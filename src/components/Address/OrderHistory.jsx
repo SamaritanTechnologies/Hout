@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import profileImg from "../../assets/myAccount/profile.png";
 import invoiceImg from "../../assets/myAccount/invoiceimg.svg";
 import profilebtn from "../../assets/myAccount/profileBtn.svg";
-import { getOrderDetails } from "../../redux/actions/orderActions";
+import { getInvoice, getOrderDetails } from "../../redux/actions/orderActions";
 import moment from "moment";
 
 const OrderHistory = () => {
   const [state, setState] = useState({
     orderList: [],
+    invoice: null,
+    loading: false,
+    selectedItem: null,
   });
 
   const fetchOrderslist = async () => {
@@ -17,17 +20,50 @@ const OrderHistory = () => {
         ...prev,
         orderList: res,
       }));
-      console.log(res, "fetchUser44334");
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
   };
 
-  console.log(state?.orderList, "state");
-
   useEffect(() => {
     fetchOrderslist();
   }, []);
+
+  const downloadInvoice = async (id) => {
+    setState((prev) => ({
+      ...prev,
+      loading: true,
+      selectedItem: id,
+    }));
+    try {
+      // Fetch the invoice data with response type as 'arraybuffer'
+      const res = await getInvoice(id);
+
+      // Create a Blob from the response data with the correct MIME type
+      const blob = new Blob([res.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `invoice_${id}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      // Optionally, you can revoke the object URL to release memory
+      window.URL.revokeObjectURL(url);
+      setState((prev) => ({
+        ...prev,
+        loading: false,
+      }));
+    } catch (error) {
+      setState((prev) => ({
+        ...prev,
+        loading: false,
+      }));
+      toast.error("Something went wrong");
+      console.error("Error fetching invoice data:", error);
+    }
+  };
 
   return (
     <section className="px-8 xs:px-8 sm:px-10 md:px-10 lg:px-12 my-20 xs:my-8 sm:my-10 md:my-13 lg:my-14">
@@ -80,10 +116,17 @@ const OrderHistory = () => {
                         €{item?.gross_total}
                       </td>
                       <td className="text-[14px] text-[#141718] w-[20%] md:w-[auto] sm:w-[auto] text-left">
-                        <button>
-                          <span>
-                            <img src={invoiceImg} alt="Invoice" />
-                          </span>
+                        <button
+                          onClick={() => downloadInvoice(item?.invoice_id)}
+                        >
+                          {state.loading &&
+                          state.selectedItem === item?.invoice_id ? (
+                            <p className="text-green1">Downloading...</p>
+                          ) : (
+                            <span>
+                              <img src={invoiceImg} alt="Invoice" />
+                            </span>
+                          )}
                         </button>
                       </td>
                     </tr>

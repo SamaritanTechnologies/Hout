@@ -111,3 +111,15 @@ export const deleteCartItem = async (id) => {
     throw error;
   }
 };
+
+export const getInvoice = async (id, options = {}) => {
+  try {
+    return axiosWithCredentials.get(`/download-invoice/${id}/`, {
+      ...options,
+      responseType: "arraybuffer",
+    });
+  } catch (error) {
+    console.error("Error fetching order details:", error);
+    throw error;
+  }
+};
