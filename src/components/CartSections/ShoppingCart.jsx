@@ -11,7 +11,7 @@ import { deleteCartItem } from "../../redux/actions/orderActions";
 import { toast } from "react-toastify";
 import { axiosWithCredentials } from "../../providers";
 
-const ShoppingCart = ({ cartData, fetchCart, taxData, delivery }) => {
+const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
   const [cartItems, setCartItems] = useState(cartData?.cart_items || []);
   const [updatedItem, setUpdatedItem] = useState(null);
 
@@ -106,6 +106,8 @@ const ShoppingCart = ({ cartData, fetchCart, taxData, delivery }) => {
   }, 0);
 
   const total = totalPrice + delivery + taxData;
+
+  console.log(total, totalPrice, delivery, taxData, "total");
   return (
     <>
       <section className="w-full flex xl:gap-[40px] lg:gap-[30px] md:gap-[20px] gap-[10px] justify-between xl:px-[135px] lg:px-[80px] px-[20px]  xl:pb-[100px] lg:pb-[70px] md:pb-[80px] pb-[70px] md:flex-col sm:flex-col xs:flex-col  ">

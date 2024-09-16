@@ -269,10 +269,10 @@ export const AddToCart = () => {
 
         {selectedTab === "firstTab" ? (
           <ShoppingCart
-            cartData={state.cartData}
+            cartData={state?.cartData}
             fetchCart={fetchCart}
-            taxData={state.tax}
-            delivery={state.deliveryFee}
+            taxData={state?.tax}
+            delivery={state?.deliveryFee}
           />
         ) : selectedTab === "secondTab" ? (
           <CheckoutDetail
