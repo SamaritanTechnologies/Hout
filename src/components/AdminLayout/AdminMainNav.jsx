@@ -10,7 +10,7 @@ import { getAccessToken } from "../../providers";
 const AdminMainNav = () => {
   const navigate = useNavigate();
   const userData = JSON.parse(localStorage.getItem("userData"));
-  const token = userData.token;
+  const token = userData?.token;
   const [isScrolled, setIsScrolled] = useState(false);
   const isAdmin = false;
   console.log(token, "token");

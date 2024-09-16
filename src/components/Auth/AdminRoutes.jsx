@@ -11,7 +11,6 @@ const AdminRoutes = ({ children }) => {
 
   //* Check user role
   if (!userData.is_superuser) {
-    // Redirect regular users away from admin routes
     return <Navigate to="/" />;
   }
 
