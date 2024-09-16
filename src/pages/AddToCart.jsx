@@ -279,10 +279,10 @@ export const AddToCart = () => {
             selectedThirdTab={selectedThirdTab}
             setSelectedThirdTab={setSelectedThirdTab}
             handleDivClick={handleDivClick}
-            cartData={state.cartData}
+            cartData={state?.cartData}
             fetchCart={fetchCart}
-            taxData={state.tax}
-            delivery={state.deliveryFee}
+            taxData={state?.tax}
+            delivery={state?.deliveryFee}
           />
         ) : (
           <OrderComplete
