@@ -10,12 +10,36 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import FormikField from "../components/Common/FormikField";
+import { Multiselect } from "multiselect-react-dropdown";
 
 export const AddNewProduct = () => {
   const navigate = useNavigate();
 
   const location = useLocation();
   const selectedProduct = location?.state?.item;
+  const objectArray = [
+    { key: "Option 1", cat: "Group 1" },
+    { key: "Option 2", cat: "Group 1" },
+    { key: "Option 3", cat: "Group 1" },
+    { key: "Option 4", cat: "Group 2" },
+    { key: "Option 5", cat: "Group 2" },
+    { key: "Option 6", cat: "Group 2" },
+    { key: "Option 7", cat: "Group 2" }
+  ]
+
+  const styleMultiSelect = {
+    chips: {
+      background: "gray",
+      borderRadius: '2px',
+    },
+    searchBox: {
+    },
+    option: {
+      background: 'white',
+      color: 'black',
+    }
+
+  };
 
   return (
     <div>
@@ -87,6 +111,7 @@ export const AddNewProduct = () => {
                         type="text"
                         name="name"
                         id="name"
+                        as="sele"
                         placeholder="Name"
                         required
                         label="Name"
@@ -96,30 +121,27 @@ export const AddNewProduct = () => {
                   </div>
                   <div className="flex gap-[20px] mb-[25px]">
                     <div className="w-full  md:mb-0">
-                      <Field
-                        type="text"
-                        name="group"
-                        id="group"
-                        placeholder="Group"
-                        label="Group"
-                        component={FormikField}
+                      <label>Group</label>
+                      <Multiselect
+                        options={objectArray}
+                        displayValue="key"
+                        closeIcon="close"
+                        style={styleMultiSelect}
                       />
                     </div>
                   </div>
                   <div className="flex gap-[20px] mb-[24px]">
                     <div className="w-1/2 md:mb-0">
-                      <Field
-                        type="text"
-                        name="typeOfWood"
-                        id="typeOfWood"
-                        placeholder="Type of Wood"
-                        required
-                        label="Type of Wood"
-                        component={FormikField}
+                    <label>Type</label>
+                      <Multiselect
+                        options={objectArray}
+                        displayValue="key"
+                        closeIcon="close"
+                        style={styleMultiSelect}
                       />
                     </div>
                     <div className="w-1/2">
-                      <Field
+                      {/* <Field
                         type="text"
                         name="woodGroup"
                         id="woodGroup"
@@ -127,12 +149,19 @@ export const AddNewProduct = () => {
                         required
                         label="Wood Group"
                         component={FormikField}
+                      /> */}
+                      <label>Material</label>
+                      <Multiselect
+                        options={objectArray}
+                        displayValue="key"
+                        closeIcon="close"
+                        style={styleMultiSelect}
                       />
                     </div>
                   </div>
                   <div className="flex gap-[20px] mb-[24px]">
                     <div className="w-1/2 md:mb-0">
-                      <Field
+                      {/* <Field
                         type="text"
                         name="typeOfProduct"
                         id="typeOfProduct"
@@ -140,59 +169,70 @@ export const AddNewProduct = () => {
                         required
                         label="Type of Product"
                         component={FormikField}
+                      /> */}
+                      <label>Profile</label>
+                      <Multiselect
+                        options={objectArray}
+                        displayValue="key"
+                        closeIcon="close"
+                        style={styleMultiSelect}
                       />
                     </div>
                     <div className="w-1/2">
-                      <Field
-                        type="text"
-                        name="durabilityGlass"
-                        id="durabilityGlass"
-                        placeholder="Durability Glass"
-                        required
-                        label=" Durability Glass"
-                        component={FormikField}
+                    <label>Durability Class</label>
+                      <Multiselect
+                        options={objectArray}
+                        displayValue="key"
+                        closeIcon="close"
+                        style={styleMultiSelect}
                       />
                     </div>
                   </div>
 
                   <div className="flex gap-[20px] mb-[24px]">
                     <div className="w-1/2 md:mb-0">
-                      <Field
-                        type="text"
-                        name="quality"
-                        id="quality"
-                        placeholder="Quality"
-                        required
-                        label="Quality"
-                        component={FormikField}
+                    <label>Quality</label>
+                      <Multiselect
+                        options={objectArray}
+                        displayValue="key"
+                        closeIcon="close"
+                        style={styleMultiSelect}
                       />
                     </div>
                     <div className="w-1/2">
-                      <Field
-                        type="text"
-                        name="edited"
-                        id="edited"
-                        placeholder="Edited"
-                        required
-                        label="Edited"
-                        component={FormikField}
+                    <label>Application</label>
+                      <Multiselect
+                        options={objectArray}
+                        displayValue="key"
+                        closeIcon="close"
+                        style={styleMultiSelect}
                       />
                     </div>
                   </div>
+                  <div className="inline-block min-w-full rounded-lg overflow-hidden">
+                  <label
+                        name="productDescription"
+                        class=" text-black text-xs font-semibold xl:mb-[8px] mb-[4px] block"
+                        for="email"
+                    >
+                      Product Description
+                    </label>
+                    <Textarea name="productDescription" />
+                  </div>
                   <div className="flex gap-[20px] mb-[24px]">
                     <div className="w-1/2 md:mb-0">
-                      <Field
+                    <Field
                         type="text"
-                        name="application"
-                        id="application"
-                        placeholder="Application"
+                        name="with"
+                        id="width"
+                        placeholder="Width"
                         required
-                        label="Application"
+                        label="Width"
                         component={FormikField}
                       />
                     </div>
                     <div className="w-1/2">
-                      <Field
+                    <Field
                         type="text"
                         name="thickness"
                         id="thickness"
@@ -204,30 +244,22 @@ export const AddNewProduct = () => {
                     </div>
                   </div>
                   <div className="flex gap-[20px] mb-[24px]">
-                    <div className="w-1/2 md:mb-0">
-                      <Field
-                        type="text"
-                        name="with"
-                        id="width"
-                        placeholder="Width"
-                        required
-                        label="Width"
-                        component={FormikField}
-                      />
-                    </div>
                     <div className="w-1/2">
                       <Field
                         type="text"
-                        name="length"
-                        id="length"
-                        placeholder="Length"
+                        name="weight"
+                        id="weight"
+                        placeholder="Weight"
                         required
-                        label="Length"
+                        label="Weight"
                         component={FormikField}
                       />
                     </div>
+                    <div className="w-1/2 md:mb-0">
+                  
+                    </div>
                   </div>
-                  <div class=" flex mb-[10px]">
+                  {/* <div class=" flex mb-[10px]">
                     <div class="w-full mb-0 md:mb-0">
                       <label
                         name="productDescription"
@@ -238,7 +270,8 @@ export const AddNewProduct = () => {
                       </label>
                       <Textarea name="productDescription" />
                     </div>
-                  </div>
+                  </div> */}
+
                   {/* Add other fields similarly */}
 
                   <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
@@ -253,7 +286,7 @@ export const AddNewProduct = () => {
                               Product ID
                             </th>
                             <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold	">
-                              Price
+                              Full Price ex Vat
                             </th>
                             <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold	">
                               Discount
@@ -307,7 +340,7 @@ export const AddNewProduct = () => {
                       </table>
                     </div>
                   </div>
-
+{/* 
                   <div className="flex gap-[20px] mb-[24px]">
                     <div className="w-1/2 md:mb-0 relative">
                       <Field
@@ -329,9 +362,9 @@ export const AddNewProduct = () => {
                         component={FormikField}
                       />
                     </div>
-                  </div>
+                  </div> */}
 
-                  <div className="flex gap-[20px] mb-[24px]">
+                  {/* <div className="flex gap-[20px] mb-[24px]">
                     <div className="w-1/2 md:mb-0 relative">
                       <label
                         htmlFor="weight"
@@ -351,7 +384,7 @@ export const AddNewProduct = () => {
                         component={FormikField}
                       />
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className="flex gap-[20px] mb-[24px]">
                     <div className="w-full md:mb-0 relative">

@@ -13,7 +13,7 @@ const Layout = () => {
   ];
   const adminPaths = [
     "/dashboard/",
-    "/inbox/",
+    // "/inbox/",
     "/order-list/",
     "/products/",
     "/user-profile/",

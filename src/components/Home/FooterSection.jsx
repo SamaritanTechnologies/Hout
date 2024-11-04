@@ -9,9 +9,10 @@ import footerLogo from "../../assets/new-logo.png";
 import whatsp from "../../assets/HeaderAndFooter/whatspFooter.svg";
 import facebook from "../../assets/HeaderAndFooter/facebookFooter.svg";
 import headerImage from "../../assets/HeaderAndFooter/headerImage.svg";
-import { axiosApi } from "../../providers";
+import { BASE_URL, axiosApi } from "../../providers";
 import { toast } from "react-toastify";
 import { scrollToTop } from "../../utils/helper";
+import axios from "axios";
 
 const FooterSection = ({ isShow }) => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const FooterSection = ({ isShow }) => {
 
   const handleGetOpeningHours = async () => {
     try {
-      const response = await axiosApi.get("/opening-hours/");
+      const response = await axios.get(`${BASE_URL}/google-opening-hours/?place=Hout Totaal`);
       setState((prev) => ({
         ...prev,
         openHours: response.data,
@@ -251,9 +252,9 @@ const FooterSection = ({ isShow }) => {
               <div className="mb-6 text-[18px] md:text-[20px] lg:text-[22px] xl:text-[22px] font-semibold text-[#000]">
                 Opening Hours
               </div>
-              {state.openHours.map((item, index) => (
+              {state.openHours?.weekday_text?.map((item, index) => (
                 <div key={index}>
-                  <div className="mb-5 text-[14px] vietnam ">{item.hour}</div>
+                  <div className="mb-5 text-[14px] vietnam ">{item}</div>
                 </div>
               ))}
             </div>

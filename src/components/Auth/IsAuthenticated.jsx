@@ -9,7 +9,7 @@ const UserRoutes = ({ children }) => {
     return <Navigate to="/sign-in" />;
   }
 
-  //* Check user role
+  // //* Check user role
   if (userData.is_superuser) {
     // Redirect admins away from user routes
     return <Navigate to="/dashboard" />;

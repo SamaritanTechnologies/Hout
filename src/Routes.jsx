@@ -54,7 +54,7 @@ function Routes() {
           <Route path="/dashboard/" element={<Dashboard />} />
           <Route path="/new-product" element={<AddNewProduct />} />
           <Route path="/products/" element={<Products />} />
-          <Route path="/inbox/" element={<Inbox />} />
+          {/* <Route path="/inbox/" element={<Inbox />} /> */}
           <Route path="/order-list/" element={<OrderList />} />
           <Route path="/user-profile" element={<UserProfile />} />
         </Route>

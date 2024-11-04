@@ -73,7 +73,8 @@ const AdminMainNav = () => {
             <img src={notfiIcon} alt="" />
           </a>
           <div className="flagSelMain">
-            <CountrySelector />
+            {/* <CountrySelector /> */}
+            <div id="google_translate_element"></div>
           </div>
           {/* <div>
             <a href="#">

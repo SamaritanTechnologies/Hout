@@ -472,3 +472,34 @@ input[type="date"] {
   right: 50px !important;
 }
 }
+
+/* Hide the Google Translate toolbar */
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+/* Hide the "Powered by Google" text */
+.goog-logo-link {
+  display: none !important;
+}
+
+/* Optional: Adjust the size of the translation dropdown */
+#google_translate_element select {
+  background-color: transparent;
+  color: #000;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+/* Optional: Customize the container of the translation dropdown */
+#google_translate_element {
+  display: inline-block;
+  margin: 10px;
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+.VIpgJd-ZVi9od-l4eHX-hSRGPd{
+  display: none;
+}

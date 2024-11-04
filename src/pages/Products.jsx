@@ -22,121 +22,6 @@ export const Products = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [isDeleted, setIsDeleted] = useState(false);
   const navigate = useNavigate();
-  const productData = [
-    {
-      id: "#123456",
-      productName: "Product Name",
-      description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-      image: productName,
-      code: "QAk",
-      category: "Standard",
-      condition: "Sanded",
-      quantity: {
-        amount: 120,
-        status: "80 Left",
-      },
-      price: "€1,500.00",
-      editLink: "/customized-product",
-      deleteLink: "#",
-      dropdownMenuLink: "#",
-    },
-
-    {
-      id: "#123456",
-      productName: "Product Name",
-      description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-      image: productName,
-      code: "QAk",
-      category: "Standard",
-      condition: "Sanded",
-      quantity: {
-        amount: 120,
-        status: "80 Left",
-      },
-      price: "€1,500.00",
-      editLink: "/customized-product",
-      deleteLink: "#",
-      dropdownMenuLink: "#",
-    },
-
-    {
-      id: "#123456",
-      productName: "Product Name",
-      description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-      image: productName,
-      code: "QAk",
-      category: "Standard",
-      condition: "Sanded",
-      quantity: {
-        amount: 120,
-        status: "80 Left",
-      },
-      price: "€1,500.00",
-      editLink: "/customized-product",
-      deleteLink: "#",
-      dropdownMenuLink: "#",
-    },
-
-    {
-      id: "#123456",
-      productName: "Product Name",
-      description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-      image: productName,
-      code: "QAk",
-      category: "Standard",
-      condition: "Sanded",
-      quantity: {
-        amount: 120,
-        status: "80 Left",
-      },
-      price: "€1,500.00",
-      editLink: "/customized-product",
-      deleteLink: "#",
-      dropdownMenuLink: "#",
-    },
-
-    {
-      id: "#123456",
-      productName: "Product Name",
-      description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-      image: productName,
-      code: "QAk",
-      category: "Standard",
-      condition: "Sanded",
-      quantity: {
-        amount: 120,
-        status: "80 Left",
-      },
-      price: "€1,500.00",
-      editLink: "/customized-product",
-      deleteLink: "#",
-      dropdownMenuLink: "#",
-    },
-
-    {
-      id: "#123456",
-      productName: "Product Name",
-      description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-      image: productName,
-      code: "QAk",
-      category: "Standard",
-      condition: "Sanded",
-      quantity: {
-        amount: 120,
-        status: "80 Left",
-      },
-      price: "€1,500.00",
-      editLink: "/customized-product",
-      deleteLink: "#",
-      dropdownMenuLink: "#",
-    },
-  ];
 
   const fetchProducts = async () => {
     try {
@@ -155,7 +40,6 @@ export const Products = () => {
     try {
       if (selectedItem) {
         const res = await deleteProduct({ id: selectedItem });
-        console.log(res, "fetchUser");
         setIsDeleted(!isDeleted);
       }
     } catch (error) {
@@ -168,8 +52,6 @@ export const Products = () => {
   useEffect(() => {
     fetchProducts();
   }, [isDeleted]);
-
-  console.log(open, "state");
 
   return (
     <>
@@ -262,30 +144,33 @@ export const Products = () => {
                     ID
                   </th>
                   <th className="px-[10px] py-[12px]  text-left text-14 font-bold  	">
-                    Image/Name
+                    Image
+                  </th>
+                  <th className="px-[10px] py-[12px]  text-left text-14 font-bold  	">
+                    Name
                   </th>
                   <th className="px-[10px] py-[12px]  text-left text-14 font-bold	">
-                    Description
+                    Thickness
                   </th>
                   <th className="px-[10px] py-[12px]  text-left text-14 font-bold	">
-                    Wood Type
+                    Width
                   </th>
                   <th className="px-[10px] py-[12px]  text-left text-14 font-bold	">
-                    Hanging
+                    Group
                   </th>
                   <th className="px-[10px] py-[12px]  text-left text-14 font-bold	">
-                    Sanded
+                    Type
                   </th>
                   <th className="px-[10px] py-[12px]  text-left text-14 font-bold	">
+                    Material
+                  </th>
+
+                  <th className="px-[10px] py-[12px]  text-center text-14 font-bold">
+                    Profile
+                  </th>
+
+                  <th className="px-[10px] py-[12px]  text-center text-14 font-bold">
                     Stock
-                  </th>
-
-                  <th className="px-[10px] py-[12px]  text-center text-14 font-bold">
-                    Price
-                  </th>
-
-                  <th className="px-[10px] py-[12px]  text-center text-14 font-bold">
-                    After Discount
                   </th>
                   <th className="px-[10px] py-[12px]  text-center text-14 font-bold">
                     Action
@@ -298,9 +183,8 @@ export const Products = () => {
                   state.productsData.map((rowData, index) => (
                     <tr
                       key={index}
-                      className={`border-b-[0.4px] w-full border-gray ${
-                        index % 2 !== 0 ? "bg-[#F1F4F9]" : "bg-[#fff]"
-                      }`}
+                      className={`border-b-[0.4px] w-full border-gray ${index % 2 !== 0 ? "bg-[#F1F4F9]" : "bg-[#fff]"
+                        }`}
                     >
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">
                         <div className="">
@@ -318,30 +202,22 @@ export const Products = () => {
                               className=""
                             />
                           </div>
-                          <div className="">
-                            <p className="text-gray-900 whitespace-no-wrap">
-                              {rowData?.name}
-                            </p>
-                          </div>
                         </div>
+                      </td>
+                      <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">
+                        {rowData?.name_en}
                       </td>
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3 w-[12%]">
                         <p className="text-gray-900 overflow-hidden whitespace-normal line-clamp-3 min-w-[120px]">
-                          {rowData?.description}
+                          {rowData?.thickness}
                         </p>
                       </td>
 
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">
                         <div className="flex gap-2 items-center">
-                          <div className="flex-shrink-0 w-[38.64px] h-[38.64px]">
-                            <img
-                              src={rowData?.image}
-                              alt={rowData?.productName}
-                            />
-                          </div>
                           <div className="min-w-[40px]">
                             <p className="text-gray-900 whitespace-no-wrap">
-                              {rowData?.code}
+                              {rowData?.width}
                             </p>
                           </div>
                         </div>
@@ -350,9 +226,11 @@ export const Products = () => {
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">
                         <div className="flex gap-3 items-center">
                           <div className="">
-                            <p className="text-gray-900 whitespace-no-wrap">
-                              {rowData?.hangings}
-                            </p>
+                            {rowData?.group.map((item) => {
+                              return (
+                                <p>{item} </p>
+                              )
+                            })}
                           </div>
                         </div>
                       </td>
@@ -360,9 +238,13 @@ export const Products = () => {
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">
                         <div className="flex xl:gap-3 gap-2 items-center">
                           <div className="">
-                            <p className="text-gray-900 whitespace-no-wrap">
-                              {rowData?.sanded}
-                            </p>
+                            {rowData?.type?.map((item) => {
+                              return (
+                                <p className="text-gray-900 whitespace-no-wrap">
+                                  {item}
+                                </p>
+                              )
+                            })}
                           </div>
                         </div>
                       </td>
@@ -370,12 +252,15 @@ export const Products = () => {
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">
                         <div className="flex gap-3 items-center">
                           <div className="">
-                            <p className="text-gray-900 whitespace-no-wrap flex gap-2 items-center">
-                              {rowData?.stock}{" "}
-                              <span className="bg-[#FBC7001A] text-[#FBC700] p-[8px] rounded-full inline-block min-w-[70px] text-center">
-                                {rowData.quantity.status}
-                              </span>
-                            </p>
+                            {rowData?.material?.map((item) => {
+                              return (
+                                <p className="text-gray-900 whitespace-no-wrap flex gap-2 items-center">
+                                  <span className="bg-[#FBC7001A] text-[#FBC700] p-[8px] rounded-full inline-block min-w-[70px] text-center">
+                                    {item}
+                                  </span>
+                                </p>
+                              )
+                            })}
                           </div>
                         </div>
                       </td>
@@ -383,17 +268,21 @@ export const Products = () => {
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">
                         <div className="flex gap-3 items-center justify-center">
                           <div className="">
-                            <p className="text-14 text-center">
-                              ${rowData?.price}
-                            </p>
+                          {rowData?.profile?.map((item) => {
+                              return (
+                                <p className="text-gray-900 whitespace-no-wrap flex gap-2 items-center">
+                                    {item}
+                                </p>
+                              )
+                            })}
                           </div>
                         </div>
                       </td>
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">
                         <div className="flex xl:gap-3 gap-2 items-center justify-center">
-                          <p className="xl:text-14 lg-text-[13px] text-12 text-center">
-                            N/A
-                          </p>
+                          <p className="text-gray-900 whitespace-no-wrap flex gap-2 items-center">
+                              {rowData?.stock}
+                            </p>
                         </div>
                       </td>
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left xl:text-14 lg-text-[13px] text-12 font-semibold text-gray3 min-w-[100px]">

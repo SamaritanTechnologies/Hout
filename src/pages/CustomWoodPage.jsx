@@ -15,11 +15,18 @@ import pintrest from "../assets/customWoodPage/pintrest.svg";
 import twitter from "../assets/customWoodPage/twitter.svg";
 import linkdln from "../assets/customWoodPage/linkdln.svg";
 import email from "../assets/customWoodPage/email.svg";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const CustomWoodPage = () => {
 
   const navigate = useNavigate()
+  const location = useLocation()
+
+  console.log(location, "location")
+
+  const [state, setState] = useState({
+    product: location.state?.data
+  })
 
   const [productInfo, setProductInfo] = useState([
     {
@@ -80,7 +87,7 @@ export const CustomWoodPage = () => {
           <td className="h-[px] font-bold text-[#9F9F9F] xs:text-14 sm:text-15 text-16">
             |{" "}
           </td>
-          <td>Oka Wood </td>
+          <td>{state.product.name_en}</td>
         </tr>
       </section>
 
@@ -110,8 +117,7 @@ export const CustomWoodPage = () => {
 
           <div className=" xl:hidden lg:hidden md:hidden mt-20">
             <h1 className="text-20 font-bold">
-              Angelium Vermelho, Planing, Rounded Corners with Points of 68*68mm
-              FSC*{" "}
+              {state.product.name_en}
             </h1>
             <div className="flex gap-x-6 pt-6">
               <div>
@@ -124,7 +130,7 @@ export const CustomWoodPage = () => {
               <div className="text-18"> 5 Customer Review</div>
             </div>
 
-            <div className="pt-6 text-44">€ 2,500</div>
+            <div className="pt-6 text-44">€ 2,50</div>
 
             <div className="flex items-center gap-x-4 pt-5 border-b-2 border-[#D9D9D9] pb-[26px]    ">
               <div className="text-14">SHARE THIS PAGE:</div>
@@ -157,16 +163,7 @@ export const CustomWoodPage = () => {
             </span>
             <div className="pt-5 text-18 text-start xs:text-15 sm:text-15">
               {" "}
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took a galley of
-              type and scrambled it to make a type specimen book. It has
-              survived not only five centuries, but also the leap into
-              electronic typesetting, remaining essentially unchanged. It was
-              popularised in the 1960s with the release of Letraset sheets
-              containing Lorem Ipsum passages, and more recently with desktop
-              publishing software like Aldus PageMaker including versions of
-              Lorem Ipsum.
+              {state.product.description_en}
             </div>
           </section>
         </section>
@@ -174,8 +171,7 @@ export const CustomWoodPage = () => {
         {/* Right side Content  */}
         <section>
           <h1 className="xl:text-38 lg:text-36 md:text-32 text-28 font-bold">
-            Angelium Vermelho, Planing, Rounded Corners with Points of 68*68mm
-            FSC*{" "}
+          {state.product.name_en}
           </h1>
           <div className="flex items-center gap-x-6 xl:pt-6 lg:pt-5 pt-4">
             <div>
@@ -189,7 +185,7 @@ export const CustomWoodPage = () => {
 "> 5 Customer Review</div>
           </div>
 
-          <div className="pt-6 xl:text-44 lg:text-40 md:text-36 sm:text-32 text-28">€ 2,500</div>
+          <div className="pt-6 xl:text-44 lg:text-40 md:text-36 sm:text-32 text-28">{state.product.full_price_ex_vat}</div>
 
           <div className="flex items-center gap-x-4 pt-5 border-b-2 border-[#D9D9D9] pb-[26px]    ">
             <div className="text-14">SHARE THIS PAGE:</div>

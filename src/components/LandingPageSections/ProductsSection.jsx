@@ -30,7 +30,7 @@ const ProductsSection = ({
 
   const handleGetProducts = async () => {
     try {
-      const response = await axiosWithCredentials.get("/product-filter/");
+      const response = await axiosWithCredentials.get("/products/");
       if (selectedFilter === "" && location.pathname !== "/") {
         setState((prev) => ({
           ...prev,
@@ -62,7 +62,7 @@ const ProductsSection = ({
           products: response.data,
         }));
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleAddToCart = async (id, price) => {
@@ -114,29 +114,36 @@ const ProductsSection = ({
           }
         >
           {state?.products?.slice(0, 4)?.map((item, index) => {
+            console.log(item, "items")
             return (
               // JSX code here
               <div key={index} className="">
                 <div
                   className="cursor-pointer"
                   onClick={() => {
-                    navigate("/wood-page");
+                    navigate('/wood-page', { state: { data: item } });
+
                   }}
                 >
                   <img
-                    src={item?.images_url?.[0]}
+                    src={item?.images_url[0]?.url}
                     className="w-full object-cover h-full sm:h-[310px] lg:h-[310px] xl:h-[310px]"
                   />
                 </div>
                 <section className="bg-[#F4F5F7] pb-4 px-4">
                   <div className="font-semibold  text-24 pt-[15px]">
-                    {item.name}
+                    {item?.name_en}
                   </div>
                   <div className=" font-medium  text-16  text-gray2 pt-[15px]">
-                    {item.hout_type}
+                    {item?.type?.map((item_type, index) => {
+                      return (
+                        <>{ item_type } </>
+                      )
+                    })}
                   </div>
+
                   <section className="flex gap-x-3 pt-[15px] pb-[20px] md:gap-x-2">
-                    <div>€{item.price}</div>
+                    <div>€{item.full_price_ex_vat}</div>
                     <div className="text-gray2 line-through">{item.vat}</div>
                   </section>
                   <section className="flex gap-x-4 items-center justify-between">
