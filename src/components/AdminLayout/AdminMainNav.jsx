@@ -13,7 +13,6 @@ const AdminMainNav = () => {
   const token = userData?.token;
   const [isScrolled, setIsScrolled] = useState(false);
   const isAdmin = false;
-  console.log(token, "token");
 
   const handleScroll = () => {
     if (window.scrollY > 0) {

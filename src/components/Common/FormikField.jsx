@@ -12,6 +12,7 @@ const FormikField = ({
   marginTop,
   marginBottom,
   icon: IconComponent,
+  postfix,
   ...props
 }) => {
   const [hidePassword, setHidePassword] = useState(true);
@@ -43,9 +44,11 @@ const FormikField = ({
           type={
             type === "password" ? (hidePassword ? "password" : "text") : type
           }
+          
           {...field}
           {...props}
         />
+        {postfix && <span className="absolute right-3 text-sm text-gray2">{postfix}</span> }
         {type === "password" && (
           <img
             src={hidePassword ? eyes : showEye}

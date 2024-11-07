@@ -9,10 +9,8 @@ import dots from "../assets/DashboardImages/dotsvertical.svg";
 import Button from "../components/Common/Button";
 import cartButton from "../assets/addToCart/cartButton.svg";
 import { Link, useNavigate } from "react-router-dom";
-import { axiosWithCredentials } from "../providers";
-import { getProducts } from "../redux/actions/orderActions";
 import DeleteModal from "../components/Modals/DeleteModal";
-import { deleteProduct } from "../redux/actions/productActions";
+import { deleteProduct, getProducts } from "../redux/actions/productActions";
 
 export const Products = () => {
   const [state, setState] = useState({
@@ -39,7 +37,10 @@ export const Products = () => {
   const handleDelete = async () => {
     try {
       if (selectedItem) {
-        const res = await deleteProduct({ id: selectedItem });
+        await deleteProduct({
+          id: selectedItem?.product_id,
+          parentId: selectedItem?.parent_product_id,
+        });
         setIsDeleted(!isDeleted);
       }
     } catch (error) {
@@ -68,44 +69,51 @@ export const Products = () => {
             </h1>
 
             <div className="flex gap-4">
-              <div class="relative inline-block text-left">
-                <div>
-                  <button
-                    type="button"
-                    className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                    id="menu-button"
-                    aria-expanded="true"
-                    aria-haspopup="true"
+              {/* <div class="relative text-left">
+                <button
+                  type="button"
+                  className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                  id="menu-button"
+                  aria-expanded="true"
+                  aria-haspopup="true"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="w-6 h-6"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z"
-                      />
-                    </svg>
-                    Filters
-                    <svg
-                      className="-mr-1 h-5 w-5 text-gray-400"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </button>
-                </div>
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z"
+                    />
+                  </svg>
+                  Filters
+                  <svg
+                    className="-mr-1 h-5 w-5 text-gray-400"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div> */}
+              <div>
+                <Button
+                  onClick={() => {
+                    navigate("/new-product");
+                  }}
+                  btnText=" Add New Product"
+                  breakpoint="xl:w-[282px] lg:w-[240px] w-[200px] "
+                />
               </div>
               {/* <div class="relative inline-block text-left">
               <div>
@@ -183,8 +191,9 @@ export const Products = () => {
                   state.productsData.map((rowData, index) => (
                     <tr
                       key={index}
-                      className={`border-b-[0.4px] w-full border-gray ${index % 2 !== 0 ? "bg-[#F1F4F9]" : "bg-[#fff]"
-                        }`}
+                      className={`border-b-[0.4px] w-full border-gray ${
+                        index % 2 !== 0 ? "bg-[#F1F4F9]" : "bg-[#fff]"
+                      }`}
                     >
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">
                         <div className="">
@@ -196,11 +205,13 @@ export const Products = () => {
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">
                         <div className="flex gap-1 items-center">
                           <div className="block xl:w-[60px] lg:w-[50px] w-[45px]">
-                            <img
-                              src={rowData?.images_url?.[0]}
-                              alt={rowData?.name}
-                              className=""
-                            />
+                            {rowData?.images_url?.length ? (
+                              <img
+                                src={rowData?.images_url?.[0]?.url}
+                                alt={rowData?.name}
+                                className=""
+                              />
+                            ) : null}
                           </div>
                         </div>
                       </td>
@@ -224,75 +235,74 @@ export const Products = () => {
                       </td>
 
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">
-                        <div className="flex gap-3 items-center">
-                          <div className="">
-                            {rowData?.group.map((item) => {
-                              return (
-                                <p>{item} </p>
-                              )
-                            })}
-                          </div>
+                        <div className="flex flex-col gap-1 items-center">
+                          {rowData?.group && rowData.group.length > 0
+                            ? rowData.group.map((item, index) => (
+                                <p key={index}>{item}</p>
+                              ))
+                            : "---"}
                         </div>
                       </td>
 
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">
-                        <div className="flex xl:gap-3 gap-2 items-center">
-                          <div className="">
-                            {rowData?.type?.map((item) => {
-                              return (
-                                <p className="text-gray-900 whitespace-no-wrap">
+                        <div className="flex flex-col gap-1 items-center">
+                          {rowData?.type && rowData.type.length > 0
+                            ? rowData.type.map((item, index) => (
+                                <p
+                                  key={index}
+                                  className="text-gray-900 whitespace-no-wrap"
+                                >
                                   {item}
                                 </p>
-                              )
-                            })}
-                          </div>
+                              ))
+                            : "---"}
                         </div>
                       </td>
 
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">
-                        <div className="flex gap-3 items-center">
-                          <div className="">
-                            {rowData?.material?.map((item) => {
-                              return (
-                                <p className="text-gray-900 whitespace-no-wrap flex gap-2 items-center">
-                                  <span className="bg-[#FBC7001A] text-[#FBC700] p-[8px] rounded-full inline-block min-w-[70px] text-center">
+                        <div className="flex flex-col gap-1 items-center">
+                          {rowData?.material && rowData.material.length > 0
+                            ? rowData.material.map((item, index) => (
+                                <p
+                                  key={index}
+                                  className="text-gray-900 whitespace-no-wrap flex gap-2 items-center"
+                                >
+                                  <span className="bg-[#FBC7001A] text-[#FBC700] py-1 px-3 rounded-full inline-block min-w-[70px] text-center">
                                     {item}
                                   </span>
                                 </p>
-                              )
-                            })}
-                          </div>
+                              ))
+                            : "---"}
                         </div>
                       </td>
 
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">
-                        <div className="flex gap-3 items-center justify-center">
-                          <div className="">
-                          {rowData?.profile?.map((item) => {
-                              return (
-                                <p className="text-gray-900 whitespace-no-wrap flex gap-2 items-center">
-                                    {item}
+                        <div className="flex flex-col gap-1 items-center justify-center">
+                          {rowData?.profile && rowData.profile.length > 0
+                            ? rowData.profile.map((item, index) => (
+                                <p
+                                  key={index}
+                                  className="text-gray-900 whitespace-no-wrap flex gap-2 items-center"
+                                >
+                                  {item}
                                 </p>
-                              )
-                            })}
-                          </div>
+                              ))
+                            : "---"}
                         </div>
                       </td>
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">
                         <div className="flex xl:gap-3 gap-2 items-center justify-center">
                           <p className="text-gray-900 whitespace-no-wrap flex gap-2 items-center">
-                              {rowData?.stock}
-                            </p>
+                            {rowData?.stock}
+                          </p>
                         </div>
                       </td>
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left xl:text-14 lg-text-[13px] text-12 font-semibold text-gray3 min-w-[100px]">
                         <div className="flex xl:gap-3 gap-2 items-center justify-center">
                           <div
-                            onClick={() => {
-                              navigate("/new-product", {
-                                state: { item: rowData },
-                              });
-                            }}
+                            // onClick={() => {
+                            //   navigate(`/product/${rowData.product_id}`);
+                            // }}
                             className="cursor-pointer"
                           >
                             <img src={editImg} alt="edit icon image" />
@@ -300,7 +310,7 @@ export const Products = () => {
                           <div
                             className="cursor-pointer"
                             onClick={() => {
-                              setSelectedItem(rowData?.id);
+                              setSelectedItem(rowData);
                               setOpen(true);
                             }}
                           >
@@ -431,21 +441,15 @@ export const Products = () => {
           </div>
           {/* order details table end */}
 
-          <div
-            onClick={() => {
-              navigate("/new-product");
-            }}
-            className="w-full xl:mt-[60px] lg:mt-[40px] mt-[25px] flex justify-end"
-          >
-            {/* <button className="bg-[#FBC700] block text-black text-center py-[14px] px-[20px] w-[26%] font-semibold mb-[23px] text-20 ">
-            Add New Product
-          </button> */}
-
+          {/* <div className="w-full xl:mt-[60px] lg:mt-[40px] mt-[25px] flex justify-end">
             <Button
+              onClick={() => {
+                navigate("/new-product");
+              }}
               btnText=" Add New Product"
               breakpoint="xl:w-[282px] lg:w-[240px] w-[200px] "
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </>

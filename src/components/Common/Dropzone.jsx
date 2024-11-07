@@ -2,8 +2,10 @@ import React from "react";
 import { useDropzone } from "react-dropzone";
 import ImgUpload from "../../assets/DashboardImages/imgUpload.svg";
 
-const Dropzone = ({width, height}) => {
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+const Dropzone = ({width, height, onDrop}) => {
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+    onDrop: (files) => onDrop(files),
+  });
 
   const files = acceptedFiles.map((file) => (
     <li key={file.path}>

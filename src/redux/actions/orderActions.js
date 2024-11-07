@@ -14,16 +14,6 @@ export const getOrderDetails = async (month, payment, day) => {
     throw error;
   }
 };
-export const getProducts = async () => {
-  try {
-    const response = await axiosWithCredentials.get(`/product-filter/`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching order details:", error);
-    throw error;
-  }
-};
-
 export const getCart = async () => {
   const cartId = localStorage.getItem("cartId");
   try {
