@@ -103,9 +103,10 @@ export const AddNewProduct = () => {
     const file = e.target.files[0];
     if (file) {
       if (validTypes.includes(file.type)) {
-        const newImage = Object.assign(file, {
+        const newImage = {
+          file: file,
           preview: URL.createObjectURL(file),
-        });
+        };
         setImages((prevImages) => [...prevImages, newImage]);
       } else {
         alert("Please upload a valid image (jpg, jpeg, png, or webp)");
@@ -127,7 +128,7 @@ export const AddNewProduct = () => {
           type: [],
           material: [],
           profile: [],
-          durabilityClass: [],
+          durability_class: [],
           quality: [],
           application: [],
           productDescription: "",
@@ -284,13 +285,13 @@ export const AddNewProduct = () => {
                       <Multiselect
                         closeIcon="close"
                         style={styleMultiSelect}
-                        name="durabilityClass"
-                        id="durabilityClass"
+                        name="durability_class"
+                        id="durability_class"
                         options={getChoicesByName("durability_class")}
                         displayValue="name_en"
-                        selectedValues={values.durabilityClass}
+                        selectedValues={values.durability_class}
                         onSelect={(selectedList) => {
-                          setFieldValue("durabilityClass", selectedList);
+                          setFieldValue("durability_class", selectedList);
                         }}
                       />
                     </div>
@@ -428,12 +429,13 @@ export const AddNewProduct = () => {
                             </th>
 
                             <th className="px-[2px] py-[16px] text-end text-16 font-semibold">
-                              <a
+                              <button
+                                type="button"
                                 onClick={handleAddRow}
                                 className="flex justify-end"
                               >
                                 <img src={PlusCircle} alt="Add" />
-                              </a>
+                              </button>
                             </th>
                           </tr>
                         </thead>
@@ -574,7 +576,7 @@ export const AddNewProduct = () => {
                         </div>
 
                         {/* Display uploaded images */}
-                        {images.map((image, index) => (
+                        {images?.map((image, index) => (
                           <div
                             key={index}
                             className="relative w-[215px] h-[215px] rounded-lg overflow-hidden"
@@ -585,6 +587,7 @@ export const AddNewProduct = () => {
                               className="w-full h-full object-cover"
                             />
                             <button
+                              type="button"
                               onClick={() => handleRemoveImage(index)}
                               className="absolute top-2 right-2 bg-white rounded-full p-1 text-red-600"
                             >

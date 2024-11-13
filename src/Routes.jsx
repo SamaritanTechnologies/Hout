@@ -23,6 +23,7 @@ import {
   CustomizedProduct,
   AddNewProduct,
   MyAccount,
+  UpdateProduct,
 } from "./pages";
 
 import { TermsConditions } from "./pages/TermsConditions";
@@ -52,8 +53,9 @@ function Routes() {
 
         <Route element={<AdminRoutes />}>
           <Route path="/dashboard/" element={<Dashboard />} />
-          <Route path="/new-product" element={<AddNewProduct />} />
           <Route path="/products/" element={<Products />} />
+          <Route path="/product/:id" element={<UpdateProduct />} />
+          <Route path="/new-product" element={<AddNewProduct />} />
           {/* <Route path="/inbox/" element={<Inbox />} /> */}
           <Route path="/order-list/" element={<OrderList />} />
           <Route path="/user-profile" element={<UserProfile />} />

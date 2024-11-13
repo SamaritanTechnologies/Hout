@@ -9,7 +9,7 @@ import footerLogo from "../../assets/new-logo.png";
 import whatsp from "../../assets/HeaderAndFooter/whatspFooter.svg";
 import facebook from "../../assets/HeaderAndFooter/facebookFooter.svg";
 import headerImage from "../../assets/HeaderAndFooter/headerImage.svg";
-import { BASE_URL, axiosApi } from "../../providers";
+import { API_BASE_URL, axiosApi } from "../../providers";
 import { toast } from "react-toastify";
 import { scrollToTop } from "../../utils/helper";
 import axios from "axios";
@@ -28,7 +28,7 @@ const FooterSection = ({ isShow }) => {
 
   const handleGetOpeningHours = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/google-opening-hours/?place=Hout Totaal`);
+      const response = await axios.get(`${API_BASE_URL}/google-opening-hours/?place=Hout Totaal`);
       setState((prev) => ({
         ...prev,
         openHours: response.data,

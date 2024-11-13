@@ -48,8 +48,6 @@ export const Products = () => {
     }
   };
 
-  console.log(state?.productsData, "state");
-
   useEffect(() => {
     fetchProducts();
   }, [isDeleted]);
@@ -61,6 +59,7 @@ export const Products = () => {
         closeModal={() => setOpen(!open)}
         handleDelete={handleDelete}
       />
+     
       <div>
         <div className="xl:py-[24px] lg:py-[20px] py-[16px] xl:px-[20px] lg:px-[16px] px-[10px] bg-[#fafafa] h-full min-h-[86vh]">
           <div className="flex justify-between">
@@ -300,9 +299,9 @@ export const Products = () => {
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left xl:text-14 lg-text-[13px] text-12 font-semibold text-gray3 min-w-[100px]">
                         <div className="flex xl:gap-3 gap-2 items-center justify-center">
                           <div
-                            // onClick={() => {
-                            //   navigate(`/product/${rowData.product_id}`);
-                            // }}
+                            onClick={() => {
+                              navigate(`/product/${rowData.parent_product_id}`);
+                            }}
                             className="cursor-pointer"
                           >
                             <img src={editImg} alt="edit icon image" />

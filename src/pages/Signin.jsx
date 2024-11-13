@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { axiosApi, setAccessToken, authEndpoint } from "../providers";
+import { axiosApi, setAccessToken, BASE_URL } from "../providers";
 import { toast } from "react-toastify";
 
 import signInRight from "../assets/authImages/signInRight.svg";
@@ -119,7 +119,7 @@ export const Signin = () => {
                 {/* social auth row  */}
                 <div className="socialAuthRow flex gap-3 mb-[12px]">
                   <a
-                    href={`${authEndpoint}/accounts/google/login/?process=login`}
+                    href={`${BASE_URL}/accounts/google/login/?process=login`}
                     className="w-[32%] flex gap-2 items-center rounded-md	xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium"
                     style={{ border: "1px solid #ccc" }}
                   >
@@ -127,7 +127,7 @@ export const Signin = () => {
                     <span> Google </span>
                   </a>
                   <a
-                    href={`${authEndpoint}/accounts/facebook/login/?process=login`}
+                    href={`${BASE_URL}/accounts/facebook/login/?process=login`}
                     className="w-[32%] flex gap-2 items-center rounded-md		xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium"
                     style={{ border: "1px solid #ccc" }}
                   >
@@ -135,7 +135,7 @@ export const Signin = () => {
                     <span> Facebook </span>
                   </a>
                   <a
-                    href={`${authEndpoint}/accounts/apple/login/?process=login`}
+                    href={`${BASE_URL}/accounts/apple/login/?process=login`}
                     className=" w-[32%] flex gap-2 items-center rounded-md xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium"
                     style={{ border: "1px solid #ccc" }}
                   >

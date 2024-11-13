@@ -16,6 +16,7 @@ const Layout = () => {
     // "/inbox/",
     "/order-list/",
     "/products/",
+    "/product/",
     "/user-profile/",
     "/new-product/",
     "/customized-product/",

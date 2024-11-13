@@ -12,4 +12,5 @@ export { AddToCart } from "./AddToCart";
 export { UserProfile } from "./UserProfile";
 export { CustomizedProduct } from "./CustomizedProduct";
 export { AddNewProduct } from "./AddNewProduct";
+export {UpdateProduct} from "./UpdateProduct"
 export { MyAccount } from "./MyAccount";
