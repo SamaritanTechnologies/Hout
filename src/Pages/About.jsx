@@ -11,7 +11,7 @@ const About = () => {
     <>
       <section className="about flex justify-center items-center ">
         <div className="w-[320px] m-auto  text-center bg-transparentGray text-white py-[35px] rounded-lg ">
-          <div className="text-white text-48 font-medium">About US </div>
+          <div className="text-white text-30 md:tex-40 lg:text-44 xl:text-48 font-medium">About US </div>
           <div className="text-white flex items-center justify-center gap-x-3 pt-5 ">
             <div className="flex items-center gap-x-3">
               Home <img src={rightArrow} />
@@ -21,8 +21,8 @@ const About = () => {
         </div>
       </section>
 
-      <section className="grid grid-cols-12 px-[100px] pt-[100px] gap-x-2 ">
-        <section className="xl:col-span-6 text-16  ">
+      <section className="flex flex-col-reverse items-center lg:items-start xl:items-start lg:flex-row xl:flex-row px-[30px] md:px-[80px] lg:px-[100px] pt-[100px] gap-y-12 gap-x-6 max-w-[1240px] mx-auto">
+        <div className="text-16 flex-1">
           Lorem Ipsum is simply dummy text of the printing and typesetting
           industry. Lorem Ipsum has been the industry's standard dummy text ever
           since the 1500s, when an unknown printer took a galley of type and
@@ -41,10 +41,10 @@ const About = () => {
           containing Lorem Ipsum passages, and more recently with desktop
           publishing software like Aldus PageMaker including versions of Lorem
           Ipsum.
-        </section>
-        <section className="xl:col-span-6 ">
+        </div>
+        <div className="flex-1">
           <img src={gridGroup} />
-        </section>
+        </div>
       </section>
 
       <div className="pt-[65px]">

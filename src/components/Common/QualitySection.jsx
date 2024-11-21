@@ -26,7 +26,7 @@ const QualitySection = () => {
     },
   ];
   return (
-    <section className="bg-[#111727] flex justify-center items-center px-[50px] gap-x-[100px] pt-[100px] pb-[130px]">
+    <section className="bg-[#111727] flex flex-wrap justify-center items-center px-[50px] gap-[50px] md:gap-[50px] lg:gap-[40px] xl:gap-[60px] g pt-[100px] pb-[130px]">
       {data.map((item, index) => {
         return (
           <div key={index} className="flex gap-x-3">
