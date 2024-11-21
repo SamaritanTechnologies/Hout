@@ -252,9 +252,6 @@ export const Products = () => {
                           >
                             <img src={dltImg} alt="Delete icon image" />
                           </div>
-                          <a href={rowData?.dropdownMenuLink}>
-                            <img src={dots} alt="vertical drop down dot img" />
-                          </a>
                         </div>
                       </td>
                       {/* <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">

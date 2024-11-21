@@ -62,8 +62,8 @@ export const getProductDetailsById = async (id) => {
 
 export const addProduct = async (values, products, images) => {
   const formData = new FormData();
-  formData.append("name_nl", values.name);
-  formData.append("name_en", values.nameNl);
+  formData.append("name_nl", values.nameNl);
+  formData.append("name_en", values.name);
   formData.append("description_nl", values.productDescriptionNl);
   formData.append("description_en", values.productDescription);
   formData.append("width", values.width);
@@ -133,8 +133,8 @@ export const addProduct = async (values, products, images) => {
 
 export const updateProduct = async (id, values, products, images) => {
   const formData = new FormData();
-  formData.append("name_nl", values.name);
-  formData.append("name_en", values.nameNl);
+  formData.append("name_nl", values.nameNl);
+  formData.append("name_en", values.name);
   formData.append("description_nl", values.productDescriptionNl);
   formData.append("description_en", values.productDescription);
   formData.append("width", values.width);
