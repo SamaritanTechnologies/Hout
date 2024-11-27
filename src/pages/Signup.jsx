@@ -24,6 +24,8 @@ export const Signup = () => {
     companyName: "",
     email: "",
     phone: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const handleFormData = (event) => {
@@ -39,6 +41,17 @@ export const Signup = () => {
   const createUser = async (e) => {
     e.preventDefault();
     setBtnLoading(true);
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match");
+      setBtnLoading(false);
+      return;
+    }
+
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password || !formData.phone || !formData.companyName) {
+      toast.error("Please fill in all fields");
+      setBtnLoading(false);
+      return;
+    }
 
     let data = {
       first_name: formData.firstName,
@@ -72,8 +85,7 @@ export const Signup = () => {
           <img
             src={signUpLeft}
             alt="signupleftImg"
-            className="w-[100%] min-h-[142px] md:min-h-[80vh] sm:min-h-[80vh] xs:min-h-[80vh] md:h-[80vh] sm:h-[80vh] xs:h-[80vh]"
-            style={{ objectFit: "cover" }}
+            className="w-[100%] min-h-[142px] h-full object-cover"
           />
           <div>
             <div className=" yellowBar absolute xl:top-[35%] lg:top-[30%] md:top-[10%] sm:top-[20%] xs:top-[20%] left-[50%] translate-x-[-50%]  bg-[#FBC700] w-[291px]  rounded-xl flex items-center xl:py-[10px] py-[6px] xl:px-[20px] px-[12px] gap-2 mb-[22.34px]">
@@ -217,6 +229,26 @@ export const Signup = () => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleFormData}
+                  />
+                </div>
+                <div className="mb-[23px]">
+                  <InputField
+                    name="password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={handleFormData}
+                    type="password"
+                    required
+                  />
+                </div>
+                <div className="mb-[23px]">
+                  <InputField
+                    name="confirmPassword"
+                    placeholder="Confirm Password"
+                    value={formData.confirmPassword}
+                    onChange={handleFormData}
+                    type="password"
+                    required
                   />
                 </div>
                 <div className="w-full ">

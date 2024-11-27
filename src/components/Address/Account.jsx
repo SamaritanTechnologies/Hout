@@ -191,7 +191,7 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
         )}
       </Formik>
 
-      <>
+      {/* <>
         <h5 className="text-20 font-semibold mb-[30px] mt-8">
           Delivery Address
         </h5>
@@ -283,7 +283,6 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
           )}
         </Formik>
       </>
-      {/* Invoice Address  */}
       <>
         <h5 className="text-20 font-semibold mb-[30px]  mt-8">
           Invoice Address
@@ -376,7 +375,7 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
             </Form>
           )}
         </Formik>
-      </>
+      </> */}
 
       <Formik
         initialValues={initialValuesPassword}

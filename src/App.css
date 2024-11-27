@@ -162,6 +162,9 @@ a.sideActive::before {
   /* height: 40px; */
   border-radius: 50%;
 }
+.uploadImgWrap .imgGrayBox img {
+  border-radius: unset;
+}
 .uploadImgWrap input[type="file"] {
   cursor: pointer;
   position: absolute;

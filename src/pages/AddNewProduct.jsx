@@ -11,6 +11,7 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import FormikField from "../components/Common/FormikField";
 import { Multiselect } from "multiselect-react-dropdown";
+import checkSquareIcon from "../assets/DashboardImages/check-square.svg";
 import {
   addProduct,
   getProductCategories,
@@ -18,8 +19,8 @@ import {
 
 const styleMultiSelect = {
   chips: {
-    background: "gray",
-    borderRadius: "2px",
+    background: "#FAFAFA",
+    borderRadius: "4px"
   },
   searchBox: {},
   option: {
@@ -232,8 +233,8 @@ export const AddNewProduct = () => {
                       />
                     </div>
                   </div>
-                  <div className="flex gap-[20px] mb-[24px]">
-                    <div className="w-1/2 md:mb-0">
+                  <div className="flex flex-col gap-[20px] mb-[24px]">
+                    <div className="w-full md:mb-0">
                       <label>Soort | Type</label>
                       <Multiselect
                         closeIcon="close"
@@ -248,7 +249,7 @@ export const AddNewProduct = () => {
                         }}
                       />
                     </div>
-                    <div className="w-1/2">
+                    <div className="w-full">
                       <label>Materiaal | Material</label>
                       <Multiselect
                         closeIcon="close"
@@ -264,8 +265,8 @@ export const AddNewProduct = () => {
                       />
                     </div>
                   </div>
-                  <div className="flex gap-[20px] mb-[24px]">
-                    <div className="w-1/2 md:mb-0">
+                  <div className="flex flex-col gap-[20px] mb-[24px]">
+                    <div className="w-full md:mb-0">
                       <label>Profiel | Profile</label>
                       <Multiselect
                         closeIcon="close"
@@ -280,7 +281,7 @@ export const AddNewProduct = () => {
                         }}
                       />
                     </div>
-                    <div className="w-1/2">
+                    <div className="w-full">
                       <label>Duurzaamheidsklasse | Durability Class</label>
                       <Multiselect
                         closeIcon="close"
@@ -297,8 +298,8 @@ export const AddNewProduct = () => {
                     </div>
                   </div>
 
-                  <div className="flex gap-[20px] mb-[24px]">
-                    <div className="w-1/2 md:mb-0">
+                  <div className="flex flex-col gap-[20px] mb-[24px]">
+                    <div className="w-full md:mb-0">
                       <label>Kwaliteit | Quality</label>
                       <Multiselect
                         closeIcon="close"
@@ -313,7 +314,7 @@ export const AddNewProduct = () => {
                         }}
                       />
                     </div>
-                    <div className="w-1/2">
+                    <div className="w-full">
                       <label>Toepassing | Application</label>
                       <Multiselect
                         closeIcon="close"
@@ -365,6 +366,7 @@ export const AddNewProduct = () => {
                       />
                     </div>
                   </div>
+                  <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
                   <div className="flex gap-[20px] mb-[24px]">
                     <div className="w-1/2 md:mb-0">
                       <Field
@@ -535,7 +537,12 @@ export const AddNewProduct = () => {
                       </table>
                     </div>
                   </div>
-
+                  <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
+                  <div className="flex gap-5 items-center mb-[24px]">
+                    <img src={checkSquareIcon} alt="check square"/>
+                    <p className="font-semibold text-lg text-[#111727]">Place Product on GoedGeplaatst via API</p>
+                  </div>
+                  <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
                   <div className="flex gap-[20px] mb-[24px]">
                     <div className="w-full md:mb-0 relative">
                       <label
@@ -555,7 +562,7 @@ export const AddNewProduct = () => {
                           height="215px"
                           onDrop={handleDrop}
                         />
-                        <div className="w-[215px] h-[215px] border border-dashed border-[#4C5B66] rounded-lg p-3 flex items-center justify-center">
+                        <div className="w-full max-w-[215px] h-[215px] border border-dashed border-[#4C5B66] rounded-lg p-3 flex items-center justify-center">
                           <input
                             type="file"
                             accept="image/jpeg, image/png, image/webp"
@@ -605,6 +612,7 @@ export const AddNewProduct = () => {
                       type="submit"
                       btnText="Add Product"
                       paddingX="20px"
+                      textColor="#000000"
                       breakpoint="xl:w-[354px] lg:w-[280px] w-[240px]"
                     />
                   </div>

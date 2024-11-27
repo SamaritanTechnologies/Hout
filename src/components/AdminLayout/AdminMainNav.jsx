@@ -71,10 +71,10 @@ const AdminMainNav = () => {
           <a href="#">
             <img src={notfiIcon} alt="" />
           </a>
-          <div className="flagSelMain">
-            {/* <CountrySelector /> */}
+          {/* <div className="flagSelMain flex items-center">
+            <CountrySelector />
             <div id="google_translate_element"></div>
-          </div>
+          </div> */}
           {/* <div>
             <a href="#">
               <img src={ProfileDD} alt="" />

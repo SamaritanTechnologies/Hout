@@ -13,8 +13,8 @@ const FormikMultiSelect = ({
   className,
   style = {
     chips: {
-      background: "gray",
-      borderRadius: "2px",
+      background: "#FAFAFA",
+      borderRadius: "4px"
     },
     searchBox: {},
     option: {

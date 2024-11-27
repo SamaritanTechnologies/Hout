@@ -222,7 +222,7 @@ export const AddToCart = () => {
           {tabs.map((tab, idx) => (
             <div
               key={tab.name}
-              className="  4xll:gap-x-16 4xl:gap-x-14 3xll:gap-x-12    3xl:gap-x-10 2xll:gap-x-8 2xl:gap-x-6   flex-center gap-x-4 xs:flex-col xs:w-[33%] xs:items-center xs:justify-center  sm:gap-x-2  xs:gap-[12px] cursor-pointer"
+              className="  4xll:gap-x-16 4xl:gap-x-14 3xll:gap-x-12    3xl:gap-x-10 2xll:gap-x-8 2xl:gap-x-6   flex-center gap-x-4 xs:flex-col sm:flex-col md:flex-col xs:w-[33%] xs:items-center xs:justify-center md:gap-[12px]  sm:gap-[12px]  xs:gap-[12px] cursor-pointer"
               onClick={() => handleDivClick(tab.name)}
             >
               <div
@@ -259,7 +259,7 @@ export const AddToCart = () => {
 
               {idx !== tabs.length - 1 && (
                 <>
-                  <div className="border-b w-[40px] sm:w-[40px] xs:hidden  "></div>
+                  <div className="border-b w-[40px] sm:w-[40px] xs:hidden sm:hidden md:hidden"></div>
                   {/* */}
                 </>
               )}

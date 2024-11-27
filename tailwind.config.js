@@ -73,11 +73,9 @@ export default {
       },
 
       fontFamily: {
-        fontFamily: {
           main: ["Josefin Sans"],
           footer1: ["Poppins"],
           footer2: ["Montserrat", "sans-serif"],
-        },
       },
     },
   },

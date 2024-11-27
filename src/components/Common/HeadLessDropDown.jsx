@@ -16,8 +16,8 @@ const HeadLessDropDown = ({ token }) => {
       <div>
         <Menu.Button className="inline-flex  z-10 w-full justify-center rounded-md bg-black/20 px-4 py-2 text-sm font-medium text-black hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
           <div className="flex items-center gap-x-5 z-10">
-            <div>
-              <img src={avatars} />
+            <div className="shrink-0">
+              <img src={avatars}/>
             </div>
             <div className="flex-col">
               <div className="text-[14px] w-[max-content]">Name Sur</div>
