@@ -174,7 +174,7 @@ export const Dashboard = () => {
               <thead>
                 <tr className="bg-[#F1F4F9]">
                   <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold  rounded-l-2xl text-nowrap">
-                    Product Name Product Name Product Name Product Name
+                    Product Name
                   </th>
                   <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	text-nowrap">
                     Location

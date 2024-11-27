@@ -35,45 +35,41 @@ const Layout = () => {
 
   return (
     <>
-      <div>
-        <div>
-          {hasSidnav.includes(true) ? (
-            <>
-              <div className="flex">
-                <div className="min-h-screen">
-                  <AdminSideNav />
-                </div>
-                <div className="flex-1 min-h-screen ">
-                  <AdminMainNav />
-                  <div className="!pt-2">
-                    <Outlet />
-                  </div>
-                </div>
+      {hasSidnav.includes(true) ? (
+        <>
+          <div className="flex">
+            <div className="min-h-screen">
+              <AdminSideNav />
+            </div>
+            <div className="flex-1 min-h-screen overflow-x-hidden">
+              <AdminMainNav />
+              <div className="!pt-2">
+                <Outlet />
               </div>
-            </>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          {!hasHeaderFooter ? (
+            <div className="">
+              <div className="">
+                <HeaderSection />
+                <div className=" xl:!pt-20 lg:!pt-18 md:!pt-16 !pt-14 w-full flex-1 ">
+                  <Outlet />
+                </div>
+                <FooterSection />
+              </div>
+            </div>
           ) : (
             <>
-              {!hasHeaderFooter ? (
-                <div className="">
-                  <div className="">
-                    <HeaderSection />
-                    <div className=" xl:!pt-20 lg:!pt-18 md:!pt-16 !pt-14 w-full flex-1 ">
-                      <Outlet />
-                    </div>
-                    <FooterSection />
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <div className="">
-                    <Outlet />
-                  </div>
-                </>
-              )}
+              <div className="">
+                <Outlet />
+              </div>
             </>
           )}
-        </div>
-      </div>
+        </>
+      )}
     </>
   );
 };
