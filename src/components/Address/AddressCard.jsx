@@ -65,7 +65,7 @@ const AddressCard = ({ setSelectedComponent }) => {
         My Account
       </h1> */}
       <div className="flex xs:flex-col xs:items-center sm:flex-col sm:items-center lg:mb-32 justify-center">
-        <div className="xs:w-[100%]">
+        <div className="w-full max-w-[707px]">
           <h1 className="text-[16px] font-semibold text-[#111727] mb-[19px] xs:text-center xs:mt-5 sm:mt-8 sm:text-center">
             Address
           </h1>

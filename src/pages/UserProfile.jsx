@@ -123,7 +123,7 @@ export const UserProfile = () => {
 
         {/* user profile card section */}
         {/* account detail card  */}
-        <div className="myCard rounded-[4px] mb-[30px]">
+        <div className="bg-white myCard rounded-sm mb-[30px]">
           <h5 className="xl:text-20 lg:text-18 md:text-16 font-semibold xl:mb-[30px] mb-[24px]">
             Account Details
           </h5>
@@ -220,7 +220,7 @@ export const UserProfile = () => {
         </div>
 
         {/* Password detail card  */}
-        <div className="myCard rounded-[4px] mb-[30px]">
+        <div className="bg-white myCard rounded-sm mb-[30px]">
           <h5 className="text-20 font-semibold mb-[30px]">Password</h5>
           <Formik
             initialValues={{
@@ -290,7 +290,7 @@ export const UserProfile = () => {
         </div>
 
         {/* Delivery Address  */}
-        <div className="myCard rounded-[4px] mb-[30px]">
+        <div className="bg-white myCard rounded-sm mb-[30px]">
           <h5 className="text-20 font-semibold mb-[30px]">Delivery Address</h5>
           <Formik
             initialValues={{
@@ -381,7 +381,7 @@ export const UserProfile = () => {
           </Formik>
         </div>
         {/* Invoice Address  */}
-        <div className="myCard rounded-[4px] mb-[30px]">
+        <div className="bg-white myCard rounded-sm mb-[30px]">
           <h5 className="text-20 font-semibold mb-[30px]">Invoice Address</h5>
           <Formik
             initialValues={{

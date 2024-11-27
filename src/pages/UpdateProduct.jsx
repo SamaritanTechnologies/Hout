@@ -21,8 +21,8 @@ import { BASE_URL } from "../providers";
 
 const styleMultiSelect = {
   chips: {
-    background: "gray",
-    borderRadius: "2px",
+    background: "#FAFAFA",
+    borderRadius: "4px"
   },
   searchBox: {},
   option: {
@@ -372,6 +372,7 @@ export const UpdateProduct = () => {
                           onSelect={(selectedList) => {
                             setFieldValue("quality", selectedList);
                           }}
+                          closeIconStyle={{ color: 'red' }}
                         />
                       </div>
                       <div className="w-1/2">
