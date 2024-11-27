@@ -86,10 +86,12 @@ export const Dashboard = () => {
           Dashboard
         </h1>
         {/* analytics row  */}
-        <div className="dashCardRow flex justify-start gap-8 items-center xl:mb-[15.76px] mb-[10px]">
+        <div className="dashCardRow grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-2 lg:gap-4 xl:gap-8 xl:mb-[15.76px] mb-[10px]">
           <StatsCard
             name="Total Inventory"
-            amount={state?.stats?.total_inventory ?state?.stats?.total_inventory : 0 }
+            amount={
+              state?.stats?.total_inventory ? state?.stats?.total_inventory : 0
+            }
             image={inventory}
           />
           <StatsCard
@@ -167,111 +169,107 @@ export const Dashboard = () => {
             {/* dropdown end  */}
           </div>
           {/* order details table  */}
-          <div className="">
-            <div className="overflow-x-auto">
-              <div className="inline-block min-w-full rounded-lg overflow-hidden">
-                <table className="w-full leading-normal">
-                  <thead>
-                    <tr className="bg-[#F1F4F9]">
-                      <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold  rounded-l-2xl">
-                        Product Name
-                      </th>
-                      <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	">
-                        Location
-                      </th>
-                      <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold">
-                        Date - Time
-                      </th>
-                      <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	">
-                        Piece
-                      </th>
-                      <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	">
-                        Amount
-                      </th>
+          <div className="w-full rounded-lg overflow-x-auto">
+            <table className="w-full leading-normal">
+              <thead>
+                <tr className="bg-[#F1F4F9]">
+                  <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold  rounded-l-2xl text-nowrap">
+                    Product Name Product Name Product Name Product Name
+                  </th>
+                  <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	text-nowrap">
+                    Location
+                  </th>
+                  <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold text-nowrap">
+                    Date - Time
+                  </th>
+                  <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	text-nowrap">
+                    Piece
+                  </th>
+                  <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	text-nowrap">
+                    Amount
+                  </th>
 
-                      <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-center xl:text-15 text-14font-bold rounded-r-2xl	">
-                        Status
-                      </th>
-                    </tr>
-                  </thead>
+                  <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-center xl:text-15 text-14font-bold rounded-r-2xl text-nowrap">
+                    Status
+                  </th>
+                </tr>
+              </thead>
 
-                  {state?.orderList?.length > 0 ? (
-                    state?.orderList?.map((item, index) => {
-                      return (
-                        <tbody key={index}>
-                          <tr className="border-b-[0.4px] border-gray">
-                            <td className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-semibold text-gray3">
-                              <div className="flex xl:gap-3 gap-1 items-center">
-                                <div className="flex-shrink-0 w-10 h-10">
-                                  <img
-                                    src={item?.image || sampleProductImg} // Use item.image or fallback to sampleProductImg
-                                    alt={item?.name || "Sample Product Name"} // Use item.name or fallback to "Sample Product Name"
-                                    className="xl:w-[36px] lg:w-[32px] w-[28px]"
-                                  />
-                                </div>
-                                <div className="ml-3">
-                                  <p className="text-gray-900 whitespace-no-wrap">
-                                    {item?.name}
-                                  </p>
-                                </div>
-                              </div>
-                            </td>
-                            <td className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-semibold text-gray3">
-                              <div className="ml-3">
-                                <p className="text-gray-900 whitespace-no-wrap">
-                                  {item?.address}
-                                </p>
-                              </div>
-                            </td>
-                            <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
-                              <p className="text-gray-900 whitespace-no-wrap xl:text-15 text-12">
-                                {moment(item?.dates)?.format("MMMM DD, YYYY")}
-                              </p>
-                            </td>
-                            <td className="xl:px-[20px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
+              {state?.orderList?.length > 0 ? (
+                state?.orderList?.map((item, index) => {
+                  return (
+                    <tbody key={index}>
+                      <tr className="border-b-[0.4px] border-gray">
+                        <td className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-semibold text-gray3">
+                          <div className="flex xl:gap-3 gap-1 items-center">
+                            <div className="flex-shrink-0 w-10 h-10">
+                              <img
+                                src={item?.image || sampleProductImg} // Use item.image or fallback to sampleProductImg
+                                alt={item?.name || "Sample Product Name"} // Use item.name or fallback to "Sample Product Name"
+                                className="xl:w-[36px] lg:w-[32px] w-[28px]"
+                              />
+                            </div>
+                            <div className="ml-3">
                               <p className="text-gray-900 whitespace-no-wrap">
-                                {item?.quantity}
+                                {item?.name}
                               </p>
-                            </td>
-                            <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
-                              <div className="flex gap-3 items-center">
-                                <p className="text-gray-900 whitespace-no-wrap">
-                                  €{item?.gross_total}
-                                </p>
-                              </div>
-                            </td>
-                            <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
-                              <p
-                                className={`rounded-full ${
-                                  item?.status === "Rejected"
-                                    ? "bg-[#FD5454]"
-                                    : item?.status === "Pending"
-                                    ? "bg-[#FCBE2D]"
-                                    : "bg-green1"
-                                } text-white px-[4px] py-[7px] text-14 font-bold text-center`}
-                              >
-                                {item?.status}
-                              </p>
-                            </td>
-                          </tr>
-                        </tbody>
-                      );
-                    })
-                  ) : (
-                    <tbody>
-                      <tr>
-                        <td
-                          colSpan="6"
-                          className="text-center py-[16px] font-semibold text-gray3"
-                        >
-                          No data found
+                            </div>
+                          </div>
+                        </td>
+                        <td className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-semibold text-gray3">
+                          <div className="ml-3">
+                            <p className="text-gray-900 whitespace-no-wrap">
+                              {item?.address}
+                            </p>
+                          </div>
+                        </td>
+                        <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
+                          <p className="text-gray-900 whitespace-no-wrap xl:text-15 text-12">
+                            {moment(item?.dates)?.format("MMMM DD, YYYY")}
+                          </p>
+                        </td>
+                        <td className="xl:px-[20px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
+                          <p className="text-gray-900 whitespace-no-wrap">
+                            {item?.quantity}
+                          </p>
+                        </td>
+                        <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
+                          <div className="flex gap-3 items-center">
+                            <p className="text-gray-900 whitespace-no-wrap">
+                              €{item?.gross_total}
+                            </p>
+                          </div>
+                        </td>
+                        <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
+                          <p
+                            className={`rounded-full ${
+                              item?.status === "Rejected"
+                                ? "bg-[#FD5454]"
+                                : item?.status === "Pending"
+                                ? "bg-[#FCBE2D]"
+                                : "bg-green1"
+                            } text-white px-[4px] py-[7px] text-14 font-bold text-center`}
+                          >
+                            {item?.status}
+                          </p>
                         </td>
                       </tr>
                     </tbody>
-                  )}
-                </table>
-              </div>
-            </div>
+                  );
+                })
+              ) : (
+                <tbody>
+                  <tr>
+                    <td
+                      colSpan="6"
+                      className="text-center py-[16px] font-semibold text-gray3"
+                    >
+                      No data found
+                    </td>
+                  </tr>
+                </tbody>
+              )}
+            </table>
           </div>
           {/* order details table end */}
         </div>

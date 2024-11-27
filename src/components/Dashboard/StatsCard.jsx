@@ -2,7 +2,7 @@ import React from "react";
 
 const StatsCard = ({ name, amount, image }) => {
   return (
-    <div className="  inventCard xl:p-[21px] lg:p-[16px] p-[10px] rounded-lg bg-[#fff] w-[32%]">
+    <div className="  inventCard xl:p-[21px] lg:p-[16px] p-[10px] rounded-lg bg-[#fff]">
       <div className="flex justify-between items-center xl:mb-[50px] lg:mb-[35px] mb-[20px] md:flex-col-reverse">
         <div>
           <h6 className="xl:text-20 lg:text-18 md:text-16 font-semibold text-gray3 opacity-[0.7] xl:mb-[25px] lg:mb-[20px] mb-[15px]">

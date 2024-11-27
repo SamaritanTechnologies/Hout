@@ -107,7 +107,7 @@ export const UserProfile = () => {
 
   return (
     <div>
-      <div className="xl:py-[48px] lg:py-[38px] py-[28px] xl:px-[170px] lg:px-[100px] px-[60px] bg-[rgb(250,250,250)] h-full min-h-[86vh]">
+      <div className="xl:py-[48px] lg:py-[38px] py-[28px] xl:px-[170px] lg:px-[100px] px-[30px] bg-[rgb(250,250,250)] h-full min-h-[86vh]">
         <div className="flex justify-center mb-[23px]">
           <div className="uploadImgWrap">
             <div className="imgGrayBox">
