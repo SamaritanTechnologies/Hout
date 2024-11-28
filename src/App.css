@@ -359,6 +359,17 @@ input[type="number"] {
     content: "";
     height: 28px;
   }
+  .assortment-filters {
+    transform: translate(-100%);
+    width: 300px;
+    position: fixed;
+    top: 0px;
+    z-index: 60;
+    height: 100vh !important;
+  }
+  .open-filter-drawer {
+    transform: translate(0px);
+  }
 }
 
 @media only screen and (max-width: 767.98px) {
@@ -380,6 +391,9 @@ input[type="number"] {
 }
 
 @media only screen and (max-width: 575.98px) {
+  .open-filter-drawer {
+    width: 100%;
+  }
 }
 
 .scrollNav {

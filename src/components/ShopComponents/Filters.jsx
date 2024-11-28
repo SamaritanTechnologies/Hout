@@ -82,7 +82,7 @@ const Filters = ({ filters, filterCheck }) => {
     //     })}
     //   </section>
     // </div>
-    <div className="assortment-filters py-4 w-full lg:max-w-[300px] xl:max-w-[300px]  lg:min-h-[1015px] xl:min-h-[1015px] shadow-xl font-main">
+    <>
       <Accordion  expanded={expanded.includes("netto")} onChange={handleAccordionChange("netto")}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography>Netmaat (mm)</Typography>
@@ -143,7 +143,7 @@ const Filters = ({ filters, filterCheck }) => {
           </FormGroup>
         </AccordionDetails>
       </Accordion>
-      <div className="w-full max-w-md mx-auto p-4 ">
+      <div className="w-full max-w-md p-4 ">
         <h4 className="text-base xl:text-[22px] font-semibold text-[#2A353D] font-main mb-2.5">Price</h4>
         <div className="bg-[#F4F5F7] py-4 px-7 rounded-2xl">
           <div className="flex justify-between mb-3 text-sm font-medium font-main text-[#2A353D] max-w-[180px] mx-auto">
@@ -172,7 +172,7 @@ const Filters = ({ filters, filterCheck }) => {
           />
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
