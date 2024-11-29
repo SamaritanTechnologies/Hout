@@ -189,6 +189,45 @@ footer .input-field {
   color: #fff;
   font-weight: 600;
 }
+.multiselect-container .searchWrapper {
+  border: 1px solid #CBCBCB;
+  background-color: #fff;
+  min-height: 50px;
+  align-items: center;
+  display: flex;
+}
+.multiselect-container .searchWrapper > .chip {
+  margin-bottom: 0;
+  min-height: 33px;
+  color: #6C7275;
+  font-weight: 600;
+  gap: 10px;
+}
+.assortment-filters .MuiAccordion-root.MuiAccordion-rounded {
+  box-shadow: none;
+  border-radius: 0px;
+  border-bottom: 1px solid #e8e5e5;
+  margin: 0px;
+}
+.assortment-filters .css-1808mag-MuiPaper-root-MuiAccordion-root::before {
+  background-color: transparent !important;
+}
+.assortment-filters .MuiAccordionSummary-content .css-rizt0-MuiTypography-root {
+  font-weight: 600;
+}
+.horizontal-slider .example-track {
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 14px;
+  height: 3px;
+  background: #FFFFFF;
+}
+.example-track.example-track-1 {
+  background: #FBC700;
+}
+.example-track.example-track-2 {
+  background: #fff;
+}
 @media only screen and (max-width: 767.98px) {
   footer .input-field {
     border-radius: 8px;

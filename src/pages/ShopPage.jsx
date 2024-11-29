@@ -32,7 +32,10 @@ export const ShopPage = () => {
     filterTypes: [],
     selectedFilter: "",
   });
-
+  const [filterDrawer, setFilterDrawer] = useState(false);
+  const filterToggler = () => {
+    setFilterDrawer((prev) => !prev);
+  };
   const toggle = () => {
     setState((prev) => ({
       ...prev,
@@ -77,11 +80,14 @@ export const ShopPage = () => {
         <div>
           {" "}
           <div className="flex items-center gap-x-6 md:gap-x-5 xs:gap-x-4 ">
-            <div className="poppins" onClick={toggle}>
+            <div
+              className="flex items-center gap-4 cursor-pointer"
+              onClick={filterToggler}
+              role="button"
+              aria-pressed={filterDrawer}
+            >
               <img src={filter} className="md:size-5 xs:size-5" />
-            </div>
-            <div onClick={state.openfilter}>
-              <h4 className="pops text-20 sm:text-16 xs:text-14 xs:leading-[22px]">
+              <h4 className="prop text-20 sm:text-16 xs:text-14 xs:leading-[22px]">
                 {" "}
                 Filter{" "}
               </h4>
@@ -118,9 +124,32 @@ export const ShopPage = () => {
         </section>
       </section>
 
-      <section className="flex pb-[200px]  md:flex-col sm:flex-col  xs:flex-col ">
+      <section className="flex pb-[200px]  md:flex-col sm:flex-col  xs:flex-col">
         {filters && (
-          <div className=" xl:w-[22%] md:w-full ">
+          <div
+            className={`${
+              filterDrawer ? "open-filter-drawer" : ""
+            } assortment-filters bg-white py-4 w-full h-0 lg:min-h-[1015px] xl:min-h-[1015px] shadow-xl font-main lg:w-[22%] xl:w-[27.5%] transition-transform duration-300 ease-in-out`}
+          >
+            <div
+              className="close-menu xl:hidden lg:hidden flex justify-end"
+              onClick={filterToggler}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18 18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
             <Filters filters={filters} filterCheck={handleFilterCheck} />
           </div>
         )}
