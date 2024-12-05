@@ -181,7 +181,7 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
               </div>
               <div className="pt-5">
                 <Button
-                  btnText="Submit"
+                  btnText="Save changes"
                   disabled={isSubmitting}
                   type="submit"
                 />
@@ -428,7 +428,7 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
               </div>
               <div className="pt-5">
                 <Button
-                  btnText="Submit"
+                  btnText="Save changes"
                   disabled={isSubmitting}
                   type="submit"
                 />

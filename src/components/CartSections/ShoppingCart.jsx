@@ -338,7 +338,7 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
           </section>
 
           <div className="xl:py-[30px] py-[15px] flex justify-center">
-            <button className="xl:w-[93.5%] lg:w-[93.5%] w-[100%] bg-yellow-500 text-white py-2 rounded-lg">
+            <button className="xl:w-[93.5%] lg:w-[93.5%] w-[100%] bg-[#FBC700] text-white py-2 rounded-lg">
               Checkout
             </button>
           </div>

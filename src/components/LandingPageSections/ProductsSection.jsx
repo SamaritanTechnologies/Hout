@@ -176,7 +176,7 @@ const ProductsSection = ({
           <div className="flex  justify-center pt-[30px] md:pt-[40px] lg:pt-[70px] xl:pt-[70px] view-assortment-btn">
             {" "}
             <Button
-              btnText="View Shop"
+              btnText="VIEW SHOP"
               paddingX="72px"
               fontbold
               paddingY="22px"
