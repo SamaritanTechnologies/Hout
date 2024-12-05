@@ -148,7 +148,7 @@ export const Signin = () => {
                   <div className="w-[32%]">
                     <img src={grayLine} alt="" />
                   </div>
-                  <h5 className="w-[32%] text-13 xs:text-12 text-center font-normal">
+                  <h5 className="w-[32%] text-[13px] xs:text-12 text-center font-footer1 font-normal">
                     or continue with{" "}
                   </h5>
                   <div className="w-[32%]">
@@ -159,7 +159,7 @@ export const Signin = () => {
                   <div className="mb-[23px]">
                     <InputField
                       required
-                      placeholder="Enter Email"
+                      placeholder="Email"
                       type="email"
                       name="email"
                       value={formData.email}
@@ -181,7 +181,7 @@ export const Signin = () => {
                     <Switch />
                     <a
                       onClick={() => navigate("/forget-password")}
-                      className="text-14 text-red cursor-pointer"
+                      className="text-14 font-footer1 text-[#D93F21] cursor-pointer"
                     >
                       Recover Password{" "}
                     </a>{" "}

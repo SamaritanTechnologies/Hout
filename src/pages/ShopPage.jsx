@@ -79,15 +79,15 @@ export const ShopPage = () => {
       <section className="flex justify-between   sm:flex-col xs:flex-col   items-center py-[36px] font-poppins bg-[#F4F5F7] xl:px-[80px] lg:px-[50px] md:px-[40px]  ">
         <div>
           {" "}
-          <div className="flex items-center gap-x-6 md:gap-x-5 xs:gap-x-4 ">
+          <div className="flex items-center gap-x-6 md:gap-x-5 xs:gap-x-4 font-footer1">
             <div
-              className="flex items-center gap-4 cursor-pointer"
+              className="flex items-center gap-3 cursor-pointer"
               onClick={filterToggler}
               role="button"
               aria-pressed={filterDrawer}
             >
-              <img src={filter} className="md:size-5 xs:size-5" />
-              <h4 className="prop text-20 sm:text-16 xs:text-14 xs:leading-[22px]">
+              <img src={filter} className="md:size-5 xs:size-5 mb-[1px]" />
+              <h4 className="prop text-xl sm:text-16 xs:text-14 xs:leading-[22px] font-footer1 text-[#111727]">
                 {" "}
                 Filter{" "}
               </h4>
@@ -105,7 +105,7 @@ export const ShopPage = () => {
         </div>
 
         <section className=" sm:pt-4  xs:pt-4">
-          <div className="flex gap-x-6  md:gap-x-5 ">
+          <div className="flex gap-x-6  md:gap-x-5 items-center font-footer1">
             <div className="pops md:text-14  sm:text-14 xs:text-12  ">
               Show Prices
             </div>

@@ -157,7 +157,7 @@ export const CustomWoodPage = () => {
           </div>
 
           <section className=" xl:pt-[60px] lg:pt-[50px] md:pt-[40px] pt-[30px]">
-            <span className="xl:text-24 lg:text-22 md:text-20 sm:text-18 text-[17px] font-bold border-b-3 border-yellow">
+            <span className="xl:text-24 lg:text-22 md:text-20 sm:text-18 text-[17px] font-bold border-b-3 border-customYellow">
 
               Description
             </span>

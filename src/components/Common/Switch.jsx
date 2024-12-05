@@ -6,7 +6,7 @@ const Switch = ({ optional }) => {
       <input type="checkbox" id="switch" />
       <label for="switch"></label>
 
-      {optional ? null : <span className="block text-12">Remember me</span>}
+      {optional ? null : <span className="block text-12 font-footer1 text-[#1A1A1A]">Remember me</span>}
     </div>
   );
 };
