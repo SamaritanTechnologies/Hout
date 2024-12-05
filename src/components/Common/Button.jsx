@@ -26,8 +26,8 @@ const Button = ({
        ${fontbold ? "font-bold" : null}
        text-[${textColor}]
         xl:py-3 py-2 px-2 xl:text-md   ${
-         color ? "bg-[#fff]" : " bg-yellow"
-       }   ${border ? "border border-yellow " : ""} text-16`}
+         color ? "bg-[#fff]" : " bg-customYellow"
+       }   ${border ? "border border-customYellow " : ""} text-16`}
       disabled={disabled}
       onClick={onClick}
       type={type}

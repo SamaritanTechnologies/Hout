@@ -50,9 +50,11 @@ const InputField = (props) => {
           </span>
         )}
         <input
-          className={`block w-full appearance-none ${
+          className={`block w-full appearance-none font-footer1 placeholder-[#5A5A5A] ${
             IconComponent ? "pl-10" : ""
-          } rounded-md xl:py-3 xl:px-3 py-2 px-2 outline-none border border-[#D9D9D9] focus:outline-none sm:text-sm input-field`}
+          } rounded-md xl:py-3 xl:ps-3 py-2 ${
+            type === "password" ? "pe-12" : "pe-3"
+          } outline-none border border-[#D9D9D9] focus:outline-none sm:text-sm input-field`}
           id={id}
           label={label}
           max={max}

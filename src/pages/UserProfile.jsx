@@ -115,7 +115,7 @@ export const UserProfile = () => {
 
               <input type="file" onChange={handleFileChange}></input>
             </div>
-            <h6 className="text-14 text-yellow" onClick={handleFileChange}>
+            <h6 className="text-14 text-customYellow" onClick={handleFileChange}>
               Upload Photo
             </h6>
           </div>

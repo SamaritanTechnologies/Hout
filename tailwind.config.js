@@ -55,7 +55,7 @@ export default {
       colors: {
         primary: "#fff",
         secondary: "#000000",
-        yellow: "#FBC700",
+        customYellow: "#FBC700",
         red: "#D93F21",
         green: "20DC49",
         green1: "#00B69B",

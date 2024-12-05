@@ -278,7 +278,7 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
               <div className="xl:text-14 lg:text-14 text-[13px] xl:pt-[25px] lg:pt-[20px] pt-[10px]">
                 <input
                   type="checkbox"
-                  className="form-checkbox focus:ring-[#000] rounded-full mr-4 h-4 w-4 text-[#15803D]"
+                  className="form-checkbox rounded-full mr-4 h-4 w-4 accent-yellow-400"
                   checked={terms}
                   onChange={() => setTerms(!terms)}
                 />{" "}
@@ -291,7 +291,6 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
               <Button
                 disabled={loading}
                 btnText={loading ? "Confirming.." : "Confirm Order"}
-                paddingY="20px"
                 widthfull
                 onClick={confirmOrder}
               />
@@ -415,11 +414,12 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
                         placeholder="Country"
                       />
                     </div>
-                    <div className="mt-4 float-end w-[39%]">
+                    <div className="mt-4 float-end max-w-[159px] w-full">
                       <Button
                         btnText={isSubmitting ? "Saving.." : "Save"}
                         disabled={isSubmitting}
                         type="submit"
+                        widthfull
                       />
                     </div>
                   </div>
@@ -427,7 +427,7 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
               )}
             </Formik>
 
-            {/* <div className="mt-8 pb-[100px] my-4">
+            <div className="mt-8 pb-[100px] my-4">
               <h2 className="text-2xl font-bold my-2 border-b border-[#D9D9D9] pb-3">
                 Payment Method
               </h2>
@@ -442,7 +442,7 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
                   />
                 </div>
               ))}
-            </div> */}
+            </div>
           </section>
         </section>
       </section>

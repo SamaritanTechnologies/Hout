@@ -264,7 +264,7 @@ export const Signup = () => {
                     Have an account?{" "}
                     <a
                       onClick={() => navigate("/sign-in")}
-                      className="text-yellow  cursor-pointer  ml-1 font-semibold"
+                      className="text-customYellow  cursor-pointer  ml-1 font-semibold"
                     >
                       Sign in!
                     </a>

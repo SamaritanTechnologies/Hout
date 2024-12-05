@@ -35,7 +35,7 @@ const TotalBalance = ({ subtotal, deliveryFee, tax, total, cartItems }) => {
 
             <section className="flex justify-between xl:pt-[25px] lg:pt-[20px] pt-[10px] pb-5">
               <div className="text-16 font-medium text-[#111727]">Total</div>
-              <div className="text-yellow font-medium xl:text-18 lg:text-16 text-14">
+              <div className="text-customYellow font-medium xl:text-18 lg:text-16 text-14">
                 USD €{cartItems?.length ? total?.toFixed(2) : 0}
               </div>
             </section>

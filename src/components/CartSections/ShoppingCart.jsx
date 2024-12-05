@@ -280,7 +280,7 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
             <div className="min-w-[140px]">$38.00</div>
           </section> */}
 
-          {/* <section className="pt-[30px]">
+          <section className="pt-[30px]">
             <div>
               <h6
                 className="xl:text-16 lg:text-14 text-[13px]
@@ -294,16 +294,16 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
                 Add your code for an instant cart discount
               </p>
             </div>
-            <div className="flex border justify-between items-center rounded-md flex-1 xl:w-[442px] w-[100%] pl-3 mt-3">
+            <div className="flex border border-[#6C727580] justify-between items-center rounded-[10px] flex-1 xl:w-[442px] w-[100%] pl-3 mt-3">
               <div className="flex gap-x-2 xl:py-[14px] lg:py-[12px] py-[8px] items-center">
                 <img src={coupon} />
                 <span className="pt-[4px] text-[#6C7275]">Coupon Code</span>
               </div>
-              <div className="bg-yellow text-white p-4 cursor-pointer rounded-md rounded-l-none">
+              <div className="cursor-pointer p-4 cursor-pointer rounded-md rounded-l-none">
                 Apply
               </div>
             </div>
-          </section> */}
+          </section>
         </section>
 
         {/* Right side of grid  */}
@@ -331,7 +331,7 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
               <div className="xl:text-16 lg:text-15 md:text-14 text-[13px] font-medium">
                 Total
               </div>
-              <div className="text-yellow font-medium xl:text-18 lg:text-16 text-14">
+              <div className="text-customYellow font-medium xl:text-18 lg:text-16 text-14">
                 USD €{cartItems?.length ? total?.toFixed(2) : 0}
               </div>
             </section>

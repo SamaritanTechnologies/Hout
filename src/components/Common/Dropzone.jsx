@@ -47,7 +47,7 @@ const Dropzone = ({width, height, onDrop}) => {
             }}
           >
              Drop your image here, or select
-            <span className="text-yellow"> click to browse </span>
+            <span className="text-customYellow"> click to browse </span>
           </p>
         </div>
         <aside>
