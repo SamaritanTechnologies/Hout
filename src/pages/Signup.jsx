@@ -38,20 +38,24 @@ export const Signup = () => {
     });
   };
 
-  const createUser = async (e) => {
-    e.preventDefault();
-    setBtnLoading(true);
-    if (formData.password !== formData.confirmPassword) {
-      toast.error("Passwords do not match");
-      setBtnLoading(false);
-      return;
+  const validateForm = () => {
+    if (Object.values(formData).some((field) => field.trim() === "")) {
+      toast.error("Please fill in all fields");
+      return false;
     }
 
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password || !formData.phone || !formData.companyName) {
-      toast.error("Please fill in all fields");
-      setBtnLoading(false);
-      return;
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match");
+      return false;
     }
+
+    return true;
+  };
+
+  const createUser = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+    setBtnLoading(true);
 
     let data = {
       first_name: formData.firstName,

@@ -4,7 +4,6 @@ import { Navigate, Outlet } from "react-router-dom";
 const AdminRoutes = ({ children }) => {
   const userData = JSON.parse(localStorage.getItem("userData"));
 
-  //* Check if user is authenticated
   if (!userData || !userData.token) {
     return <Navigate to="/sign-in" />;
   }
