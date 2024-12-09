@@ -40,7 +40,7 @@ const AdminMainNav = () => {
       <div className="dashHead xl:px-[30px] lg:px-[26px] px-[20px] xl:py-[16px] py-[10px] flex justify-between items-center">
         <div className="search w-[40%]">
           <div className="">
-            <div className="relative flex items-center xl:w-[80%] w-[100%] h-12 rounded-full focus-within:shadow-lg bg-white overflow-hidden border-gray	border-[0.5px]">
+            <div className="relative flex items-center w-full max-w-[388px] h-10 rounded-full focus-within:shadow-lg bg-white overflow-hidden border-gray	border-[0.5px]">
               <div class="grid place-items-center h-full w-12 text-gray-300 bg-[#fefbeb]  min-w-[50px]">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

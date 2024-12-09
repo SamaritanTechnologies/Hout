@@ -93,6 +93,13 @@ export const Dashboard = () => {
               state?.stats?.total_inventory ? state?.stats?.total_inventory : 0
             }
             image={inventory}
+            graphImage={trendUp}
+          />
+          <StatsCard
+            name="Total SKU"
+            amount={40}
+            image={skuImg}
+            graphImage={trendUp}
           />
           <StatsCard
             name="Total Sales"
@@ -100,6 +107,7 @@ export const Dashboard = () => {
             amount={`€${
               state?.stats?.total_sales ? state?.stats?.total_sales : 0
             }`}
+            graphImage={trendDown}
           />
         </div>
 
@@ -278,7 +286,7 @@ export const Dashboard = () => {
         <div className="w-full xl:mt-[106px] lg:mt-[80px] mt-[50px] flex justify-end">
           <button
             onClick={() => navigate("/new-product")}
-            className="bg-[#FBC700] block text-black text-center py-[14px] px-[20px] w-2/6 font-semibold xl:mb-[23px] mb-[15px] xl:text-20 lg:text-18 md:text-16
+            className="bg-[#FBC700] block text-black text-center py-[14px] px-[18px] w-2/6 font-semibold xl:mb-[23px] mb-[15px] xl:text-18 lg:text-18 md:text-16 max-w-[280px]
 "
           >
             Add New Product

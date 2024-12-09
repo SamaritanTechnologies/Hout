@@ -78,7 +78,7 @@ export const ForgetPassword = () => {
                 className="xl:w-[160px] xl:h-[46px] cursor-pointer lg:w-[140px] lg:h-[40px] w-[120px] h-[35px] object-cover"
               />
             </div>
-            <div className="signUpFormSec xl:px-[80px] lg:px-[30px] px-[5px] ">
+            <div className="signUpFormSec max-w-[400px] mx-auto">
               <div className="text-center xl:mb-[42px] lg:mb-[30px] mb-[20px]">
                 <h4 className="xl:text-36 lg:text-24 text-20 font-semibold">
                   Forget Password
@@ -113,7 +113,7 @@ export const ForgetPassword = () => {
                         <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="bg-[#FBC700] block text-black text-center xl:py-[19px] lg:py-[16px] py-[12px] px-[25px] w-full font-semibold mb-[23px] xl:text-[18px] text-[16px]"
+                          className="bg-[#FBC700] block text-black text-center xl:py-[16px] lg:py-[16px] py-[12px] px-[25px] w-full font-semibold mb-[23px] xl:text-[18px] text-[16px]"
                         >
                           {isSubmitting ? "Submitting..." : "Submit"}
                         </button>

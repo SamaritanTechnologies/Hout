@@ -1,6 +1,6 @@
 import React from "react";
 
-const StatsCard = ({ name, amount, image }) => {
+const StatsCard = ({ name, amount, image, graphImage }) => {
   return (
     <div className="  inventCard xl:p-[21px] lg:p-[16px] p-[10px] rounded-lg bg-[#fff]">
       <div className="flex justify-between items-center xl:mb-[50px] lg:mb-[35px] mb-[20px] md:flex-col-reverse">
@@ -19,11 +19,11 @@ const StatsCard = ({ name, amount, image }) => {
         </div>
       </div>
       <div className="flex items-center xl:gap-[10px] gap-[3px]">
-        {/* <img
-          src={}
+        <img
+          src={graphImage}
           alt=""
-          className="xl:w-[32px] lg:w-[27px] w-[22px]"
-        />{" "} */}
+        />{" "}
+        <p className="text-xl font-semibold text-[#606060]"><span className="text-[#00B69B]">8.5%</span> Up from January</p>
       </div>
     </div>
   );
