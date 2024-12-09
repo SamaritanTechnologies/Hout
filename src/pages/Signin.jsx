@@ -35,6 +35,12 @@ export const Signin = () => {
 
   const loginUser = async (e) => {
     e.preventDefault();
+    // Validate form fields
+    if (!formData.email.trim() || !formData.password.trim()) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
     setBtnLoading(true);
 
     let data = {
@@ -44,15 +50,20 @@ export const Signin = () => {
 
     try {
       const response = await axiosApi.post("/accounts/login/", data);
-      setAccessToken(response.data?.token);
+      const { token, cart_id } = response.data;
+
+      setAccessToken(token);
       localStorage.setItem("userData", JSON.stringify(response.data));
-      localStorage.setItem("cartId", JSON.stringify(response.data?.cart_id));
-      setBtnLoading(false);
+      localStorage.setItem("cartId", JSON.stringify(cart_id));
+
       navigate("/");
       toast.success("Successfully logged in");
     } catch (error) {
+      const errorMessage =
+        error?.response?.data?.message || "Wrong credentials!";
+      toast.error(errorMessage);
+    } finally {
       setBtnLoading(false);
-      toast.error("Wrong credentials!");
     }
   };
 

@@ -15,7 +15,6 @@ const UserRoutes = ({ children }) => {
     return <Navigate to="/dashboard" />;
   }
 
-  //* Render the child components/routes if user is authenticated and not an admin
   return (
     <>
       <Outlet />
