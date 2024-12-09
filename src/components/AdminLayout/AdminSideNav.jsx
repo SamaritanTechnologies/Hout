@@ -11,7 +11,7 @@ const AdminSidenav = () => {
     { name: "Dashboard", link: "/dashboard/", active: true },
     { name: "Products", link: "/products/", active: false },
     { name: "Inbox", link: "/inbox/", active: false },
-    { name: "Order List", link: "/order-list/", active: false },
+    { name: "Order Lists", link: "/order-list/", active: false },
   ]);
 
   useEffect(() => {

@@ -178,7 +178,7 @@ export const AddNewProduct = () => {
                 </h5>
               </div>
 
-              <div className="myCard rounded-[4px] xl:mb-[30px] lg:mb-[25px] mb-[20px]">
+              <div className="myCard rounded-[4px] xl:mb-[30px] lg:mb-[25px] mb-[20px] mx-auto max-w-[912px]">
                 <div className="flex mb-4">
                   <h5 className="xl:text-26 lg:text-24 text-22 font-semibold">
                     Add New Product

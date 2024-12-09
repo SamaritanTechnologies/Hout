@@ -5,8 +5,10 @@ import woodImg from "../assets/DashboardImages/woodImg.svg";
 // import editImg from "../assets/DashboardImages/editImg.svg";
 import editImg from "../assets/DashboardImages/edit.svg";
 import dltImg from "../assets/DashboardImages/delete.svg";
+import filterImg from "../assets/DashboardImages/filter-funnel.svg";
 import dots from "../assets/DashboardImages/dotsvertical.svg";
 import Button from "../components/Common/Button";
+import DropdownFilter from "../components/Dashboard/DropdownFilter";
 import cartButton from "../assets/addToCart/cartButton.svg";
 import { Link, useNavigate } from "react-router-dom";
 import DeleteModal from "../components/Modals/DeleteModal";
@@ -51,7 +53,7 @@ export const Products = () => {
   useEffect(() => {
     fetchProducts();
   }, [isDeleted]);
-
+  const [selectedOptions, setSelectedOptions] = useState([]);
   return (
     <>
       <DeleteModal
@@ -59,7 +61,7 @@ export const Products = () => {
         closeModal={() => setOpen(!open)}
         handleDelete={handleDelete}
       />
-     
+
       <div>
         <div className="xl:py-[24px] lg:py-[20px] py-[16px] xl:px-[20px] lg:px-[16px] px-[10px] bg-[#fafafa] h-full min-h-[86vh]">
           <div className="flex justify-between">
@@ -81,42 +83,121 @@ export const Products = () => {
           </div>
 
           <div className=" max-w-screen mx-auto overflow-x-auto">
-            <table className="table-auto productsTable w-full">
+            <table className="table-auto productsTable w-full min-w-[1154px] min-h-80">
               <thead>
                 <tr className="bg-[#F1F4F9]">
                   <th className="px-[10px] py-[12px]  text-left text-14 font-bold  rounded-l-2xl	">
-                    ID
+                    Product ID
                   </th>
-                  <th className="px-[10px] py-[12px]  text-left text-14 font-bold  	">
+
+                  <th className="px-[10px] py-[12px]  text-left text-14 font-medium min-h-12">
                     Image
                   </th>
-                  <th className="px-[10px] py-[12px]  text-left text-14 font-bold  	">
+                  <th className="px-[10px] py-[12px]  text-left text-14 font-medium min-h-12">
                     Name
                   </th>
-                  <th className="px-[10px] py-[12px]  text-left text-14 font-bold	">
-                    Thickness
+                  <th className="px-[10px] py-[12px]  text-left text-14 font-medium min-h-12">
+                    <div className="flex items-center gap-2">
+                      <span>Thickness</span>
+                      <DropdownFilter
+                        options={[
+                          { value: "option1", label: "Option 1" },
+                          { value: "option2", label: "Option 2" },
+                          { value: "option3", label: "Option 3" },
+                          { value: "option4", label: "Option 4" },
+                        ]}
+                        selected={selectedOptions}
+                        setSelected={setSelectedOptions}
+                        label={<img src={filterImg} alt="Filter" />}
+                      />
+                    </div>
                   </th>
-                  <th className="px-[10px] py-[12px]  text-left text-14 font-bold	">
-                    Width
+                  <th className="px-[10px] py-[12px]  text-left text-14 font-medium min-h-12">
+                    <div className="flex items-center gap-2">
+                      <span>Width</span>
+                      <DropdownFilter
+                        options={[
+                          { value: "option1", label: "Option 1" },
+                          { value: "option2", label: "Option 2" },
+                          { value: "option3", label: "Option 3" },
+                          { value: "option4", label: "Option 4" },
+                        ]}
+                        selected={selectedOptions}
+                        setSelected={setSelectedOptions}
+                        label={<img src={filterImg} alt="Filter" />}
+                      />
+                    </div>
                   </th>
-                  <th className="px-[10px] py-[12px]  text-left text-14 font-bold	">
-                    Group
+                  <th className="px-[10px] py-[12px]  text-left text-14 font-medium min-h-12">
+                    <div className="flex items-center gap-2">
+                      <span>Group</span>
+                      <DropdownFilter
+                        options={[
+                          { value: "option1", label: "Option 1" },
+                          { value: "option2", label: "Option 2" },
+                          { value: "option3", label: "Option 3" },
+                          { value: "option4", label: "Option 4" },
+                        ]}
+                        selected={selectedOptions}
+                        setSelected={setSelectedOptions}
+                        label={<img src={filterImg} alt="Filter" />}
+                      />
+                    </div>
                   </th>
-                  <th className="px-[10px] py-[12px]  text-left text-14 font-bold	">
-                    Type
+                  <th className="px-[10px] py-[12px]  text-left text-14 font-medium min-h-12">
+                    <div className="flex items-center gap-2">
+                      <span>Type</span>
+                      <DropdownFilter
+                        options={[
+                          { value: "option1", label: "Option 1" },
+                          { value: "option2", label: "Option 2" },
+                          { value: "option3", label: "Option 3" },
+                          { value: "option4", label: "Option 4" },
+                        ]}
+                        selected={selectedOptions}
+                        setSelected={setSelectedOptions}
+                        label={<img src={filterImg} alt="Filter" />}
+                      />
+                    </div>
                   </th>
-                  <th className="px-[10px] py-[12px]  text-left text-14 font-bold	">
-                    Material
+                  <th className="px-[10px] py-[12px]  text-left text-14 font-medium min-h-12">
+                    <div className="flex items-center gap-2">
+                      <span>Material</span>
+                      <DropdownFilter
+                        options={[
+                          { value: "option1", label: "Option 1" },
+                          { value: "option2", label: "Option 2" },
+                          { value: "option3", label: "Option 3" },
+                          { value: "option4", label: "Option 4" },
+                        ]}
+                        selected={selectedOptions}
+                        setSelected={setSelectedOptions}
+                        label={<img src={filterImg} alt="Filter" />}
+                      />
+                    </div>
                   </th>
 
-                  <th className="px-[10px] py-[12px]  text-center text-14 font-bold">
-                    Profile
+                  <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
+                    <div className="flex items-center gap-2">
+                      <span>Profile</span>
+                      <DropdownFilter
+                        options={[
+                          { value: "option1", label: "Option 1" },
+                          { value: "option2", label: "Option 2" },
+                          { value: "option3", label: "Option 3" },
+                          { value: "option4", label: "Option 4" },
+                        ]}
+                        selected={selectedOptions}
+                        setSelected={setSelectedOptions}
+                        label={<img src={filterImg} alt="Filter" />}
+                      />
+                    </div>
                   </th>
 
-                  <th className="px-[10px] py-[12px]  text-center text-14 font-bold">
+                  <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
                     Stock
                   </th>
-                  <th className="px-[10px] py-[12px]  text-center text-14 font-bold">
+                  <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
                     Action
                   </th>
                 </tr>

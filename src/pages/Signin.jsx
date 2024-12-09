@@ -98,7 +98,7 @@ export const Signin = () => {
             </div>
           </div>
           <div className="xl:min-w-[650px] min-w-[auto] signUpRight xl:w-[50%] lg:w-[55%] w-[100%] xl:py-[25px] py-[18px] xl:px-[51px] lg:px-[30px] px-[20px]">
-            <div className="signUpHead flex justify-start xl:mb-[46px] lg:mb-[30px] mb-[20px]">
+            <div className="signUpHead xl:mb-[46px] lg:mb-[30px] mb-[20px] max-w-[400px] mx-auto">
               <img
                 src={houtLogo}
                 onClick={() => navigate("/")}
@@ -106,7 +106,7 @@ export const Signin = () => {
                 className=" xl:h-[50px] cursor-pointer mt-4 lg:w-[160px] lg:h-[40px] w-[120px] h-[35px] object-cover"
               />
             </div>
-            <div className="signUpFormSec xl:px-[80px] lg:px-[30px] px-[5px] ">
+            <div className="signUpFormSec max-w-[400px] mx-auto">
               <div className="text-center xl:mb-[42px] lg:mb-[30px] mb-[20px]">
                 <h4 className="xl:text-36 lg:text-24 text-20 font-semibold">
                   Welcome Back
@@ -117,10 +117,10 @@ export const Signin = () => {
               </div>
               <form className="w-full" onSubmit={loginUser}>
                 {/* social auth row  */}
-                <div className="socialAuthRow flex gap-3 mb-[12px]">
+                <div className="mx-auto socialAuthRow flex gap-2.5 mb-[12px]">
                   <a
                     href={`${BASE_URL}/accounts/google/login/?process=login`}
-                    className="w-[32%] flex gap-2 items-center rounded-md	xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium"
+                    className="flex-1 flex gap-2 items-center rounded-md	xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium"
                     style={{ border: "1px solid #ccc" }}
                   >
                     <img src={googleIcon} alt="" />
@@ -128,7 +128,7 @@ export const Signin = () => {
                   </a>
                   <a
                     href={`${BASE_URL}/accounts/facebook/login/?process=login`}
-                    className="w-[32%] flex gap-2 items-center rounded-md		xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium"
+                    className="flex-1 flex gap-2 items-center rounded-md		xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium"
                     style={{ border: "1px solid #ccc" }}
                   >
                     <img src={faceBookIcon} alt="" />
@@ -136,7 +136,7 @@ export const Signin = () => {
                   </a>
                   <a
                     href={`${BASE_URL}/accounts/apple/login/?process=login`}
-                    className=" w-[32%] flex gap-2 items-center rounded-md xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium"
+                    className="flex-1 flex gap-2 items-center rounded-md xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium"
                     style={{ border: "1px solid #ccc" }}
                   >
                     <img src={appleIcon} alt="" />
@@ -192,7 +192,7 @@ export const Signin = () => {
                       type="submit"
                       onClick={loginUser}
                       disabled={btnLoading}
-                      className="bg-[#FBC700] block text-black text-center xl:py-[19px] lg:py-[16px] py-[12px] px-[25px] w-full font-semibold mb-[23px] xl:text-[18px] text-[16px]"
+                      className="bg-[#FBC700] block text-black text-center xl:py-[16px] lg:py-[16px] py-[12px] px-[25px] w-full font-semibold mb-[23px] xl:text-[18px] text-[16px]"
                     >
                       {btnLoading ? "Loading..." : "Log In"}
                     </button>

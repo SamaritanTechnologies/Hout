@@ -127,7 +127,7 @@ export const Signup = () => {
           </div>
         </div>
         <div className="xl:min-w-[650px] min-w-[auto] signUpRight xl:w-[50%] lg:w-[55%] w-[100%] sm:w-[100%] xs:w-[100%] xl:py-[25px] py-[18px] xl:px-[51px] lg:px-[30px] px-[20px]">
-          <div className="signUpHead flex justify-end xl:mb-[46px] lg:mb-[30px] mb-[20px]">
+          <div className="signUpHead flex justify-end xl:mb-[46px] lg:mb-[30px] mb-[20px] ">
             <img
               src={houtLogo}
               alt=""
@@ -135,7 +135,7 @@ export const Signup = () => {
               className="cursor-pointer  xl:h-[50px] lg:w-[160px] lg:h-[40px] w-[120px] h-[35px] object-cover"
             />
           </div>
-          <div className="signUpFormSec xl:px-[80px] lg:px-[30px] px-[5px] ">
+          <div className="signUpFormSec max-w-[400px] mx-auto">
             <div className="text-center xl:mb-[42px] lg:mb-[30px] mb-[20px]">
               <h4 className="xl:text-24 lg:text-20 text-18 font-semibold">
                 Get Started With houttotaal.nl
@@ -149,7 +149,7 @@ export const Signup = () => {
               <div className="socialAuthRow flex gap-3 mb-[12px]">
                 <a
                   href="#"
-                  className="w-[32%] flex gap-2 items-center rounded-md	xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium"
+                  className="flex-1 flex gap-2 items-center rounded-md	xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium"
                   style={{ border: "1px solid #ccc" }}
                 >
                   <img src={googleIcon} alt="" />
@@ -157,7 +157,7 @@ export const Signup = () => {
                 </a>
                 <a
                   href="#"
-                  className="w-[32%] flex gap-2 items-center rounded-md		xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium"
+                  className="flex-1 flex gap-2 items-center rounded-md		xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium"
                   style={{ border: "1px solid #ccc" }}
                 >
                   <img src={faceBookIcon} alt="" />
@@ -165,7 +165,7 @@ export const Signup = () => {
                 </a>
                 <a
                   href="#"
-                  className=" w-[32%] flex gap-2 items-center rounded-md xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium"
+                  className=" flex-1 flex gap-2 items-center rounded-md xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium"
                   style={{ border: "1px solid #ccc" }}
                 >
                   <img src={appleIcon} alt="" />
@@ -256,7 +256,7 @@ export const Signup = () => {
                     type="submit"
                     onClick={createUser}
                     disabled={btnLoading}
-                    className="bg-[#FBC700] block text-black text-center xl:py-[19px] lg:py-[16px] py-[12px] px-[25px] w-full font-semibold mb-[23px] xl:text-[18px] text-[16px]"
+                    className="bg-[#FBC700] block text-black text-center xl:py-[16px] lg:py-[16px] py-[12px] px-[25px] w-full font-semibold mb-[23px] xl:text-[18px] text-[16px]"
                   >
                     {btnLoading ? "Loading..." : "Create Account"}
                   </button>
