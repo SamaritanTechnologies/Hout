@@ -24,8 +24,6 @@ export const Signup = () => {
     companyName: "",
     email: "",
     phone: "",
-    password: "",
-    confirmPassword: "",
   });
 
   const handleFormData = (event) => {
@@ -41,11 +39,6 @@ export const Signup = () => {
   const validateForm = () => {
     if (Object.values(formData).some((field) => field.trim() === "")) {
       toast.error("Please fill in all fields");
-      return false;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      toast.error("Passwords do not match");
       return false;
     }
 
@@ -153,7 +146,7 @@ export const Signup = () => {
               <div className="socialAuthRow flex gap-3 mb-[12px]">
                 <a
                   href="#"
-                  className="flex-1 flex gap-2 items-center rounded-md	xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium"
+                  className="flex-1 flex gap-2 items-center rounded-md	xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium font-footer1"
                   style={{ border: "1px solid #ccc" }}
                 >
                   <img src={googleIcon} alt="" />
@@ -161,7 +154,7 @@ export const Signup = () => {
                 </a>
                 <a
                   href="#"
-                  className="flex-1 flex gap-2 items-center rounded-md		xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium"
+                  className="flex-1 flex gap-2 items-center rounded-md		xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium font-footer1"
                   style={{ border: "1px solid #ccc" }}
                 >
                   <img src={faceBookIcon} alt="" />
@@ -169,7 +162,7 @@ export const Signup = () => {
                 </a>
                 <a
                   href="#"
-                  className=" flex-1 flex gap-2 items-center rounded-md xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium"
+                  className=" flex-1 flex gap-2 items-center rounded-md xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium font-footer1"
                   style={{ border: "1px solid #ccc" }}
                 >
                   <img src={appleIcon} alt="" />
@@ -233,26 +226,6 @@ export const Signup = () => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleFormData}
-                  />
-                </div>
-                <div className="mb-[23px]">
-                  <InputField
-                    name="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleFormData}
-                    type="password"
-                    required
-                  />
-                </div>
-                <div className="mb-[23px]">
-                  <InputField
-                    name="confirmPassword"
-                    placeholder="Confirm Password"
-                    value={formData.confirmPassword}
-                    onChange={handleFormData}
-                    type="password"
-                    required
                   />
                 </div>
                 <div className="w-full ">
