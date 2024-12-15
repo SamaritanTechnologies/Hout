@@ -16,11 +16,12 @@ import {
   addProduct,
   getProductCategories,
 } from "../redux/actions/productActions";
+import { useSelector } from "react-redux";
 
 const styleMultiSelect = {
   chips: {
-    background: "#FAFAFA",
-    borderRadius: "4px"
+    background: "#F8F8F8",
+    borderRadius: "4px",
   },
   searchBox: {},
   option: {
@@ -41,23 +42,12 @@ const productItem = {
 
 export const AddNewProduct = () => {
   const navigate = useNavigate();
-
-  const [categories, setCategories] = useState();
+  const { productCategories: categories } = useSelector((state) => state.admin);
   const [products, setProducts] = useState([{ ...productItem }]);
   const [images, setImages] = useState([]);
-
-  const fetchCategories = async () => {
-    try {
-      const res = await getProductCategories();
-      setCategories(res);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+  const [isErrors, setIsErrors] = useState({
+    images: false,
+  });
 
   const getChoicesByName = (name) => {
     const category = categories?.find((cat) => cat.name == name);
@@ -91,6 +81,7 @@ export const AddNewProduct = () => {
       }));
 
     setImages((prevImages) => [...prevImages, ...newImages]);
+    setIsErrors((prev) => ({ ...prev, images: false }));
 
     const invalidFiles = acceptedFiles.filter(
       (file) => !validTypes.includes(file.type)
@@ -109,6 +100,7 @@ export const AddNewProduct = () => {
           preview: URL.createObjectURL(file),
         };
         setImages((prevImages) => [...prevImages, newImage]);
+        setIsErrors((prev) => ({ ...prev, images: false }));
       } else {
         alert("Please upload a valid image (jpg, jpeg, png, or webp)");
       }
@@ -116,7 +108,11 @@ export const AddNewProduct = () => {
   };
 
   const handleRemoveImage = (index) => {
-    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    setImages((prevImages) => {
+      const updatedImages = prevImages.filter((_, i) => i !== index);
+      setIsErrors((prev) => ({ ...prev, images: updatedImages.length === 0 }));
+      return updatedImages;
+    });
   };
 
   return (
@@ -152,6 +148,10 @@ export const AddNewProduct = () => {
           ),
         })}
         onSubmit={async (values, { setSubmitting }) => {
+          if (!images?.length) {
+            setIsErrors((prev) => ({ ...prev, images: true }));
+            return;
+          }
           try {
             const response = await addProduct(values, products, images);
             console.log("Form submitted successfully:", response);
@@ -165,14 +165,16 @@ export const AddNewProduct = () => {
       >
         {({ values, setFieldValue, isSubmitting, errors }) => (
           <Form>
-            <div className=" cursor-pointer lg:pt-[50px] pt-[30px] xl:pb-[30px] lg:pb-[25px] pb-[20px] px-[20px] bg-[rgb(250,250,250)] h-full min-h-[86vh]">
-              <div
-                onClick={() => {
-                  navigate("/products");
-                }}
-                className="flex gap-2 items-center"
-              >
-                <img src={ArrowBack} alt="" />
+            <div className="lg:pt-[50px] pt-[30px] xl:pb-[30px] lg:pb-[25px] pb-[20px] px-[20px] bg-[rgb(250,250,250)] h-full min-h-[86vh]">
+              <div className="flex gap-2 items-center">
+                <div
+                  onClick={() => {
+                    navigate("/products");
+                  }}
+                  className="cursor-pointer"
+                >
+                  <img src={ArrowBack} alt="" />
+                </div>
                 <h5 className="xl:text-32 lg:text-28 text-26 font-bold">
                   Products
                 </h5>
@@ -215,7 +217,7 @@ export const AddNewProduct = () => {
                   </div>
                   <div className="flex gap-[20px] mb-[25px]">
                     <div className="w-full  md:mb-0">
-                      <label>Groep | Group</label>
+                      <label className="text-sm">Groep | Group</label>
                       <Multiselect
                         closeIcon="close"
                         style={styleMultiSelect}
@@ -235,7 +237,7 @@ export const AddNewProduct = () => {
                   </div>
                   <div className="flex flex-col gap-[20px] mb-[24px]">
                     <div className="w-full md:mb-0">
-                      <label>Soort | Type</label>
+                      <label className="text-sm">Soort | Type</label>
                       <Multiselect
                         closeIcon="close"
                         style={styleMultiSelect}
@@ -250,7 +252,7 @@ export const AddNewProduct = () => {
                       />
                     </div>
                     <div className="w-full">
-                      <label>Materiaal | Material</label>
+                      <label className="text-sm">Materiaal | Material</label>
                       <Multiselect
                         closeIcon="close"
                         style={styleMultiSelect}
@@ -267,7 +269,7 @@ export const AddNewProduct = () => {
                   </div>
                   <div className="flex flex-col gap-[20px] mb-[24px]">
                     <div className="w-full md:mb-0">
-                      <label>Profiel | Profile</label>
+                      <label className="text-sm">Profiel | Profile</label>
                       <Multiselect
                         closeIcon="close"
                         style={styleMultiSelect}
@@ -282,7 +284,9 @@ export const AddNewProduct = () => {
                       />
                     </div>
                     <div className="w-full">
-                      <label>Duurzaamheidsklasse | Durability Class</label>
+                      <label className="text-sm">
+                        Duurzaamheidsklasse | Durability Class
+                      </label>
                       <Multiselect
                         closeIcon="close"
                         style={styleMultiSelect}
@@ -300,7 +304,7 @@ export const AddNewProduct = () => {
 
                   <div className="flex flex-col gap-[20px] mb-[24px]">
                     <div className="w-full md:mb-0">
-                      <label>Kwaliteit | Quality</label>
+                      <label className="text-sm">Kwaliteit | Quality</label>
                       <Multiselect
                         closeIcon="close"
                         style={styleMultiSelect}
@@ -315,7 +319,9 @@ export const AddNewProduct = () => {
                       />
                     </div>
                     <div className="w-full">
-                      <label>Toepassing | Application</label>
+                      <label className="text-sm">
+                        Toepassing | Application
+                      </label>
                       <Multiselect
                         closeIcon="close"
                         style={styleMultiSelect}
@@ -332,37 +338,25 @@ export const AddNewProduct = () => {
                   </div>
                   <div className="flex gap-[20px] mb-[24px]">
                     <div className="w-1/2 inline-block rounded-lg overflow-hidden">
-                      <label
-                        htmlFor="productDescriptionNl"
-                        className="text-black text-xs font-semibold xl:mb-[8px] mb-[4px] block"
-                      >
-                        Product omschrijving
-                      </label>
-                      <Textarea
-                        id="productDescriptionNl"
+                      <Field
+                        type="text"
                         name="productDescriptionNl"
+                        id="productDescriptionNl"
+                        as="sele"
                         placeholder="omschrijving"
-                        value={values.productDescriptionNl}
-                        onChange={(e) =>
-                          setFieldValue("productDescriptionNl", e.target.value)
-                        }
+                        label="Product omschrijving"
+                        component={Textarea}
                       />
                     </div>
                     <div className="w-1/2 inline-block rounded-lg overflow-hidden">
-                      <label
-                        className="text-black text-xs font-semibold xl:mb-[8px] mb-[4px] block"
-                        htmlFor="productDescription"
-                      >
-                        Product Description
-                      </label>
-                      <Textarea
-                        id="productDescription"
+                      <Field
+                        type="text"
                         name="productDescription"
+                        id="productDescription"
+                        as="sele"
                         placeholder="Description"
-                        value={values.productDescription}
-                        onChange={(e) =>
-                          setFieldValue("productDescription", e.target.value)
-                        }
+                        label="Product Description"
+                        component={Textarea}
                       />
                     </div>
                   </div>
@@ -539,8 +533,10 @@ export const AddNewProduct = () => {
                   </div>
                   <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
                   <div className="flex gap-5 items-center mb-[24px]">
-                    <img src={checkSquareIcon} alt="check square"/>
-                    <p className="font-semibold text-lg text-[#111727]">Place Product on GoedGeplaatst via API</p>
+                    <img src={checkSquareIcon} alt="check square" />
+                    <p className="font-semibold text-lg text-[#111727]">
+                      Place Product on GoedGeplaatst via API
+                    </p>
                   </div>
                   <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
                   <div className="flex gap-[20px] mb-[24px]">
@@ -603,12 +599,17 @@ export const AddNewProduct = () => {
                           </div>
                         ))}
                       </div>
+                      {isErrors.images && (
+                        <p className="text-sm text-red mt-2">
+                          Please upload atleast 1 image
+                        </p>
+                      )}
                     </div>
                   </div>
 
                   <div>
                     <Button
-                      disabled={isSubmitting}
+                      loading={isSubmitting}
                       type="submit"
                       btnText="Add Product"
                       paddingX="20px"

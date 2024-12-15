@@ -12,9 +12,17 @@ import DropdownFilter from "../components/Dashboard/DropdownFilter";
 import cartButton from "../assets/addToCart/cartButton.svg";
 import { Link, useNavigate } from "react-router-dom";
 import DeleteModal from "../components/Modals/DeleteModal";
-import { deleteProduct, getProducts } from "../redux/actions/productActions";
+import {
+  deleteProduct,
+  getProductCategories,
+  getProducts,
+} from "../redux/actions/productActions";
+import { useDispatch, useSelector } from "react-redux";
+import { setProductCategories } from "../redux";
 
 export const Products = () => {
+  const dispatch = useDispatch();
+  const { productCategories } = useSelector((state) => state.admin);
   const [state, setState] = useState({
     productsData: [],
   });
@@ -53,7 +61,9 @@ export const Products = () => {
   useEffect(() => {
     fetchProducts();
   }, [isDeleted]);
+
   const [selectedOptions, setSelectedOptions] = useState([]);
+
   return (
     <>
       <DeleteModal
@@ -99,7 +109,7 @@ export const Products = () => {
                   <th className="px-[10px] py-[12px]  text-left text-14 font-medium min-h-12">
                     <div className="flex items-center gap-2">
                       <span>Thickness</span>
-                      <DropdownFilter
+                      {/* <DropdownFilter
                         options={[
                           { value: "option1", label: "Option 1" },
                           { value: "option2", label: "Option 2" },
@@ -109,13 +119,13 @@ export const Products = () => {
                         selected={selectedOptions}
                         setSelected={setSelectedOptions}
                         label={<img src={filterImg} alt="Filter" />}
-                      />
+                      /> */}
                     </div>
                   </th>
                   <th className="px-[10px] py-[12px]  text-left text-14 font-medium min-h-12">
                     <div className="flex items-center gap-2">
                       <span>Width</span>
-                      <DropdownFilter
+                      {/* <DropdownFilter
                         options={[
                           { value: "option1", label: "Option 1" },
                           { value: "option2", label: "Option 2" },
@@ -125,13 +135,13 @@ export const Products = () => {
                         selected={selectedOptions}
                         setSelected={setSelectedOptions}
                         label={<img src={filterImg} alt="Filter" />}
-                      />
+                      /> */}
                     </div>
                   </th>
                   <th className="px-[10px] py-[12px]  text-left text-14 font-medium min-h-12">
                     <div className="flex items-center gap-2">
                       <span>Group</span>
-                      <DropdownFilter
+                      {/* <DropdownFilter
                         options={[
                           { value: "option1", label: "Option 1" },
                           { value: "option2", label: "Option 2" },
@@ -141,13 +151,13 @@ export const Products = () => {
                         selected={selectedOptions}
                         setSelected={setSelectedOptions}
                         label={<img src={filterImg} alt="Filter" />}
-                      />
+                      /> */}
                     </div>
                   </th>
                   <th className="px-[10px] py-[12px]  text-left text-14 font-medium min-h-12">
                     <div className="flex items-center gap-2">
                       <span>Type</span>
-                      <DropdownFilter
+                      {/* <DropdownFilter
                         options={[
                           { value: "option1", label: "Option 1" },
                           { value: "option2", label: "Option 2" },
@@ -157,13 +167,13 @@ export const Products = () => {
                         selected={selectedOptions}
                         setSelected={setSelectedOptions}
                         label={<img src={filterImg} alt="Filter" />}
-                      />
+                      /> */}
                     </div>
                   </th>
                   <th className="px-[10px] py-[12px]  text-left text-14 font-medium min-h-12">
                     <div className="flex items-center gap-2">
                       <span>Material</span>
-                      <DropdownFilter
+                      {/* <DropdownFilter
                         options={[
                           { value: "option1", label: "Option 1" },
                           { value: "option2", label: "Option 2" },
@@ -173,14 +183,14 @@ export const Products = () => {
                         selected={selectedOptions}
                         setSelected={setSelectedOptions}
                         label={<img src={filterImg} alt="Filter" />}
-                      />
+                      /> */}
                     </div>
                   </th>
 
                   <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
                     <div className="flex items-center gap-2">
                       <span>Profile</span>
-                      <DropdownFilter
+                      {/* <DropdownFilter
                         options={[
                           { value: "option1", label: "Option 1" },
                           { value: "option2", label: "Option 2" },
@@ -190,7 +200,7 @@ export const Products = () => {
                         selected={selectedOptions}
                         setSelected={setSelectedOptions}
                         label={<img src={filterImg} alt="Filter" />}
-                      />
+                      /> */}
                     </div>
                   </th>
 

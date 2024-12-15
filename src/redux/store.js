@@ -3,13 +3,14 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import authReducer from "./slices/authSlice";
+import adminReducer from "./slices/adminSlice";
 
 const persistConfig = {
   key: "root",
   storage,
 };
 
-const rootReducer = combineSlices({ auth: authReducer });
+const rootReducer = combineSlices({ auth: authReducer, admin: adminReducer });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

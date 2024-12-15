@@ -6,8 +6,12 @@ import ProfileDD from "../../assets/DashboardImages/ProfileDD.svg";
 import CountrySelector from "../Common/CountrySelector";
 import HeadLessDropDown from "../Common/HeadLessDropDown";
 import { getAccessToken } from "../../providers";
+import { getProductCategories } from "../../redux/actions/productActions";
+import { useDispatch } from "react-redux";
+import { setProductCategories } from "../../redux";
 
 const AdminMainNav = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const userData = JSON.parse(localStorage.getItem("userData"));
   const token = userData?.token;
@@ -27,6 +31,20 @@ const AdminMainNav = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await getProductCategories();
+      dispatch(setProductCategories(res));
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      dispatch(setProductCategories([]));
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
   }, []);
 
   return (

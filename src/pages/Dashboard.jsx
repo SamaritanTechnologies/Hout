@@ -31,6 +31,7 @@ const months = [
 ];
 
 export const Dashboard = () => {
+  const navigate = useNavigate();
   const [state, setState] = useState({
     orderList: [],
     stats: null,
@@ -44,7 +45,6 @@ export const Dashboard = () => {
         ...prev,
         orderList: res,
       }));
-      console.log(res, "fetchUser44334");
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -57,7 +57,6 @@ export const Dashboard = () => {
         ...prev,
         stats: res,
       }));
-      console.log(res, "fetchUser44334");
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -78,7 +77,7 @@ export const Dashboard = () => {
     fetchDashboardStats();
   }, []);
 
-  const navigate = useNavigate();
+
   return (
     <div>
       <div className="xl:p-[30px] lg:p-[24px] p-[20px] bg-[#fafafa] h-full min-h-[86vh]">
@@ -97,7 +96,7 @@ export const Dashboard = () => {
           />
           <StatsCard
             name="Total SKU"
-            amount={40}
+            amount={0}
             image={skuImg}
             graphImage={trendUp}
           />

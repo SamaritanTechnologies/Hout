@@ -50,9 +50,9 @@ const Dropzone = ({width, height, onDrop}) => {
             <span className="text-customYellow"> click to browse </span>
           </p>
         </div>
-        <aside>
+        {/* <aside>
           <ul className="text-12 text-gray2 text-center">{files}</ul>
-        </aside>
+        </aside> */}
       </section>
     </>
   );
