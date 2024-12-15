@@ -131,7 +131,7 @@ export const Signin = () => {
                 <div className="mx-auto socialAuthRow flex gap-2.5 mb-[12px]">
                   <a
                     href={`${BASE_URL}/accounts/google/login/?process=login`}
-                    className="flex-1 flex gap-2 items-center rounded-md	xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium"
+                    className="flex-1 flex gap-2 items-center rounded-md	xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium font-footer1"
                     style={{ border: "1px solid #ccc" }}
                   >
                     <img src={googleIcon} alt="" />
@@ -139,7 +139,7 @@ export const Signin = () => {
                   </a>
                   <a
                     href={`${BASE_URL}/accounts/facebook/login/?process=login`}
-                    className="flex-1 flex gap-2 items-center rounded-md		xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium"
+                    className="flex-1 flex gap-2 items-center rounded-md		xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium font-footer1"
                     style={{ border: "1px solid #ccc" }}
                   >
                     <img src={faceBookIcon} alt="" />
@@ -147,7 +147,7 @@ export const Signin = () => {
                   </a>
                   <a
                     href={`${BASE_URL}/accounts/apple/login/?process=login`}
-                    className="flex-1 flex gap-2 items-center rounded-md xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium"
+                    className="flex-1 flex gap-2 items-center rounded-md xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium font-footer1"
                     style={{ border: "1px solid #ccc" }}
                   >
                     <img src={appleIcon} alt="" />
