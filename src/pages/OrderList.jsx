@@ -221,10 +221,10 @@ export const OrderList = () => {
                     ) : (
                       <tr>
                         <td
-                          colSpan="5"
+                          colSpan="6"
                           className="text-[14px] text-[#141718] text-center py-[22px]"
                         >
-                          No items
+                          No orders found
                         </td>
                       </tr>
                     )}

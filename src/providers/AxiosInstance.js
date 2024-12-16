@@ -4,9 +4,6 @@ import { getAccessToken } from "./AccessToken";
 export const API_BASE_URL = "https://backend.houttotaal.nl/api";
 export const BASE_URL = "https://backend.houttotaal.nl";
 
-// export const API_BASE_URL https://backend.houttotaal.nl/api";
-// export const BASE_URL https://backend.houttotaal.nl";
-
 export const axiosApi = axios.create({
   baseURL: API_BASE_URL,
 });

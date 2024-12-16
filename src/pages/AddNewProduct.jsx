@@ -50,9 +50,10 @@ export const AddNewProduct = () => {
   });
 
   const getChoicesByName = (name) => {
-    const category = categories?.find((cat) => cat.name == name);
+    const category = categories?.find((cat) => cat.name.toLowerCase() === name.toLowerCase());
     return category ? category.choices : [];
   };
+  
 
   const handleAddRow = () => {
     setProducts([...products, { ...productItem }]);
