@@ -20,8 +20,8 @@ const HeadLessDropDown = ({ token }) => {
               <img src={avatars}/>
             </div>
             <div className="flex-col">
-              <div className="text-[14px] w-[max-content]">Name Sur</div>
-              <div className="text-[12px] text-[#565656] ">Admin</div>
+              <div className="text-[14px] w-[max-content]">Admin</div>
+              {/* <div className="text-[12px] text-[#565656] ">Admin</div> */}
             </div>
             <div>
               <img src={more} />
@@ -38,17 +38,17 @@ const HeadLessDropDown = ({ token }) => {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-[-12px] mt-2 w-52 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
-          <div className="px-1 py-1 ">
+        <Menu.Items className="absolute right-0 mt-2 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
+          <div className="py-2">
             <ul className="cursor-pointer">
-              <li
+              {/* <li
                 className="text-center"
                 onClick={() => navigate("/user-profile")}
               >
                 Profile
-              </li>
+              </li> */}
               <li
-                className="text-center pt-3 text-red"
+                className="text-center text-red"
                 onClick={() => {
                   navigate("/sign-in");
                   setAccessToken(null);
