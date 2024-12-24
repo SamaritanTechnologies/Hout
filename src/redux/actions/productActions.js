@@ -1,9 +1,23 @@
 import { toast } from "react-toastify";
 import { axiosWithCredentials } from "../../providers";
 
-export const getProducts = async () => {
+export const getProducts = async (filters = {}) => {
   try {
-    const response = await axiosWithCredentials.get(`/products/`);
+    // Construct query string from filters
+    const params = new URLSearchParams();
+
+    Object.entries(filters).forEach(([key, values]) => {
+      if (Array.isArray(values) && values.length > 0) {
+        values.forEach((value) => {
+          params.append(key, value);
+        });
+      }
+    });
+
+    const queryString = params.toString();
+    const url = queryString ? `/products?${queryString}` : `/products`;
+
+    const response = await axiosWithCredentials.get(url);
     return response.data;
   } catch (error) {
     console.error("Error fetching order details:", error);
@@ -46,6 +60,18 @@ export const getProductCategories = async () => {
     return response.data;
   } catch (error) {
     console.error("Error fetching cetegories details:", error);
+    throw error;
+  }
+};
+
+export const getProductStaticValuesByName = async (field) => {
+  try {
+    const response = await axiosWithCredentials.get(
+      `/product-field-values/?field=${field}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching static details:", error);
     throw error;
   }
 };

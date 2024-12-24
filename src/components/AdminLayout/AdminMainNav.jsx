@@ -6,8 +6,15 @@ import ProfileDD from "../../assets/DashboardImages/ProfileDD.svg";
 import CountrySelector from "../Common/CountrySelector";
 import HeadLessDropDown from "../Common/HeadLessDropDown";
 import { getAccessToken } from "../../providers";
+import {
+  getProductCategories,
+  getProductStaticValuesByName,
+} from "../../redux/actions/productActions";
+import { useDispatch } from "react-redux";
+import { setProductCategories } from "../../redux";
 
 const AdminMainNav = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const userData = JSON.parse(localStorage.getItem("userData"));
   const token = userData?.token;
@@ -27,6 +34,53 @@ const AdminMainNav = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      // fetch dynamic categories
+      const dynamicCategories = await getProductCategories();
+
+      // fetch unqiue values for thickness, width, and weight from all products list
+      const staticValuesPromises = [
+        getProductStaticValuesByName("thickness"),
+        getProductStaticValuesByName("width"),
+        // getProductStaticValuesByName("weight"),
+      ];
+      // backend not sending weight unique values :) need to add from backend
+      const [thicknessRes, widthRes, weightRes] = await Promise.all(
+        staticValuesPromises
+      );
+
+      // transform unqiue values into the same format as categories
+      const transformUniqiueValues = (name, values) => ({
+        id: Math.floor(Math.random() * 1000),
+        name,
+        choices: values?.map((value) => ({
+          id: Number(value),
+          category: name,
+          name_en: value,
+          name_nl: value,
+        })),
+      });
+
+      const uniqueCategories = [
+        transformUniqiueValues("thickness", thicknessRes.values),
+        transformUniqiueValues("width", widthRes.values),
+        // transformUniqiueValues("weight", weightRes.values),
+      ];
+
+      // combine dynamic and unique static categories
+      const combinedCategories = [...dynamicCategories, ...uniqueCategories];
+      dispatch(setProductCategories(combinedCategories));
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      dispatch(setProductCategories([]));
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
   }, []);
 
   return (

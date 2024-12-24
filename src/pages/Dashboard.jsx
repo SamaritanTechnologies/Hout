@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from "react";
-// import Sidebar from "./Sidebar";
 import inventory from "../assets/DashboardImages/inventory.svg";
 import skuImg from "../assets/DashboardImages/skuImg.svg";
 import salesImg from "../assets/DashboardImages/salesImg.svg";
-import trendUp from "../assets/DashboardImages/trendUp.svg";
-import trendDown from "../assets/DashboardImages/trendDown.svg";
 import sampleProductImg from "../assets/DashboardImages/sampleProductImg.svg";
 import DropDown from "../components/Common/DropDown";
-import { toast } from "react-toastify";
 import { getOrderDetails } from "../redux/actions/orderActions";
-import Button from "../components/Common/Button";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { getStats } from "../redux/actions/dashboardActions";
@@ -31,6 +26,7 @@ const months = [
 ];
 
 export const Dashboard = () => {
+  const navigate = useNavigate();
   const [state, setState] = useState({
     orderList: [],
     stats: null,
@@ -44,7 +40,6 @@ export const Dashboard = () => {
         ...prev,
         orderList: res,
       }));
-      console.log(res, "fetchUser44334");
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -53,11 +48,16 @@ export const Dashboard = () => {
   const fetchDashboardStats = async () => {
     try {
       const res = await getStats();
-      setState((prev) => ({
-        ...prev,
-        stats: res,
-      }));
-      console.log(res, "fetchUser44334");
+      if (res) {
+        const transformedData = Object.entries(res).map(([key, details]) => ({
+          key,
+          ...details,
+        }));
+        setState((prev) => ({
+          ...prev,
+          stats: transformedData,
+        }));
+      }
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -78,7 +78,12 @@ export const Dashboard = () => {
     fetchDashboardStats();
   }, []);
 
-  const navigate = useNavigate();
+  const inventoryStats = state?.stats?.find(
+    (stat) => stat.key === "total_inventory"
+  );
+  const skuStats = state?.stats?.find((stat) => stat.key === "total_sku");
+  const salesStats = state?.stats?.find((stat) => stat.key === "total_sales");
+
   return (
     <div>
       <div className="xl:p-[30px] lg:p-[24px] p-[20px] bg-[#fafafa] h-full min-h-[86vh]">
@@ -89,26 +94,11 @@ export const Dashboard = () => {
         <div className="dashCardRow grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-2 lg:gap-4 xl:gap-8 xl:mb-[15.76px] mb-[10px]">
           <StatsCard
             name="Total Inventory"
-            amount={
-              state?.stats?.total_inventory ? state?.stats?.total_inventory : 0
-            }
             image={inventory}
-            graphImage={trendUp}
+            stats={inventoryStats}
           />
-          <StatsCard
-            name="Total SKU"
-            amount={40}
-            image={skuImg}
-            graphImage={trendUp}
-          />
-          <StatsCard
-            name="Total Sales"
-            image={salesImg}
-            amount={`€${
-              state?.stats?.total_sales ? state?.stats?.total_sales : 0
-            }`}
-            graphImage={trendDown}
-          />
+          <StatsCard name="Total SKU" image={skuImg} stats={skuStats} />
+          <StatsCard name="Total Sales" image={salesImg} stats={salesStats} />
         </div>
 
         {/* analytics row end  */}

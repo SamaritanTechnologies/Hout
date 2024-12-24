@@ -57,7 +57,7 @@ function Routes() {
           <Route path="/product/:id" element={<UpdateProduct />} />
           <Route path="/new-product" element={<AddNewProduct />} />
           <Route path="/order-list/" element={<OrderList />} />
-          <Route path="/user-profile" element={<UserProfile />} />
+          {/* <Route path="/user-profile" element={<UserProfile />} /> */}
         </Route>
 
         <Route element={<AuthRedirect />}>

@@ -12,9 +12,17 @@ import DropdownFilter from "../components/Dashboard/DropdownFilter";
 import cartButton from "../assets/addToCart/cartButton.svg";
 import { Link, useNavigate } from "react-router-dom";
 import DeleteModal from "../components/Modals/DeleteModal";
-import { deleteProduct, getProducts } from "../redux/actions/productActions";
+import {
+  deleteProduct,
+  getProductCategories,
+  getProducts,
+} from "../redux/actions/productActions";
+import { useDispatch, useSelector } from "react-redux";
+import { setProductCategories } from "../redux";
 
 export const Products = () => {
+  const dispatch = useDispatch();
+  const { productCategories } = useSelector((state) => state.admin);
   const [state, setState] = useState({
     productsData: [],
   });
@@ -22,15 +30,22 @@ export const Products = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [isDeleted, setIsDeleted] = useState(false);
   const navigate = useNavigate();
+  const [selectedOptions, setSelectedOptions] = useState({
+    group: [],
+    type: [],
+    material: [],
+    profile: [],
+    thickness: [],
+    width: [],
+  });
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (selectedOptions) => {
     try {
-      const res = await getProducts();
+      const res = await getProducts(selectedOptions);
       setState((prev) => ({
         ...prev,
         productsData: res,
       }));
-      console.log(res, "fetchUser");
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -53,7 +68,44 @@ export const Products = () => {
   useEffect(() => {
     fetchProducts();
   }, [isDeleted]);
-  const [selectedOptions, setSelectedOptions] = useState([]);
+
+  const getTransformedChoices = (name) => {
+    const category = productCategories?.find(
+      (cat) => cat.name.toLowerCase() === name.toLowerCase()
+    );
+    if (!category) return [];
+
+    return category.choices.map((choice) => ({
+      value: choice.id,
+      label: choice.name_en,
+    }));
+  };
+
+  const onFilterChange = (filterKey, selectedValues) => {
+    setSelectedOptions((prev) => {
+      const updatedOptions = {
+        ...prev,
+        [filterKey]: selectedValues,
+      };
+      fetchProducts(updatedOptions);
+      return updatedOptions;
+    });
+  };
+
+  const FilterLabel = ({ type }) => {
+    const selected = selectedOptions[type] || [];
+    const hasSelectedOptions = selected.length > 0;
+
+    return (
+      <div className="relative">
+        <img src={filterImg} alt="Filter" />
+        {hasSelectedOptions && (
+          <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-yellow-400" />
+        )}
+      </div>
+    );
+  };
+
   return (
     <>
       <DeleteModal
@@ -83,7 +135,7 @@ export const Products = () => {
           </div>
 
           <div className=" max-w-screen mx-auto overflow-x-auto">
-            <table className="table-auto productsTable w-full min-w-[1154px] min-h-80">
+            <table className="table-auto productsTable w-full min-w-[1154px] min-h-52">
               <thead>
                 <tr className="bg-[#F1F4F9]">
                   <th className="px-[10px] py-[12px]  text-left text-14 font-bold  rounded-l-2xl	">
@@ -100,31 +152,23 @@ export const Products = () => {
                     <div className="flex items-center gap-2">
                       <span>Thickness</span>
                       <DropdownFilter
-                        options={[
-                          { value: "option1", label: "Option 1" },
-                          { value: "option2", label: "Option 2" },
-                          { value: "option3", label: "Option 3" },
-                          { value: "option4", label: "Option 4" },
-                        ]}
-                        selected={selectedOptions}
-                        setSelected={setSelectedOptions}
-                        label={<img src={filterImg} alt="Filter" />}
+                        options={getTransformedChoices("thickness")}
+                        selected={selectedOptions.thickness}
+                        onChange={(values) =>
+                          onFilterChange("thickness", values)
+                        }
+                        label={<FilterLabel type="thickness" />}
                       />
                     </div>
                   </th>
-                  <th className="px-[10px] py-[12px]  text-left text-14 font-medium min-h-12">
+                  <th className="px-[10px] py-[12px] text-left text-14 font-medium min-h-12">
                     <div className="flex items-center gap-2">
                       <span>Width</span>
                       <DropdownFilter
-                        options={[
-                          { value: "option1", label: "Option 1" },
-                          { value: "option2", label: "Option 2" },
-                          { value: "option3", label: "Option 3" },
-                          { value: "option4", label: "Option 4" },
-                        ]}
-                        selected={selectedOptions}
-                        setSelected={setSelectedOptions}
-                        label={<img src={filterImg} alt="Filter" />}
+                        options={getTransformedChoices("width")}
+                        selected={selectedOptions.width}
+                        onChange={(values) => onFilterChange("width", values)}
+                        label={<FilterLabel type="width" />}
                       />
                     </div>
                   </th>
@@ -132,15 +176,10 @@ export const Products = () => {
                     <div className="flex items-center gap-2">
                       <span>Group</span>
                       <DropdownFilter
-                        options={[
-                          { value: "option1", label: "Option 1" },
-                          { value: "option2", label: "Option 2" },
-                          { value: "option3", label: "Option 3" },
-                          { value: "option4", label: "Option 4" },
-                        ]}
-                        selected={selectedOptions}
-                        setSelected={setSelectedOptions}
-                        label={<img src={filterImg} alt="Filter" />}
+                        options={getTransformedChoices("group")}
+                        selected={selectedOptions.group}
+                        onChange={(values) => onFilterChange("group", values)}
+                        label={<FilterLabel type="group" />}
                       />
                     </div>
                   </th>
@@ -148,15 +187,10 @@ export const Products = () => {
                     <div className="flex items-center gap-2">
                       <span>Type</span>
                       <DropdownFilter
-                        options={[
-                          { value: "option1", label: "Option 1" },
-                          { value: "option2", label: "Option 2" },
-                          { value: "option3", label: "Option 3" },
-                          { value: "option4", label: "Option 4" },
-                        ]}
-                        selected={selectedOptions}
-                        setSelected={setSelectedOptions}
-                        label={<img src={filterImg} alt="Filter" />}
+                        options={getTransformedChoices("type")}
+                        selected={selectedOptions.type}
+                        onChange={(values) => onFilterChange("type", values)}
+                        label={<FilterLabel type="type" />}
                       />
                     </div>
                   </th>
@@ -164,15 +198,12 @@ export const Products = () => {
                     <div className="flex items-center gap-2">
                       <span>Material</span>
                       <DropdownFilter
-                        options={[
-                          { value: "option1", label: "Option 1" },
-                          { value: "option2", label: "Option 2" },
-                          { value: "option3", label: "Option 3" },
-                          { value: "option4", label: "Option 4" },
-                        ]}
-                        selected={selectedOptions}
-                        setSelected={setSelectedOptions}
-                        label={<img src={filterImg} alt="Filter" />}
+                        options={getTransformedChoices("material")}
+                        selected={selectedOptions.material}
+                        onChange={(values) =>
+                          onFilterChange("material", values)
+                        }
+                        label={<FilterLabel type="material" />}
                       />
                     </div>
                   </th>
@@ -181,15 +212,10 @@ export const Products = () => {
                     <div className="flex items-center gap-2">
                       <span>Profile</span>
                       <DropdownFilter
-                        options={[
-                          { value: "option1", label: "Option 1" },
-                          { value: "option2", label: "Option 2" },
-                          { value: "option3", label: "Option 3" },
-                          { value: "option4", label: "Option 4" },
-                        ]}
-                        selected={selectedOptions}
-                        setSelected={setSelectedOptions}
-                        label={<img src={filterImg} alt="Filter" />}
+                        options={getTransformedChoices("profile")}
+                        selected={selectedOptions.profile}
+                        onChange={(values) => onFilterChange("profile", values)}
+                        label={<FilterLabel type="profile" />}
                       />
                     </div>
                   </th>
@@ -345,10 +371,10 @@ export const Products = () => {
                 ) : (
                   <tr className="w-full">
                     <td
-                      colSpan="5"
+                      colSpan="10"
                       className="text-[14px] text-[#141718] text-center py-[22px]"
                     >
-                      No items
+                      No products found
                     </td>
                   </tr>
                 )}

@@ -49,7 +49,9 @@ const AdminSidenav = () => {
               <a
                 key={item.link}
                 className={`h-[43px] text-14 font-medium cursor-pointer ${
-                  item.active ? "sideActive" : ""
+                  item.active || item.link === location.pathname
+                    ? "sideActive"
+                    : ""
                 }`}
                 onClick={() => {
                   handleClick(item);

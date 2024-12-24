@@ -18,11 +18,12 @@ import {
   updateProduct,
 } from "../redux/actions/productActions";
 import { BASE_URL } from "../providers";
+import { useSelector } from "react-redux";
 
 const styleMultiSelect = {
   chips: {
-    background: "#FAFAFA",
-    borderRadius: "4px"
+    background: "#F8F8F8",
+    borderRadius: "4px",
   },
   searchBox: {},
   option: {
@@ -44,23 +45,15 @@ const productItem = {
 export const UpdateProduct = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-
+  const { productCategories: categories } = useSelector((state) => state.admin);
   const [loading, setLoading] = useState(true);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [product, setProduct] = useState();
-  const [categories, setCategories] = useState();
   const [products, setProducts] = useState([{ ...productItem }]);
   const [images, setImages] = useState([]);
-
-  const fetchCategories = async () => {
-    try {
-      const res = await getProductCategories();
-      setCategories(res);
-      setCategoriesLoading(false);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  };
+  const [isErrors, setIsErrors] = useState({
+    images: false,
+  });
 
   const getProductDetails = async (id) => {
     try {
@@ -91,12 +84,8 @@ export const UpdateProduct = () => {
     getProductDetails(id);
   }, [id]);
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
   const getChoicesByName = (name) => {
-    const category = categories?.find((cat) => cat.name == name);
+    const category = categories?.find((cat) => cat.name.toLowerCase() === name.toLowerCase());
     return category ? category.choices : [];
   };
 
@@ -145,6 +134,7 @@ export const UpdateProduct = () => {
       }));
 
     setImages((prevImages) => [...prevImages, ...newImages]);
+    setIsErrors((prev) => ({ ...prev, images: false }));
 
     const invalidFiles = acceptedFiles.filter(
       (file) => !validTypes.includes(file.type)
@@ -163,6 +153,7 @@ export const UpdateProduct = () => {
           preview: URL.createObjectURL(file),
         };
         setImages((prevImages) => [...prevImages, newImage]);
+        setIsErrors((prev) => ({ ...prev, images: false }));
       } else {
         alert("Please upload a valid image (jpg, jpeg, png, or webp)");
       }
@@ -170,9 +161,12 @@ export const UpdateProduct = () => {
   };
 
   const handleRemoveImage = (index) => {
-    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    setImages((prevImages) => {
+      const updatedImages = prevImages.filter((_, i) => i !== index);
+      setIsErrors((prev) => ({ ...prev, images: updatedImages.length === 0 }));
+      return updatedImages;
+    });
   };
-
 
   return (
     <>
@@ -206,6 +200,10 @@ export const UpdateProduct = () => {
             ),
           })}
           onSubmit={async (values, { setSubmitting }) => {
+            if (!images?.length) {
+              setIsErrors((prev) => ({ ...prev, images: true }));
+              return;
+            }
             try {
               const response = await updateProduct(
                 id,
@@ -224,14 +222,16 @@ export const UpdateProduct = () => {
         >
           {({ values, setFieldValue, isSubmitting, errors }) => (
             <Form>
-              <div className=" cursor-pointer lg:pt-[50px] pt-[30px] xl:pb-[30px] lg:pb-[25px] pb-[20px] px-[20px] bg-[rgb(250,250,250)] h-full min-h-[86vh]">
-                <div
-                  onClick={() => {
-                    navigate("/products");
-                  }}
-                  className="flex gap-2 items-center"
-                >
-                  <img src={ArrowBack} alt="" />
+              <div className="lg:pt-[50px] pt-[30px] xl:pb-[30px] lg:pb-[25px] pb-[20px] px-[20px] bg-[rgb(250,250,250)] h-full min-h-[86vh]">
+                <div className="flex gap-2 items-center">
+                  <div
+                    onClick={() => {
+                      navigate("/products");
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <img src={ArrowBack} alt="" />
+                  </div>
                   <h5 className="xl:text-32 lg:text-28 text-26 font-bold">
                     Products
                   </h5>
@@ -275,7 +275,7 @@ export const UpdateProduct = () => {
                     </div>
                     <div className="flex gap-[20px] mb-[25px]">
                       <div className="w-full  md:mb-0">
-                        <label>Groep | Group</label>
+                        <label className="text-sm">Groep | Group</label>
                         <Multiselect
                           closeIcon="close"
                           style={styleMultiSelect}
@@ -295,7 +295,7 @@ export const UpdateProduct = () => {
                     </div>
                     <div className="flex gap-[20px] mb-[24px]">
                       <div className="w-1/2 md:mb-0">
-                        <label>Soort | Type</label>
+                        <label className="text-sm">Soort | Type</label>
                         <Multiselect
                           closeIcon="close"
                           style={styleMultiSelect}
@@ -310,7 +310,7 @@ export const UpdateProduct = () => {
                         />
                       </div>
                       <div className="w-1/2">
-                        <label>Materiaal | Material</label>
+                        <label className="text-sm">Materiaal | Material</label>
                         <Multiselect
                           closeIcon="close"
                           style={styleMultiSelect}
@@ -327,7 +327,7 @@ export const UpdateProduct = () => {
                     </div>
                     <div className="flex gap-[20px] mb-[24px]">
                       <div className="w-1/2 md:mb-0">
-                        <label>Profiel | Profile</label>
+                        <label className="text-sm">Profiel | Profile</label>
                         <Multiselect
                           closeIcon="close"
                           style={styleMultiSelect}
@@ -342,7 +342,9 @@ export const UpdateProduct = () => {
                         />
                       </div>
                       <div className="w-1/2">
-                        <label>Duurzaamheidsklasse | Durability Class</label>
+                        <label className="text-sm">
+                          Duurzaamheidsklasse | Durability Class
+                        </label>
                         <Multiselect
                           closeIcon="close"
                           style={styleMultiSelect}
@@ -360,7 +362,7 @@ export const UpdateProduct = () => {
 
                     <div className="flex gap-[20px] mb-[24px]">
                       <div className="w-1/2 md:mb-0">
-                        <label>Kwaliteit | Quality</label>
+                        <label className="text-sm">Kwaliteit | Quality</label>
                         <Multiselect
                           closeIcon="close"
                           style={styleMultiSelect}
@@ -372,11 +374,13 @@ export const UpdateProduct = () => {
                           onSelect={(selectedList) => {
                             setFieldValue("quality", selectedList);
                           }}
-                          closeIconStyle={{ color: 'red' }}
+                          closeIconStyle={{ color: "red" }}
                         />
                       </div>
                       <div className="w-1/2">
-                        <label>Toepassing | Application</label>
+                        <label className="text-sm">
+                          Toepassing | Application
+                        </label>
                         <Multiselect
                           closeIcon="close"
                           style={styleMultiSelect}
@@ -393,40 +397,25 @@ export const UpdateProduct = () => {
                     </div>
                     <div className="flex gap-[20px] mb-[24px]">
                       <div className="w-1/2 inline-block rounded-lg overflow-hidden">
-                        <label
-                          htmlFor="productDescriptionNl"
-                          className="text-black text-xs font-semibold xl:mb-[8px] mb-[4px] block"
-                        >
-                          Product omschrijving
-                        </label>
-                        <Textarea
-                          id="productDescriptionNl"
+                        <Field
+                          type="text"
                           name="productDescriptionNl"
+                          id="productDescriptionNl"
+                          as="sele"
                           placeholder="omschrijving"
-                          value={values.productDescriptionNl}
-                          onChange={(e) =>
-                            setFieldValue(
-                              "productDescriptionNl",
-                              e.target.value
-                            )
-                          }
+                          label="Product omschrijving"
+                          component={Textarea}
                         />
                       </div>
                       <div className="w-1/2 inline-block rounded-lg overflow-hidden">
-                        <label
-                          className="text-black text-xs font-semibold xl:mb-[8px] mb-[4px] block"
-                          htmlFor="productDescription"
-                        >
-                          Product Description
-                        </label>
-                        <Textarea
-                          id="productDescription"
+                        <Field
+                          type="text"
                           name="productDescription"
+                          id="productDescription"
+                          as="sele"
                           placeholder="Description"
-                          value={values.productDescription}
-                          onChange={(e) =>
-                            setFieldValue("productDescription", e.target.value)
-                          }
+                          label="Product Description"
+                          component={Textarea}
                         />
                       </div>
                     </div>
@@ -665,12 +654,17 @@ export const UpdateProduct = () => {
                             </div>
                           ))}
                         </div>
+                        {isErrors.images && (
+                          <p className="text-sm text-red mt-2">
+                            Please upload atleast 1 image
+                          </p>
+                        )}
                       </div>
                     </div>
 
                     <div>
                       <Button
-                        disabled={isSubmitting || loading}
+                        loading={isSubmitting}
                         type="submit"
                         btnText="Update Product"
                         paddingX="20px"
