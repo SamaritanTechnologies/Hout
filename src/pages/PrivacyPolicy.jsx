@@ -4,28 +4,31 @@ import { axiosApi } from "../providers";
 import { useNavigate } from "react-router-dom";
 
 export const PrivacyPolicy = () => {
-
-  const navigate = useNavigate()
-
-  const [state, setState] = useState({
-    privacy: [],
-  });
+  const navigate = useNavigate();
+  const [data, setData] = useState("");
 
   useEffect(() => {
-    handleGetPolicy();
+    getPrivacyPolicy();
   }, []);
 
-  const handleGetPolicy = async () => {
+  const getPrivacyPolicy = async () => {
     try {
       const response = await axiosApi.get("/privacy-policy/");
-      setState((prev) => ({
-        ...prev,
-        privacy: response.data,
-      }));
+      // Check if response data is a string (assuming HTML content is returned as a string)
+      if (
+        typeof response.data === "string" &&
+        response.data?.trim()?.startsWith("<")
+      ) {
+        setData(response.data);
+      } else {
+        console.error("Invalid HTML content received");
+        setData("<p class='text-center'>Content is not available at the moment.</p>");
+      }
     } catch (error) {
-      toast.error("Somthing went wrong");
+      console.error("Error fetching privacy policy", error);
     }
   };
+
   return (
     <>
       <section className="about flex justify-center items-center !pt-18 ">
@@ -33,24 +36,19 @@ export const PrivacyPolicy = () => {
           <div className="text-white text-48 font-medium">Privacy Policy </div>
           <div className="text-white flex items-center justify-center gap-x-3 pt-5 ">
             <div className="flex items-center gap-x-3">
-              <p className="cursor-pointer" onClick={() => navigate('/')}>Home</p> <img src={rightArrow} />
+              <p className="cursor-pointer" onClick={() => navigate("/")}>
+                Home
+              </p>{" "}
+              <img src={rightArrow} />
             </div>
             <div>Privacy Policy</div>
           </div>
         </div>
       </section>
 
-      <section className="grid xl:grid-cols-2  lg:grid-cols-2  md:grid-cols-1 sm:grid-cols-1 xs:grid-cols-1   px-[100px] lg:px-[60px] md:px[40px] sm:px-[30px] xs:px-[20px]  pt-[100px] gap-x-2 ">
-        <section className="xl:w-[100%] lg:w-[100%] w-[100%]  text-16  ">
-          {state.privacy.length &&
-            state.privacy.map((item) => {
-              return (
-                <section className="xl:w-[100%] lg:w-[100%] w-[100%]  text-16  ">
-                  {item.content}
-                </section>
-              );
-            })}
-        </section>
+
+      <section className="min-h-48 w-full p-16">
+        <div dangerouslySetInnerHTML={{ __html: data }} />
       </section>
     </>
   );

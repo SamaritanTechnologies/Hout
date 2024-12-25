@@ -3,7 +3,7 @@ import rightArrow from "../assets/shopPage/rightArrow.svg";
 import filter from "../assets/shopPage/filter.svg";
 import gridView from "../assets/shopPage/gridView.svg";
 import listView from "../assets/shopPage/listView.svg";
-import ProductsSection from "../components/LandingPageSections/ProductsSection";
+import ProductsSection from "../components/ShopComponents/ProductsSection";
 import Filters from "../components/ShopComponents/Filters";
 import cup from "../assets/shopPage/cup.svg";
 import guarantee from "../assets/shopPage/guarantee.svg";

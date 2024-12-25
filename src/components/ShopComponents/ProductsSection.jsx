@@ -25,12 +25,12 @@ const ProductsSection = ({
   });
 
   useEffect(() => {
-    // getProducts();
+    getProducts();
   }, [selectedFilter]);
 
   const getProducts = async () => {
     try {
-      const response = await axiosWithCredentials.get("/products/");
+      const response = await axiosWithCredentials.get("/product-pagination/");
       if (selectedFilter === "" && location.pathname !== "/") {
         setState((prev) => ({
           ...prev,

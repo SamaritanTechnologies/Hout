@@ -9,7 +9,7 @@ import brazil from "../../assets/LandingPageImages/assortment/brazil.svg";
 import iron from "../../assets/LandingPageImages/assortment/iron.svg";
 import parasols from "../../assets/LandingPageImages/assortment/parasols.svg";
 
-const OurAssortmentSectio = () => {
+const OurAssortmentSection = () => {
   const WoodData = [
     {
       image: oak,
@@ -94,4 +94,4 @@ const OurAssortmentSectio = () => {
   );
 };
 
-export default OurAssortmentSectio;
+export default OurAssortmentSection;

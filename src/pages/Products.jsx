@@ -20,12 +20,18 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { setProductCategories } from "../redux";
 
+const initialState = {
+  results: [],
+  count: 0,
+  next: null,
+  previous: null,
+};
+
 export const Products = () => {
   const dispatch = useDispatch();
   const { productCategories } = useSelector((state) => state.admin);
-  const [state, setState] = useState({
-    productsData: [],
-  });
+
+  const [state, setState] = useState(initialState);
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isDeleted, setIsDeleted] = useState(false);
@@ -44,10 +50,14 @@ export const Products = () => {
       const res = await getProducts(selectedOptions);
       setState((prev) => ({
         ...prev,
-        productsData: res,
+        results: res.results || [],
+        count: res.count || 0,
+        next: res.next || null,
+        previous: res.previous || null,
       }));
     } catch (error) {
       console.error("Error fetching user data:", error);
+      setState(initialState);
     }
   };
 
@@ -230,8 +240,8 @@ export const Products = () => {
               </thead>
 
               <tbody>
-                {state?.productsData?.length > 0 ? (
-                  state.productsData.map((rowData, index) => (
+                {state?.results?.length > 0 ? (
+                  state.results.map((rowData, index) => (
                     <tr
                       key={index}
                       className={`border-b-[0.4px] w-full border-gray ${

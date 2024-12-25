@@ -47,7 +47,6 @@ export const UpdateProduct = () => {
   const { id } = useParams();
   const { productCategories: categories } = useSelector((state) => state.admin);
   const [loading, setLoading] = useState(true);
-  const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [product, setProduct] = useState();
   const [products, setProducts] = useState([{ ...productItem }]);
   const [images, setImages] = useState([]);
@@ -65,7 +64,7 @@ export const UpdateProduct = () => {
 
         const newImages = res.images?.map((file) => ({
           file,
-          preview: `${BASE_URL}${file.product_image}`,
+          preview: file.product_image,
         }));
 
         setImages(newImages);
@@ -81,11 +80,15 @@ export const UpdateProduct = () => {
   };
 
   useEffect(() => {
-    getProductDetails(id);
+    if (id) {
+      getProductDetails(id);
+    }
   }, [id]);
 
   const getChoicesByName = (name) => {
-    const category = categories?.find((cat) => cat.name.toLowerCase() === name.toLowerCase());
+    const category = categories?.find(
+      (cat) => cat.name.toLowerCase() === name.toLowerCase()
+    );
     return category ? category.choices : [];
   };
 
@@ -170,7 +173,7 @@ export const UpdateProduct = () => {
 
   return (
     <>
-      {loading || categoriesLoading ? (
+      {loading ? (
         <div className="flex justify-center mx-auto pt-14 w-full">
           Fetching Product details...
         </div>
@@ -205,13 +208,7 @@ export const UpdateProduct = () => {
               return;
             }
             try {
-              const response = await updateProduct(
-                id,
-                values,
-                products,
-                images
-              );
-              console.log("Form submitted successfully:", response);
+              await updateProduct(id, values, products, images);
               navigate("/products");
             } catch (error) {
               console.error("Error submitting form:", error);
