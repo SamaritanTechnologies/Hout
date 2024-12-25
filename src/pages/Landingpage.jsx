@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import HoutHandelSection from "../components/LandingPageSections/HoutHandelSection";
-import ProductsSection from "../components/LandingPageSections/ProductsSection";
+import ProductsSection from "../components/ShopComponents/ProductsSection";
 import OurValuesSection from "../components/LandingPageSections/OurValuesSection";
-import OurAssortmentSectio from "../components/LandingPageSections/OurAssortmentSectio";
+import OurAssortmentSection from "../components/LandingPageSections/OurAssortmentSection";
 import VideoSection from "../components/LandingPageSections/VideoSection";
 import TestimonialSection from "../components/LandingPageSections/TestimonialSection";
 import { ContactusSection } from "../components/LandingPageSections/ContactusSection";
@@ -38,14 +38,13 @@ export const Landingpage = () => {
       navigate("/");
     }
   }, [location]);
+
   return (
     <>
       <HoutHandelSection />
       <ProductsSection />
       <OurValuesSection />
-
-      <OurAssortmentSectio />
-
+      <OurAssortmentSection />
       <VideoSection />
       <TestimonialSection />
       <ContactusSection />

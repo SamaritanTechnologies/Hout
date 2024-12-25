@@ -154,8 +154,7 @@ export const AddNewProduct = () => {
             return;
           }
           try {
-            const response = await addProduct(values, products, images);
-            console.log("Form submitted successfully:", response);
+            await addProduct(values, products, images);
             navigate("/products");
           } catch (error) {
             console.error("Error submitting form:", error);

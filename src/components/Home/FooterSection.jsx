@@ -8,7 +8,6 @@ import phone from "../../assets/HeaderAndFooter/phoneFooter.svg";
 import footerLogo from "../../assets/new-logo.png";
 import whatsp from "../../assets/HeaderAndFooter/whatspFooter.svg";
 import facebook from "../../assets/HeaderAndFooter/facebookFooter.svg";
-import headerImage from "../../assets/HeaderAndFooter/headerImage.svg";
 import { API_BASE_URL, axiosApi } from "../../providers";
 import { toast } from "react-toastify";
 import { scrollToTop } from "../../utils/helper";
@@ -16,29 +15,38 @@ import axios from "axios";
 
 const FooterSection = ({ isShow }) => {
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(false);
   const [state, setState] = useState({
     openHours: [],
     email: "",
   });
 
   useEffect(() => {
-    handleGetOpeningHours();
+    getOpeningHours();
   }, []);
 
-  const handleGetOpeningHours = async () => {
+  const getOpeningHours = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/google-opening-hours/?place=Hout Totaal`);
+      // const response = await axios.get(`${API_BASE_URL}/google-opening-hours/?place=Hout Totaal`);
+      const response = await axios.get(`${API_BASE_URL}/opening-hours/`);
+      const sortedData = response.data?.sort((a, b) => a.order - b.order);
       setState((prev) => ({
         ...prev,
-        openHours: response.data,
+        openHours: sortedData || [],
       }));
     } catch (error) {
       // toast.error("Wrong credentials!");
     }
   };
 
-  const handleNewsLetter = async () => {
+  const handleMailToClick = (e) => {
+    e.preventDefault();
+    window.location.href = "mailto:info@makeyourplank.nl";
+  };
+
+  const handleNewsLetter = async (e) => {
+    e.preventDefault();
+    setLoading(true);
     try {
       const response = await axiosApi.post("/hubspot_subscribe/", {
         email: state.email,
@@ -51,34 +59,22 @@ const FooterSection = ({ isShow }) => {
         toast.success("Newsletter submit successfuly");
       }
     } catch (error) {
-      // Log the error object for debugging
-      console.log(error, "error");
-
-      // Check if error.response exists
       if (error?.response?.data) {
-        console.log(error.response, "76767667");
-        console.log(error.response.status);
-        console.log(error.response.headers);
-
         toast.error(error?.response?.data?.error || "Something went wrong");
       } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser
         // and an instance of http.ClientRequest in Node.js
-        console.log(error.request);
         toast.error("No response from server. Please try again later.");
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.log("Error", error.message);
         toast.error(error.message);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleMailToClick = (e) => {
-    e.preventDefault();
-    window.location.href = "mailto:info@makeyourplank.nl";
-  };
   return (
     <>
       <footer className="bg-[#E9E6D6] relative">
@@ -88,7 +84,10 @@ const FooterSection = ({ isShow }) => {
               <div className="font-semibold text-[#000] text-[25px] vietnam">
                 Newsletter
               </div>
-              <div className="flex flex-col xs:gap-4 sm:gap-4 sm:flex-row md:flex-row lg:flex-row xl:flex-row w-full">
+              <form
+                onSubmit={handleNewsLetter}
+                className="flex flex-col xs:gap-4 sm:gap-4 sm:flex-row md:flex-row lg:flex-row xl:flex-row w-full"
+              >
                 <input
                   type="email"
                   autoComplete={true}
@@ -99,16 +98,18 @@ const FooterSection = ({ isShow }) => {
                     }));
                   }}
                   value={state.email}
+                  required={true}
                   placeholder="Enter Email Address"
                   className="bg-[#F5F4F8] flex-grow input-field"
                 />
                 <button
+                  disabled={loading}
                   className="subscribe-btn vietnam  w-[150px] md:w-[200px] lg:w-[253px] xl:w-[253px]"
-                  onClick={handleNewsLetter}
+                  type="submit"
                 >
                   Subscribe
                 </button>
-              </div>
+              </form>
             </div>
             <div className=" pt-2 pl-[15px] text-xs vietnam  text-[#000] xs:text-sm ms-0 md:ms-[140px] lg:ms-[140px] xl:ms-[140px]">
               Subscribe to Our Newsletter and get updated every time.
@@ -252,9 +253,9 @@ const FooterSection = ({ isShow }) => {
               <div className="mb-6 text-[18px] md:text-[20px] lg:text-[22px] xl:text-[22px] font-semibold text-[#000]">
                 Opening Hours
               </div>
-              {state.openHours?.weekday_text?.map((item, index) => (
-                <div key={index}>
-                  <div className="mb-5 text-[14px] vietnam ">{item}</div>
+              {state.openHours?.map((item) => (
+                <div key={item.id} className="mb-5 text-[14px] vietnam">
+                  {item.hour}
                 </div>
               ))}
             </div>
