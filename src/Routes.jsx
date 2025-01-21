@@ -24,6 +24,16 @@ import {
   AddNewProduct,
   MyAccount,
   UpdateProduct,
+  ProductOptions,
+  HomepageImage,
+  HomepageProducts,
+  OurValues,
+  OurAssortment,
+  WhyHoutTotaal,
+  TermsAndConditions,
+  AdminPrivacyPolicy,
+  AdminFAQ,
+
 } from "./pages";
 
 import { TermsConditions } from "./pages/TermsConditions";
@@ -54,6 +64,15 @@ function Routes() {
         <Route element={<AdminRoutes />}>
           <Route path="/dashboard/" element={<Dashboard />} />
           <Route path="/products/" element={<Products />} />
+          <Route path="/product-options/" element={<ProductOptions />} />
+          <Route path="/homepage-image/" element={<HomepageImage />} />
+          <Route path="/homepage-products/" element={<HomepageProducts />} />
+          <Route path="/our-values/" element={<OurValues />} />
+          <Route path="/our-assortment/" element={<OurAssortment />} />
+          <Route path="/why-hout-totaal/" element={<WhyHoutTotaal />} />
+          <Route path="/terms-and-conditions/" element={<TermsAndConditions />} />
+          <Route path="/admin-privacy-policy/" element={<AdminPrivacyPolicy />} />
+          <Route path="/admin-FAQ/" element={<AdminFAQ />} />
           <Route path="/product/:id" element={<UpdateProduct />} />
           <Route path="/new-product" element={<AddNewProduct />} />
           <Route path="/order-list/" element={<OrderList />} />

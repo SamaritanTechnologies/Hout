@@ -17,6 +17,7 @@ import {
   getProductCategories,
 } from "../redux/actions/productActions";
 import { useSelector } from "react-redux";
+import Select from "react-select";
 
 const styleMultiSelect = {
   chips: {
@@ -50,10 +51,11 @@ export const AddNewProduct = () => {
   });
 
   const getChoicesByName = (name) => {
-    const category = categories?.find((cat) => cat.name.toLowerCase() === name.toLowerCase());
+    const category = categories?.find(
+      (cat) => cat.name.toLowerCase() === name.toLowerCase()
+    );
     return category ? category.choices : [];
   };
-  
 
   const handleAddRow = () => {
     setProducts([...products, { ...productItem }]);
@@ -115,6 +117,12 @@ export const AddNewProduct = () => {
       return updatedImages;
     });
   };
+  const productOptions = [
+    { value: 'option1', label: 'Option 1' },
+    { value: 'option2', label: 'Option 2' },
+    { value: 'option3', label: 'Option 3' },
+    { value: 'option4', label: 'Option 4' },
+  ];
 
   return (
     <div>
@@ -604,6 +612,53 @@ export const AddNewProduct = () => {
                           Please upload atleast 1 image
                         </p>
                       )}
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-[20px] mb-[60px]">
+                  <h2 className="text-sm">Related Products</h2>
+                    <div className="w-full md:mb-0">
+                      <label className="text-sm">Product 1</label>
+                      <Field
+                        name="fruit"
+                        component={Select}
+                        options={productOptions}
+                        onChange={(option) => setFieldValue("product", option ? option.value : '')}
+                        isSearchable
+                        placeholder="Product 1"
+                      />
+                    </div>
+                    <div className="w-full">
+                      <label className="text-sm">Product 2</label>
+                      <Field
+                        name="fruit"
+                        component={Select}
+                        options={productOptions}
+                        onChange={(option) => setFieldValue("product", option ? option.value : '')}
+                        isSearchable
+                        placeholder="Product 2"
+                      />
+                    </div>
+                    <div className="w-full">
+                      <label className="text-sm">Product 3</label>
+                      <Field
+                        name="fruit"
+                        component={Select}
+                        options={productOptions}
+                        onChange={(option) => setFieldValue("product", option ? option.value : '')}
+                        isSearchable
+                        placeholder="Product 3"
+                      />
+                    </div>
+                    <div className="w-full">
+                      <label className="text-sm">Product 4</label>
+                      <Field
+                        name="fruit"
+                        component={Select}
+                        options={productOptions}
+                        onChange={(option) => setFieldValue("product", option ? option.value : '')}
+                        isSearchable
+                        placeholder="Product 4"
+                      />
                     </div>
                   </div>
 
