@@ -15,8 +15,8 @@ export { AddNewProduct } from "./AddNewProduct";
 export {UpdateProduct} from "./UpdateProduct"
 export { MyAccount } from "./MyAccount";
 export {ProductOptions} from "./ProductOptions";
-export {HomepageImage} from "./HomepageImage";
-export {HomepageProducts} from "./HomepageProducts";
+export {HomePageImage} from "./HomePageImage";
+export {HomePageProducts} from "./HomePageProducts";
 export {OurValues} from "./OurValues";
 export {OurAssortment} from "./OurAssortment";
 export {WhyHoutTotaal} from "./WhyHoutTotaal";

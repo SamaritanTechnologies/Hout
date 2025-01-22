@@ -10,12 +10,12 @@ const Dashboard = () => {
           <div className="dashHead px-[30px] py-[16px]">
             <div className="search">
               {/* <!-- component --> */}
-              <div class="max-w-md">
-                <div class="relative flex items-center w-[80%] h-12 rounded-full focus-within:shadow-lg bg-white overflow-hidden border-inherit	border-[0.5px]">
-                  <div class="grid place-items-center h-full w-12 text-gray-300 bg-[#fefbeb]  min-w-[50px]">
+              <div className="max-w-md">
+                <div className="relative flex items-center w-[80%] h-12 rounded-full focus-within:shadow-lg bg-white overflow-hidden border-inherit	border-[0.5px]">
+                  <div className="grid place-items-center h-full w-12 text-gray-300 bg-[#fefbeb]  min-w-[50px]">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 searchSvg"
+                      className="h-5 w-5 searchSvg"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -31,7 +31,7 @@ const Dashboard = () => {
                   </div>
 
                   <input
-                    class="peer h-full w-full outline-none text-sm text-gray-700 pr-2 bg-[#fefbeb]"
+                    className="peer h-full w-full outline-none text-sm text-gray-700 pr-2 bg-[#fefbeb]"
                     type="text"
                     id="search"
                     placeholder="Search"

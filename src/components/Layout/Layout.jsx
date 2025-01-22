@@ -13,12 +13,21 @@ const Layout = () => {
   ];
   const adminPaths = [
     "/dashboard/",
+    "/products/",
+    "/new-product/",
+    "/product-options/",
+    "/homepage-image/",
+    "/homepage-products/",
+    "/our-values/",
+    "/our-assortment/",
+    "/why-hout-totaal/",
+    "/terms-and-conditions/",
+    "/admin-privacy-policy/",
+    "/admin-FAQ/",
     // "/inbox/",
     "/order-list/",
-    "/products/",
     "/product/",
     "/user-profile/",
-    "/new-product/",
     "/customized-product/",
   ];
 

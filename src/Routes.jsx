@@ -25,8 +25,8 @@ import {
   MyAccount,
   UpdateProduct,
   ProductOptions,
-  HomepageImage,
-  HomepageProducts,
+  HomePageImage,
+  HomePageProducts,
   OurValues,
   OurAssortment,
   WhyHoutTotaal,
@@ -65,8 +65,8 @@ function Routes() {
           <Route path="/dashboard/" element={<Dashboard />} />
           <Route path="/products/" element={<Products />} />
           <Route path="/product-options/" element={<ProductOptions />} />
-          <Route path="/homepage-image/" element={<HomepageImage />} />
-          <Route path="/homepage-products/" element={<HomepageProducts />} />
+          <Route path="/homepage-image/" element={<HomePageImage />} />
+          <Route path="/homepage-products/" element={<HomePageProducts />} />
           <Route path="/our-values/" element={<OurValues />} />
           <Route path="/our-assortment/" element={<OurAssortment />} />
           <Route path="/why-hout-totaal/" element={<WhyHoutTotaal />} />

@@ -57,7 +57,7 @@ const AdminSidenav = () => {
             return (
               <a
                 key={item.link}
-                className={`h-[43px] text-14 font-medium cursor-pointer ${
+                className={`h-[43px] text-14 font-medium cursor-pointer px-4 ${
                   item.active || item.link === location.pathname
                     ? "sideActive"
                     : ""

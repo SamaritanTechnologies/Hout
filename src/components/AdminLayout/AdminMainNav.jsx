@@ -95,10 +95,10 @@ const AdminMainNav = () => {
         <div className="search w-[40%]">
           <div className="">
             <div className="relative flex items-center w-full max-w-[388px] h-10 rounded-full focus-within:shadow-lg bg-white overflow-hidden border-gray	border-[0.5px]">
-              <div class="grid place-items-center h-full w-12 text-gray-300 bg-[#fefbeb]  min-w-[50px]">
+              <div className="grid place-items-center h-full w-12 text-gray-300 bg-[#fefbeb]  min-w-[50px]">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 searchSvg"
+                  className="h-5 w-5 searchSvg"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -112,7 +112,7 @@ const AdminMainNav = () => {
                 </svg>
               </div>
               <input
-                class="peer h-full w-full outline-none text-sm text-gray-700 pr-2 bg-[#fefbeb]"
+                className="peer h-full w-full outline-none text-sm text-gray-700 pr-2 bg-[#fefbeb]"
                 type="text"
                 id="search"
                 placeholder="Search"

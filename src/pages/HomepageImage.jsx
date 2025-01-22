@@ -22,7 +22,7 @@ const handleDrop = (acceptedFiles) => {
   }
 };
 
-export const HomepageImage = () => {
+export const HomePageImage = () => {
   return (
     <div className="lg:pt-[50px] pt-[30px] xl:pb-[30px] lg:pb-[25px] pb-[20px] px-[20px] bg-[rgb(250,250,250)] h-full min-h-[86vh]">
       <div className="flex gap-2 items-center">
