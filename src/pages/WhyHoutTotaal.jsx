@@ -1,13 +1,12 @@
 import React from "react";
 import ArrowBack from "../assets/DashboardImages/arrowback.svg";
 import Button from "../components/Common/Button";
-import Textarea from "../components/Common/Textarea";
-import { Formik, Form, Field } from "formik";
+import RichTextEditor from "../components/Common/RichTextEditor";
 
 export const WhyHoutTotaal = () => {
   return (
     <div className="lg:pt-[50px] pt-[30px] xl:pb-[30px] lg:pb-[25px] pb-[20px] px-[20px] bg-[rgb(250,250,250)] h-full min-h-[86vh]">
-      <div className="flex gap-2 items-center">
+      <div className="flex gap-2 items-center mb-6">
         <div className="cursor-pointer">
           <img src={ArrowBack} alt="Back" />
         </div>
@@ -15,56 +14,28 @@ export const WhyHoutTotaal = () => {
         Why Hout Totaal
         </h5>
       </div>
-      <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 overflow-x-auto pl-[54px]">
-        <Formik
-          initialValues={{
-            WaaromHoutTotaal: "",
-            WhyHoutTotaal: "",
-          }}
-          onSubmit={(values) => {
-            console.log(values);
-          }}
-        >
-          <Form>
-            <div className="flex gap-[20px] mb-[24px]">
-              <div className="w-1/2">
-                <div className="w-full md:mb-0">
-                  <Field
-                    type="text"
-                    name="Waarom Hout Totaal"
-                    id="WaaromHoutTotaal"
-                    as="textarea"
-                    placeholder="Omschrijving"
-                    label="Waarom Hout Totaal"
-                    component={Textarea} 
-                  />
-                </div>
-              </div>
-              <div className="w-1/2">
-                <div className="w-full md:mb-0">
-                  <Field
-                    type="text"
-                    name="Why Hout Totaal"
-                    id="WhyHoutTotaal"
-                    as="textarea"
-                    placeholder="Description"
-                    label="Why Hout Totaal"
-                    component={Textarea}
-                  />
-                </div>
-              </div>
-            </div>
-            <Button
-              loading={false}
-              type="submit"
-              btnText="Save"
-              paddingX="20px"
-              textColor="#000000"
-              breakpoint="xl:w-[354px] lg:w-[280px] w-[240px]"
-            />
-          </Form>
-        </Formik>
+
+      <div className="flex gap-8 pl-[54px] w-full">
+        <div className="w-1/2">
+          <RichTextEditor
+            label="Waarom Hout Totaal"
+          />
+        </div>
+        <div className="w-1/2">
+          <RichTextEditor
+            label="Why Hout Totaal"
+          />
+        </div>
       </div>
+
+      <Button
+        loading={false}
+        type="submit"
+        btnText="Save"
+        paddingX="20px"
+        textColor="#000000"
+        breakpoint="xl:w-[354px] lg:w-[280px] w-[240px] ml-[54px] mt-[100px]"
+      />
     </div>
   );
 };

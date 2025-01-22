@@ -45,253 +45,63 @@ export const OurAssortment = () => {
         <h5 className="xl:text-32 lg:text-28 text-26 font-bold">Our Assortment</h5>
       </div>
       <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-14 overflow-x-auto pl-[54px]">
-        <Formik
-          initialValues={initialValues}
-          onSubmit={handleSubmit}
-        >
+        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
           {({ setFieldValue }) => (
             <Form>
               <div className="flex flex-col gap-[40px] mb-[24px]">
                 <div className="w-full">
                   <div className="flex flex-wrap gap-[5%]">
-                  <div className="flex gap-[12px] flex-wrap my-3 flex-col w-[30%]">
-                  <label
-                    htmlFor="images"
-                    className="text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
-                  >
-                    Group 1
-                  </label>
-                    <div className="flex justify-center">
-                    <Dropzone
-                      width="140px"
-                      height="140px"
-                      onDrop={(acceptedFiles) => {
-                        handleDrop(acceptedFiles);
-                        setFieldValue("images", acceptedFiles);
-                      }}
-                    />
-                    </div>
-                     <Field
+                    {[...Array(6)].map((_, index) => (
+                      <div
+                        key={index}
+                        className="flex gap-[12px] flex-wrap my-3 flex-col w-[30%]"
+                      >
+                        <label
+                          htmlFor="images"
+                          className="text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
+                        >
+                          Group {index + 1}
+                        </label>
+                        <div className="flex justify-center">
+                          <Dropzone
+                            width="140px"
+                            height="140px"
+                            onDrop={(acceptedFiles) => {
+                              handleDrop(acceptedFiles);
+                              setFieldValue("images", acceptedFiles);
+                            }}
+                          />
+                        </div>
+                        <Field
                           type="text"
                           name="nameNl"
                           id="nameNl"
-                          as="sele"
+                          as="select"
                           placeholder="Group Name"
                           component={FormikField}
                         />
-                    <Field
-                      type="text"
-                      name="description"
-                      id="description"
-                      as="textarea"
-                      placeholder="Description"
-                      component={Textarea}
-                      className="h-16 w-full"
-                    />
-                  </div>
-                  <div className="flex gap-[12px] flex-wrap my-3 flex-col w-[30%]">
-                  <label
-                    htmlFor="images"
-                    className="text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
-                  >
-                    Group 1
-                  </label>
-                    <div className="flex justify-center">
-                    <Dropzone
-                      width="140px"
-                      height="140px"
-                      onDrop={(acceptedFiles) => {
-                        handleDrop(acceptedFiles);
-                        setFieldValue("images", acceptedFiles);
-                      }}
-                    />
-                    </div>
-                     <Field
+                        <Field
                           type="text"
-                          name="nameNl"
-                          id="nameNl"
-                          as="sele"
-                          placeholder="Group Name"
-                          component={FormikField}
+                          name="description"
+                          id="description"
+                          as="textarea"
+                          placeholder="Description"
+                          component={Textarea}
+                          className="w-full"
                         />
-                    <Field
-                      type="text"
-                      name="description"
-                      id="description"
-                      as="textarea"
-                      placeholder="Description"
-                      component={Textarea}
-                      className="h-16 w-full"
-                    />
+                      </div>
+                    ))}
                   </div>
-                  <div className="flex gap-[12px] flex-wrap my-3 flex-col w-[30%]">
-                  <label
-                    htmlFor="images"
-                    className="text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
-                  >
-                    Group 1
-                  </label>
-                    <div className="flex justify-center">
-                    <Dropzone
-                      width="140px"
-                      height="140px"
-                      onDrop={(acceptedFiles) => {
-                        handleDrop(acceptedFiles);
-                        setFieldValue("images", acceptedFiles);
-                      }}
-                    />
-                    </div>
-                     <Field
-                          type="text"
-                          name="nameNl"
-                          id="nameNl"
-                          as="sele"
-                          placeholder="Group Name"
-                          component={FormikField}
-                        />
-                    <Field
-                      type="text"
-                      name="description"
-                      id="description"
-                      as="textarea"
-                      placeholder="Description"
-                      component={Textarea}
-                      className="h-16 w-full"
-                    />
-                  </div>
-                  
-                  
-                  </div>
-
-                  <Button
-                    loading={false}
-                    type="submit"
-                    btnText="Save"
-                    paddingX="20px"
-                    textColor="#000000"
-                    breakpoint="xl:w-[354px] lg:w-[280px] w-[240px]"
-                  />
                 </div>
-                <div className="w-full">
-                  <div className="flex flex-wrap gap-[5%]">
-                  <div className="flex gap-[12px] flex-wrap my-3 flex-col w-[30%]">
-                  <label
-                    htmlFor="images"
-                    className="text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
-                  >
-                    Group 1
-                  </label>
-                    <div className="flex justify-center">
-                    <Dropzone
-                      width="140px"
-                      height="140px"
-                      onDrop={(acceptedFiles) => {
-                        handleDrop(acceptedFiles);
-                        setFieldValue("images", acceptedFiles);
-                      }}
-                    />
-                    </div>
-                     <Field
-                          type="text"
-                          name="nameNl"
-                          id="nameNl"
-                          as="sele"
-                          placeholder="Group Name"
-                          component={FormikField}
-                        />
-                    <Field
-                      type="text"
-                      name="description"
-                      id="description"
-                      as="textarea"
-                      placeholder="Description"
-                      component={Textarea}
-                      className="h-16 w-full"
-                    />
-                  </div>
-                  <div className="flex gap-[12px] flex-wrap my-3 flex-col w-[30%]">
-                  <label
-                    htmlFor="images"
-                    className="text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
-                  >
-                    Group 1
-                  </label>
-                    <div className="flex justify-center">
-                    <Dropzone
-                      width="140px"
-                      height="140px"
-                      onDrop={(acceptedFiles) => {
-                        handleDrop(acceptedFiles);
-                        setFieldValue("images", acceptedFiles);
-                      }}
-                    />
-                    </div>
-                     <Field
-                          type="text"
-                          name="nameNl"
-                          id="nameNl"
-                          as="sele"
-                          placeholder="Group Name"
-                          component={FormikField}
-                        />
-                    <Field
-                      type="text"
-                      name="description"
-                      id="description"
-                      as="textarea"
-                      placeholder="Description"
-                      component={Textarea}
-                      className="h-16 w-full"
-                    />
-                  </div>
-                  <div className="flex gap-[12px] flex-wrap my-3 flex-col w-[30%]">
-                  <label
-                    htmlFor="images"
-                    className="text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
-                  >
-                    Group 1
-                  </label>
-                    <div className="flex justify-center">
-                    <Dropzone
-                      width="140px"
-                      height="140px"
-                      onDrop={(acceptedFiles) => {
-                        handleDrop(acceptedFiles);
-                        setFieldValue("images", acceptedFiles);
-                      }}
-                    />
-                    </div>
-                     <Field
-                          type="text"
-                          name="nameNl"
-                          id="nameNl"
-                          as="sele"
-                          placeholder="Group Name"
-                          component={FormikField}
-                        />
-                    <Field
-                      type="text"
-                      name="description"
-                      id="description"
-                      as="textarea"
-                      placeholder="Description"
-                      component={Textarea}
-                      className="h-16 w-full"
-                    />
-                  </div>
-                  
-                  
-                  </div>
 
-                  <Button
-                    loading={false}
-                    type="submit"
-                    btnText="Save"
-                    paddingX="20px"
-                    textColor="#000000"
-                    breakpoint="xl:w-[354px] lg:w-[280px] w-[240px]"
-                  />
-                </div>
+                <Button
+                  loading={false}
+                  type="submit"
+                  btnText="Save"
+                  paddingX="20px"
+                  textColor="#000000"
+                  breakpoint="xl:w-[354px] lg:w-[280px] w-[240px]"
+                />
               </div>
             </Form>
           )}
@@ -300,4 +110,3 @@ export const OurAssortment = () => {
     </div>
   );
 };
-

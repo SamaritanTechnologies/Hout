@@ -517,3 +517,10 @@ input[type="date"] {
 .VIpgJd-ZVi9od-l4eHX-hSRGPd{
   display: none;
 }
+.ql-container.ql-snow {
+  border: none !important; 
+}
+.ql-toolbar.ql-snow {
+  border: none !important;
+  border-bottom: 1px solid #ccc !important;
+}
