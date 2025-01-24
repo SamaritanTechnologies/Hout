@@ -18,6 +18,8 @@ import {
 } from "../redux/actions/productActions";
 import { useSelector } from "react-redux";
 import Select from "react-select";
+import countryflag from "../assets/DashboardImages/UK-Flag.svg"
+import countryflag2 from "../assets/DashboardImages/USA-flag.svg"
 
 const styleMultiSelect = {
   chips: {
@@ -197,7 +199,7 @@ export const AddNewProduct = () => {
                 <div className="formSec">
                   <div className="flex gap-[20px] mb-[24px]">
                     <div className="w-1/2">
-                      <div className="w-full md:mb-0">
+                      <div className="w-full md:mb-0 relative">
                         <Field
                           type="text"
                           name="nameNl"
@@ -207,10 +209,15 @@ export const AddNewProduct = () => {
                           label="Naam"
                           component={FormikField}
                         />
+                        <img
+                                  src={countryflag}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 bottom-3"
+                                />
                       </div>
                     </div>
                     <div className="w-1/2">
-                      <div className="w-full md:mb-0">
+                      <div className="w-full md:mb-0 relative">
                         <Field
                           type="text"
                           name="name"
@@ -220,6 +227,11 @@ export const AddNewProduct = () => {
                           label="Name"
                           component={FormikField}
                         />
+                                                <img
+                                  src={countryflag2}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 bottom-3"
+                                />
                       </div>
                     </div>
                   </div>
@@ -345,7 +357,7 @@ export const AddNewProduct = () => {
                     </div>
                   </div>
                   <div className="flex gap-[20px] mb-[24px]">
-                    <div className="w-1/2 inline-block rounded-lg overflow-hidden">
+                    <div className="w-1/2 inline-block rounded-lg overflow-hidden relative">
                       <Field
                         type="text"
                         name="productDescriptionNl"
@@ -355,8 +367,13 @@ export const AddNewProduct = () => {
                         label="Product omschrijving"
                         component={Textarea}
                       />
+                                              <img
+                                  src={countryflag}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 top-8"
+                                />
                     </div>
-                    <div className="w-1/2 inline-block rounded-lg overflow-hidden">
+                    <div className="w-1/2 inline-block rounded-lg overflow-hidden relative">
                       <Field
                         type="text"
                         name="productDescription"
@@ -366,6 +383,11 @@ export const AddNewProduct = () => {
                         label="Product Description"
                         component={Textarea}
                       />
+                                              <img
+                                  src={countryflag2}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 top-8"
+                                />
                     </div>
                   </div>
                   <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>

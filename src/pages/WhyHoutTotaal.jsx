@@ -2,6 +2,8 @@ import React from "react";
 import ArrowBack from "../assets/DashboardImages/arrowback.svg";
 import Button from "../components/Common/Button";
 import RichTextEditor from "../components/Common/RichTextEditor";
+import countryflag from "../assets/DashboardImages/UK-Flag.svg"
+import countryflag2 from "../assets/DashboardImages/USA-flag.svg"
 
 export const WhyHoutTotaal = () => {
   return (
@@ -16,15 +18,25 @@ export const WhyHoutTotaal = () => {
       </div>
 
       <div className="flex gap-8 pl-[54px] w-full">
-        <div className="w-1/2">
+        <div className="w-1/2 relative">
           <RichTextEditor
             label="Waarom Hout Totaal"
           />
+            <img
+                                  src={countryflag}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-[6px] top-[60px]"
+                                />
         </div>
-        <div className="w-1/2">
+        <div className="w-1/2 relative">
           <RichTextEditor
             label="Why Hout Totaal"
           />
+            <img
+                                  src={countryflag2}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-[6px] top-[60px]"
+                                />
         </div>
       </div>
 

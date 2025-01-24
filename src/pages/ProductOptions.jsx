@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import ArrowBack from "../assets/DashboardImages/arrowback.svg";
 import TableBody from "../components/Common/TableBody";
+import countryflag from "../assets/DashboardImages/UK-Flag.svg"
+import countryflag2 from "../assets/DashboardImages/USA-flag.svg"
 
 
 export const ProductOptions = () => {
@@ -19,11 +21,21 @@ export const ProductOptions = () => {
           <table className="min-w-full leading-normal">
             <thead>
               <tr>
-                <th className="px-[24px] py-[16px] text-left text-14 font-bold rounded-ss-2xl bg-[#cbcbcb]">
+                <th className="px-[24px] py-[16px] text-left text-14 font-bold rounded-ss-2xl bg-[#cbcbcb] relative">
                   Groep
+                  <img
+                                  src={countryflag}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 top-5"
+                                />
                 </th>
-                <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold rounded-se-2xl">
+                <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold rounded-se-2xl relative">
                   Group
+                  <img
+                                  src={countryflag2}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 top-5"
+                                />
                 </th>
               </tr>
             </thead>
@@ -34,11 +46,21 @@ export const ProductOptions = () => {
           <table className="min-w-full leading-normal">
             <thead>
               <tr>
-                <th className="px-[24px] py-[16px] text-left text-14 font-bold rounded-ss-2xl bg-[#cbcbcb]">
+                <th className="px-[24px] py-[16px] text-left text-14 font-bold rounded-ss-2xl bg-[#cbcbcb] relative">
                 Soort
+                <img
+                                  src={countryflag}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 top-5"
+                                />
                 </th>
-                <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold rounded-se-2xl">
+                <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold rounded-se-2xl relative">
                 Type
+                <img
+                                  src={countryflag2}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 top-5"
+                                />
                 </th>
               </tr>
             </thead>
@@ -49,11 +71,21 @@ export const ProductOptions = () => {
           <table className="min-w-full leading-normal">
             <thead>
               <tr>
-                <th className="px-[24px] py-[16px] text-left text-14 font-bold rounded-ss-2xl bg-[#cbcbcb]">
+                <th className="px-[24px] py-[16px] text-left text-14 font-bold rounded-ss-2xl bg-[#cbcbcb] relative">
                 Materiaal
+                <img
+                                  src={countryflag}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 top-5"
+                                />
                 </th>
-                <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold rounded-se-2xl">
+                <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold rounded-se-2xl relative">
                 Material
+                <img
+                                  src={countryflag2}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 top-5"
+                                />
                 </th>
               </tr>
             </thead>
@@ -64,11 +96,21 @@ export const ProductOptions = () => {
           <table className="min-w-full leading-normal">
             <thead>
               <tr>
-                <th className="px-[24px] py-[16px] text-left text-14 font-bold rounded-ss-2xl bg-[#cbcbcb]">
+                <th className="px-[24px] py-[16px] text-left text-14 font-bold rounded-ss-2xl bg-[#cbcbcb] relative">
                 Profiel
+                <img
+                                  src={countryflag}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 top-5"
+                                />
                 </th>
-                <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold rounded-se-2xl">
+                <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold rounded-se-2xl relative">
                 Profiel
+                <img
+                                  src={countryflag2}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 top-5"
+                                />
                 </th>
               </tr>
             </thead>
@@ -79,11 +121,21 @@ export const ProductOptions = () => {
           <table className="min-w-full leading-normal">
             <thead>
               <tr>
-                <th className="px-[24px] py-[16px] text-left text-14 font-bold rounded-ss-2xl bg-[#cbcbcb]">
+                <th className="px-[24px] py-[16px] text-left text-14 font-bold rounded-ss-2xl bg-[#cbcbcb] relative">
                 Duurzaamheidsklasse
+                <img
+                                  src={countryflag}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 top-5"
+                                />
                 </th>
-                <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold rounded-se-2xl">
+                <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold rounded-se-2xl relative">
                 Durability
+                <img
+                                  src={countryflag2}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 top-5"
+                                />
                 </th>
               </tr>
             </thead>
@@ -94,11 +146,21 @@ export const ProductOptions = () => {
           <table className="min-w-full leading-normal">
             <thead>
               <tr>
-                <th className="px-[24px] py-[16px] text-left text-14 font-bold rounded-ss-2xl bg-[#cbcbcb]">
+                <th className="px-[24px] py-[16px] text-left text-14 font-bold rounded-ss-2xl bg-[#cbcbcb] relative">
                 Kwaliteit
+                <img
+                                  src={countryflag}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 top-5"
+                                />
                 </th>
-                <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold rounded-se-2xl">
+                <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold rounded-se-2xl relative">
                 Quality
+                <img
+                                  src={countryflag2}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 top-5"
+                                />
                 </th>
               </tr>
             </thead>
@@ -109,11 +171,21 @@ export const ProductOptions = () => {
           <table className="min-w-full leading-normal">
             <thead>
               <tr>
-                <th className="px-[24px] py-[16px] text-left text-14 font-bold rounded-ss-2xl bg-[#cbcbcb]">
+                <th className="px-[24px] py-[16px] text-left text-14 font-bold rounded-ss-2xl bg-[#cbcbcb] relative">
                 Toepassing
+                <img
+                                  src={countryflag}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 top-5"
+                                />
                 </th>
-                <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold rounded-se-2xl">
+                <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold rounded-se-2xl relative">
                 Application
+                <img
+                                  src={countryflag2}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 top-5"
+                                />
                 </th>
               </tr>
             </thead>
