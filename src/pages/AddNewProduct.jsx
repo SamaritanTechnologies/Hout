@@ -17,6 +17,9 @@ import {
   getProductCategories,
 } from "../redux/actions/productActions";
 import { useSelector } from "react-redux";
+import Select from "react-select";
+import countryflag from "../assets/DashboardImages/UK-Flag.svg"
+import countryflag2 from "../assets/DashboardImages/USA-flag.svg"
 
 const styleMultiSelect = {
   chips: {
@@ -50,10 +53,11 @@ export const AddNewProduct = () => {
   });
 
   const getChoicesByName = (name) => {
-    const category = categories?.find((cat) => cat.name.toLowerCase() === name.toLowerCase());
+    const category = categories?.find(
+      (cat) => cat.name.toLowerCase() === name.toLowerCase()
+    );
     return category ? category.choices : [];
   };
-  
 
   const handleAddRow = () => {
     setProducts([...products, { ...productItem }]);
@@ -115,6 +119,12 @@ export const AddNewProduct = () => {
       return updatedImages;
     });
   };
+  const productOptions = [
+    { value: 'option1', label: 'Option 1' },
+    { value: 'option2', label: 'Option 2' },
+    { value: 'option3', label: 'Option 3' },
+    { value: 'option4', label: 'Option 4' },
+  ];
 
   return (
     <div>
@@ -189,7 +199,7 @@ export const AddNewProduct = () => {
                 <div className="formSec">
                   <div className="flex gap-[20px] mb-[24px]">
                     <div className="w-1/2">
-                      <div className="w-full md:mb-0">
+                      <div className="w-full md:mb-0 relative">
                         <Field
                           type="text"
                           name="nameNl"
@@ -199,10 +209,15 @@ export const AddNewProduct = () => {
                           label="Naam"
                           component={FormikField}
                         />
+                        <img
+                                  src={countryflag}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 bottom-3"
+                                />
                       </div>
                     </div>
                     <div className="w-1/2">
-                      <div className="w-full md:mb-0">
+                      <div className="w-full md:mb-0 relative">
                         <Field
                           type="text"
                           name="name"
@@ -212,6 +227,11 @@ export const AddNewProduct = () => {
                           label="Name"
                           component={FormikField}
                         />
+                                                <img
+                                  src={countryflag2}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 bottom-3"
+                                />
                       </div>
                     </div>
                   </div>
@@ -337,7 +357,7 @@ export const AddNewProduct = () => {
                     </div>
                   </div>
                   <div className="flex gap-[20px] mb-[24px]">
-                    <div className="w-1/2 inline-block rounded-lg overflow-hidden">
+                    <div className="w-1/2 inline-block rounded-lg overflow-hidden relative">
                       <Field
                         type="text"
                         name="productDescriptionNl"
@@ -347,8 +367,13 @@ export const AddNewProduct = () => {
                         label="Product omschrijving"
                         component={Textarea}
                       />
+                                              <img
+                                  src={countryflag}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 top-8"
+                                />
                     </div>
-                    <div className="w-1/2 inline-block rounded-lg overflow-hidden">
+                    <div className="w-1/2 inline-block rounded-lg overflow-hidden relative">
                       <Field
                         type="text"
                         name="productDescription"
@@ -358,6 +383,11 @@ export const AddNewProduct = () => {
                         label="Product Description"
                         component={Textarea}
                       />
+                                              <img
+                                  src={countryflag2}
+                                  alt="Flag"
+                                  className="cursor-pointer h-5 w-5 absolute right-4 top-8"
+                                />
                     </div>
                   </div>
                   <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
@@ -604,6 +634,53 @@ export const AddNewProduct = () => {
                           Please upload atleast 1 image
                         </p>
                       )}
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-[20px] mb-[60px]">
+                  <h2 className="text-sm">Related Products</h2>
+                    <div className="w-full md:mb-0">
+                      <label className="text-sm">Product 1</label>
+                      <Field
+                        name="fruit"
+                        component={Select}
+                        options={productOptions}
+                        onChange={(option) => setFieldValue("product", option ? option.value : '')}
+                        isSearchable
+                        placeholder="Product 1"
+                      />
+                    </div>
+                    <div className="w-full">
+                      <label className="text-sm">Product 2</label>
+                      <Field
+                        name="fruit"
+                        component={Select}
+                        options={productOptions}
+                        onChange={(option) => setFieldValue("product", option ? option.value : '')}
+                        isSearchable
+                        placeholder="Product 2"
+                      />
+                    </div>
+                    <div className="w-full">
+                      <label className="text-sm">Product 3</label>
+                      <Field
+                        name="fruit"
+                        component={Select}
+                        options={productOptions}
+                        onChange={(option) => setFieldValue("product", option ? option.value : '')}
+                        isSearchable
+                        placeholder="Product 3"
+                      />
+                    </div>
+                    <div className="w-full">
+                      <label className="text-sm">Product 4</label>
+                      <Field
+                        name="fruit"
+                        component={Select}
+                        options={productOptions}
+                        onChange={(option) => setFieldValue("product", option ? option.value : '')}
+                        isSearchable
+                        placeholder="Product 4"
+                      />
                     </div>
                   </div>
 

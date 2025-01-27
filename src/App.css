@@ -76,14 +76,11 @@ button:hover {
 }
 .sideBarMain a {
   width: 100%;
-  padding: 0 40px;
   display: flex;
-  /* justify-content: center; */
   align-items: center;
 }
 a.sideActive {
   background: #fbc700;
-  /* padding:0 40px; */
   text-align: center;
   color: #fff;
   position: relative;
@@ -519,4 +516,11 @@ input[type="date"] {
 
 .VIpgJd-ZVi9od-l4eHX-hSRGPd{
   display: none;
+}
+.ql-container.ql-snow {
+  border: none !important; 
+}
+.ql-toolbar.ql-snow {
+  border: none !important;
+  border-bottom: 1px solid #ccc !important;
 }

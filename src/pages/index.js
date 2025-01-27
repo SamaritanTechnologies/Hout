@@ -14,3 +14,12 @@ export { CustomizedProduct } from "./CustomizedProduct";
 export { AddNewProduct } from "./AddNewProduct";
 export {UpdateProduct} from "./UpdateProduct"
 export { MyAccount } from "./MyAccount";
+export {ProductOptions} from "./ProductOptions";
+export {HomePageImage} from "./HomePageImage";
+export {HomePageProducts} from "./HomePageProducts";
+export {OurValues} from "./OurValues";
+export {OurAssortment} from "./OurAssortment";
+export {WhyHoutTotaal} from "./WhyHoutTotaal";
+export {TermsAndConditions} from "./TermsAndConditions";
+export {AdminPrivacyPolicy} from "./AdminPrivacyPolicy";
+export {AdminFAQ} from "./AdminFAQ";

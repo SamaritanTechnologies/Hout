@@ -111,7 +111,7 @@ export const Dashboard = () => {
             </h5>
             {/* dropdown  */}
             <div>
-              <div class="relative inline-block text-left">
+              <div className="relative inline-block text-left">
                 <div>
                   <DropDown
                     firstOptionText="October"

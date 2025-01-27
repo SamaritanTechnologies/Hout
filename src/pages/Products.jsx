@@ -19,6 +19,9 @@ import {
 } from "../redux/actions/productActions";
 import { useDispatch, useSelector } from "react-redux";
 import { setProductCategories } from "../redux";
+import Activebadge from "../assets/DashboardImages/ActiveBadge.svg"
+import ActiveTableHead from "../assets/DashboardImages/ActiveTableHead.svg"
+
 
 const initialState = {
   results: [],
@@ -234,6 +237,12 @@ export const Products = () => {
                     Stock
                   </th>
                   <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
+                  <img
+                                  src={ActiveTableHead}
+                                  alt="ActiveTableHead"
+                                />
+                  </th>
+                  <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
                     Action
                   </th>
                 </tr>
@@ -350,6 +359,12 @@ export const Products = () => {
                           </p>
                         </div>
                       </td>
+                      <td>
+                  <img
+                                  src={Activebadge}
+                                  alt="ActiveBadge"
+                                />
+                  </td>
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left xl:text-14 lg-text-[13px] text-12 font-semibold text-gray3 min-w-[100px]">
                         <div className="flex xl:gap-3 gap-2 items-center justify-center">
                           <div
