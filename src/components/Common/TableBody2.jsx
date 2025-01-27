@@ -4,7 +4,6 @@ import CrossCircle from "../../assets/DashboardImages/cancelCircle.svg";
 
 const productItem = {
   Bezorgen: "",
-  product_id_prefix: "",
   full_price_ex_vat: "",
 };
 
@@ -43,18 +42,6 @@ const TableBody2 = () => {
               required
               placeholder="Bezorgen"
               onChange={(e) => handleChange(index, "length", e.target.value)}
-              className="w-full outline-none bg-transparent"
-            />
-          </td>
-          <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
-            <input
-              required
-              type="text"
-              placeholder="Hoe laat komen we bezorgen?"
-              value={product.product_id_prefix}
-              onChange={(e) =>
-                handleChange(index, "product_id_prefix", e.target.value)
-              }
               className="w-full outline-none bg-transparent"
             />
           </td>
