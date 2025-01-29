@@ -19,9 +19,8 @@ import {
 } from "../redux/actions/productActions";
 import { useDispatch, useSelector } from "react-redux";
 import { setProductCategories } from "../redux";
-import Activebadge from "../assets/DashboardImages/ActiveBadge.svg"
-import ActiveTableHead from "../assets/DashboardImages/ActiveTableHead.svg"
-
+import Activebadge from "../assets/DashboardImages/ActiveBadge.svg";
+import ActiveTableHead from "../assets/DashboardImages/ActiveTableHead.svg";
 
 const initialState = {
   results: [],
@@ -31,7 +30,6 @@ const initialState = {
 };
 
 export const Products = () => {
-  const dispatch = useDispatch();
   const { productCategories } = useSelector((state) => state.admin);
 
   const [state, setState] = useState(initialState);
@@ -51,6 +49,7 @@ export const Products = () => {
   const fetchProducts = async (selectedOptions) => {
     try {
       const res = await getProducts(selectedOptions);
+
       setState((prev) => ({
         ...prev,
         results: res.results || [],
@@ -67,10 +66,7 @@ export const Products = () => {
   const handleDelete = async () => {
     try {
       if (selectedItem) {
-        await deleteProduct({
-          id: selectedItem?.product_id,
-          parentId: selectedItem?.parent_product_id,
-        });
+        await deleteProduct(selectedItem?.id);
         setIsDeleted(!isDeleted);
       }
     } catch (error) {
@@ -84,11 +80,11 @@ export const Products = () => {
 
   const getTransformedChoices = (name) => {
     const category = productCategories?.find(
-      (cat) => cat.name_en.toLowerCase() === name.toLowerCase()
+      (cat) => cat.name?.toLowerCase() === name.toLowerCase()
     );
     if (!category) return [];
 
-    return category.choices.map((choice) => ({
+    return category.choices?.map((choice) => ({
       value: choice.id,
       label: choice.name_en,
     }));
@@ -237,10 +233,7 @@ export const Products = () => {
                     Stock
                   </th>
                   <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
-                  <img
-                                  src={ActiveTableHead}
-                                  alt="ActiveTableHead"
-                                />
+                    <img src={ActiveTableHead} alt="ActiveTableHead" />
                   </th>
                   <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
                     Action
@@ -250,7 +243,7 @@ export const Products = () => {
 
               <tbody>
                 {state?.results?.length > 0 ? (
-                  state.results.map((rowData, index) => (
+                  state.results?.map((rowData, index) => (
                     <tr
                       key={index}
                       className={`border-b-[0.4px] w-full border-gray ${
@@ -267,9 +260,9 @@ export const Products = () => {
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">
                         <div className="flex gap-1 items-center">
                           <div className="block xl:w-[60px] lg:w-[50px] w-[45px]">
-                            {rowData?.images_url?.length ? (
+                            {rowData?.images?.length ? (
                               <img
-                                src={rowData?.images_url?.[0]?.url}
+                                src={rowData?.images?.[0]?.url}
                                 alt={rowData?.name}
                                 className=""
                               />
@@ -298,9 +291,9 @@ export const Products = () => {
 
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">
                         <div className="flex flex-col gap-1 items-center">
-                          {rowData?.group && rowData.group.length > 0
-                            ? rowData.group.map((item, index) => (
-                                <p key={index}>{item}</p>
+                          {rowData?.group && rowData.group?.length > 0
+                            ? rowData.group?.map((item, index) => (
+                                <p key={index}>{item.name_en}</p>
                               ))
                             : "---"}
                         </div>
@@ -308,13 +301,14 @@ export const Products = () => {
 
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">
                         <div className="flex flex-col gap-1 items-center">
-                          {rowData?.type && rowData.type.length > 0
-                            ? rowData.type.map((item, index) => (
+                          {rowData?.product_type &&
+                          rowData.product_type?.length > 0
+                            ? rowData.product_type?.map((item, index) => (
                                 <p
                                   key={index}
                                   className="text-gray-900 whitespace-no-wrap"
                                 >
-                                  {item}
+                                  {item.name_en}
                                 </p>
                               ))
                             : "---"}
@@ -330,7 +324,7 @@ export const Products = () => {
                                   className="text-gray-900 whitespace-no-wrap flex gap-2 items-center"
                                 >
                                   <span className="bg-[#FBC7001A] text-[#FBC700] py-1 px-3 rounded-full inline-block min-w-[70px] text-center">
-                                    {item}
+                                    {item.name_en}
                                   </span>
                                 </p>
                               ))
@@ -346,7 +340,7 @@ export const Products = () => {
                                   key={index}
                                   className="text-gray-900 whitespace-no-wrap flex gap-2 items-center"
                                 >
-                                  {item}
+                                  {item.name_en}
                                 </p>
                               ))
                             : "---"}
@@ -355,21 +349,23 @@ export const Products = () => {
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">
                         <div className="flex xl:gap-3 gap-2 items-center justify-center">
                           <p className="text-gray-900 whitespace-no-wrap flex gap-2 items-center">
-                            {rowData?.stock}
+                            {rowData?.lengths && rowData.lengths.length > 0
+                              ? rowData.lengths.reduce(
+                                  (total, item) => total + item.stock,
+                                  0
+                                )
+                              : 0}
                           </p>
                         </div>
                       </td>
                       <td>
-                  <img
-                                  src={Activebadge}
-                                  alt="ActiveBadge"
-                                />
-                  </td>
+                        <img src={Activebadge} alt="ActiveBadge" />
+                      </td>
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left xl:text-14 lg-text-[13px] text-12 font-semibold text-gray3 min-w-[100px]">
                         <div className="flex xl:gap-3 gap-2 items-center justify-center">
                           <div
                             onClick={() => {
-                              navigate(`/product/${rowData.parent_product_id}`);
+                              navigate(`/product/${rowData.id}`);
                             }}
                             className="cursor-pointer"
                           >

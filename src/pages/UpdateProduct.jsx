@@ -60,7 +60,7 @@ export const UpdateProduct = () => {
 
       if (res) {
         setProduct(res);
-        setProducts(res.products);
+        setProducts(res.lengths);
 
         const newImages = res.images?.map((file) => ({
           file,
@@ -87,7 +87,7 @@ export const UpdateProduct = () => {
 
   const getChoicesByName = (name) => {
     const category = categories?.find(
-      (cat) => cat.name_en.toLowerCase() === name.toLowerCase()
+      (cat) => cat.name?.toLowerCase() === name.toLowerCase()
     );
     return category ? category.choices : [];
   };

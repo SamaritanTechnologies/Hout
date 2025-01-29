@@ -54,7 +54,7 @@ export const AddNewProduct = () => {
 
   const getChoicesByName = (name) => {
     const category = categories?.find(
-      (cat) => cat.name_en.toLowerCase() === name.toLowerCase()
+      (cat) => cat.name?.toLowerCase() === name.toLowerCase()
     );
     return category ? category.choices : [];
   };

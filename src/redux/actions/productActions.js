@@ -25,11 +25,9 @@ export const getProducts = async (filters = {}) => {
   }
 };
 
-export const deleteProduct = async (values) => {
+export const deleteProduct = async (id) => {
   try {
-    const { id, parentId } = values;
-
-    await axiosWithCredentials.delete(`/product/${parentId}/delete/${id}/`);
+    await axiosWithCredentials.delete(`/product/${id}/delete/`);
 
     toast.success("Successfully deleted");
   } catch (error) {
@@ -78,7 +76,7 @@ export const getProductStaticValuesByName = async (field) => {
 
 export const getProductDetailsById = async (id) => {
   try {
-    const response = await axiosWithCredentials.get(`/product/${id}/detail/`);
+    const response = await axiosWithCredentials.get(`/product/?product_id=${id}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching product details:", error);
@@ -139,6 +137,8 @@ export const addProduct = async (values, products, images) => {
       product.full_price_ex_vat || 0
     );
   });
+
+  // related products
 
   try {
     const response = await axiosWithCredentials.post(
@@ -220,7 +220,7 @@ export const updateProduct = async (id, values, products, images) => {
 
   try {
     const response = await axiosWithCredentials.put(
-      `/products/${id}/update/`,
+      `/product/${id}/update/`,
       formData,
       {
         headers: { "Content-Type": "multipart/form-data" },

@@ -70,6 +70,7 @@ const AdminMainNav = () => {
         // transformUniqiueValues("weight", weightRes.values),
       ];
 
+
       // combine dynamic and unique static categories
       const combinedCategories = [...dynamicCategories, ...uniqueCategories];
       dispatch(setProductCategories(combinedCategories));
