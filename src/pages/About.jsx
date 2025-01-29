@@ -35,7 +35,7 @@ export const About = () => {
     <>
       <section className="about flex justify-center items-center ">
         <div className="w-[320px] m-auto  text-center bg-transparentGray text-white py-[35px] rounded-lg ">
-          <div className="text-white text-48 font-medium">About US </div>
+          <div className="text-white text-30 md:tex-40 lg:text-44 xl:text-48 font-medium">About US </div>
           <div className="text-white flex items-center justify-center gap-x-3 pt-5 ">
             <div className="flex items-center gap-x-3">
               <p className="cursor-pointer" onClick={() => navigate("/")}>

@@ -15,7 +15,7 @@ export const getProducts = async (filters = {}) => {
     });
 
     const queryString = params.toString();
-    const url = queryString ? `/products?${queryString}` : `/products`;
+    const url = queryString ? `/product?${queryString}` : `/product`;
 
     const response = await axiosWithCredentials.get(url);
     return response.data;
@@ -29,7 +29,7 @@ export const deleteProduct = async (values) => {
   try {
     const { id, parentId } = values;
 
-    await axiosWithCredentials.delete(`/products/${parentId}/delete/${id}/`);
+    await axiosWithCredentials.delete(`/product/${parentId}/delete/${id}/`);
 
     toast.success("Successfully deleted");
   } catch (error) {
@@ -56,7 +56,7 @@ export const deleteWishList = async (values) => {
 
 export const getProductCategories = async () => {
   try {
-    const response = await axiosWithCredentials.get(`/choice-categories/`);
+    const response = await axiosWithCredentials.get(`/product/category-choices/`);
     return response.data;
   } catch (error) {
     console.error("Error fetching cetegories details:", error);
@@ -67,7 +67,7 @@ export const getProductCategories = async () => {
 export const getProductStaticValuesByName = async (field) => {
   try {
     const response = await axiosWithCredentials.get(
-      `/product-field-values/?field=${field}`
+      `/product/field-values/?field=${field}`
     );
     return response.data;
   } catch (error) {
@@ -78,7 +78,7 @@ export const getProductStaticValuesByName = async (field) => {
 
 export const getProductDetailsById = async (id) => {
   try {
-    const response = await axiosWithCredentials.get(`/products/${id}/detail/`);
+    const response = await axiosWithCredentials.get(`/product/${id}/detail/`);
     return response.data;
   } catch (error) {
     console.error("Error fetching product details:", error);
@@ -88,13 +88,13 @@ export const getProductDetailsById = async (id) => {
 
 export const addProduct = async (values, products, images) => {
   const formData = new FormData();
-  formData.append("name_nl", values.nameNl);
-  formData.append("name_en", values.name);
-  formData.append("description_nl", values.productDescriptionNl);
-  formData.append("description_en", values.productDescription);
+  formData.append("name_nl", values.name_nl);
+  formData.append("name_en", values.name_en);
+  formData.append("description_nl", values.description_nl);
+  formData.append("description_en", values.description_en);
   formData.append("width", values.width);
   formData.append("thickness", values.thickness);
-  formData.append("weight_per_m3", values.weight);
+  formData.append("weight_per_m3", values.weight_per_m3);
 
   // Append groups, types, materials, etc.
 
@@ -142,7 +142,7 @@ export const addProduct = async (values, products, images) => {
 
   try {
     const response = await axiosWithCredentials.post(
-      `/products/create/`,
+      `/product/create/`,
       formData,
       {
         headers: { "Content-Type": "multipart/form-data" },
@@ -159,13 +159,13 @@ export const addProduct = async (values, products, images) => {
 
 export const updateProduct = async (id, values, products, images) => {
   const formData = new FormData();
-  formData.append("name_nl", values.nameNl);
-  formData.append("name_en", values.name);
-  formData.append("description_nl", values.productDescriptionNl);
-  formData.append("description_en", values.productDescription);
+  formData.append("name_nl", values.name_nl);
+  formData.append("name_en", values.name_en);
+  formData.append("description_nl", values.description_nl);
+  formData.append("description_en", values.description_en);
   formData.append("width", values.width);
   formData.append("thickness", values.thickness);
-  formData.append("weight_per_m3", values.weight);
+  formData.append("weight_per_m3", values.weight_per_m3);
 
   // Append groups, types, materials, etc.
 
@@ -203,7 +203,7 @@ export const updateProduct = async (id, values, products, images) => {
   // Append product variations
   products?.forEach((product, index) => {
     if (product.id) {
-      formData.append(`products[${index}][id]`, product.id);
+      formData.append(`product[${index}][id]`, product.id);
     }
     formData.append(`products[${index}][length]`, product.length || 0);
     formData.append(`products[${index}][discount]`, product.discount || 0);

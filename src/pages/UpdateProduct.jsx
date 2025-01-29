@@ -87,7 +87,7 @@ export const UpdateProduct = () => {
 
   const getChoicesByName = (name) => {
     const category = categories?.find(
-      (cat) => cat.name.toLowerCase() === name.toLowerCase()
+      (cat) => cat.name_en.toLowerCase() === name.toLowerCase()
     );
     return category ? category.choices : [];
   };
