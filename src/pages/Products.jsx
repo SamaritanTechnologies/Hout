@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from "react";
-// import sampleProductImg from "../assets/DashboardImages/sampleProductImg.svg";
-import productName from "../assets/DashboardImages/productName.svg";
-import woodImg from "../assets/DashboardImages/woodImg.svg";
-// import editImg from "../assets/DashboardImages/editImg.svg";
 import editImg from "../assets/DashboardImages/edit.svg";
 import dltImg from "../assets/DashboardImages/delete.svg";
 import filterImg from "../assets/DashboardImages/filter-funnel.svg";
-import dots from "../assets/DashboardImages/dotsvertical.svg";
 import Button from "../components/Common/Button";
 import DropdownFilter from "../components/Dashboard/DropdownFilter";
-import cartButton from "../assets/addToCart/cartButton.svg";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import DeleteModal from "../components/Modals/DeleteModal";
 import {
   deleteProduct,
@@ -232,9 +226,9 @@ export const Products = () => {
                   <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
                     Stock
                   </th>
-                  <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
+                  {/* <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
                     <img src={ActiveTableHead} alt="ActiveTableHead" />
-                  </th>
+                  </th> */}
                   <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
                     Action
                   </th>
@@ -262,7 +256,7 @@ export const Products = () => {
                           <div className="block xl:w-[60px] lg:w-[50px] w-[45px]">
                             {rowData?.images?.length ? (
                               <img
-                                src={rowData?.images?.[0]?.url}
+                                src={rowData?.images?.[0]?.image}
                                 alt={rowData?.name}
                                 className=""
                               />
@@ -358,9 +352,14 @@ export const Products = () => {
                           </p>
                         </div>
                       </td>
-                      <td>
-                        <img src={Activebadge} alt="ActiveBadge" />
-                      </td>
+                      {/* <td>
+                        <div className="border border-[#D0D5DD] rounded-md flex items-center justify-center px-1.5 py-0.5 gap-1">
+                          <div className="w-1.5 h-1.5 rounded-full bg-[#17B26A] shrink-0"></div>
+                          <p className="block shrink-0 text-xs leading-[19px] font-medium text-[#344054]">
+                            Active
+                          </p>
+                        </div>
+                      </td> */}
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left xl:text-14 lg-text-[13px] text-12 font-semibold text-gray3 min-w-[100px]">
                         <div className="flex xl:gap-3 gap-2 items-center justify-center">
                           <div

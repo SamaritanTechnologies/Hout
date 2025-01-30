@@ -15,6 +15,7 @@ import checkSquareIcon from "../assets/DashboardImages/check-square.svg";
 import {
   addProduct,
   getProductCategories,
+  getProducts,
 } from "../redux/actions/productActions";
 import { useSelector } from "react-redux";
 import Select from "react-select";
@@ -51,6 +52,7 @@ export const AddNewProduct = () => {
   const [isErrors, setIsErrors] = useState({
     images: false,
   });
+  const [relatedProductsOptions, setRelatedProductsOptions] = useState([]);
 
   const getChoicesByName = (name) => {
     const category = categories?.find(
@@ -119,12 +121,24 @@ export const AddNewProduct = () => {
       return updatedImages;
     });
   };
-  const productOptions = [
-    { value: "option1", label: "Option 1" },
-    { value: "option2", label: "Option 2" },
-    { value: "option3", label: "Option 3" },
-    { value: "option4", label: "Option 4" },
-  ];
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await getProducts();
+        const data = response.results;
+        const options = data.map((product) => ({
+          label: product.name_en,
+          value: product.id,
+        }));
+        setRelatedProductsOptions(options); 
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   return (
     <div>
@@ -643,11 +657,14 @@ export const AddNewProduct = () => {
                     <div className="w-full md:mb-0">
                       <label className="text-sm">Product 1</label>
                       <Field
-                        name="fruit"
+                        name="related_products[0]"
                         component={Select}
-                        options={productOptions}
+                        options={relatedProductsOptions}
                         onChange={(option) =>
-                          setFieldValue("product", option ? option.value : "")
+                          setFieldValue(
+                            "related_products[0]",
+                            option ? option.value : ""
+                          )
                         }
                         isSearchable
                         placeholder="Product 1"
@@ -656,11 +673,14 @@ export const AddNewProduct = () => {
                     <div className="w-full">
                       <label className="text-sm">Product 2</label>
                       <Field
-                        name="fruit"
+                        name="related_products[1]"
                         component={Select}
-                        options={productOptions}
+                        options={relatedProductsOptions}
                         onChange={(option) =>
-                          setFieldValue("product", option ? option.value : "")
+                          setFieldValue(
+                            "related_products[1]",
+                            option ? option.value : ""
+                          )
                         }
                         isSearchable
                         placeholder="Product 2"
@@ -669,11 +689,14 @@ export const AddNewProduct = () => {
                     <div className="w-full">
                       <label className="text-sm">Product 3</label>
                       <Field
-                        name="fruit"
+                        name="related_products[2]"
                         component={Select}
-                        options={productOptions}
+                        options={relatedProductsOptions}
                         onChange={(option) =>
-                          setFieldValue("product", option ? option.value : "")
+                          setFieldValue(
+                            "related_products[2]",
+                            option ? option.value : ""
+                          )
                         }
                         isSearchable
                         placeholder="Product 3"
@@ -682,11 +705,14 @@ export const AddNewProduct = () => {
                     <div className="w-full">
                       <label className="text-sm">Product 4</label>
                       <Field
-                        name="fruit"
+                        name="related_products[3]"
                         component={Select}
-                        options={productOptions}
+                        options={relatedProductsOptions}
                         onChange={(option) =>
-                          setFieldValue("product", option ? option.value : "")
+                          setFieldValue(
+                            "related_products[3]",
+                            option ? option.value : ""
+                          )
                         }
                         isSearchable
                         placeholder="Product 4"

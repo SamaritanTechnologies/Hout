@@ -280,7 +280,7 @@ export const UpdateProduct = () => {
                           id="group"
                           options={getChoicesByName("group")}
                           displayValue="name_en"
-                          selectedValues={values.group}
+                          selectedValues={product?.group}
                           onSelect={(selectedList) => {
                             setFieldValue("group", selectedList);
                           }}
@@ -300,7 +300,7 @@ export const UpdateProduct = () => {
                           id="type"
                           options={getChoicesByName("type")}
                           displayValue="name_en"
-                          selectedValues={values.type}
+                          selectedValues={product?.product_type}
                           onSelect={(selectedList) => {
                             setFieldValue("type", selectedList);
                           }}
@@ -315,7 +315,7 @@ export const UpdateProduct = () => {
                           id="material"
                           options={getChoicesByName("material")}
                           displayValue="name_en"
-                          selectedValues={values.material}
+                          selectedValues={product?.material}
                           onSelect={(selectedList) => {
                             setFieldValue("material", selectedList);
                           }}
@@ -332,7 +332,7 @@ export const UpdateProduct = () => {
                           id="profile"
                           options={getChoicesByName("profile")}
                           displayValue="name_en"
-                          selectedValues={values.profile}
+                          selectedValues={product?.profile}
                           onSelect={(selectedList) => {
                             setFieldValue("profile", selectedList);
                           }}
@@ -349,7 +349,7 @@ export const UpdateProduct = () => {
                           id="durability_class"
                           options={getChoicesByName("durability_class")}
                           displayValue="name_en"
-                          selectedValues={values.durability_class}
+                          selectedValues={product?.durability_class}
                           onSelect={(selectedList) => {
                             setFieldValue("durability_class", selectedList);
                           }}
@@ -367,7 +367,7 @@ export const UpdateProduct = () => {
                           id="quality"
                           options={getChoicesByName("quality")}
                           displayValue="name_en"
-                          selectedValues={values.quality}
+                          selectedValues={product?.quality}
                           onSelect={(selectedList) => {
                             setFieldValue("quality", selectedList);
                           }}
@@ -385,7 +385,7 @@ export const UpdateProduct = () => {
                           id="application"
                           options={getChoicesByName("application")}
                           displayValue="name_en"
-                          selectedValues={values.application}
+                          selectedValues={product.application}
                           onSelect={(selectedList) => {
                             setFieldValue("application", selectedList);
                           }}
