@@ -54,7 +54,9 @@ export const deleteWishList = async (values) => {
 
 export const getProductCategories = async () => {
   try {
-    const response = await axiosWithCredentials.get(`/product/category-choices/`);
+    const response = await axiosWithCredentials.get(
+      `/product/category-choices/`
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching cetegories details:", error);
@@ -76,7 +78,9 @@ export const getProductStaticValuesByName = async (field) => {
 
 export const getProductDetailsById = async (id) => {
   try {
-    const response = await axiosWithCredentials.get(`/product/?product_id=${id}`);
+    const response = await axiosWithCredentials.get(
+      `/product/?product_id=${id}`
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching product details:", error);
@@ -84,7 +88,18 @@ export const getProductDetailsById = async (id) => {
   }
 };
 
-export const addProduct = async (values, products, images) => {
+const extractIds = (items) =>
+  JSON.stringify(items?.map((item) => item.id) || []);
+const extractValues = (obj) =>
+  JSON.stringify(
+    Object.values(obj)
+      .filter((item) => item !== null)
+      .map((item) => item.value) || []
+  );
+const extractImages = (images) =>
+  JSON.stringify(images?.map((img) => ({ image: img.file })) || []);
+
+export const addProduct = async (values, lengths, images, relatedProducts) => {
   const formData = new FormData();
   formData.append("name_nl", values.name_nl);
   formData.append("name_en", values.name_en);
@@ -96,49 +111,36 @@ export const addProduct = async (values, products, images) => {
 
   // Append groups, types, materials, etc.
 
-  values.group?.forEach((group, index) =>
-    formData.append(`group[${index}]`, group.id)
-  );
-  values.type?.forEach((type, index) =>
-    formData.append(`type[${index}]`, type.id)
-  );
-  values.material?.forEach((material, index) =>
-    formData.append(`material[${index}]`, material.id)
-  );
-  values.durability_class?.forEach((durability, index) =>
-    formData.append(`durability_class[${index}]`, durability.id)
-  );
-  values.quality?.forEach((quality, index) =>
-    formData.append(`quality[${index}]`, quality.id)
-  );
-  values.application?.forEach((application, index) =>
-    formData.append(`application[${index}]`, application.id)
-  );
-  values.profile?.forEach((profile, index) =>
-    formData.append(`profile[${index}]`, profile.id)
-  );
-
-  // Append images
-  images?.forEach((image, index) => {
-    formData.append(`images[${index}][product_image]`, image.file);
-  });
-
-  // Append product variations
-  products?.forEach((product, index) => {
-    formData.append(`products[${index}][length]`, product.length || 0);
-    formData.append(`products[${index}][discount]`, product.discount || 0);
-    formData.append(`products[${index}][stock]`, product.stock || 0);
-    formData.append(
-      `products[${index}][product_id_prefix]`,
-      product.product_id_prefix || ""
-    );
-    formData.append(
-      `products[${index}][full_price_ex_vat]`,
-      product.full_price_ex_vat || 0
-    );
-  });
-
-  // related products
+  if (values.group?.length) {
+    formData.append("group", extractIds(values.group));
+  }
+  if (values.type?.length) {
+    formData.append("product_type", extractIds(values.type));
+  }
+  if (values.material?.length) {
+    formData.append("material", extractIds(values.material));
+  }
+  if (values.durability_class?.length) {
+    formData.append("durability_class", extractIds(values.durability_class));
+  }
+  if (values.quality?.length) {
+    formData.append("quality", extractIds(values.quality));
+  }
+  if (values.application?.length) {
+    formData.append("quality", extractIds(values.application));
+  }
+  if (values.profile?.length) {
+    formData.append("quality", extractIds(values.profile));
+  }
+  if (relatedProducts?.length) {
+    formData.append("related_products", extractValues(relatedProducts));
+  }
+  // if (images?.length) {
+  //   formData.append("images", extractImages(images));
+  // }
+  if (lengths?.length) {
+    formData.append("lengths", JSON.stringify(lengths));
+  }
 
   try {
     const response = await axiosWithCredentials.post(

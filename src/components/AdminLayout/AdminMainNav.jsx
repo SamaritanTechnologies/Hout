@@ -73,6 +73,7 @@ const AdminMainNav = () => {
 
       // combine dynamic and unique static categories
       const combinedCategories = [...dynamicCategories, ...uniqueCategories];
+      console.log("=-= Categories", combinedCategories)
       dispatch(setProductCategories(combinedCategories));
     } catch (error) {
       console.error("Error fetching categories:", error);

@@ -36,22 +36,29 @@ const styleMultiSelect = {
 
 const validTypes = ["image/jpeg", "image/png", "image/webp"];
 
-const productItem = {
+const lengthItem = {
   length: "",
-  product_id_prefix: "",
   full_price_ex_vat: "",
   discount: "",
   stock: "",
 };
 
+const relatedInitial = {
+  product1: null,
+  product2: null,
+  product3: null,
+  product4: null,
+};
+
 export const AddNewProduct = () => {
   const navigate = useNavigate();
   const { productCategories: categories } = useSelector((state) => state.admin);
-  const [products, setProducts] = useState([{ ...productItem }]);
+  const [lengths, setLengths] = useState([{ ...lengthItem }]);
   const [images, setImages] = useState([]);
   const [isErrors, setIsErrors] = useState({
     images: false,
   });
+  const [relatedProducts, setRelatedProducts] = useState(relatedInitial);
   const [relatedProductsOptions, setRelatedProductsOptions] = useState([]);
 
   const getChoicesByName = (name) => {
@@ -62,21 +69,21 @@ export const AddNewProduct = () => {
   };
 
   const handleAddRow = () => {
-    setProducts([...products, { ...productItem }]);
+    setLengths([...lengths, { ...lengthItem }]);
   };
 
   const handleRemoveRow = (index) => {
-    if (products.length === 1) {
-      setProducts([{ ...productItem }]);
+    if (lengths.length === 1) {
+      setLengths([{ ...lengthItem }]);
     } else {
-      setProducts(products.filter((_, i) => i !== index));
+      setLengths(lengths.filter((_, i) => i !== index));
     }
   };
 
   const handleChange = (index, field, value) => {
-    const updatedProducts = [...products];
+    const updatedProducts = [...lengths];
     updatedProducts[index][field] = value;
-    setProducts(updatedProducts);
+    setLengths(updatedProducts);
   };
 
   const handleDrop = (acceptedFiles) => {
@@ -131,7 +138,7 @@ export const AddNewProduct = () => {
           label: product.name_en,
           value: product.id,
         }));
-        setRelatedProductsOptions(options); 
+        setRelatedProductsOptions(options);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -158,8 +165,6 @@ export const AddNewProduct = () => {
           width: "",
           thickness: "",
           weight_per_m3: "",
-          lengths: [],
-          related_products: [],
         }}
         validationSchema={Yup.object({
           name_nl: Yup.string().required("Name is required"),
@@ -180,7 +185,7 @@ export const AddNewProduct = () => {
             return;
           }
           try {
-            await addProduct(values, products, images);
+            await addProduct(values, lengths, images, relatedProducts);
             navigate("/products");
           } catch (error) {
             console.error("Error submitting form:", error);
@@ -279,7 +284,7 @@ export const AddNewProduct = () => {
                         style={styleMultiSelect}
                         name="product_type"
                         id="product_type"
-                        options={getChoicesByName("product_type")}
+                        options={getChoicesByName("type")}
                         displayValue="name_en"
                         selectedValues={values.product_type}
                         onSelect={(selectedList) => {
@@ -328,7 +333,7 @@ export const AddNewProduct = () => {
                         style={styleMultiSelect}
                         name="durability_class"
                         id="durability_class"
-                        options={getChoicesByName("durability_class")}
+                        options={getChoicesByName("Durability Class")}
                         displayValue="name_en"
                         selectedValues={values.durability_class}
                         onSelect={(selectedList) => {
@@ -458,9 +463,6 @@ export const AddNewProduct = () => {
                               Lengte | Lenght
                             </th>
                             <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold	">
-                              Product ID
-                            </th>
-                            <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold	">
                               Full Price ex Vat
                             </th>
                             <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold	">
@@ -482,7 +484,7 @@ export const AddNewProduct = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {products?.map((product, index) => (
+                          {lengths?.map((product, index) => (
                             <tr key={index}>
                               <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
                                 <input
@@ -495,22 +497,6 @@ export const AddNewProduct = () => {
                                     handleChange(
                                       index,
                                       "length",
-                                      e.target.value
-                                    )
-                                  }
-                                  className="w-full outline-none bg-transparent"
-                                />
-                              </td>
-                              <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
-                                <input
-                                  required
-                                  type="text"
-                                  placeholder="HHP123_300"
-                                  value={product.product_id_prefix}
-                                  onChange={(e) =>
-                                    handleChange(
-                                      index,
-                                      "product_id_prefix",
                                       e.target.value
                                     )
                                   }
@@ -564,12 +550,16 @@ export const AddNewProduct = () => {
                                 />
                               </td>
                               <td className="px-[2px] py-[16px] text-end">
-                                <img
-                                  src={CrossCircle}
-                                  alt="Remove"
-                                  onClick={() => handleRemoveRow(index)}
-                                  className="cursor-pointer h-5 w-5"
-                                />
+                                {lengths?.length > 1 ? (
+                                  <img
+                                    src={CrossCircle}
+                                    alt="Remove"
+                                    onClick={() => handleRemoveRow(index)}
+                                    className="cursor-pointer h-5 w-5"
+                                  />
+                                ) : (
+                                  ""
+                                )}
                               </td>
                             </tr>
                           ))}
@@ -638,9 +628,9 @@ export const AddNewProduct = () => {
                             <button
                               type="button"
                               onClick={() => handleRemoveImage(index)}
-                              className="absolute top-2 right-2 bg-white rounded-full p-1 text-red-600"
+                              className="absolute top-2 right-2 border border-black bg-white rounded-full p-1 text-red-600"
                             >
-                              {/* <IoCloseCircle size={24} /> */}
+                              X
                             </button>
                           </div>
                         ))}
@@ -656,66 +646,74 @@ export const AddNewProduct = () => {
                     <h2 className="text-sm">Related Products</h2>
                     <div className="w-full md:mb-0">
                       <label className="text-sm">Product 1</label>
-                      <Field
-                        name="related_products[0]"
-                        component={Select}
-                        options={relatedProductsOptions}
-                        onChange={(option) =>
-                          setFieldValue(
-                            "related_products[0]",
-                            option ? option.value : ""
-                          )
-                        }
+                      <Select
+                        classNamePrefix="select"
+                        isClearable
                         isSearchable
+                        name="product1"
                         placeholder="Product 1"
+                        options={relatedProductsOptions}
+                        value={relatedProducts.product1}
+                        onChange={(value) => {
+                          setRelatedProducts((prev) => ({
+                            ...prev,
+                            product1: value,
+                          }));
+                        }}
                       />
                     </div>
                     <div className="w-full">
                       <label className="text-sm">Product 2</label>
-                      <Field
-                        name="related_products[1]"
-                        component={Select}
-                        options={relatedProductsOptions}
-                        onChange={(option) =>
-                          setFieldValue(
-                            "related_products[1]",
-                            option ? option.value : ""
-                          )
-                        }
+                      <Select
+                        classNamePrefix="select"
+                        isClearable
                         isSearchable
+                        name="product2"
                         placeholder="Product 2"
+                        options={relatedProductsOptions}
+                        value={relatedProducts.product2}
+                        onChange={(value) => {
+                          setRelatedProducts((prev) => ({
+                            ...prev,
+                            product2: value,
+                          }));
+                        }}
                       />
                     </div>
                     <div className="w-full">
                       <label className="text-sm">Product 3</label>
-                      <Field
-                        name="related_products[2]"
-                        component={Select}
-                        options={relatedProductsOptions}
-                        onChange={(option) =>
-                          setFieldValue(
-                            "related_products[2]",
-                            option ? option.value : ""
-                          )
-                        }
+                      <Select
+                        classNamePrefix="select"
+                        isClearable
                         isSearchable
+                        name="product3"
                         placeholder="Product 3"
+                        options={relatedProductsOptions}
+                        value={relatedProducts.product3}
+                        onChange={(value) => {
+                          setRelatedProducts((prev) => ({
+                            ...prev,
+                            product3: value,
+                          }));
+                        }}
                       />
                     </div>
                     <div className="w-full">
                       <label className="text-sm">Product 4</label>
-                      <Field
-                        name="related_products[3]"
-                        component={Select}
-                        options={relatedProductsOptions}
-                        onChange={(option) =>
-                          setFieldValue(
-                            "related_products[3]",
-                            option ? option.value : ""
-                          )
-                        }
+                      <Select
+                        classNamePrefix="select"
+                        isClearable
                         isSearchable
+                        name="product4"
                         placeholder="Product 4"
+                        options={relatedProductsOptions}
+                        value={relatedProducts.product4}
+                        onChange={(value) => {
+                          setRelatedProducts((prev) => ({
+                            ...prev,
+                            product4: value,
+                          }));
+                        }}
                       />
                     </div>
                   </div>

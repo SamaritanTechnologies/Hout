@@ -36,10 +36,16 @@ const validTypes = ["image/jpeg", "image/png", "image/webp"];
 
 const productItem = {
   length: "",
-  product_id_prefix: "",
   full_price_ex_vat: "",
   discount: "",
   stock: "",
+};
+
+const relatedInitial = {
+  product1: null,
+  product2: null,
+  product3: null,
+  product4: null,
 };
 
 export const UpdateProduct = () => {
@@ -48,11 +54,14 @@ export const UpdateProduct = () => {
   const { productCategories: categories } = useSelector((state) => state.admin);
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState();
-  const [products, setProducts] = useState([{ ...productItem }]);
+  const [lengths, setLengths] = useState([{ ...productItem }]);
   const [images, setImages] = useState([]);
   const [isErrors, setIsErrors] = useState({
     images: false,
   });
+
+  const [relatedProducts, setRelatedProducts] = useState(relatedInitial);
+  const [relatedProductsOptions, setRelatedProductsOptions] = useState([]);
 
   const getProductDetails = async (id) => {
     try {
@@ -60,11 +69,13 @@ export const UpdateProduct = () => {
 
       if (res) {
         setProduct(res);
-        setProducts(res.lengths);
+        setLengths(res.lengths);
+        setLengths(res.lengths);
+        // res.related_products
 
         const newImages = res.images?.map((file) => ({
           file,
-          preview: file.product_image,
+          preview: file.image,
         }));
 
         setImages(newImages);
@@ -111,21 +122,21 @@ export const UpdateProduct = () => {
   };
 
   const handleAddRow = () => {
-    setProducts([...products, { ...productItem }]);
+    setLengths([...lengths, { ...productItem }]);
   };
 
   const handleRemoveRow = (index) => {
-    if (products.length === 1) {
-      setProducts([{ ...productItem }]);
+    if (lengths.length === 1) {
+      setLengths([{ ...productItem }]);
     } else {
-      setProducts(products.filter((_, i) => i !== index));
+      setLengths(lengths.filter((_, i) => i !== index));
     }
   };
 
   const handleChange = (index, field, value) => {
-    const updatedProducts = [...products];
+    const updatedProducts = [...lengths];
     updatedProducts[index][field] = value;
-    setProducts(updatedProducts);
+    setLengths(updatedProducts);
   };
 
   const handleDrop = (acceptedFiles) => {
@@ -208,7 +219,7 @@ export const UpdateProduct = () => {
               return;
             }
             try {
-              await updateProduct(id, values, products, images);
+              await updateProduct(id, values, lengths, images);
               navigate("/products");
             } catch (error) {
               console.error("Error submitting form:", error);
@@ -300,7 +311,7 @@ export const UpdateProduct = () => {
                           id="type"
                           options={getChoicesByName("type")}
                           displayValue="name_en"
-                          selectedValues={product?.product_type}
+                          selectedValues={product?.type}
                           onSelect={(selectedList) => {
                             setFieldValue("type", selectedList);
                           }}
@@ -491,7 +502,7 @@ export const UpdateProduct = () => {
                             </tr>
                           </thead>
                           <tbody>
-                            {products?.map((product, index) => (
+                            {lengths?.map((product, index) => (
                               <tr key={index}>
                                 <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
                                   <input
