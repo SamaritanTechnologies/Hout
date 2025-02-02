@@ -9,28 +9,29 @@ const productItem = {
   product_id_prefix: "",
 };
 
-export const ProductCategoryItem = ({groupCategory}) => {
-  const [products, setProducts] = useState([{ ...productItem }]);
+export const ProductCategoryItem = ({ groupCategory }) => {
+  const [choices, setChoices] = useState(groupCategory.choices || []);
 
   const handleAddRow = () => {
-    setProducts((prevProducts) => [...prevProducts, { ...productItem }]);
+    setChoices((prevChoices) => [...prevChoices, { ...productItem }]);
   };
 
   const handleRemoveRow = (index) => {
-    setProducts((prevProducts) =>
-      prevProducts.length === 1
+    setChoices((prevChoices) =>
+      prevChoices.length === 1
         ? [{ ...productItem }]
-        : prevProducts.filter((_, i) => i !== index)
+        : prevChoices.filter((_, i) => i !== index)
     );
   };
 
   const handleChange = (index, field, value) => {
-    setProducts((prevProducts) => {
-      const updatedProducts = [...prevProducts];
-      updatedProducts[index][field] = value;
-      return updatedProducts;
+    setChoices((prevChoices) => {
+      const updatedChoices = [...prevChoices];
+      updatedChoices[index][field] = value;
+      return updatedChoices;
     });
   };
+
   return (
     <div className="inline-block min-w-full rounded-lg overflow-hidden mb-[50px]">
       <table className="min-w-full leading-normal">
@@ -45,7 +46,7 @@ export const ProductCategoryItem = ({groupCategory}) => {
               />
             </th>
             <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold rounded-se-2xl relative">
-            {groupCategory.name}
+              {groupCategory.name}
               <img
                 src={countryflag2}
                 alt="Flag"
@@ -55,15 +56,14 @@ export const ProductCategoryItem = ({groupCategory}) => {
           </tr>
         </thead>
         <tbody>
-          {groupCategory.choices.map((choice) => (
+          {choices.map((choice, index) => (
             <tr key={index}>
               <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
                 <input
-                  type="number"
-                  min={0}
-                  value={choice.name_nl}
                   required
+                  type="text"
                   placeholder="300 cm"
+                  value={choice.name_nl}
                   onChange={(e) =>
                     handleChange(index, "length", e.target.value)
                   }
@@ -77,7 +77,7 @@ export const ProductCategoryItem = ({groupCategory}) => {
                   placeholder="HHP123_300"
                   value={choice.name_en}
                   onChange={(e) =>
-                    handleChange(index, "product_id_prefix", e.target.value)
+                    handleChange(index, "length", e.target.value)
                   }
                   className="w-full outline-none bg-transparent"
                 />
@@ -93,7 +93,7 @@ export const ProductCategoryItem = ({groupCategory}) => {
             </tr>
           ))}
           <tr>
-            <td colSpan={Object.keys(productItem).length}></td>
+            <td colSpan="2"></td>
             <td>
               <button
                 type="button"
