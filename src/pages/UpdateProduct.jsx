@@ -17,6 +17,7 @@ import {
   getProductDetailsById,
   updateProduct,
 } from "../redux/actions/productActions";
+import { XCircleIcon } from "@heroicons/react/24/outline";
 import { BASE_URL } from "../providers";
 import { useSelector } from "react-redux";
 
@@ -657,7 +658,7 @@ export const UpdateProduct = () => {
                                 onClick={() => handleRemoveImage(index)}
                                 className="absolute top-2 right-2 bg-white rounded-full p-1 text-red-600"
                               >
-                                {/* <IoCloseCircle size={24} /> */}
+                                <XCircleIcon class="h-6 w-6 text-gray-500" />
                               </button>
                             </div>
                           ))}

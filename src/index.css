@@ -203,6 +203,9 @@ footer .input-field {
   font-weight: 600;
   gap: 10px;
 }
+.multiselect-container .closeIcon {
+  background: #6C7275;
+}
 
 .assortment-filters .MuiAccordion-root.MuiAccordion-rounded {
   box-shadow: none;
