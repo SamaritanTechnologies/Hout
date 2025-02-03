@@ -111,36 +111,111 @@ export const addProduct = async (values, lengths, images, relatedProducts) => {
 
   // Append groups, types, materials, etc.
 
-  if (values.group?.length) {
-    formData.append("group", extractIds(values.group));
-  }
-  if (values.type?.length) {
-    formData.append("product_type", extractIds(values.type));
-  }
-  if (values.material?.length) {
-    formData.append("material", extractIds(values.material));
-  }
-  if (values.durability_class?.length) {
-    formData.append("durability_class", extractIds(values.durability_class));
-  }
-  if (values.quality?.length) {
-    formData.append("quality", extractIds(values.quality));
-  }
-  if (values.application?.length) {
-    formData.append("quality", extractIds(values.application));
-  }
-  if (values.profile?.length) {
-    formData.append("quality", extractIds(values.profile));
-  }
-  if (relatedProducts?.length) {
-    formData.append("related_products", extractValues(relatedProducts));
-  }
-  // if (images?.length) {
-  //   formData.append("images", extractImages(images));
+  // values.group?.forEach((group, index) =>
+  //   formData.append(`group[${index}]`, group.id)
+  // );
+  // values.type?.forEach((type, index) =>
+  //   formData.append(`type[${index}]`, type.id)
+  // );
+  // values.material?.forEach((material, index) =>
+  //   formData.append(`material[${index}]`, material.id)
+  // );
+  // values.durability_class?.forEach((durability, index) =>
+  //   formData.append(`durability_class[${index}]`, durability.id)
+  // );
+  // values.quality?.forEach((quality, index) =>
+  //   formData.append(`quality[${index}]`, quality.id)
+  // );
+  // values.application?.forEach((application, index) =>
+  //   formData.append(`application[${index}]`, application.id)
+  // );
+  // values.profile?.forEach((profile, index) =>
+  //   formData.append(`profile[${index}]`, profile.id)
+  // );
+  // values.relatedProducts?.forEach((related, index) =>
+  //   formData.append(`related_products[${index}]`, related.id)
+  // );
+
+  // Append groups, types, materials, etc.
+
+  values.group?.forEach((group, index) =>
+    formData.append(`group`, group.id)
+  );
+  values.type?.forEach((type, index) =>
+    formData.append(`type`, type.id)
+  );
+  values.material?.forEach((material, index) =>
+    formData.append(`material`, material.id)
+  );
+  values.durability_class?.forEach((durability, index) =>
+    formData.append(`durability_class`, durability.id)
+  );
+  values.quality?.forEach((quality, index) =>
+    formData.append(`quality`, quality.id)
+  );
+  values.application?.forEach((application, index) =>
+    formData.append(`application`, application.id)
+  );
+  values.profile?.forEach((profile, index) =>
+    formData.append(`profile`, profile.id)
+  );
+  values.relatedProducts?.forEach((related, index) =>
+    formData.append(`related_products`, related.id)
+  );
+
+  // if (values.group?.length) {
+  //   formData.append("group", extractIds(values.group));
   // }
-  if (lengths?.length) {
-    formData.append("lengths", JSON.stringify(lengths));
-  }
+  // if (values.type?.length) {
+  //   formData.append("product_type", extractIds(values.type));
+  // }
+  // if (values.material?.length) {
+  //   formData.append("material", extractIds(values.material));
+  // }
+  // if (values.durability_class?.length) {
+  //   formData.append("durability_class", extractIds(values.durability_class));
+  // }
+  // if (values.quality?.length) {
+  //   formData.append("quality", extractIds(values.quality));
+  // }
+  // if (values.application?.length) {
+  //   formData.append("quality", extractIds(values.application));
+  // }
+  // if (values.profile?.length) {
+  //   formData.append("quality", extractIds(values.profile));
+  // }
+  // if (relatedProducts?.length) {
+  //   formData.append("related_products", extractValues(relatedProducts));
+  // }
+  // if (images?.length) {
+  //   formData.append("images", img.file );
+  // }
+
+  // Append lengths variations
+  images?.forEach((image, index) => {
+    if (image.id) {
+      formData.append(`images`, image.file);
+    }
+    formData.append(`images`, image.file);
+  });
+
+  // if (lengths?.length) {
+  //   formData.append("lengths", JSON.stringify(lengths));
+  // }
+
+  // Append lengths variations
+  lengths?.forEach((length, index) => {
+    if (length.id) {
+      formData.append(`lengths[${index}][id]`, length.id);
+    }
+    formData.append(`lengths[${index}][length]`, length.length || 0);
+    formData.append(`lengths[${index}][discount]`, length.discount || 0);
+    formData.append(`lengths[${index}][stock]`, length.stock || 0);
+    formData.append(
+      `lengths[${index}][full_price_ex_vat]`,
+      length.full_price_ex_vat || 0
+    );
+  });
 
   try {
     const response = await axiosWithCredentials.post(
