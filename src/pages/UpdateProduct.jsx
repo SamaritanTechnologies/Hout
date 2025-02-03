@@ -10,16 +10,18 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import FormikField from "../components/Common/FormikField";
+import Select from 'react-select';
 import { Multiselect } from "multiselect-react-dropdown";
 import {
-  addProduct,
-  getProductCategories,
+  getProducts,
   getProductDetailsById,
   updateProduct,
 } from "../redux/actions/productActions";
 import { XCircleIcon } from "@heroicons/react/24/outline";
-import { BASE_URL } from "../providers";
+import checkSquareIcon from "../assets/DashboardImages/check-square.svg";
 import { useSelector } from "react-redux";
+import countryflag from "../assets/DashboardImages/UK-Flag.svg";
+import countryflag2 from "../assets/DashboardImages/USA-flag.svg"
 
 const styleMultiSelect = {
   chips: {
@@ -74,7 +76,6 @@ export const UpdateProduct = () => {
 
       if (res) {
         setProduct(res);
-        setLengths(res.lengths);
         setLengths(res.lengths);
         const newImages = res.images?.map((file) => ({
           file,
@@ -197,6 +198,24 @@ export const UpdateProduct = () => {
     });
   };
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await getProducts();
+        const data = response.results;
+        const options = data.map((product) => ({
+          label: product.name_en,
+          value: product.id,
+        }));
+        setRelatedProductsOptions(options);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   return (
     <>
       {loading ? (
@@ -234,7 +253,7 @@ export const UpdateProduct = () => {
               return;
             }
             try {
-              await updateProduct(id, values, lengths, images);
+              await updateProduct(id, values, lengths, images, relatedProducts);
               navigate("/products");
             } catch (error) {
               console.error("Error submitting form:", error);
@@ -260,7 +279,7 @@ export const UpdateProduct = () => {
                   </h5>
                 </div>
 
-                <div className="myCard rounded-[4px] xl:mb-[30px] lg:mb-[25px] mb-[20px]">
+                <div className="myCard rounded-[4px] xl:mb-[30px] lg:mb-[25px] mb-[20px] mx-auto max-w-[912px]">
                   <div className="flex mb-4">
                     <h5 className="xl:text-26 lg:text-24 text-22 font-semibold">
                       Update Product
@@ -270,7 +289,7 @@ export const UpdateProduct = () => {
                   <div className="formSec">
                     <div className="flex gap-[20px] mb-[24px]">
                       <div className="w-1/2">
-                        <div className="w-full md:mb-0">
+                        <div className="w-full md:mb-0 relative">
                           <Field
                             type="text"
                             name="nameNl"
@@ -280,10 +299,15 @@ export const UpdateProduct = () => {
                             label="Naam"
                             component={FormikField}
                           />
+                          <img
+                            src={countryflag}
+                            alt="Flag"
+                            className="cursor-pointer h-5 w-5 absolute right-4 bottom-3"
+                          />
                         </div>
                       </div>
                       <div className="w-1/2">
-                        <div className="w-full md:mb-0">
+                        <div className="w-full md:mb-0 relative">
                           <Field
                             type="text"
                             name="name"
@@ -293,6 +317,11 @@ export const UpdateProduct = () => {
                             label="Name"
                             component={FormikField}
                           />
+                          <img
+                              src={countryflag2}
+                              alt="Flag"
+                              className="cursor-pointer h-5 w-5 absolute right-4 bottom-3"
+                            />
                         </div>
                       </div>
                     </div>
@@ -316,8 +345,8 @@ export const UpdateProduct = () => {
                         />
                       </div>
                     </div>
-                    <div className="flex gap-[20px] mb-[24px]">
-                      <div className="w-1/2 md:mb-0">
+                    <div className="flex flex-col gap-[20px] mb-[24px]">
+                      <div className="w-full md:mb-0">
                         <label className="text-sm">Soort | Type</label>
                         <Multiselect
                           closeIcon="close"
@@ -332,7 +361,7 @@ export const UpdateProduct = () => {
                           }}
                         />
                       </div>
-                      <div className="w-1/2">
+                      <div className="w-full">
                         <label className="text-sm">Materiaal | Material</label>
                         <Multiselect
                           closeIcon="close"
@@ -348,8 +377,8 @@ export const UpdateProduct = () => {
                         />
                       </div>
                     </div>
-                    <div className="flex gap-[20px] mb-[24px]">
-                      <div className="w-1/2 md:mb-0">
+                    <div className="flex flex-col gap-[20px] mb-[24px]">
+                      <div className="w-full md:mb-0">
                         <label className="text-sm">Profiel | Profile</label>
                         <Multiselect
                           closeIcon="close"
@@ -364,7 +393,7 @@ export const UpdateProduct = () => {
                           }}
                         />
                       </div>
-                      <div className="w-1/2">
+                      <div className="w-full">
                         <label className="text-sm">
                           Duurzaamheidsklasse | Durability Class
                         </label>
@@ -383,8 +412,8 @@ export const UpdateProduct = () => {
                       </div>
                     </div>
 
-                    <div className="flex gap-[20px] mb-[24px]">
-                      <div className="w-1/2 md:mb-0">
+                    <div className="flex flex-col gap-[20px] mb-[24px]">
+                      <div className="w-full md:mb-0">
                         <label className="text-sm">Kwaliteit | Quality</label>
                         <Multiselect
                           closeIcon="close"
@@ -400,7 +429,7 @@ export const UpdateProduct = () => {
                           closeIconStyle={{ color: "red" }}
                         />
                       </div>
-                      <div className="w-1/2">
+                      <div className="w-full">
                         <label className="text-sm">
                           Toepassing | Application
                         </label>
@@ -419,7 +448,7 @@ export const UpdateProduct = () => {
                       </div>
                     </div>
                     <div className="flex gap-[20px] mb-[24px]">
-                      <div className="w-1/2 inline-block rounded-lg overflow-hidden">
+                      <div className="w-1/2 inline-block rounded-lg overflow-hidden relative">
                         <Field
                           type="text"
                           name="productDescriptionNl"
@@ -429,8 +458,13 @@ export const UpdateProduct = () => {
                           label="Product omschrijving"
                           component={Textarea}
                         />
+                        <img
+                          src={countryflag}
+                          alt="Flag"
+                          className="cursor-pointer h-5 w-5 absolute right-4 top-8"
+                        />
                       </div>
-                      <div className="w-1/2 inline-block rounded-lg overflow-hidden">
+                      <div className="w-1/2 inline-block rounded-lg overflow-hidden relative">
                         <Field
                           type="text"
                           name="productDescription"
@@ -440,8 +474,14 @@ export const UpdateProduct = () => {
                           label="Product Description"
                           component={Textarea}
                         />
+                        <img
+                          src={countryflag2}
+                          alt="Flag"
+                          className="cursor-pointer h-5 w-5 absolute right-4 top-8"
+                        />
                       </div>
                     </div>
+                    <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
                     <div className="flex gap-[20px] mb-[24px]">
                       <div className="w-1/2 md:mb-0">
                         <Field
@@ -493,9 +533,6 @@ export const UpdateProduct = () => {
                                 Lengte | Lenght
                               </th>
                               <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold	">
-                                Product ID
-                              </th>
-                              <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold	">
                                 Full Price ex Vat
                               </th>
                               <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold	">
@@ -530,22 +567,6 @@ export const UpdateProduct = () => {
                                       handleChange(
                                         index,
                                         "length",
-                                        e.target.value
-                                      )
-                                    }
-                                    className="w-full outline-none bg-transparent"
-                                  />
-                                </td>
-                                <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
-                                  <input
-                                    required
-                                    type="text"
-                                    placeholder="HHP123_300"
-                                    value={product.product_id_prefix}
-                                    onChange={(e) =>
-                                      handleChange(
-                                        index,
-                                        "product_id_prefix",
                                         e.target.value
                                       )
                                     }
@@ -616,7 +637,14 @@ export const UpdateProduct = () => {
                         </table>
                       </div>
                     </div>
-
+                    <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
+                    <div className="flex gap-5 items-center mb-[24px]">
+                      <img src={checkSquareIcon} alt="check square" />
+                      <p className="font-semibold text-lg text-[#111727]">
+                        Place Product on GoedGeplaatst via API
+                      </p>
+                    </div>
+                    <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
                     <div className="flex gap-[20px] mb-[24px]">
                       <div className="w-full md:mb-0 relative">
                         <label
@@ -636,7 +664,7 @@ export const UpdateProduct = () => {
                             height="215px"
                             onDrop={handleDrop}
                           />
-                          <div className="w-[215px] h-[215px] border border-dashed border-[#4C5B66] rounded-lg p-3 flex items-center justify-center">
+                          <div className="w-full max-w-[215px] h-[215px] border border-dashed border-[#4C5B66] rounded-lg p-3 flex items-center justify-center">
                             <input
                               type="file"
                               accept="image/jpeg, image/png, image/webp"
@@ -670,7 +698,7 @@ export const UpdateProduct = () => {
                               <button
                                 type="button"
                                 onClick={() => handleRemoveImage(index)}
-                                className="absolute top-2 right-2 bg-white rounded-full p-1 text-red-600"
+                                className="absolute top-2 right-2 border border-black bg-white rounded-full p-1 text-red-600"
                               >
                                 <XCircleIcon class="h-6 w-6 text-gray-500" />
                               </button>
@@ -682,6 +710,82 @@ export const UpdateProduct = () => {
                             Please upload atleast 1 image
                           </p>
                         )}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-[20px] mb-[60px]">
+                      <h2 className="text-sm">Related Products</h2>
+                      <div className="w-full md:mb-0">
+                        <label className="text-sm">Product 1</label>
+                        <Select
+                          classNamePrefix="select"
+                          isClearable
+                          isSearchable
+                          name="product1"
+                          placeholder="Product 1"
+                          options={relatedProductsOptions}
+                          value={relatedProducts.product1}
+                          onChange={(value) => {
+                            setRelatedProducts((prev) => ({
+                              ...prev,
+                              product1: value,
+                            }));
+                          }}
+                        />
+                      </div>
+                      <div className="w-full">
+                        <label className="text-sm">Product 2</label>
+                        <Select
+                          classNamePrefix="select"
+                          isClearable
+                          isSearchable
+                          name="product2"
+                          placeholder="Product 2"
+                          options={relatedProductsOptions}
+                          value={relatedProducts.product2}
+                          onChange={(value) => {
+                            setRelatedProducts((prev) => ({
+                              ...prev,
+                              product2: value,
+                            }));
+                          }}
+                        />
+                      </div>
+                      <div className="w-full">
+                        <label className="text-sm">Product 3</label>
+                        <Select
+                          classNamePrefix="select"
+                          isClearable
+                          isSearchable
+                          name="product3"
+                          placeholder="Product 3"
+                          options={relatedProductsOptions}
+                          value={relatedProducts.product3}
+                          onChange={(value) => {
+                            setRelatedProducts((prev) => ({
+                              ...prev,
+                              product3: value,
+                            }));
+                          }}
+                        />
+                      </div>
+                      <div className="w-full">
+                        <label className="text-sm">Product 4</label>
+                        <Select
+                          classNamePrefix="select"
+                          isClearable
+                          isSearchable
+                          name="product4"
+                          placeholder="Product 4"
+                          options={relatedProductsOptions}
+                          value={relatedProducts.product4}
+                          onChange={(value) => {
+                            setRelatedProducts((prev) => ({
+                              ...prev,
+                              product4: value,
+                            }));
+                          }}
+                        />
                       </div>
                     </div>
 
