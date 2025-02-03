@@ -88,60 +88,73 @@ export const getProductDetailsById = async (id) => {
   }
 };
 
-const extractIds = (items) =>
-  JSON.stringify(items?.map((item) => item.id) || []);
+const extractIds = (items) => items?.map((item) => item.id) || [];
 const extractValues = (obj) =>
-  JSON.stringify(
-    Object.values(obj)
-      .filter((item) => item !== null)
-      .map((item) => item.value) || []
-  );
-const extractImages = (images) =>
-  JSON.stringify(images?.map((img) => ({ image: img.file })) || []);
+  Object.values(obj)
+    .filter((item) => item !== null)
+    .map((item) => item.value) || [];
+const extractImages = (images) => images?.map((img) => ({ image: img.file })) || [];
 
 export const addProduct = async (values, lengths, images, relatedProducts) => {
   const formData = new FormData();
-  formData.append("name_nl", values.name_nl);
-  formData.append("name_en", values.name_en);
-  formData.append("description_nl", values.description_nl);
-  formData.append("description_en", values.description_en);
-  formData.append("width", values.width);
-  formData.append("thickness", values.thickness);
-  formData.append("weight_per_m3", values.weight_per_m3);
 
-  // Append groups, types, materials, etc.
+  // Append basic product details
+  formData.append("name_nl", JSON.stringify([values.name_nl]));
+  formData.append("name_en", JSON.stringify([values.name_en]));
+  formData.append("description_nl", JSON.stringify([values.description_nl]));
+  formData.append("description_en", JSON.stringify([values.description_en]));
 
+  // Ensure `width`, `thickness`, `weight_per_m3` are valid numbers
+  formData.append("width", JSON.stringify([Number(values.width)])); 
+  formData.append("thickness", JSON.stringify([Number(values.thickness)]));
+  formData.append("weight_per_m3", JSON.stringify([Number(values.weight_per_m3)]));
+
+  // Ensure `group`, `material`, etc. are arrays of numeric IDs (not wrapped in strings)
   if (values.group?.length) {
-    formData.append("group", extractIds(values.group));
+    formData.append("group", JSON.stringify(extractIds(values.group)));
   }
-  if (values.type?.length) {
-    formData.append("product_type", extractIds(values.type));
+  if (values.product_type?.length) {
+    formData.append("product_type", JSON.stringify(extractIds(values.product_type)));
   }
   if (values.material?.length) {
-    formData.append("material", extractIds(values.material));
+    formData.append("material", JSON.stringify(extractIds(values.material)));
   }
   if (values.durability_class?.length) {
-    formData.append("durability_class", extractIds(values.durability_class));
+    formData.append("durability_class", JSON.stringify(extractIds(values.durability_class)));
   }
   if (values.quality?.length) {
-    formData.append("quality", extractIds(values.quality));
+    formData.append("quality", JSON.stringify(extractIds(values.quality)));
   }
   if (values.application?.length) {
-    formData.append("quality", extractIds(values.application));
+    formData.append("application", JSON.stringify(extractIds(values.application)));
   }
   if (values.profile?.length) {
-    formData.append("quality", extractIds(values.profile));
-  }
-  if (relatedProducts?.length) {
-    formData.append("related_products", extractValues(relatedProducts));
-  }
-  // if (images?.length) {
-  //   formData.append("images", extractImages(images));
-  // }
-  if (lengths?.length) {
-    formData.append("lengths", JSON.stringify(lengths));
+    formData.append("profile", JSON.stringify(extractIds(values.profile)));
   }
 
+  // Append related products if present
+  if (relatedProducts?.length) {
+    formData.append("related_products", JSON.stringify(extractValues(relatedProducts)));
+  }
+
+  // Append images if present
+  if (images?.length) {
+    images.forEach((image, index) => {
+      formData.append(`images[${index}]`, image);
+    });
+  }
+
+  // Ensure `lengths` have numeric values for `length`, `full_price_ex_vat`, etc.
+  if (lengths?.length) {
+    lengths.forEach((length, index) => {
+      formData.append(`lengths[${index}][length]`, Number(length.length)); 
+      formData.append(`lengths[${index}][full_price_ex_vat]`, Number(length.full_price_ex_vat));
+      formData.append(`lengths[${index}][discount]`, Number(length.discount));
+      formData.append(`lengths[${index}][stock]`, Number(length.stock));
+    });
+  }
+
+  // Send the request to the backend
   try {
     const response = await axiosWithCredentials.post(
       `/product/create/`,
