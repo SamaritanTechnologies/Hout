@@ -1,36 +1,66 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PlusCircle from "../../assets/DashboardImages/plusCricle.svg";
 import CrossCircle from "../../assets/DashboardImages/cancelCircle.svg";
 import countryflag from "../../assets/DashboardImages/UK-Flag.svg";
 import countryflag2 from "../../assets/DashboardImages/USA-flag.svg";
+import { useSelector } from "react-redux";
 
 const productItem = {
   length: "",
   product_id_prefix: "",
 };
 
-export const ProductCategoryItem = ({ groupCategory }) => {
-  const [choices, setChoices] = useState(groupCategory.choices || []);
+export const ProductCategoryItem = ({ name }) => {
+  const { productCategories } = useSelector((state) => state.admin);
+  const [groupCategory, setGroupCategory] = useState();
+
+  useEffect(() => {
+    const group = productCategories.find(
+      (category) => category.name?.toLowerCase() === name?.toLowerCase()
+    );
+    setGroupCategory(group);
+  }, [productCategories, name]);
+
+  useEffect(() => {
+    console.log("=-= groupCategory", groupCategory);
+  }, [groupCategory]);
 
   const handleAddRow = () => {
-    setChoices((prevChoices) => [...prevChoices, { ...productItem }]);
+    if (!groupCategory) return;
+
+    setGroupCategory((prevGroup) => ({
+      ...prevGroup,
+      choices: [...(prevGroup.choices || []), { ...productItem }],
+    }));
   };
 
   const handleRemoveRow = (index) => {
-    setChoices((prevChoices) =>
-      prevChoices.length === 1
-        ? [{ ...productItem }]
-        : prevChoices.filter((_, i) => i !== index)
-    );
+    if (!groupCategory) return;
+
+    setGroupCategory((prevGroup) => ({
+      ...prevGroup,
+      choices:
+        prevGroup.choices.length === 1
+          ? [{ ...productItem }]
+          : prevGroup.choices.filter((_, i) => i !== index),
+    }));
   };
 
   const handleChange = (index, field, value) => {
-    setChoices((prevChoices) => {
-      const updatedChoices = [...prevChoices];
+    if (!groupCategory) return;
+
+    setGroupCategory((prevGroup) => {
+      const updatedChoices = [...prevGroup.choices];
       updatedChoices[index][field] = value;
-      return updatedChoices;
+
+      return {
+        ...prevGroup,
+        choices: updatedChoices,
+      };
     });
   };
+
+  if (!groupCategory) return;
 
   return (
     <div className="inline-block min-w-full rounded-lg overflow-hidden mb-[50px]">
@@ -56,7 +86,7 @@ export const ProductCategoryItem = ({ groupCategory }) => {
           </tr>
         </thead>
         <tbody>
-          {choices.map((choice, index) => (
+          {groupCategory?.choices?.map((choice, index) => (
             <tr key={index}>
               <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
                 <input

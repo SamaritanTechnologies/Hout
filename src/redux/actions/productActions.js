@@ -93,56 +93,27 @@ const extractValues = (obj) =>
   Object.values(obj)
     .filter((item) => item !== null)
     .map((item) => item.value) || [];
-const extractImages = (images) => images?.map((img) => ({ image: img.file })) || [];
+const extractImages = (images) =>
+  images?.map((img) => ({ image: img.file })) || [];
 
 export const addProduct = async (values, lengths, images, relatedProducts) => {
   const formData = new FormData();
 
   // Append basic product details
-  formData.append("name_nl", JSON.stringify([values.name_nl]));
-  formData.append("name_en", JSON.stringify([values.name_en]));
-  formData.append("description_nl", JSON.stringify([values.description_nl]));
-  formData.append("description_en", JSON.stringify([values.description_en]));
+  formData.append("name_nl", values.name_nl);
+  formData.append("name_en", values.name_en);
+  formData.append("description_nl", values.description_nl);
+  formData.append("description_en", values.description_en);
 
   // Ensure `width`, `thickness`, `weight_per_m3` are valid numbers
-  formData.append("width", JSON.stringify([Number(values.width)])); 
-  formData.append("thickness", JSON.stringify([Number(values.thickness)]));
-  formData.append("weight_per_m3", JSON.stringify([Number(values.weight_per_m3)]));
+  formData.append("width", values.width);
+  formData.append("thickness", values.thickness);
+  formData.append("weight_per_m3", values.weight_per_m3);
 
   // Append groups, types, materials, etc.
-
-  // values.group?.forEach((group, index) =>
-  //   formData.append(`group[${index}]`, group.id)
-  // );
-  // values.type?.forEach((type, index) =>
-  //   formData.append(`type[${index}]`, type.id)
-  // );
-  // values.material?.forEach((material, index) =>
-  //   formData.append(`material[${index}]`, material.id)
-  // );
-  // values.durability_class?.forEach((durability, index) =>
-  //   formData.append(`durability_class[${index}]`, durability.id)
-  // );
-  // values.quality?.forEach((quality, index) =>
-  //   formData.append(`quality[${index}]`, quality.id)
-  // );
-  // values.application?.forEach((application, index) =>
-  //   formData.append(`application[${index}]`, application.id)
-  // );
-  // values.profile?.forEach((profile, index) =>
-  //   formData.append(`profile[${index}]`, profile.id)
-  // );
-  // values.relatedProducts?.forEach((related, index) =>
-  //   formData.append(`related_products[${index}]`, related.id)
-  // );
-
-  // Append groups, types, materials, etc.
-
-  values.group?.forEach((group, index) =>
-    formData.append(`group`, group.id)
-  );
-  values.type?.forEach((type, index) =>
-    formData.append(`type`, type.id)
+  values.group?.forEach((group, index) => formData.append(`group`, group.id));
+  values.product_type?.forEach((type, index) =>
+    formData.append(`product_type`, type.id)
   );
   values.material?.forEach((material, index) =>
     formData.append(`material`, material.id)
@@ -159,37 +130,13 @@ export const addProduct = async (values, lengths, images, relatedProducts) => {
   values.profile?.forEach((profile, index) =>
     formData.append(`profile`, profile.id)
   );
-  values.relatedProducts?.forEach((related, index) =>
-    formData.append(`related_products`, related.id)
-  );
 
-  // if (values.group?.length) {
-  //   formData.append("group", extractIds(values.group));
-  // }
-  // if (values.type?.length) {
-  //   formData.append("product_type", extractIds(values.type));
-  // }
-  // if (values.material?.length) {
-  //   formData.append("material", extractIds(values.material));
-  // }
-  // if (values.durability_class?.length) {
-  //   formData.append("durability_class", extractIds(values.durability_class));
-  // }
-  // if (values.quality?.length) {
-  //   formData.append("quality", extractIds(values.quality));
-  // }
-  // if (values.application?.length) {
-  //   formData.append("quality", extractIds(values.application));
-  // }
-  // if (values.profile?.length) {
-  //   formData.append("quality", extractIds(values.profile));
-  // }
-  // if (relatedProducts?.length) {
-  //   formData.append("related_products", extractValues(relatedProducts));
-  // }
-  // if (images?.length) {
-  //   formData.append("images", img.file );
-  // }
+  // Append related products variations
+  Object.entries(relatedProducts).forEach(([key, related]) => {
+    if (related) {
+      formData.append(`related_products`, related.value); // Use related.value as the ID
+    }
+  });
 
   // Append lengths variations
   images?.forEach((image, index) => {
@@ -198,10 +145,6 @@ export const addProduct = async (values, lengths, images, relatedProducts) => {
     }
     formData.append(`images`, image.file);
   });
-
-  // if (lengths?.length) {
-  //   formData.append("lengths", JSON.stringify(lengths));
-  // }
 
   // Append lengths variations
   lengths?.forEach((length, index) => {

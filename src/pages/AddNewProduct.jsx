@@ -61,6 +61,11 @@ export const AddNewProduct = () => {
   const [relatedProducts, setRelatedProducts] = useState(relatedInitial);
   const [relatedProductsOptions, setRelatedProductsOptions] = useState([]);
 
+  useEffect(() => {
+    console.log('=-= relatedProducts', relatedProducts);
+  }, [relatedProducts])
+  
+
   const getChoicesByName = (name) => {
     const category = categories?.find(
       (cat) => cat.name?.toLowerCase() === name.toLowerCase()

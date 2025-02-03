@@ -64,6 +64,10 @@ export const UpdateProduct = () => {
   const [relatedProducts, setRelatedProducts] = useState(relatedInitial);
   const [relatedProductsOptions, setRelatedProductsOptions] = useState([]);
 
+  useEffect(() => {
+    console.log("=-= relatedProducts", relatedProducts);
+  }, [relatedProducts]);
+
   const getProductDetails = async (id) => {
     try {
       const res = await getProductDetailsById(id);
@@ -72,14 +76,24 @@ export const UpdateProduct = () => {
         setProduct(res);
         setLengths(res.lengths);
         setLengths(res.lengths);
-        // res.related_products
-
         const newImages = res.images?.map((file) => ({
           file,
           preview: file.image,
         }));
 
         setImages(newImages);
+
+        // Transform related products response to match the expected structure
+        const relatedProductsArray = res.related_products || [];
+
+        const formattedRelatedProducts = {
+          product1: relatedProductsArray[0] || null,
+          product2: relatedProductsArray[1] || null,
+          product3: relatedProductsArray[2] || null,
+          product4: relatedProductsArray[3] || null,
+        };
+
+        setRelatedProducts(formattedRelatedProducts);
       } else {
         navigate("/products");
       }
@@ -308,13 +322,13 @@ export const UpdateProduct = () => {
                         <Multiselect
                           closeIcon="close"
                           style={styleMultiSelect}
-                          name="type"
-                          id="type"
+                          name="product_type"
+                          id="product_type"
                           options={getChoicesByName("type")}
                           displayValue="name_en"
-                          selectedValues={product?.type}
+                          selectedValues={product?.product_type}
                           onSelect={(selectedList) => {
-                            setFieldValue("type", selectedList);
+                            setFieldValue("product_type", selectedList);
                           }}
                         />
                       </div>
