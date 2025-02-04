@@ -178,86 +178,82 @@ export const addProduct = async (values, lengths, images, relatedProducts) => {
   }
 };
 
-export const updateProduct = async (id, values, products, images, relatedProducts) => {
+export const updateProduct = async (id, values, lengths, images, relatedProducts) => {
   const formData = new FormData();
 
-  // Append basic product details (ensure they are not undefined)
-  if (values.name_nl) formData.append("name_nl", values.name_nl);
-  if (values.name_en) formData.append("name_en", values.name_en);
-  if (values.description_nl) formData.append("description_nl", values.description_nl);
-  if (values.description_en) formData.append("description_en", values.description_en);
+  // Append basic product details
+  formData.append("name_nl", values.name_nl || "");
+  formData.append("name_en", values.name_en || "");
+  formData.append("description_nl", values.description_nl || "");
+  formData.append("description_en", values.description_en || "");
 
-  // Ensure `width`, `thickness`, `weight_per_m3` are valid numbers
-  if (values.width !== undefined) formData.append("width", values.width);
-  if (values.thickness !== undefined) formData.append("thickness", values.thickness);
-  if (values.weight_per_m3 !== undefined) formData.append("weight_per_m3", values.weight_per_m3);
+  // Append numeric fields (ensure they are valid numbers)
+  formData.append("width", values.width || 0);
+  formData.append("thickness", values.thickness || 0);
+  formData.append("weight_per_m3", values.weight_per_m3 || 0);
 
-  // Append groups, types, materials, etc. (only if they exist)
+  // Append arrays (groups, types, materials, etc.)
   if (values.group?.length) {
-    values.group.forEach((group, index) => {
-      formData.append(`group[${index}]`, group.id); // Ensure it's an ID
-    });
+    values.group.forEach((group) => formData.append("group[]", group.id));
   }
   if (values.product_type?.length) {
-    values.product_type.forEach((type, index) => {
-      formData.append(`product_type[${index}]`, type.id); // Ensure it's an ID
-    });
+    values.product_type.forEach((type) => formData.append("product_type[]", type.id));
   }
   if (values.material?.length) {
-    values.material.forEach((material, index) => {
-      formData.append(`material[${index}]`, material.id); // Ensure it's an ID
-    });
+    values.material.forEach((material) => formData.append("material[]", material.id));
   }
   if (values.durability_class?.length) {
-    values.durability_class.forEach((durability, index) => {
-      formData.append(`durability_class[${index}]`, durability.id); // Ensure it's an ID
-    });
+    values.durability_class.forEach((durability) => formData.append("durability_class[]", durability.id));
   }
   if (values.quality?.length) {
-    values.quality.forEach((quality, index) => {
-      formData.append(`quality[${index}]`, quality.id); // Ensure it's an ID
-    });
+    values.quality.forEach((quality) => formData.append("quality[]", quality.id));
   }
   if (values.application?.length) {
-    values.application.forEach((application, index) => {
-      formData.append(`application[${index}]`, application.id); // Ensure it's an ID
-    });
+    values.application.forEach((application) => formData.append("application[]", application.id));
   }
   if (values.profile?.length) {
-    values.profile.forEach((profile, index) => {
-      formData.append(`profile[${index}]`, profile.id); // Ensure it's an ID
-    });
+    values.profile.forEach((profile) => formData.append("profile[]", profile.id));
   }
 
   // Append related products (only if they exist)
-  Object.entries(relatedProducts).forEach(([key, related]) => {
-    if (related?.value) {
-      formData.append(`related_products`, related.value); // Use related.value as the ID
-    }
+  const relatedProductIds = Object.values(relatedProducts)
+    .filter((related) => related?.value)
+    .map((related) => related.value);
+
+  relatedProductIds.forEach((id) => {
+    formData.append("related_products[]", id);
   });
 
-  // Append images (only if they exist)
+  // Append images (handle existing and new images)
   if (images?.length) {
     images.forEach((image, index) => {
-      if (image.file?.id) {
-        formData.append(`images[${index}][id]`, image.file?.id);
+      if (image.id) {
+        // For existing images, append the ID
+        formData.append(`images[${index}][id]`, image.id);
       } else if (image.file) {
+        // For new images, append the file
         formData.append(`images[${index}][product_image]`, image.file);
       }
     });
   }
 
-  // Append product variations (lengths, full_price_ex_vat, discount, stock)
-  if (products?.length) {
-    products.forEach((product, index) => {
-      if (product.id) {
-        formData.append(`products[${index}][id]`, product.id); // Ensure it's an ID
+  // Append lengths (handle existing and new lengths)
+  if (lengths?.length) {
+    lengths.forEach((length, index) => {
+      if (length.id) {
+        // For existing lengths, append the ID
+        formData.append(`lengths[${index}][id]`, length.id);
       }
-      if (product.length !== undefined) formData.append(`products[${index}][length]`, product.length || 0);
-      if (product.discount !== undefined) formData.append(`products[${index}][discount]`, product.discount || 0);
-      if (product.stock !== undefined) formData.append(`products[${index}][stock]`, product.stock || 0);
-      if (product.full_price_ex_vat !== undefined) formData.append(`products[${index}][full_price_ex_vat]`, product.full_price_ex_vat || 0);
+      formData.append(`lengths[${index}][length]`, length.length || 0);
+      formData.append(`lengths[${index}][discount]`, length.discount || 0);
+      formData.append(`lengths[${index}][stock]`, length.stock || 0);
+      formData.append(`lengths[${index}][full_price_ex_vat]`, length.full_price_ex_vat || 0);
     });
+  }
+
+  // Debug formData (optional)
+  for (let [key, value] of formData.entries()) {
+    console.log(key, value);
   }
 
   try {

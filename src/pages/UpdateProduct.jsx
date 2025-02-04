@@ -21,7 +21,7 @@ import { XCircleIcon } from "@heroicons/react/24/outline";
 import checkSquareIcon from "../assets/DashboardImages/check-square.svg";
 import { useSelector } from "react-redux";
 import countryflag from "../assets/DashboardImages/UK-Flag.svg";
-import countryflag2 from "../assets/DashboardImages/USA-flag.svg"
+import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
 
 const styleMultiSelect = {
   chips: {
@@ -76,17 +76,19 @@ export const UpdateProduct = () => {
 
       if (res) {
         setProduct(res);
-        setLengths(res.lengths);
-        const newImages = res.images?.map((file) => ({
-          file,
-          preview: file.image,
+        setLengths(res.lengths || [{ ...productItem }]);
+
+        // Initialize images with existing images
+        const newImages = res.images?.map((image) => ({
+          id: image.id, // Include the ID for existing images
+          file: image.image, // Use the image URL
+          preview: image.image, // Use the image URL for preview
         }));
 
-        setImages(newImages);
+        setImages(newImages || []);
 
-        // Transform related products response to match the expected structure
+        // Initialize related products
         const relatedProductsArray = res.related_products || [];
-
         const formattedRelatedProducts = {
           product1: relatedProductsArray[0] || null,
           product2: relatedProductsArray[1] || null,
@@ -226,24 +228,24 @@ export const UpdateProduct = () => {
         <Formik
           initialValues={{
             ...mapProductCategories(),
-            name: product?.name_en ?? "",
-            nameNl: product?.name_nl ?? "",
-            productDescription: product?.description_en ?? "",
-            productDescriptionNl: product?.description_nl ?? "",
+            name_en: product?.name_en ?? "",
+            name_nl: product?.name_nl ?? "",
+            description_en: product?.description_en ?? "",
+            description_nl: product?.description_nl ?? "",
             thickness: product?.thickness ?? "",
             width: product?.width ?? "",
-            weight: product?.weight_per_m3 ?? "",
+            weight_per_m3: product?.weight_per_m3 ?? "",
           }}
           validationSchema={Yup.object({
-            name: Yup.string().required("Name is required"),
-            nameNl: Yup.string().required("Naam is required"),
+            name_en: Yup.string().required("Name is required"),
+            name_nl: Yup.string().required("Naam is required"),
             thickness: Yup.number().required("Thickness is required"),
             width: Yup.number().required("Width is required"),
-            weight: Yup.number().required("Weight is required"),
-            productDescription: Yup.string().required(
+            weight_per_m3: Yup.number().required("Weight is required"),
+            description_en: Yup.string().required(
               "Product Description is required"
             ),
-            productDescriptionNl: Yup.string().required(
+            description_nl: Yup.string().required(
               "Product omschrijving is required"
             ),
           })}
