@@ -46,3 +46,25 @@ export const addHomepageImage = async (fileInput) => {
     throw error;
   }
 };
+
+export const addHomepageProducts = async (payload) => {
+  try {
+    const response = await axiosWithCredentials.post(`/web-products/`, payload);
+    return response.data;
+  } catch (error) {
+    toast.error("Failed to add products.");
+    console.error("Error adding products:", error);
+    throw error;
+  }
+};
+
+export const getHomepageProducts = async () => {
+  try {
+    const response = await axiosWithCredentials.get(`/web-products/`);
+    return response.data;
+  }
+  catch (error) {
+    toast.error("Error fetching homepage image", error);
+    throw error;
+  }
+};
