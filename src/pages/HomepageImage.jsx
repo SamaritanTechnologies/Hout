@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 import ArrowBack from "../assets/DashboardImages/arrowback.svg";
 import Dropzone from "../components/Common/Dropzone";
 import Button from "../components/Common/Button";
-import { addHomepageImage, getHomepageImage } from "../redux/actions/dashboardActions";
+import {
+  addHomepageImage,
+  getHomepageImage,
+} from "../redux/actions/dashboardActions";
 import { toast } from "react-toastify";
+import { XCircleIcon } from "@heroicons/react/24/outline";
 
 const validTypes = ["image/jpeg", "image/png", "image/webp"];
 
@@ -12,13 +16,12 @@ export const HomePageImage = () => {
   const [existingImage, setExistingImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch existing homepage image from the database
+  // Fetch existing homepage image
   useEffect(() => {
     const fetchExistingImage = async () => {
       try {
         const response = await getHomepageImage();
-        console.log("API Response:", response); // Check the response format
-        if (response && response.length > 0 && response[0].image) {
+        if (response?.length > 0 && response[0].image) {
           setExistingImage(response[0].image);
         }
       } catch (error) {
@@ -32,9 +35,8 @@ export const HomePageImage = () => {
   const handleDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
     if (file && validTypes.includes(file.type)) {
-      const previewUrl = URL.createObjectURL(file);
-      setImage({ file, preview: previewUrl });
-      setExistingImage(null); // Hide the old image once a new file is selected
+      setImage({ file, preview: URL.createObjectURL(file) });
+      setExistingImage(null); // Clear existing image when a new one is selected
     } else {
       toast.error("Invalid file type. Only JPEG, PNG, and WebP are allowed.");
     }
@@ -57,11 +59,8 @@ export const HomePageImage = () => {
     try {
       const response = await addHomepageImage({ files: [image.file] });
       toast.success("Image uploaded successfully!");
-
-      if (response?.data?.imageUrl) {
-        setExistingImage(response.data.imageUrl);
-        setImage(null); // Reset new image selection after successful upload
-      }
+      setExistingImage(response?.data?.imageUrl || null);
+      setImage(null); // Clear new image after successful upload
     } catch (error) {
       toast.error("Failed to upload image.");
       console.error("Error uploading image:", error);
@@ -77,21 +76,24 @@ export const HomePageImage = () => {
           <img src={ArrowBack} alt="Back" />
         </div>
         <h5 className="xl:text-32 lg:text-28 text-26 font-bold">
-          Upload Homepage Wallpaper
+          Homepage Image
         </h5>
       </div>
 
       <div className="px-4 sm:px-8 py-14">
         <div className="w-full">
-          <label className="text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block">
-            Product Image
-            <br />
-            <span className="text-[#6C7275] font-normal text-12">
-              Select an image to preview before uploading.
-            </span>
-          </label>
+          <div className="flex flex-col gap-3.5 mt-12 mb-20">
+            <h2 className="text-black text-sm font-medium">
+              Upload Homepage Wallpaper
+            </h2>
+            <p className="text-[#6C7275] font-normal text-12">
+              You can Upload Multiple Images of product in different dimensions,
+              and rotate. By saving the image will be rezised to optimized
+              dimensions.
+            </p>
+          </div>
 
-          <div className="flex gap-[14px] flex-wrap">
+          <div className="flex gap-[14px] flex-wrap mb-12">
             {image?.preview ? (
               <div className="relative w-[215px] h-[215px] rounded-lg overflow-hidden">
                 <img
@@ -102,9 +104,9 @@ export const HomePageImage = () => {
                 <button
                   type="button"
                   onClick={handleRemoveImage}
-                  className="absolute top-2 right-2 border border-black bg-white rounded-full p-1 text-red-600"
+                  className="absolute top-2 right-2"
                 >
-                  X
+                  <XCircleIcon class="h-6 w-6 text-gray-500" />
                 </button>
               </div>
             ) : existingImage ? (
@@ -117,9 +119,9 @@ export const HomePageImage = () => {
                 <button
                   type="button"
                   onClick={handleRemoveImage}
-                  className="absolute top-2 right-2 border border-black bg-white rounded-full p-1 text-red-600"
+                  className="absolute top-2 right-2"
                 >
-                  X
+                  <XCircleIcon class="h-6 w-6 text-gray-500" />
                 </button>
               </div>
             ) : (
