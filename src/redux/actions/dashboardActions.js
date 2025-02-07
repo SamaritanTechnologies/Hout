@@ -68,3 +68,50 @@ export const getHomepageProducts = async () => {
     throw error;
   }
 };
+
+export const addOurValues = async (payload) => {
+  try {
+    const response = await axiosWithCredentials.post(`/our-value/`, payload);
+    toast.success("Our Values updated successfully!");
+    return response.data;
+  }
+  catch (error) {
+    toast.error("Failed to update Our Values.");
+    console.error("Error updating Our Values:", error);
+    throw error;
+  }
+};
+
+
+export const getOurValues = async () => {
+  try {
+    const response = await axiosWithCredentials.get(`/our-value/`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching Our Values:", error);
+    throw error;
+  }
+};
+
+export const addPrivacyPolicies = async (payload) => {
+  try {
+    const response = await axiosWithCredentials.post(`/privacy-policy/`, payload);
+    toast.success("Privacy policy content updated successfully!");
+    return response.data;
+  } catch (error) {
+    toast.error("Failed to update privacy policy content.");
+    console.error("Error updating Privacy Policy:", error);
+    throw error;
+  }
+};
+
+export const getPrivacyPolicy = async () => {
+  try {
+    const response = await axiosWithCredentials.get(`/privacy-policy/`);
+    return response.data;
+  } catch (error) {
+    toast.error("Failed to fetch privacy policy content.");
+    console.error("Error fetching Privacy Policy:", error);
+    throw error;
+  }
+};
