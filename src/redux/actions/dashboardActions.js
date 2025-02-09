@@ -115,3 +115,26 @@ export const getPrivacyPolicy = async () => {
     throw error;
   }
 };
+
+export const addTermsCondition = async (payload) => {
+  try {
+    const response = await axiosWithCredentials.post(`/terms-and-conditions/`,payload);
+    toast.success("Privacy policy content updated successfully!");
+    return response.data;
+  } catch (error) {
+    toast.error("Failed to update privacy policy content.");
+    console.error("Error updating Privacy Policy:", error);
+    throw error;
+  }
+}
+
+export const getTermsCondition = async () => {
+  try {
+    const response = await axiosWithCredentials.get(`/terms-and-conditions/`);
+    return response.data;
+  } catch (error) {
+    toast.error("Failed to fetch privacy policy content.");
+    console.error("Error fetching Privacy Policy:", error);
+    throw error;
+  }
+}
