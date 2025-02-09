@@ -21,10 +21,10 @@ export const TermsAndConditions = () => {
     const fetchTermsAndConditions = async () => {
       try {
         const data = await getTermsCondition();
-        if (data) {
+        if (data?.length) {
           setTermsCondition({
-            description_en: data.description_en || "",
-            description_nl: data.description_nl || "",
+            description_en: data[0].description_en || "",
+            description_nl: data[0].description_nl || "",
           });
         }
       } catch (error) {
