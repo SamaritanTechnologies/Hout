@@ -140,17 +140,11 @@ export const addProduct = async (values, lengths, images, relatedProducts) => {
 
   // Append lengths variations
   images?.forEach((image, index) => {
-    if (image.id) {
-      formData.append(`images`, image.file);
-    }
     formData.append(`images`, image.file);
   });
 
   // Append lengths variations
   lengths?.forEach((length, index) => {
-    if (length.id) {
-      formData.append(`lengths[${index}][id]`, length.id);
-    }
     formData.append(`lengths[${index}][length]`, length.length || 0);
     formData.append(`lengths[${index}][discount]`, length.discount || 0);
     formData.append(`lengths[${index}][stock]`, length.stock || 0);
@@ -178,7 +172,13 @@ export const addProduct = async (values, lengths, images, relatedProducts) => {
   }
 };
 
-export const updateProduct = async (id, values, lengths, images, relatedProducts) => {
+export const updateProduct = async (
+  id,
+  values,
+  lengths,
+  images,
+  relatedProducts
+) => {
   const formData = new FormData();
 
   // Append basic product details
@@ -192,69 +192,68 @@ export const updateProduct = async (id, values, lengths, images, relatedProducts
   formData.append("thickness", values.thickness || 0);
   formData.append("weight_per_m3", values.weight_per_m3 || 0);
 
-  // Append arrays (groups, types, materials, etc.)
-  if (values.group?.length) {
-    values.group.forEach((group) => formData.append("group[]", group.id));
-  }
-  if (values.product_type?.length) {
-    values.product_type.forEach((type) => formData.append("product_type[]", type.id));
-  }
-  if (values.material?.length) {
-    values.material.forEach((material) => formData.append("material[]", material.id));
-  }
-  if (values.durability_class?.length) {
-    values.durability_class.forEach((durability) => formData.append("durability_class[]", durability.id));
-  }
-  if (values.quality?.length) {
-    values.quality.forEach((quality) => formData.append("quality[]", quality.id));
-  }
-  if (values.application?.length) {
-    values.application.forEach((application) => formData.append("application[]", application.id));
-  }
-  if (values.profile?.length) {
-    values.profile.forEach((profile) => formData.append("profile[]", profile.id));
-  }
+  // Append groups, types, materials, etc.
+  values.group?.forEach((group, index) => formData.append(`group`, group.id));
+  values.product_type?.forEach((type, index) =>
+    formData.append(`product_type`, type.id)
+  );
+  values.material?.forEach((material, index) =>
+    formData.append(`material`, material.id)
+  );
+  values.durability_class?.forEach((durability, index) =>
+    formData.append(`durability_class`, durability.id)
+  );
+  values.quality?.forEach((quality, index) =>
+    formData.append(`quality`, quality.id)
+  );
+  values.application?.forEach((application, index) =>
+    formData.append(`application`, application.id)
+  );
+  values.profile?.forEach((profile, index) =>
+    formData.append(`profile`, profile.id)
+  );
 
-  // Append related products (only if they exist)
-  const relatedProductIds = Object.values(relatedProducts)
-    .filter((related) => related?.value)
-    .map((related) => related.value);
-
-  relatedProductIds.forEach((id) => {
-    formData.append("related_products[]", id);
+  // Append related products variations
+  Object.entries(relatedProducts).forEach(([key, related]) => {
+    if (related) {
+      formData.append(`related_products`, related.value); // Use related.value as the ID
+    }
   });
 
   // Append images (handle existing and new images)
-  if (images?.length) {
-    images.forEach((image, index) => {
-      if (image.id) {
-        // For existing images, append the ID
-        formData.append(`images[${index}][id]`, image.id);
-      } else if (image.file) {
-        // For new images, append the file
-        formData.append(`images[${index}][product_image]`, image.file);
-      }
-    });
-  }
+  images?.forEach((image, index) => {
+    if (image.id) {
+      formData.append(`images`, image.preview); // already added image
+    } else {
+      formData.append(`images`, image.file); // newly added image
+    }
+  });
+
+  // if (images?.length) {
+  //   images.forEach((image, index) => {
+  //     if (image.id) {
+  //       // For existing images, append the ID
+  //       formData.append(`images[${index}][id]`, image.id);
+  //     } else if (image.file) {
+  //       // For new images, append the file
+  //       formData.append(`images[${index}][product_image]`, image.file);
+  //     }
+  //   });
+  // }
 
   // Append lengths (handle existing and new lengths)
-  if (lengths?.length) {
-    lengths.forEach((length, index) => {
-      if (length.id) {
-        // For existing lengths, append the ID
-        formData.append(`lengths[${index}][id]`, length.id);
-      }
-      formData.append(`lengths[${index}][length]`, length.length || 0);
-      formData.append(`lengths[${index}][discount]`, length.discount || 0);
-      formData.append(`lengths[${index}][stock]`, length.stock || 0);
-      formData.append(`lengths[${index}][full_price_ex_vat]`, length.full_price_ex_vat || 0);
-    });
-  }
-
-  // Debug formData (optional)
-  for (let [key, value] of formData.entries()) {
-    console.log(key, value);
-  }
+  lengths?.forEach((length, index) => {
+    if (length.id) {
+      formData.append(`lengths[${index}][id]`, length.id);
+    }
+    formData.append(`lengths[${index}][length]`, length.length || 0);
+    formData.append(`lengths[${index}][discount]`, length.discount || 0);
+    formData.append(`lengths[${index}][stock]`, length.stock || 0);
+    formData.append(
+      `lengths[${index}][full_price_ex_vat]`,
+      length.full_price_ex_vat || 0
+    );
+  });
 
   try {
     const response = await axiosWithCredentials.put(

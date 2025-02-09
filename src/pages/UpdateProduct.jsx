@@ -10,7 +10,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import FormikField from "../components/Common/FormikField";
-import Select from 'react-select';
+import Select from "react-select";
 import { Multiselect } from "multiselect-react-dropdown";
 import {
   getProducts,
@@ -35,7 +35,7 @@ const styleMultiSelect = {
   },
 };
 
-const validTypes = ["image/jpeg", "image/png", "image/webp"];
+const validTypes = ["image/jpg", "image/jpeg", "image/png", "image/webp"];
 
 const productItem = {
   length: "",
@@ -67,8 +67,8 @@ export const UpdateProduct = () => {
   const [relatedProductsOptions, setRelatedProductsOptions] = useState([]);
 
   useEffect(() => {
-    console.log("=-= relatedProducts", relatedProducts);
-  }, [relatedProducts]);
+    console.log("=-= images", images);
+  }, [images]);
 
   const getProductDetails = async (id) => {
     try {
@@ -235,6 +235,13 @@ export const UpdateProduct = () => {
             thickness: product?.thickness ?? "",
             width: product?.width ?? "",
             weight_per_m3: product?.weight_per_m3 ?? "",
+            group: product?.group ?? [],
+            product_type: product?.product_type ?? [],
+            material: product?.material ?? [],
+            profile: product?.profile ?? [],
+            durability_class: product?.durability_class ?? [],
+            quality: product?.quality ?? [],
+            application: product?.application ?? [],
           }}
           validationSchema={Yup.object({
             name_en: Yup.string().required("Name is required"),
@@ -264,7 +271,7 @@ export const UpdateProduct = () => {
             }
           }}
         >
-          {({ values, setFieldValue, isSubmitting, errors }) => (
+          {({ values, setFieldValue, isSubmitting }) => (
             <Form>
               <div className="lg:pt-[50px] pt-[30px] xl:pb-[30px] lg:pb-[25px] pb-[20px] px-[20px] bg-[rgb(250,250,250)] h-full min-h-[86vh]">
                 <div className="flex gap-2 items-center">
@@ -294,8 +301,8 @@ export const UpdateProduct = () => {
                         <div className="w-full md:mb-0 relative">
                           <Field
                             type="text"
-                            name="nameNl"
-                            id="nameNl"
+                            name="name_nl"
+                            id="name_nl"
                             as="sele"
                             placeholder="Naam"
                             label="Naam"
@@ -312,18 +319,18 @@ export const UpdateProduct = () => {
                         <div className="w-full md:mb-0 relative">
                           <Field
                             type="text"
-                            name="name"
-                            id="name"
+                            name="name_en"
+                            id="name_en"
                             as="sele"
                             placeholder="Name"
                             label="Name"
                             component={FormikField}
                           />
                           <img
-                              src={countryflag2}
-                              alt="Flag"
-                              className="cursor-pointer h-5 w-5 absolute right-4 bottom-3"
-                            />
+                            src={countryflag2}
+                            alt="Flag"
+                            className="cursor-pointer h-5 w-5 absolute right-4 bottom-3"
+                          />
                         </div>
                       </div>
                     </div>
@@ -337,7 +344,7 @@ export const UpdateProduct = () => {
                           id="group"
                           options={getChoicesByName("group")}
                           displayValue="name_en"
-                          selectedValues={product?.group}
+                          selectedValues={values?.group}
                           onSelect={(selectedList) => {
                             setFieldValue("group", selectedList);
                           }}
@@ -357,7 +364,7 @@ export const UpdateProduct = () => {
                           id="product_type"
                           options={getChoicesByName("type")}
                           displayValue="name_en"
-                          selectedValues={product?.product_type}
+                          selectedValues={values?.product_type}
                           onSelect={(selectedList) => {
                             setFieldValue("product_type", selectedList);
                           }}
@@ -372,7 +379,7 @@ export const UpdateProduct = () => {
                           id="material"
                           options={getChoicesByName("material")}
                           displayValue="name_en"
-                          selectedValues={product?.material}
+                          selectedValues={values?.material}
                           onSelect={(selectedList) => {
                             setFieldValue("material", selectedList);
                           }}
@@ -389,7 +396,7 @@ export const UpdateProduct = () => {
                           id="profile"
                           options={getChoicesByName("profile")}
                           displayValue="name_en"
-                          selectedValues={product?.profile}
+                          selectedValues={values?.profile}
                           onSelect={(selectedList) => {
                             setFieldValue("profile", selectedList);
                           }}
@@ -406,7 +413,7 @@ export const UpdateProduct = () => {
                           id="durability_class"
                           options={getChoicesByName("durability_class")}
                           displayValue="name_en"
-                          selectedValues={product?.durability_class}
+                          selectedValues={values?.durability_class}
                           onSelect={(selectedList) => {
                             setFieldValue("durability_class", selectedList);
                           }}
@@ -424,7 +431,7 @@ export const UpdateProduct = () => {
                           id="quality"
                           options={getChoicesByName("quality")}
                           displayValue="name_en"
-                          selectedValues={product?.quality}
+                          selectedValues={values?.quality}
                           onSelect={(selectedList) => {
                             setFieldValue("quality", selectedList);
                           }}
@@ -442,7 +449,7 @@ export const UpdateProduct = () => {
                           id="application"
                           options={getChoicesByName("application")}
                           displayValue="name_en"
-                          selectedValues={product.application}
+                          selectedValues={values.application}
                           onSelect={(selectedList) => {
                             setFieldValue("application", selectedList);
                           }}
@@ -453,8 +460,8 @@ export const UpdateProduct = () => {
                       <div className="w-1/2 inline-block rounded-lg overflow-hidden relative">
                         <Field
                           type="text"
-                          name="productDescriptionNl"
-                          id="productDescriptionNl"
+                          name="description_nl"
+                          id="description_nl"
                           as="sele"
                           placeholder="omschrijving"
                           label="Product omschrijving"
@@ -469,8 +476,8 @@ export const UpdateProduct = () => {
                       <div className="w-1/2 inline-block rounded-lg overflow-hidden relative">
                         <Field
                           type="text"
-                          name="productDescription"
-                          id="productDescription"
+                          name="description_en"
+                          id="description_en"
                           as="sele"
                           placeholder="Description"
                           label="Product Description"
@@ -516,8 +523,8 @@ export const UpdateProduct = () => {
                           type="number"
                           min={0}
                           postfix="kg"
-                          name="weight"
-                          id="weight"
+                          name="weight_per_m3"
+                          id="weight_per_m3"
                           placeholder="1200"
                           label="Gewicht per m3 | Weight per m3"
                           component={FormikField}

@@ -34,7 +34,7 @@ const styleMultiSelect = {
   },
 };
 
-const validTypes = ["image/jpeg", "image/png", "image/webp"];
+const validTypes = ["image/jpg", "image/jpeg", "image/png", "image/webp"];
 
 const lengthItem = {
   length: "",
@@ -60,11 +60,6 @@ export const AddNewProduct = () => {
   });
   const [relatedProducts, setRelatedProducts] = useState(relatedInitial);
   const [relatedProductsOptions, setRelatedProductsOptions] = useState([]);
-
-  useEffect(() => {
-    console.log('=-= relatedProducts', relatedProducts);
-  }, [relatedProducts])
-  
 
   const getChoicesByName = (name) => {
     const category = categories?.find(
@@ -199,7 +194,7 @@ export const AddNewProduct = () => {
           }
         }}
       >
-        {({ values, setFieldValue, isSubmitting, errors }) => (
+        {({ values, setFieldValue, isSubmitting }) => (
           <Form>
             <div className="lg:pt-[50px] pt-[30px] xl:pb-[30px] lg:pb-[25px] pb-[20px] px-[20px] bg-[rgb(250,250,250)] h-full min-h-[86vh]">
               <div className="flex gap-2 items-center">
