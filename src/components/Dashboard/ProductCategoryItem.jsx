@@ -1,66 +1,59 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import PlusCircle from "../../assets/DashboardImages/plusCricle.svg";
 import CrossCircle from "../../assets/DashboardImages/cancelCircle.svg";
 import countryflag from "../../assets/DashboardImages/UK-Flag.svg";
 import countryflag2 from "../../assets/DashboardImages/USA-flag.svg";
-import { useSelector } from "react-redux";
 
 const productItem = {
-  length: "",
-  product_id_prefix: "",
+  name_en: "",
+  name_nl: "",
 };
 
-export const ProductCategoryItem = ({ name }) => {
-  const { productCategories } = useSelector((state) => state.admin);
-  const [groupCategory, setGroupCategory] = useState();
-
-  useEffect(() => {
-    const group = productCategories.find(
-      (category) => category.name?.toLowerCase() === name?.toLowerCase()
-    );
-    setGroupCategory(group);
-  }, [productCategories, name]);
-
-  useEffect(() => {
-    console.log("=-= groupCategory", groupCategory);
-  }, [groupCategory]);
+export const ProductCategoryItem = ({
+  name,
+  loading,
+  categoryData,
+  setCategoryData,
+}) => {
+  const groupCategory = categoryData[name];
 
   const handleAddRow = () => {
-    if (!groupCategory) return;
-
-    setGroupCategory((prevGroup) => ({
-      ...prevGroup,
-      choices: [...(prevGroup.choices || []), { ...productItem }],
+    if (loading) return;
+    setCategoryData((prevData) => ({
+      ...prevData,
+      [name]: {
+        ...prevData[name],
+        choices: [...(prevData[name].choices || []), { ...productItem }],
+      },
     }));
   };
 
   const handleRemoveRow = (index) => {
-    if (!groupCategory) return;
-
-    setGroupCategory((prevGroup) => ({
-      ...prevGroup,
-      choices:
-        prevGroup.choices.length === 1
-          ? [{ ...productItem }]
-          : prevGroup.choices.filter((_, i) => i !== index),
+    if (loading) return;
+    setCategoryData((prevData) => ({
+      ...prevData,
+      [name]: {
+        ...prevData[name],
+        choices:
+          prevData[name].choices?.length === 1
+            ? [{ ...productItem }]
+            : prevData[name].choices?.filter((_, i) => i !== index),
+      },
     }));
   };
 
   const handleChange = (index, field, value) => {
-    if (!groupCategory) return;
-
-    setGroupCategory((prevGroup) => {
-      const updatedChoices = [...prevGroup.choices];
-      updatedChoices[index][field] = value;
-
+    if (loading) return;
+    setCategoryData((prevData) => {
+      const updatedChoices = prevData[name]?.choices?.map((choice, i) =>
+        i === index ? { ...choice, [field]: value } : choice
+      );
       return {
-        ...prevGroup,
-        choices: updatedChoices,
+        ...prevData,
+        [name]: { ...prevData[name], choices: updatedChoices },
       };
     });
   };
-
-  if (!groupCategory) return;
 
   return (
     <div className="inline-block min-w-full rounded-lg overflow-hidden mb-[50px]">
@@ -68,7 +61,7 @@ export const ProductCategoryItem = ({ name }) => {
         <thead>
           <tr>
             <th className="px-[24px] py-[16px] text-left text-14 font-bold rounded-ss-2xl bg-[#cbcbcb] relative">
-              {groupCategory.name_nl}
+              {groupCategory?.name_nl || name}
               <img
                 src={countryflag}
                 alt="Flag"
@@ -76,7 +69,7 @@ export const ProductCategoryItem = ({ name }) => {
               />
             </th>
             <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold rounded-se-2xl relative">
-              {groupCategory.name}
+              {groupCategory?.name || name}
               <img
                 src={countryflag2}
                 alt="Flag"
@@ -92,10 +85,9 @@ export const ProductCategoryItem = ({ name }) => {
                 <input
                   required
                   type="text"
-                  placeholder="300 cm"
                   value={choice.name_nl}
                   onChange={(e) =>
-                    handleChange(index, "length", e.target.value)
+                    handleChange(index, "name_nl", e.target.value)
                   }
                   className="w-full outline-none bg-transparent"
                 />
@@ -104,10 +96,9 @@ export const ProductCategoryItem = ({ name }) => {
                 <input
                   required
                   type="text"
-                  placeholder="HHP123_300"
                   value={choice.name_en}
                   onChange={(e) =>
-                    handleChange(index, "length", e.target.value)
+                    handleChange(index, "name_en", e.target.value)
                   }
                   className="w-full outline-none bg-transparent"
                 />
