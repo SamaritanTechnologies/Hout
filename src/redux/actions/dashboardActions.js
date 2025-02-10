@@ -89,6 +89,28 @@ export const getOurValues = async () => {
   }
 };
 
+
+export const addOurAssortment = async (payload) => {
+  try {
+    const response = await axiosWithCredentials.post(`/our-assortment/`,payload);
+    toast.success("Our Assortment updated successfully!");
+  } catch (error) {
+    toast.error("Failed to update Our Assortment.");
+    console.error("Error updating Our Assortment:", error);
+    throw error;
+  }
+}
+
+export const getOurAssortment = async () => {
+  try {
+    const response = await axiosWithCredentials.get(`/our-assortment`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching Our Assortment:", error);
+    throw error;
+  }
+}
+
 export const addPrivacyPolicies = async (payload) => {
   try {
     const response = await axiosWithCredentials.post(
