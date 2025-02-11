@@ -14,7 +14,7 @@ import {
 
 export const WhyHoutTotaal = () => {
   const [loading, setLoading] = useState(false);
-  const [videos, setVideos] = useState([]);
+  const [videos, setVideos] = useState([]); // This will store both API videos and newly uploaded files
   const [initialValues, setInitialValues] = useState({
     title_nl: "",
     title_en: "",
@@ -29,13 +29,24 @@ export const WhyHoutTotaal = () => {
       setLoading(true);
       try {
         const data = await fetchWhyHoutTotal();
-        setInitialValues({
-          title_nl: data?.title_nl || "",
-          title_en: data?.title_en || "",
-          description_nl: data?.description_nl || "",
-          description_en: data?.description_en || "",
-          videos: data?.videos || [],
-        });
+        if (data) {
+          setInitialValues({
+            title_nl: data?.title_nl || "",
+            title_en: data?.title_en || "",
+            description_nl: data?.description_nl || "",
+            description_en: data?.description_en || "",
+            videos: data?.videos || [],
+          });
+
+          // Map the API response videos to the format expected by the component
+          const videoURLs =
+            data?.videos?.map((video) => ({
+              id: video.id, // Preserve the ID for future reference
+              url: video.video, // Use the video URL
+            })) || [];
+
+          setVideos(videoURLs);
+        }
       } catch (error) {
         toast.error("Failed to fetch data!");
       } finally {
@@ -48,7 +59,11 @@ export const WhyHoutTotaal = () => {
   // Handle video selection
   const handleVideoChange = (event) => {
     const files = Array.from(event.target.files);
-    setVideos([...videos, ...files]);
+    const newVideos = files.map((file) => ({
+      file, // Store the File object for new uploads
+      url: URL.createObjectURL(file), // Create a preview URL
+    }));
+    setVideos([...videos, ...newVideos]);
   };
 
   // Handle video drag & drop
@@ -57,7 +72,11 @@ export const WhyHoutTotaal = () => {
     const files = Array.from(event.dataTransfer.files).filter((file) =>
       file.type.startsWith("video/")
     );
-    setVideos([...videos, ...files]);
+    const newVideos = files.map((file) => ({
+      file, // Store the File object for new uploads
+      url: URL.createObjectURL(file), // Create a preview URL
+    }));
+    setVideos([...videos, ...newVideos]);
   };
 
   // Remove a selected video
@@ -65,6 +84,12 @@ export const WhyHoutTotaal = () => {
     setVideos(videos.filter((_, i) => i !== index));
   };
 
+  const fetchVideoAsFile = async (url) => {
+    const filename = url.split("/").pop();
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new File([blob], filename, { type: blob.type });
+  };  
   // Handle form submission
   const handleSave = async (values) => {
     setLoading(true);
@@ -76,9 +101,16 @@ export const WhyHoutTotaal = () => {
       formData.append("description_en", values.description_en);
 
       // Append videos
-      videos.forEach((video, index) => {
-        formData.append(`videos`, video);
-      });
+      for (const video of videos) {
+        if (video.file) {
+          // If it's a new file, append it directly
+          formData.append("videos", video.file);
+        } else if (video.url) {
+          // If it's an existing video, fetch it and convert to binary
+          const file = await fetchVideoAsFile(video.url);
+          formData.append("videos", file);
+        }
+      }      
 
       await createWhyHoutTotal(formData);
       toast.success("Data saved successfully!");
@@ -212,8 +244,8 @@ export const WhyHoutTotaal = () => {
                     <div key={index} className="relative">
                       <video controls className="w-full h-48 object-cover">
                         <source
-                          src={URL.createObjectURL(video)}
-                          type={video.type}
+                          src={video.url} // Use the URL for preview
+                          type="video/mp4"
                         />
                       </video>
                       <button

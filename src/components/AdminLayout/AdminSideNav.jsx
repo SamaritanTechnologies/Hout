@@ -19,8 +19,7 @@ const AdminSidenav = () => {
     { name: "Terms and Conditions", link: "/terms-and-conditions/", active: false },
     { name: "Privacy Policy", link: "/admin-privacy-policy/", active: false },
     { name: "FAQ", link: "/admin-FAQ/", active: false },
-    { name: "Inbox", link: "/inbox/", active: false },
-    { name: "Order Lists", link: "/order-list/", active: false },
+    // { name: "Order Lists", link: "/order-list/", active: false },
   ]);
 
   useEffect(() => {
