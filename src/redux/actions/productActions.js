@@ -88,13 +88,13 @@ export const getProductDetailsById = async (id) => {
   }
 };
 
-const extractIds = (items) => items?.map((item) => item.id) || [];
-const extractValues = (obj) =>
-  Object.values(obj)
-    .filter((item) => item !== null)
-    .map((item) => item.value) || [];
-const extractImages = (images) =>
-  images?.map((img) => ({ image: img.file })) || [];
+// Function to fetch an image URL and convert it to a File object
+export const fetchImageAsFile = async (url) => {
+  const filename = url.split("/").pop();
+  const response = await fetch(url);
+  const blob = await response.blob();
+  return new File([blob], filename, { type: blob.type });
+};
 
 export const addProduct = async (values, lengths, images, relatedProducts) => {
   const formData = new FormData();
@@ -221,25 +221,14 @@ export const updateProduct = async (
   });
 
   // Append images (handle existing and new images)
-  images?.forEach((image, index) => {
+  for (const image of images || []) {
     if (image.id) {
-      formData.append(`images`, image.preview); // already added image
+      const file = await fetchImageAsFile(image.preview); // already added image, make it binary
+      formData.append(`images`, file);
     } else {
       formData.append(`images`, image.file); // newly added image
     }
-  });
-
-  // if (images?.length) {
-  //   images.forEach((image, index) => {
-  //     if (image.id) {
-  //       // For existing images, append the ID
-  //       formData.append(`images[${index}][id]`, image.id);
-  //     } else if (image.file) {
-  //       // For new images, append the file
-  //       formData.append(`images[${index}][product_image]`, image.file);
-  //     }
-  //   });
-  // }
+  }
 
   // Append lengths (handle existing and new lengths)
   lengths?.forEach((length, index) => {
