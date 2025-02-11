@@ -124,6 +124,13 @@ export const OurValues = () => {
     setFieldValue(`images[${index}]`, null);
   };
 
+  // Function to fetch an image URL and convert it to a File object
+  const fetchImageAsFile = async (url, filename) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new File([blob], filename, { type: blob.type });
+  };
+
   // Function to handle form submission and send data to API
   const handleSave = async (values) => {
     setLoading(true);
@@ -147,11 +154,21 @@ export const OurValues = () => {
       });
 
       // Append images correctly
-      selectedImages.forEach((image, index) => {
+      for (let index = 0; index < selectedImages.length; index++) {
+        const image = selectedImages[index];
+
         if (image && image.file) {
+          // If a new file is uploaded, append it directly
           formData.append(`[${index}][image]`, image.file);
+        } else if (image && image.preview) {
+          // If an existing image URL is present, fetch it and convert to binary
+          const file = await fetchImageAsFile(image.preview, `image_${index}.jpg`);
+          formData.append(`[${index}][image]`, file);
+        } else {
+          // If no image is present, append an empty value
+          formData.append(`[${index}][image]`, "");
         }
-      });
+      }
 
       await addOurValues(formData);
       toast.success("Data saved successfully!");

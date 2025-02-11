@@ -266,3 +266,9 @@ footer .input-field {
     margin: 0;
   }
 }
+.dashboard-content {
+  max-height: calc(100vh - 90px);
+}
+.sideBarMain {
+  max-height: calc(100vh - 102px);
+}

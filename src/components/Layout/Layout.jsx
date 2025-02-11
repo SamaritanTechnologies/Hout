@@ -52,7 +52,7 @@ const Layout = () => {
             </div>
             <div className="flex-1 min-h-screen overflow-x-hidden">
               <AdminMainNav />
-              <div className="!pt-2">
+              <div className="!pt-2 dashboard-content overflow-y-auto">
                 <Outlet />
               </div>
             </div>

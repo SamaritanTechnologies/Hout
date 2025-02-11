@@ -4,10 +4,11 @@ import Dropzone from "../components/Common/Dropzone";
 import Button from "../components/Common/Button";
 import FormikField from "../components/Common/FormikField";
 import Textarea from "../components/Common/Textarea";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik"; // Import ErrorMessage
 import { XCircleIcon } from "@heroicons/react/24/outline";
 import { addOurAssortment, getOurAssortment } from "../redux/actions/dashboardActions";
-import { toast } from "react-toastify"; // Ensure you have toast for notifications
+import { toast } from "react-toastify";
+import * as Yup from "yup"; // Import Yup for validation
 
 export const OurAssortment = () => {
   const [loading, setLoading] = useState(false);
@@ -20,6 +21,25 @@ export const OurAssortment = () => {
   });
 
   const [selectedImages, setSelectedImages] = useState(new Array(9).fill(null));
+
+  // Validation Schema
+  const validationSchema = Yup.object().shape({
+    name_en: Yup.array()
+      .of(Yup.string().required("Name (English) is required"))
+      .min(9, "All 9 values must be filled"),
+    name_nl: Yup.array()
+      .of(Yup.string().required("Name (Dutch) is required"))
+      .min(9, "All 9 values must be filled"),
+    description_en: Yup.array()
+      .of(Yup.string().required("Description (English) is required"))
+      .min(9, "All 9 values must be filled"),
+    description_nl: Yup.array()
+      .of(Yup.string().required("Description (Dutch) is required"))
+      .min(9, "All 9 values must be filled"),
+    images: Yup.array()
+      .of(Yup.mixed().required("Image is required"))
+      .min(9, "All 9 images must be uploaded"),
+  });
 
   useEffect(() => {
     const fetchOurValues = async () => {
@@ -45,7 +65,7 @@ export const OurAssortment = () => {
             images: updatedImages,
           };
 
-          // Ensure always 4 sections (if less than 4, fill with empty values)
+          // Ensure always 9 sections (if less than 9, fill with empty values)
           while (updatedValues.name_en.length < 9) {
             updatedValues.name_en.push("");
             updatedValues.name_nl.push("");
@@ -84,18 +104,17 @@ export const OurAssortment = () => {
       toast.error("Please upload a valid image file.");
       return;
     }
-  
+
     const newImages = [...selectedImages];
     newImages[index] = {
-      file,  // Store actual file for API
+      file, // Store actual file for API
       preview: URL.createObjectURL(file),
       name: file.name,
     };
-  
+
     setSelectedImages(newImages);
     setFieldValue(`images[${index}]`, file); // Update Formik values correctly
   };
-  
 
   // Handle image removal
   const handleRemove = (index, setFieldValue) => {
@@ -105,35 +124,51 @@ export const OurAssortment = () => {
     setFieldValue(`images[${index}]`, null);
   };
 
+  // Function to fetch an image URL and convert it to a File object
+  const fetchImageAsFile = async (url, filename) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new File([blob], filename, { type: blob.type });
+  };
+
   // Function to handle form submission and send data to API
   const handleSave = async (values) => {
     setLoading(true);
     try {
       const formData = new FormData();
-  
+
       values.name_en.forEach((title, index) => {
         formData.append(`[${index}][name_en]`, title);
       });
-  
+
       values.name_nl.forEach((title, index) => {
         formData.append(`[${index}][name_nl]`, title);
       });
-  
+
       values.description_en.forEach((desc, index) => {
         formData.append(`[${index}][description_en]`, desc);
       });
-  
+
       values.description_nl.forEach((desc, index) => {
         formData.append(`[${index}][description_nl]`, desc);
       });
-  
+
       // Append images correctly
-      selectedImages.forEach((image, index) => {
+      for (let index = 0; index < selectedImages.length; index++) {
+        const image = selectedImages[index];
         if (image && image.file) {
+          // If a new file is uploaded, append it directly
           formData.append(`[${index}][image]`, image.file);
+        } else if (image && image.preview) {
+          // If an existing image URL is present, fetch it and convert to binary
+          const file = await fetchImageAsFile(image.preview, `image_${index}.jpg`);
+          formData.append(`[${index}][image]`, file);
+        } else {
+          // If no image is present, append an empty value
+          formData.append(`[${index}][image]`, "");
         }
-      });
-  
+      }
+
       await addOurAssortment(formData);
       toast.success("Data saved successfully!");
     } catch (error) {
@@ -143,7 +178,6 @@ export const OurAssortment = () => {
       setLoading(false);
     }
   };
-  
 
   return (
     <div className="lg:pt-[50px] pt-[30px] xl:pb-[30px] lg:pb-[25px] pb-[20px] px-[20px] bg-[rgb(250,250,250)] h-full min-h-[86vh]">
@@ -156,8 +190,13 @@ export const OurAssortment = () => {
         </h5>
       </div>
       <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-14 overflow-x-auto pl-[54px]">
-        <Formik enableReinitialize initialValues={values} onSubmit={handleSave}>
-          {({ setFieldValue }) => (
+        <Formik
+          enableReinitialize
+          initialValues={values}
+          validationSchema={validationSchema} // Add validation schema
+          onSubmit={handleSave}
+        >
+          {({ setFieldValue, isValid, touched }) => (
             <Form>
               <div className="flex flex-col gap-[40px] mb-[24px]">
                 <div className="w-full">
@@ -178,20 +217,40 @@ export const OurAssortment = () => {
                           ) : (
                             <Dropzone width="140px" height="140px" onDrop={(acceptedFiles) => handleDrop(acceptedFiles, index, setFieldValue)} />
                           )}
+                          <ErrorMessage name={`images[${index}]`} component="div" className="text-red text-sm mt-1" />
                         </div>
                         <div className="grid grid-cols-2 gap-4 mb-4">
-                          <Field type="text" name={`name_nl[${index}]`} placeholder="Naam" component={FormikField} />
-                          <Field type="text" name={`name_en[${index}]`} placeholder="Name" component={FormikField} />
+                          <div>
+                            <Field type="text" name={`name_nl[${index}]`} placeholder="Naam" component={FormikField} />
+                            <ErrorMessage name={`name_nl[${index}]`} component="div" className="text-red text-sm mt-1" />
+                          </div>
+                          <div>
+                            <Field type="text" name={`name_en[${index}]`} placeholder="Name" component={FormikField} />
+                            <ErrorMessage name={`name_en[${index}]`} component="div" className="text-red text-sm mt-1" />
+                          </div>
                         </div>
                         <div className="grid grid-cols-2 gap-4 mb-4">
-                          <Field as="textarea" name={`description_nl[${index}]`} placeholder="Description (nl)" component={Textarea} />
-                          <Field as="textarea" name={`description_en[${index}]`} placeholder="Description (en)" component={Textarea} />
+                          <div>
+                            <Field as="textarea" name={`description_nl[${index}]`} placeholder="Description (nl)" component={Textarea} />
+                            <ErrorMessage name={`description_nl[${index}]`} component="div" className="text-red text-sm mt-1" />
+                          </div>
+                          <div>
+                            <Field as="textarea" name={`description_en[${index}]`} placeholder="Description (en)" component={Textarea} />
+                            <ErrorMessage name={`description_en[${index}]`} component="div" className="text-red text-sm mt-1" />
+                          </div>
                         </div>
                       </div>
                     ))}
                   </div>
                 </div>
-                <Button loading={loading} type="submit" btnText="Save" paddingX="20px" textColor="#000000" />
+                <Button
+                  loading={loading}
+                  type="submit"
+                  btnText="Save"
+                  paddingX="20px"
+                  textColor="#000000"
+                  disabled={!isValid || !touched} // Disable if form is invalid or not touched
+                />
               </div>
             </Form>
           )}

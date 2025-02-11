@@ -43,8 +43,8 @@ const AdminSidenav = () => {
 
   return (
     <section className="">
-      <div className="xl:w-[240px] lg:w-[220px] w-[200px] min-h-screen xl:py-[13px] py-[10px]">
-        <a href="#" className="mb-[22px] block px-[24px]">
+      <div className="xl:w-[240px] lg:w-[220px] w-[200px] min-h-screen">
+        <a href="#" className="mb-[22px] block px-[24px] pt-[10px]">
           <img
             src={houtLogo}
             alt=""
@@ -52,12 +52,12 @@ const AdminSidenav = () => {
             className="w-[160px] lg:w-[135px]  h-[70px] mx-auto object-cover	"
           />
         </a>
-        <div className="flex flex-col items-start sideBarMain xl:px-[24px] lg:px-[20px] px-[16px]">
+        <div className="flex flex-col items-start sideBarMain xl:px-[24px] lg:px-[20px] px-[16px] overflow-y-auto">
           {navs.map((item) => {
             return (
               <a
                 key={item.link}
-                className={`h-[43px] text-14 font-medium cursor-pointer px-4 ${
+                className={`h-[43px] text-14 font-medium cursor-pointer px-4 shrink-0 ${
                   item.active || item.link === location.pathname
                     ? "sideActive"
                     : ""
