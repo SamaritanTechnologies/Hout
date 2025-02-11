@@ -249,6 +249,7 @@ export const OurAssortment = () => {
                   btnText="Save"
                   paddingX="20px"
                   textColor="#000000"
+                  breakpoint="xl:w-[354px] lg:w-[280px] w-[240px]"
                   disabled={!isValid || !touched} // Disable if form is invalid or not touched
                 />
               </div>

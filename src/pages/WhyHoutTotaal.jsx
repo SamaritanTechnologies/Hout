@@ -77,7 +77,7 @@ export const WhyHoutTotaal = () => {
 
       // Append videos
       videos.forEach((video, index) => {
-        formData.append(`videos[${index}]`, video);
+        formData.append(`videos`, video);
       });
 
       await createWhyHoutTotal(formData);
@@ -101,31 +101,69 @@ export const WhyHoutTotaal = () => {
         </h5>
       </div>
 
-      <Formik initialValues={initialValues} onSubmit={handleSave} enableReinitialize>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={handleSave}
+        enableReinitialize
+      >
         {({ values }) => (
           <Form className="flex gap-8 pl-[54px] w-full">
             <div className="w-full max-w-2xl">
               {/* Name Fields */}
               <div className="flex gap-[20px] mb-[24px]">
                 <div className="w-1/2 relative">
-                  <Field type="text" name="title_nl" placeholder="Naam" component={FormikField} />
-                  <img src={countryflag} alt="Dutch Flag" className="cursor-pointer h-5 w-5 absolute right-4 bottom-3" />
+                  <Field
+                    type="text"
+                    name="title_nl"
+                    placeholder="Naam"
+                    component={FormikField}
+                  />
+                  <img
+                    src={countryflag}
+                    alt="Dutch Flag"
+                    className="cursor-pointer h-5 w-5 absolute right-4 bottom-3"
+                  />
                 </div>
                 <div className="w-1/2 relative">
-                  <Field type="text" name="title_en" placeholder="Name" component={FormikField} />
-                  <img src={countryflag2} alt="English Flag" className="cursor-pointer h-5 w-5 absolute right-4 bottom-3" />
+                  <Field
+                    type="text"
+                    name="title_en"
+                    placeholder="Name"
+                    component={FormikField}
+                  />
+                  <img
+                    src={countryflag2}
+                    alt="English Flag"
+                    className="cursor-pointer h-5 w-5 absolute right-4 bottom-3"
+                  />
                 </div>
               </div>
 
               {/* Description Fields */}
               <div className="flex gap-[20px] mb-[24px]">
                 <div className="w-1/2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Beschrijving (Dutch)</label>
-                  <Field as="textarea" name="description_nl" placeholder="Voer beschrijving in" className="w-full rounded-md xl:py-3 xl:px-3 py-2 px-2 border border-[#D9D9D9]" rows="4" />
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Beschrijving (Dutch)
+                  </label>
+                  <Field
+                    as="textarea"
+                    name="description_nl"
+                    placeholder="Voer beschrijving in"
+                    className="w-full rounded-md xl:py-3 xl:px-3 py-2 px-2 border border-[#D9D9D9]"
+                    rows="4"
+                  />
                 </div>
                 <div className="w-1/2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Description (English)</label>
-                  <Field as="textarea" name="description_en" placeholder="Enter description" className="w-full rounded-md xl:py-3 xl:px-3 py-2 px-2 border border-[#D9D9D9]" rows="4" />
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Description (English)
+                  </label>
+                  <Field
+                    as="textarea"
+                    name="description_en"
+                    placeholder="Enter description"
+                    className="w-full rounded-md xl:py-3 xl:px-3 py-2 px-2 border border-[#D9D9D9]"
+                    rows="4"
+                  />
                 </div>
               </div>
 
@@ -133,14 +171,36 @@ export const WhyHoutTotaal = () => {
               <div className="mb-[24px]">
                 <label className="text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block">
                   Upload Videos <br />
-                  <span className="text-[#6C7275] font-normal text-12">You can upload multiple videos</span>
+                  <span className="text-[#6C7275] font-normal text-12">
+                    You can upload multiple videos
+                  </span>
                 </label>
-                <div className="w-full max-w-[215px] h-[215px] border border-dashed border-[#4C5B66] rounded-lg p-3 flex items-center justify-center cursor-pointer"
-                  onDrop={handleDrop} onDragOver={(e) => e.preventDefault()}>
-                  <input type="file" accept="video/*" multiple id="video-upload" hidden onChange={handleVideoChange} />
-                  <label htmlFor="video-upload" className="w-full h-full flex flex-col items-center justify-center">
-                    <img src="/src/assets/DashboardImages/add.svg" className="xl:w-[82px] lg:w-[70px] w-[60px]" alt="Add Video" />
-                    <p className="text-sm text-gray-600 mt-2">Drop video or <span className="text-customYellow">click to browse</span></p>
+                <div
+                  className="w-full max-w-[215px] h-[215px] border border-dashed border-[#4C5B66] rounded-lg p-3 flex items-center justify-center cursor-pointer"
+                  onDrop={handleDrop}
+                  onDragOver={(e) => e.preventDefault()}
+                >
+                  <input
+                    type="file"
+                    accept="video/*"
+                    multiple
+                    id="video-upload"
+                    hidden
+                    onChange={handleVideoChange}
+                  />
+                  <label
+                    htmlFor="video-upload"
+                    className="w-full h-full flex flex-col items-center justify-center"
+                  >
+                    <img
+                      src="/src/assets/DashboardImages/add.svg"
+                      className="xl:w-[82px] lg:w-[70px] w-[60px]"
+                      alt="Add Video"
+                    />
+                    <p className="text-sm text-gray-600 mt-2">
+                      Drop video or{" "}
+                      <span className="text-customYellow">click to browse</span>
+                    </p>
                   </label>
                 </div>
               </div>
@@ -151,9 +211,16 @@ export const WhyHoutTotaal = () => {
                   {videos.map((video, index) => (
                     <div key={index} className="relative">
                       <video controls className="w-full h-48 object-cover">
-                        <source src={URL.createObjectURL(video)} type={video.type} />
+                        <source
+                          src={URL.createObjectURL(video)}
+                          type={video.type}
+                        />
                       </video>
-                      <button type="button" onClick={() => handleRemoveVideo(index)} className="text-white absolute top-2 right-2">
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveVideo(index)}
+                        className="text-white absolute top-2 right-2"
+                      >
                         <XCircleIcon className="h-6 w-6 text-gray-500" />
                       </button>
                     </div>
@@ -162,7 +229,14 @@ export const WhyHoutTotaal = () => {
               )}
 
               {/* Save Button */}
-              <Button loading={loading} type="submit" btnText="Save" />
+              <Button
+                loading={loading}
+                type="submit"
+                btnText="Save"
+                paddingX="20px"
+                textColor="#000000"
+                breakpoint="xl:w-[354px] lg:w-[280px] w-[240px] mt-[100px]"
+              />
             </div>
           </Form>
         )}
