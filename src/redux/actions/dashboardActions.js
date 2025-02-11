@@ -111,6 +111,26 @@ export const getOurAssortment = async () => {
   }
 }
 
+export const createWhyHoutTotal = async (payload) => {
+  try {
+    const response = await axiosWithCredentials.post(`/why-hout-total/`, payload);
+    return response.data;
+  } catch (error) {
+    console.error("Error Adding Hout Total", error);
+    throw error; 
+  }
+}
+
+export const fetchWhyHoutTotal = async () => {
+  try {
+    const response = await axiosWithCredentials.get(`/why-hout-total/`);
+    return response.data;
+  } catch (error) {
+    console.error("Error Fetching Hout Total", error);
+    throw error;
+  }
+}
+
 export const addPrivacyPolicies = async (payload) => {
   try {
     const response = await axiosWithCredentials.post(

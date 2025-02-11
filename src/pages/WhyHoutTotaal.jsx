@@ -1,28 +1,57 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Formik, Form, Field } from "formik";
+import { toast } from "react-toastify";
 import ArrowBack from "../assets/DashboardImages/arrowback.svg";
 import Button from "../components/Common/Button";
 import countryflag from "../assets/DashboardImages/UK-Flag.svg";
 import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
 import FormikField from "../components/Common/FormikField";
 import { XCircleIcon } from "@heroicons/react/24/outline";
+import {
+  createWhyHoutTotal,
+  fetchWhyHoutTotal,
+} from "../redux/actions/dashboardActions";
 
 export const WhyHoutTotaal = () => {
+  const [loading, setLoading] = useState(false);
   const [videos, setVideos] = useState([]);
+  const [initialValues, setInitialValues] = useState({
+    title_nl: "",
+    title_en: "",
+    description_nl: "",
+    description_en: "",
+    videos: [],
+  });
 
-  const handleSave = (values) => {
-    console.log("Form Values:", values);
-    console.log(
-      "Selected Videos:",
-      videos.map((v) => v.name).join(", ") || "No videos selected"
-    );
-  };
+  // Fetch initial data on component mount
+  useEffect(() => {
+    const fetchHoutTotal = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchWhyHoutTotal();
+        setInitialValues({
+          title_nl: data?.title_nl || "",
+          title_en: data?.title_en || "",
+          description_nl: data?.description_nl || "",
+          description_en: data?.description_en || "",
+          videos: data?.videos || [],
+        });
+      } catch (error) {
+        toast.error("Failed to fetch data!");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchHoutTotal();
+  }, []);
 
+  // Handle video selection
   const handleVideoChange = (event) => {
     const files = Array.from(event.target.files);
     setVideos([...videos, ...files]);
   };
 
+  // Handle video drag & drop
   const handleDrop = (event) => {
     event.preventDefault();
     const files = Array.from(event.dataTransfer.files).filter((file) =>
@@ -31,8 +60,34 @@ export const WhyHoutTotaal = () => {
     setVideos([...videos, ...files]);
   };
 
+  // Remove a selected video
   const handleRemoveVideo = (index) => {
     setVideos(videos.filter((_, i) => i !== index));
+  };
+
+  // Handle form submission
+  const handleSave = async (values) => {
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("title_nl", values.title_nl);
+      formData.append("title_en", values.title_en);
+      formData.append("description_nl", values.description_nl);
+      formData.append("description_en", values.description_en);
+
+      // Append videos
+      videos.forEach((video, index) => {
+        formData.append(`videos[${index}]`, video);
+      });
+
+      await createWhyHoutTotal(formData);
+      toast.success("Data saved successfully!");
+    } catch (error) {
+      toast.error("Error saving data!");
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -46,168 +101,68 @@ export const WhyHoutTotaal = () => {
         </h5>
       </div>
 
-      <Formik
-        initialValues={{
-          name_nl: "",
-          name_en: "",
-          description_nl: "",
-          description_en: "",
-        }}
-        onSubmit={handleSave}
-      >
+      <Formik initialValues={initialValues} onSubmit={handleSave} enableReinitialize>
         {({ values }) => (
           <Form className="flex gap-8 pl-[54px] w-full">
             <div className="w-full max-w-2xl">
               {/* Name Fields */}
               <div className="flex gap-[20px] mb-[24px]">
-                {/* Dutch Name */}
                 <div className="w-1/2 relative">
-                  <Field
-                    type="text"
-                    name="name_nl"
-                    placeholder="Naam"
-                    component={FormikField}
-                  />
-                  <img
-                    src={countryflag}
-                    alt="Dutch Flag"
-                    className="cursor-pointer h-5 w-5 absolute right-4 bottom-3"
-                  />
+                  <Field type="text" name="title_nl" placeholder="Naam" component={FormikField} />
+                  <img src={countryflag} alt="Dutch Flag" className="cursor-pointer h-5 w-5 absolute right-4 bottom-3" />
                 </div>
-
-                {/* English Name */}
                 <div className="w-1/2 relative">
-                  <Field
-                    type="text"
-                    name="name_en"
-                    placeholder="Name"
-                    component={FormikField}
-                  />
-                  <img
-                    src={countryflag2}
-                    alt="English Flag"
-                    className="cursor-pointer h-5 w-5 absolute right-4 bottom-3"
-                  />
+                  <Field type="text" name="title_en" placeholder="Name" component={FormikField} />
+                  <img src={countryflag2} alt="English Flag" className="cursor-pointer h-5 w-5 absolute right-4 bottom-3" />
                 </div>
               </div>
 
               {/* Description Fields */}
               <div className="flex gap-[20px] mb-[24px]">
-                {/* Dutch Description */}
                 <div className="w-1/2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Beschrijving (Dutch)
-                  </label>
-                  <Field
-                    as="textarea"
-                    name="description_nl"
-                    placeholder="Voer beschrijving in"
-                    className="w-full rounded-md xl:py-3 xl:px-3 py-2 px-2 outline-none border border-[#D9D9D9] focus:outline-none sm:text-sm input-field"
-                    rows="4"
-                  />
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Beschrijving (Dutch)</label>
+                  <Field as="textarea" name="description_nl" placeholder="Voer beschrijving in" className="w-full rounded-md xl:py-3 xl:px-3 py-2 px-2 border border-[#D9D9D9]" rows="4" />
                 </div>
-
-                {/* English Description */}
                 <div className="w-1/2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Description (English)
-                  </label>
-                  <Field
-                    as="textarea"
-                    name="description_en"
-                    placeholder="Enter description"
-                    className="w-full rounded-md xl:py-3 xl:px-3 py-2 px-2 outline-none border border-[#D9D9D9] focus:outline-none sm:text-sm input-field"
-                    rows="4"
-                  />
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Description (English)</label>
+                  <Field as="textarea" name="description_en" placeholder="Enter description" className="w-full rounded-md xl:py-3 xl:px-3 py-2 px-2 border border-[#D9D9D9]" rows="4" />
                 </div>
               </div>
 
-              {/* Video Upload Section */}
-              <div className="flex gap-[20px] mb-[24px]">
-                <div className="w-full md:mb-0 relative">
-                  <label className="text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block">
-                    Upload Videos <br />
-                    <span className="text-[#6C7275] font-normal text-12">
-                      You can upload multiple videos in different formats
-                    </span>
+              {/* Video Upload */}
+              <div className="mb-[24px]">
+                <label className="text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block">
+                  Upload Videos <br />
+                  <span className="text-[#6C7275] font-normal text-12">You can upload multiple videos</span>
+                </label>
+                <div className="w-full max-w-[215px] h-[215px] border border-dashed border-[#4C5B66] rounded-lg p-3 flex items-center justify-center cursor-pointer"
+                  onDrop={handleDrop} onDragOver={(e) => e.preventDefault()}>
+                  <input type="file" accept="video/*" multiple id="video-upload" hidden onChange={handleVideoChange} />
+                  <label htmlFor="video-upload" className="w-full h-full flex flex-col items-center justify-center">
+                    <img src="/src/assets/DashboardImages/add.svg" className="xl:w-[82px] lg:w-[70px] w-[60px]" alt="Add Video" />
+                    <p className="text-sm text-gray-600 mt-2">Drop video or <span className="text-customYellow">click to browse</span></p>
                   </label>
-
-                  {/* Drag & Drop Video Upload */}
-                  <div
-                    className="w-full max-w-[215px] h-[215px] border border-dashed border-[#4C5B66] rounded-lg p-3 flex items-center justify-center cursor-pointer"
-                    onDrop={handleDrop}
-                    onDragOver={(e) => e.preventDefault()}
-                  >
-                    <input
-                      type="file"
-                      accept="video/*"
-                      multiple
-                      id="video-upload"
-                      style={{ display: "none" }}
-                      onChange={handleVideoChange}
-                    />
-                    <label
-                      htmlFor="video-upload"
-                      className="w-full h-full flex flex-col items-center justify-center"
-                    >
-                      <img
-                        src="/src/assets/DashboardImages/add.svg"
-                        className="xl:w-[82px] lg:w-[70px] w-[60px]"
-                        alt="Add Video"
-                      />
-                      <p className="text-sm text-gray-600 mt-2">
-                        Drop your video here or{" "}
-                        <span className="text-customYellow">
-                          click to browse
-                        </span>
-                      </p>
-                    </label>
-                  </div>
                 </div>
               </div>
 
               {/* Video Previews */}
               {videos.length > 0 && (
-                <div className="mb-6">
-                  <h3 className="text-lg font-semibold mb-2">Video Previews</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    {videos.map((video, index) => (
-                      <div key={index} className="relative">
-                        <div className="w-full h-48 overflow-hidden rounded-lg shadow-md">
-                          <video
-                            controls
-                            className="w-full h-full object-cover"
-                          >
-                            <source
-                              src={URL.createObjectURL(video)}
-                              type={video.type}
-                            />
-                            Your browser does not support the video tag.
-                          </video>
-                        </div>
-                        <p className="text-sm text-center mt-1">{video.name}</p>
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveVideo(index)}
-                          className="absolute top-2 right-2 text-white"
-                        >
-                          <XCircleIcon className="h-6 w-6 text-gray-500" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
+                <div className="grid grid-cols-2 gap-4">
+                  {videos.map((video, index) => (
+                    <div key={index} className="relative">
+                      <video controls className="w-full h-48 object-cover">
+                        <source src={URL.createObjectURL(video)} type={video.type} />
+                      </video>
+                      <button type="button" onClick={() => handleRemoveVideo(index)} className="text-white absolute top-2 right-2">
+                        <XCircleIcon className="h-6 w-6 text-gray-500" />
+                      </button>
+                    </div>
+                  ))}
                 </div>
               )}
 
               {/* Save Button */}
-              <Button
-                loading={false}
-                type="submit"
-                btnText="Save"
-                paddingX="20px"
-                textColor="#000000"
-                breakpoint="xl:w-[354px] lg:w-[280px] w-[240px] ml-[54px] mt-[100px]"
-              />
+              <Button loading={loading} type="submit" btnText="Save" />
             </div>
           </Form>
         )}
