@@ -334,7 +334,7 @@ export const AddNewProduct = () => {
                         style={styleMultiSelect}
                         name="durability_class"
                         id="durability_class"
-                        options={getChoicesByName("Durability Class")}
+                        options={getChoicesByName("durability")}
                         displayValue="name_en"
                         selectedValues={values.durability_class}
                         onSelect={(selectedList) => {

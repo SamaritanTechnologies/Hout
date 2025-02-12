@@ -81,22 +81,24 @@ export const ProductCategoryItem = ({
         <tbody>
           {groupCategory?.choices?.map((choice, index) => (
             <tr key={index}>
-              <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
+              <td className="px-[24px] py-[16px] text-left text-16 font-normal border border-[#D9D9D9]">
                 <input
                   required
                   type="text"
                   value={choice.name_nl}
+                  placeholder="Choice (nl)"
                   onChange={(e) =>
                     handleChange(index, "name_nl", e.target.value)
                   }
                   className="w-full outline-none bg-transparent"
                 />
               </td>
-              <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
+              <td className="px-[24px] py-[16px] text-left text-16 font-normal border border-[#D9D9D9]">
                 <input
                   required
                   type="text"
                   value={choice.name_en}
+                  placeholder="Choice (en)"
                   onChange={(e) =>
                     handleChange(index, "name_en", e.target.value)
                   }

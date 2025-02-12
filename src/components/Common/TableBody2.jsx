@@ -2,62 +2,53 @@ import React, { useState } from "react";
 import PlusCircle from "../../assets/DashboardImages/plusCricle.svg";
 import CrossCircle from "../../assets/DashboardImages/cancelCircle.svg";
 
-const productItem = {
-  Bezorgen: "",
-  full_price_ex_vat: "",
-};
-
-const TableBody2 = () => {
-  const [products, setProducts] = useState([{ ...productItem }]);
-
+const TableBody2 = ({ faqs, onAddFaq, onRemoveFaq, onEditFaq }) => {
+  // Add a new FAQ row
   const handleAddRow = () => {
-    setProducts((prevProducts) => [...prevProducts, { ...productItem }]);
-  };
-
-  const handleRemoveRow = (index) => {
-    setProducts((prevProducts) =>
-      prevProducts.length === 1
-        ? [{ ...productItem }]
-        : prevProducts.filter((_, i) => i !== index)
-    );
-  };
-
-  const handleChange = (index, field, value) => {
-    setProducts((prevProducts) => {
-      const updatedProducts = [...prevProducts];
-      updatedProducts[index][field] = value;
-      return updatedProducts;
+    onAddFaq({
+      question_en: "",
+      question_nl: "",
+      answer_en: "",
+      answer_nl: "",
     });
+  };
+
+  // Remove a FAQ row
+  const handleRemoveRow = (index) => {
+    onRemoveFaq(index);
+  };
+
+  // Handle changes in FAQ fields
+  const handleChange = (index, field, value) => {
+    const updatedFaq = { ...faqs[index], [field]: value };
+    onEditFaq(index, updatedFaq);
   };
 
   return (
     <tbody>
-      {products.map((product, index) => (
+      {faqs.map((faq, index) => (
         <tr key={index}>
-          <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
-            <input
-              type="text"
-              min={0}
-              value={product.length}
-              required
-              placeholder="Bezorgen"
-              onChange={(e) => handleChange(index, "length", e.target.value)}
-              className="w-full outline-none bg-transparent"
-            />
-          </td>
-          <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
+          <td className="px-[24px] py-[16px] text-left text-16 font-normal border border-[#D9D9D9]">
             <input
               required
               type="text"
-              min={0}
-              value={product.full_price_ex_vat}
-              placeholder="Blalalsabdssbckjsadfcbevckbskjdbvkbdsak lksdn cldsan lfnds csdn sand,jvc dsmvc "
-              onChange={(e) =>
-                handleChange(index, "full_price_ex_vat", e.target.value)
-              }
+              value={faq.question_en}
+              placeholder="Question (EN)"
+              onChange={(e) => handleChange(index, "question_en", e.target.value)}
               className="w-full outline-none bg-transparent"
             />
           </td>
+          <td className="px-[24px] py-[16px] text-left text-16 font-normal border border-[#D9D9D9]">
+            <input
+              required
+              type="text"
+              value={faq.answer_en}
+              placeholder="Answer (EN)"
+              onChange={(e) => handleChange(index, "answer_en", e.target.value)}
+              className="w-full outline-none bg-transparent"
+            />
+          </td>
+          {/* Remove FAQ Button */}
           <td className="px-[2px] py-[16px] text-end">
             <img
               src={CrossCircle}
@@ -68,8 +59,9 @@ const TableBody2 = () => {
           </td>
         </tr>
       ))}
+      {/* Add FAQ Button */}
       <tr>
-        <td colSpan={Object.keys(productItem).length}></td>
+        <td colSpan={2}></td>
         <td>
           <button
             type="button"

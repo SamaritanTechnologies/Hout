@@ -16,7 +16,7 @@ export const ProductOptions = () => {
     "Type",
     "Material",
     "Profile",
-    "Durability Class",
+    "Durability",
     "Quality",
     "Application",
   ];
