@@ -317,7 +317,7 @@ export const Products = () => {
                                   key={index}
                                   className="text-gray-900 whitespace-no-wrap flex gap-2 items-center"
                                 >
-                                  <span className="bg-[#FBC7001A] text-[#FBC700] py-1 px-3 rounded-full inline-block min-w-[70px] text-center">
+                                  <span>
                                     {item.name_en}
                                   </span>
                                 </p>
@@ -342,14 +342,11 @@ export const Products = () => {
                       </td>
                       <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">
                         <div className="flex xl:gap-3 gap-2 items-center justify-center">
-                          <p className="text-gray-900 whitespace-no-wrap flex gap-2 items-center">
-                            {rowData?.lengths && rowData.lengths.length > 0
-                              ? rowData.lengths.reduce(
-                                  (total, item) => total + item.stock,
-                                  0
-                                )
-                              : 0}
-                          </p>
+                        <p className="bg-[#FBC7001A] text-[#FBC700] py-1 px-3 rounded-full min-w-[70px] text-left text-gray-900 whitespace-no-wrap flex gap-2 items-center">
+                          {rowData?.lengths && rowData.lengths.length > 0
+                            ? rowData.lengths.reduce((total, item) => total + item.stock, 0)
+                            : 0} Left
+                        </p>
                         </div>
                       </td>
                       {/* <td>

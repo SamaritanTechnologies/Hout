@@ -1,6 +1,6 @@
 import React from "react";
-import PlusCircle from "../../assets/DashboardImages/plusCricle.svg";
-import CrossCircle from "../../assets/DashboardImages/cancelCircle.svg";
+import addCircle from "../../assets/DashboardImages/add-sqaure-icon.svg";
+import deleteIcon from "../../assets/DashboardImages/delete-icon.svg";
 import countryflag from "../../assets/DashboardImages/UK-Flag.svg";
 import countryflag2 from "../../assets/DashboardImages/USA-flag.svg";
 
@@ -107,7 +107,7 @@ export const ProductCategoryItem = ({
               </td>
               <td className="px-[2px] py-[16px] text-end">
                 <img
-                  src={CrossCircle}
+                  src={deleteIcon}
                   alt="Remove"
                   onClick={() => handleRemoveRow(index)}
                   className="cursor-pointer h-5 w-5"
@@ -124,7 +124,7 @@ export const ProductCategoryItem = ({
                 className="flex justify-end"
                 title="Add Row"
               >
-                <img src={PlusCircle} alt="Add" />
+                <img src={addCircle} alt="Add" />
               </button>
             </td>
           </tr>

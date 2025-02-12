@@ -149,11 +149,7 @@ export const WhyHoutTotaal = () => {
                     name="title_nl"
                     placeholder="Naam"
                     component={FormikField}
-                  />
-                  <img
-                    src={countryflag}
-                    alt="Dutch Flag"
-                    className="cursor-pointer h-5 w-5 absolute right-4 bottom-3"
+                    flag={countryflag}
                   />
                 </div>
                 <div className="w-1/2 relative">
@@ -162,11 +158,7 @@ export const WhyHoutTotaal = () => {
                     name="title_en"
                     placeholder="Name"
                     component={FormikField}
-                  />
-                  <img
-                    src={countryflag2}
-                    alt="English Flag"
-                    className="cursor-pointer h-5 w-5 absolute right-4 bottom-3"
+                    flag={countryflag2}
                   />
                 </div>
               </div>

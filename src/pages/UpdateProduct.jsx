@@ -307,11 +307,7 @@ export const UpdateProduct = () => {
                             placeholder="Naam"
                             label="Naam"
                             component={FormikField}
-                          />
-                          <img
-                            src={countryflag}
-                            alt="Flag"
-                            className="cursor-pointer h-5 w-5 absolute right-4 bottom-3"
+                            flag={countryflag}
                           />
                         </div>
                       </div>
@@ -325,11 +321,7 @@ export const UpdateProduct = () => {
                             placeholder="Name"
                             label="Name"
                             component={FormikField}
-                          />
-                          <img
-                            src={countryflag2}
-                            alt="Flag"
-                            className="cursor-pointer h-5 w-5 absolute right-4 bottom-3"
+                            flag={countryflag2}
                           />
                         </div>
                       </div>
@@ -463,7 +455,7 @@ export const UpdateProduct = () => {
                           name="description_nl"
                           id="description_nl"
                           as="sele"
-                          placeholder="omschrijving"
+                          placeholder="Omschrijving"
                           label="Product omschrijving"
                           component={Textarea}
                         />

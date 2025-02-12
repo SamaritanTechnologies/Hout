@@ -13,6 +13,7 @@ const FormikField = ({
   marginBottom,
   icon: IconComponent,
   postfix,
+  flag,
   ...props
 }) => {
   const [hidePassword, setHidePassword] = useState(true);
@@ -55,6 +56,13 @@ const FormikField = ({
             onClick={() => setHidePassword(!hidePassword)}
             className="cursor-pointer h-[24px] w-[24px] absolute right-3 top-1/2 transform -translate-y-1/2"
           />
+        )}
+        {flag && (
+          <img
+          src={flag}
+          alt="Flag"
+          className="cursor-pointer h-5 w-5 absolute right-4 top-1/2 transform -translate-y-1/2"
+        />
         )}
       </div>
       {touched[field.name] && errors[field.name] && (
