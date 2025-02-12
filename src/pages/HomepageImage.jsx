@@ -54,20 +54,24 @@ export const HomePageImage = () => {
       toast.error("Please select an image to upload.");
       return;
     }
-
+  
     setIsLoading(true);
     try {
-      const response = await addHomepageImage({ files: [image.file] });
+      const formData = new FormData();
+      formData.append("title", "homepage");
+      formData.append("image", image.file); 
+  
+      const response = await addHomepageImage(formData);
       toast.success("Image uploaded successfully!");
       setExistingImage(response?.data?.imageUrl || null);
-      setImage(null); // Clear new image after successful upload
+      setImage(null);
     } catch (error) {
       toast.error("Failed to upload image.");
       console.error("Error uploading image:", error);
     } finally {
       setIsLoading(false);
     }
-  };
+  };  
 
   return (
     <div className="lg:pt-[50px] pt-[30px] xl:pb-[30px] lg:pb-[25px] pb-[20px] px-[20px] bg-[rgb(250,250,250)] h-full min-h-[86vh]">

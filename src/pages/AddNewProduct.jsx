@@ -21,6 +21,7 @@ import { useSelector } from "react-redux";
 import Select from "react-select";
 import countryflag from "../assets/DashboardImages/UK-Flag.svg";
 import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
+import { XCircleIcon } from "@heroicons/react/24/outline";
 
 const styleMultiSelect = {
   chips: {
@@ -486,7 +487,7 @@ export const AddNewProduct = () => {
                         <tbody>
                           {lengths?.map((product, index) => (
                             <tr key={index}>
-                              <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
+                              <td className="px-[24px] py-[16px] text-left text-16 font-normal border border-[#D9D9D9]">
                                 <input
                                   type="number"
                                   min={0}
@@ -628,9 +629,9 @@ export const AddNewProduct = () => {
                             <button
                               type="button"
                               onClick={() => handleRemoveImage(index)}
-                              className="absolute top-2 right-2 border border-black bg-white rounded-full p-1 text-red-600"
+                              className="absolute top-2 right-2"
                             >
-                              X
+                              <XCircleIcon class="h-6 w-6 text-gray-500" />
                             </button>
                           </div>
                         ))}

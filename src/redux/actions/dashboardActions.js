@@ -1,198 +1,102 @@
-import { toast } from "react-toastify";
 import { axiosWithCredentials } from "../../providers";
 
 export const getStats = async () => {
-  try {
-    const response = await axiosWithCredentials.get(`/dashboard/`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching order details:", error);
-    throw error;
-  }
+  const response = await axiosWithCredentials.get(`/dashboard/`);
+  return response.data;
 };
 export const getProducts = async () => {
-  try {
-    const response = await axiosWithCredentials.get(`/product/`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching order details:", error);
-    throw error;
-  }
+  const response = await axiosWithCredentials.get(`/product/`);
+  return response.data;
 };
 
 export const getHomepageImage = async () => {
-  try {
-    const response = await axiosWithCredentials.get(`/images/`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching homepage image", error);
-    throw error;
-  }
+  const response = await axiosWithCredentials.get(`/images/`);
+  return response.data;
 };
 
-export const addHomepageImage = async (fileInput) => {
-  const formData = new FormData();
-  formData.append("title", "homepage");
-  formData.append("image", fileInput.files[0]);
-
-  try {
-    const response = await axiosWithCredentials.post(`/images/`, formData);
-    toast.success("Image added successfully!");
-    return response.data;
-  } catch (error) {
-    toast.error("Failed to add image.");
-    console.error("Error adding image:", error);
-    throw error;
-  }
+export const addHomepageImage = async (payload) => {
+  const response = await axiosWithCredentials.post(`/images/`, payload);
+  return response.data;
 };
+
 
 export const addHomepageProducts = async (payload) => {
-  try {
-    const response = await axiosWithCredentials.post(`/web-products/`, payload);
-    return response.data;
-  } catch (error) {
-    toast.error("Failed to add products.");
-    console.error("Error adding products:", error);
-    throw error;
-  }
+  const response = await axiosWithCredentials.post(`/web-products/`, payload);
+  return response.data;
 };
 
 export const getHomepageProducts = async () => {
-  try {
-    const response = await axiosWithCredentials.get(`/web-products/`);
-    return response.data;
-  } catch (error) {
-    toast.error("Error fetching homepage image", error);
-    throw error;
-  }
+  const response = await axiosWithCredentials.get(`/web-products/`);
+  return response.data;
 };
 
 export const addOurValues = async (payload) => {
-  try {
-    const response = await axiosWithCredentials.post(`/our-value/`, payload);
-    toast.success("Our Values updated successfully!");
-    return response.data;
-  } catch (error) {
-    toast.error("Failed to update Our Values.");
-    console.error("Error updating Our Values:", error);
-    throw error;
-  }
+  const response = await axiosWithCredentials.post(`/our-value/`, payload);
+  return response.data;
 };
 
 export const getOurValues = async () => {
-  try {
-    const response = await axiosWithCredentials.get(`/our-value/`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching Our Values:", error);
-    throw error;
-  }
+  const response = await axiosWithCredentials.get(`/our-value/`);
+  return response.data;
 };
 
-
 export const addOurAssortment = async (payload) => {
-  try {
-    const response = await axiosWithCredentials.post(`/our-assortment/`,payload);
-    toast.success("Our Assortment updated successfully!");
-  } catch (error) {
-    toast.error("Failed to update Our Assortment.");
-    console.error("Error updating Our Assortment:", error);
-    throw error;
-  }
-}
+  const response = await axiosWithCredentials.post(`/our-assortment/`, payload);
+  return response.data;
+};
 
 export const getOurAssortment = async () => {
-  try {
-    const response = await axiosWithCredentials.get(`/our-assortment`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching Our Assortment:", error);
-    throw error;
-  }
-}
+  const response = await axiosWithCredentials.get(`/our-assortment/`);
+  return response.data;
+};
 
 export const createWhyHoutTotal = async (payload) => {
-  try {
-    const response = await axiosWithCredentials.post(`/why-hout-total/`, payload);
-    return response.data;
-  } catch (error) {
-    console.error("Error Adding Hout Total", error);
-    throw error; 
-  }
-}
+  const response = await axiosWithCredentials.post(`/why-hout-total/`, payload);
+  return response.data;
+};
 
 export const fetchWhyHoutTotal = async () => {
-  try {
-    const response = await axiosWithCredentials.get(`/why-hout-total/`);
-    return response.data;
-  } catch (error) {
-    console.error("Error Fetching Hout Total", error);
-    throw error;
-  }
-}
+  const response = await axiosWithCredentials.get(`/why-hout-total/`);
+  return response.data;
+};
 
 export const addPrivacyPolicies = async (payload) => {
-  try {
-    const response = await axiosWithCredentials.post(
-      `/privacy-policy/`,
-      payload
-    );
-    toast.success("Privacy policy content updated successfully!");
-    return response.data;
-  } catch (error) {
-    toast.error("Failed to update privacy policy content.");
-    console.error("Error updating Privacy Policy:", error);
-    throw error;
-  }
+  const response = await axiosWithCredentials.post(`/privacy-policy/`, payload);
+  return response.data;
 };
 
 export const getPrivacyPolicy = async () => {
-  try {
-    const response = await axiosWithCredentials.get(`/privacy-policy/`);
-    return response.data;
-  } catch (error) {
-    toast.error("Failed to fetch privacy policy content.");
-    console.error("Error fetching Privacy Policy:", error);
-    throw error;
-  }
+  const response = await axiosWithCredentials.get(`/privacy-policy/`);
+  return response.data;
 };
 
 export const addTermsCondition = async (payload) => {
-  try {
-    const response = await axiosWithCredentials.post(
-      `/terms-and-conditions/`,
-      payload
-    );
-    toast.success("Privacy policy content updated successfully!");
-    return response.data;
-  } catch (error) {
-    toast.error("Failed to update privacy policy content.");
-    console.error("Error updating Privacy Policy:", error);
-    throw error;
-  }
+  const response = await axiosWithCredentials.post(
+    `/terms-and-conditions/`,
+    payload
+  );
+  return response.data;
 };
 
 export const getTermsCondition = async () => {
-  try {
-    const response = await axiosWithCredentials.get(`/terms-and-conditions/`);
-    return response.data;
-  } catch (error) {
-    toast.error("Failed to fetch privacy policy content.");
-    console.error("Error fetching Privacy Policy:", error);
-    throw error;
-  }
+  const response = await axiosWithCredentials.get(`/terms-and-conditions/`);
+  return response.data;
 };
 
 export const updateCategories = async (payload) => {
-  try {
-    const response = await axiosWithCredentials.post(
-      `/product/category-choice-update/`,
-      payload
-    );
-    return response.data;
-  } catch (error) {
-    toast.error("Failed to update categories");
-    console.error("Error update categories:", error);
-    throw error;
-  }
+  const response = await axiosWithCredentials.post(
+    `/product/category-choice-update/`,
+    payload
+  );
+  return response.data;
+};
+
+export const addFaqs = async (payload) => {
+  const response = await axiosWithCredentials.post(`/faqs/`, payload);
+  return response.data;
+};
+
+export const getFaqs = async () => {
+  const response = await axiosWithCredentials.get("/faqs");
+  return response.data;
 };

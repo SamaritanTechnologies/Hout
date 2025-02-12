@@ -565,7 +565,7 @@ export const UpdateProduct = () => {
                           <tbody>
                             {lengths?.map((product, index) => (
                               <tr key={index}>
-                                <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
+                                <td className="px-[24px] py-[16px] text-left text-16 font-normal border border-[#D9D9D9]">
                                   <input
                                     type="number"
                                     min={0}
@@ -582,7 +582,7 @@ export const UpdateProduct = () => {
                                     className="w-full outline-none bg-transparent"
                                   />
                                 </td>
-                                <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
+                                <td className="px-[24px] py-[16px] text-left text-16 font-normal border border-[#D9D9D9]">
                                   <input
                                     required
                                     type="number"
@@ -599,7 +599,7 @@ export const UpdateProduct = () => {
                                     className="w-full outline-none bg-transparent"
                                   />
                                 </td>
-                                <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
+                                <td className="px-[24px] py-[16px] text-left text-16 font-normal border border-[#D9D9D9]">
                                   <input
                                     type="number"
                                     min={0}
@@ -615,7 +615,7 @@ export const UpdateProduct = () => {
                                     className="w-full outline-none bg-transparent"
                                   />
                                 </td>
-                                <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
+                                <td className="px-[24px] py-[16px] text-left text-16 font-normal border border-[#D9D9D9]">
                                   <input
                                     required
                                     type="number"
@@ -707,7 +707,7 @@ export const UpdateProduct = () => {
                               <button
                                 type="button"
                                 onClick={() => handleRemoveImage(index)}
-                                className="absolute top-2 right-2 border border-black bg-white rounded-full p-1 text-red-600"
+                                className="absolute top-2 right-2"
                               >
                                 <XCircleIcon class="h-6 w-6 text-gray-500" />
                               </button>
