@@ -383,7 +383,7 @@ input[type="number"] {
   }
   .landing {
     height: 100vh;
-    min-height: auto !important;
+    min-height: auto;
   }
 }
 
@@ -414,79 +414,8 @@ input[type="date"] {
 } */
 .swiper-button-prev:after, 
 .swiper-button-next:after {
-
   color: rgb(213, 162, 132) !important;
-  position: absolute;
-  bottom: -100% !important;
 }
-.swiper-button-prev:after {
-
-  left: 230px !important;
-}
-.swiper-button-next:after {
-
-  right: 270px !important;
-}
-@media(max-width:1024px){
-
-.swiper-button-prev:after {
-
-  left: 200px !important;
-}
-.swiper-button-next:after {
-
-  right: 200px !important;
-}
-}
-@media(max-width:768px){
-  .swiper-button-prev:after, 
-.swiper-button-next:after {
-
-  font-size: 20px;
-  bottom: -80% !important;
-}
-.swiper-button-prev:after {
-
-  left: 130px !important;
-}
-.swiper-button-next:after {
-
-  right: 130px !important;
-}
-}
-@media(max-width:425px){
-  .swiper-button-prev:after, 
-.swiper-button-next:after {
-
-  font-size: 15px;
-  bottom: -35% !important;
-}
-.swiper-button-prev:after {
-
-  left: 50px !important;
-}
-.swiper-button-next:after {
-
-  right: 50px !important;
-}
-}
-@media(max-width:320px){
-  .swiper-button-prev:after, 
-.swiper-button-next:after {
-
-  font-size: 14px;
-  bottom: -15% !important;
-}
-.swiper-button-prev:after {
-
-  left: 50px !important;
-}
-.swiper-button-next:after {
-
-  right: 50px !important;
-}
-}
-
 /* Hide the Google Translate toolbar */
 .goog-te-banner-frame.skiptranslate {
   display: none !important;
