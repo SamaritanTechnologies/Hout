@@ -1,35 +1,25 @@
 import React, { useEffect, useState } from "react";
 import rightArrow from "../assets/shopPage/rightArrow.svg";
-import { axiosApi } from "../providers";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import DOMPurify from "dompurify";
+import { getTermsCondition } from "../redux/actions/userActions";
 
 export const TermsConditions = () => {
-  const navigate = useNavigate();
   const [data, setData] = useState("");
 
   useEffect(() => {
-    getTermsConditions();
-  }, []);
-
-  const getTermsConditions = async () => {
-    try {
-      const response = await axiosApi.get("/terms&condition/");
-      // Check if response data is a string (assuming HTML content is returned as a string)
-      if (
-        typeof response.data === "string" &&
-        response.data?.trim()?.startsWith("<")
-      ) {
-        setData(response.data);
-      } else {
-        console.error("Invalid HTML content received");
-        setData(
-          "<p class='text-center'>Content is not available at the moment.</p>"
-        );
+    const fetchTermsConditions = async () => {
+      try {
+        const data = await getTermsCondition();
+        setData(DOMPurify.sanitize(data.description_en));
+      } catch (error) {
+        console.error("Error fetching terms and conditions", error);
+        setData("<p class='text-center'>Failed to load terms and conditions.</p>");
       }
-    } catch (error) {
-      console.error("Error fetching terms and conditions", error);
-    }
-  };
+    };
+
+    fetchTermsConditions();
+  }, []);
 
   return (
     <>
@@ -40,9 +30,7 @@ export const TermsConditions = () => {
           </div>
           <div className="text-white flex items-center justify-center gap-x-3 pt-5 ">
             <div className="flex items-center gap-x-3">
-              <p className="cursor-pointer" onClick={() => navigate("/")}>
-                Home
-              </p>{" "}
+              <Link to="/">Home</Link>
               <img src={rightArrow} />
             </div>
             <div>Terms and Conditions</div>

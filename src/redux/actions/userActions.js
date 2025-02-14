@@ -30,3 +30,13 @@ export const subscribeToNewsletter = async (payload) => {
   const response = await axiosApi.post(`/hubspot_subscribe/`, payload);
   return response.data;
 };
+
+export const getPrivacyPolicy = async () => {
+  const response = await  axiosApi.get("/privacy-policy/");
+  return response.data;
+};
+
+export const getTermsCondition = async () => {
+  const response = await axiosApi.get(`/terms-and-conditions/`);
+  return response.data;
+};
