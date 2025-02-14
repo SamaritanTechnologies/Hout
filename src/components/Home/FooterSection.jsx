@@ -12,64 +12,46 @@ import { API_BASE_URL, axiosApi } from "../../providers";
 import { toast } from "react-toastify";
 import { scrollToTop } from "../../utils/helper";
 import axios from "axios";
+import { getOpeningHours, subscribeToNewsletter } from "../../redux/actions/userActions";
 
 const FooterSection = ({ isShow }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [state, setState] = useState({
-    openHours: [],
-    email: "",
-  });
+  const [openingHour, setOpeningHour] = useState([]);
+  const [email, setEmail] = useState();
 
   useEffect(() => {
-    getOpeningHours();
+    const fetchOpeningHours = async () => {
+      try {
+        const data = await getOpeningHours();
+        console.log(data, "data here")
+        setOpeningHour(data);
+      } catch (error) {
+        console.error("Error fetching opening hours:", error);
+        toast.error("An error occurred while fetching data: " + error.message);
+      }
+    };
+
+    fetchOpeningHours();
   }, []);
-
-  const getOpeningHours = async () => {
-    try {
-      // const response = await axios.get(`${API_BASE_URL}/google-opening-hours/?place=Hout Totaal`);
-      const response = await axios.get(`${API_BASE_URL}/opening-hours/`);
-      const sortedData = response.data?.sort((a, b) => a.order - b.order);
-      setState((prev) => ({
-        ...prev,
-        openHours: sortedData || [],
-      }));
-    } catch (error) {
-      // toast.error("Wrong credentials!");
-    }
-  };
-
-  const handleMailToClick = (e) => {
-    e.preventDefault();
-    window.location.href = "mailto:info@makeyourplank.nl";
-  };
 
   const handleNewsLetter = async (e) => {
     e.preventDefault();
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+      setMessage("Please enter a valid email.");
+      return;
+    }
     setLoading(true);
     try {
-      const response = await axiosApi.post("/hubspot_subscribe/", {
-        email: state.email,
-      });
-      if (response.status === 201 || response.status === 200) {
-        setState((prevState) => ({
-          ...prevState,
-          email: "",
-        }));
-        toast.success("Newsletter submit successfuly");
+      const response = await subscribeToNewsletter({ email });
+      if (response.success) {
+        toast.success("🎉 Successfully subscribed to our newsletter!");
+        setEmail("");
+      } else {
+        throw new Error(response.message || "Subscription failed.");
       }
     } catch (error) {
-      if (error?.response?.data) {
-        toast.error(error?.response?.data?.error || "Something went wrong");
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser
-        // and an instance of http.ClientRequest in Node.js
-        toast.error("No response from server. Please try again later.");
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        toast.error(error.message);
-      }
+      toast.error("❌ " + (error.response?.data?.message || "Something went wrong."));
     } finally {
       setLoading(false);
     }
@@ -91,13 +73,8 @@ const FooterSection = ({ isShow }) => {
                 <input
                   type="email"
                   autoComplete={true}
-                  onChange={(e) => {
-                    setState((prev) => ({
-                      ...prev,
-                      email: e.target.value,
-                    }));
-                  }}
-                  value={state.email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
                   required={true}
                   placeholder="Enter Email Address"
                   className="bg-[#F5F4F8] flex-grow input-field"
@@ -253,9 +230,9 @@ const FooterSection = ({ isShow }) => {
               <div className="mb-6 text-[18px] md:text-[20px] lg:text-[22px] xl:text-[22px] font-semibold text-[#000]">
                 Opening Hours
               </div>
-              {state.openHours?.map((item) => (
-                <div key={item.id} className="mb-5 text-[14px] vietnam">
-                  {item.hour}
+              {openingHour.weekday_text?.map((item, index) => (
+                <div key={index} className="mb-5 text-[14px] vietnam">
+                  {item}
                 </div>
               ))}
             </div>
@@ -278,13 +255,12 @@ const FooterSection = ({ isShow }) => {
                 {" "}
                 <img src={phone} /> +31 71 203 40 90
               </div>
-              <div
-                onClick={handleMailToClick}
+              <a
                 href="mailto:info@makeyourplank.nl"
-                className="flex items-center mb-5 text-[14px] gap-x-2 vietnam  cursor-pointer"
+                className="flex items-center mb-5 text-[14px] gap-x-2 vietnam cursor-pointer"
               >
-                <img src={emailFooter} /> info@makeyourplank.nl
-              </div>
+                <img src={emailFooter} alt="Email Icon" /> info@makeyourplank.nl
+              </a>
               <div className="flex items-center mb-5 text-[14px] gap-x-6">
                 <div
                   className="flex items-center cursor-pointer"

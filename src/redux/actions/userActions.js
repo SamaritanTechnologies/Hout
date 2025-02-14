@@ -1,3 +1,4 @@
+import { Place } from "@mui/icons-material";
 import { axiosApi } from "../../providers";
 
 export const getOurValues = async () => {
@@ -19,3 +20,13 @@ export const getWhyHoutTotal = async () => {
   const response = await axiosApi.get(`/why-hout-total`);
   return response.data;
 }
+
+export const getOpeningHours = async (place = "Hout Totaal") => {
+  const response = await axiosApi.get(`/google-opening-hours/?place=${encodeURIComponent(place)}`);
+  return response.data;
+}
+
+export const subscribeToNewsletter = async (payload) => {
+  const response = await axiosApi.post(`/hubspot_subscribe/`, payload);
+  return response.data;
+};
