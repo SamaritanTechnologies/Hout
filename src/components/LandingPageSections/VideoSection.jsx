@@ -19,7 +19,6 @@ const VideoSection = () => {
     const fetchWhyHoutTotal = async () => {
       try {
         const data = await getWhyHoutTotal();
-        console.log("total", data);
         setContent(data);
       } catch (error) {
         toast.error("An error occurred while fetching data: " + error.message);

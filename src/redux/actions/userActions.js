@@ -1,5 +1,9 @@
-import { Place } from "@mui/icons-material";
 import { axiosApi } from "../../providers";
+
+export const getHomepageImage = async () => {
+  const response = await axiosApi.get(`/images/`);
+  return response.data;
+}
 
 export const getOurValues = async () => {
   const response =  await axiosApi.get(`/our-values`);
@@ -40,3 +44,9 @@ export const getTermsCondition = async () => {
   const response = await axiosApi.get(`/terms-and-conditions/`);
   return response.data;
 };
+
+
+export const getFaqs = async () => {
+  const response = await axiosApi.get(`/faqs/`);
+  return response.data;
+}

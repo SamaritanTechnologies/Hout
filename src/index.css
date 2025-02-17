@@ -110,7 +110,7 @@ button:focus-visible {
 }
 
 .landing {
-  background-image: url(./assets/LandingPageImages/backWood.svg);
+  /* background-image: url(./assets/LandingPageImages/backWood.svg); */
   background-repeat: no-repeat;
   background-size: cover;
   background-position: bottom;

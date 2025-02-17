@@ -24,7 +24,6 @@ const FooterSection = ({ isShow }) => {
     const fetchOpeningHours = async () => {
       try {
         const data = await getOpeningHours();
-        console.log(data, "data here")
         setOpeningHour(data);
       } catch (error) {
         console.error("Error fetching opening hours:", error);
