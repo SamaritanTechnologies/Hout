@@ -174,7 +174,7 @@ export const WhyHoutTotaal = () => {
                     name="description_nl"
                     placeholder="Voer beschrijving in"
                     className="w-full rounded-md xl:py-3 xl:px-3 py-2 px-2 border border-[#D9D9D9]"
-                    rows="4"
+                    rows="6"
                   />
                 </div>
                 <div className="w-1/2">
@@ -186,7 +186,7 @@ export const WhyHoutTotaal = () => {
                     name="description_en"
                     placeholder="Enter description"
                     className="w-full rounded-md xl:py-3 xl:px-3 py-2 px-2 border border-[#D9D9D9]"
-                    rows="4"
+                    rows="6"
                   />
                 </div>
               </div>

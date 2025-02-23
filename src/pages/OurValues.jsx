@@ -181,7 +181,7 @@ export const OurValues = () => {
           <img src={ArrowBack} alt="Back" />
         </div>
         <h5 className="xl:text-32 lg:text-28 text-26 font-bold">
-          Our Assortment
+          Our Values
         </h5>
       </div>
       <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-14 overflow-x-auto pl-[54px]">

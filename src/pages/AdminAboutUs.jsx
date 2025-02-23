@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  addTermsCondition,
-  getTermsCondition,
+  addAboutUs,
+  addPrivacyPolicies,
+  getAboutUs,
+  getPrivacyPolicy,
 } from "../redux/actions/dashboardActions";
 import ArrowBack from "../assets/DashboardImages/arrowback.svg";
 import Button from "../components/Common/Button";
@@ -10,41 +12,40 @@ import countryflag from "../assets/DashboardImages/UK-Flag.svg";
 import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
 import { toast } from "react-toastify";
 
-export const TermsAndConditions = () => {
-  const [termsCondition, setTermsCondition] = useState({
-    description_nl: "",
+export const AdminAboutUs = () => {
+  const [aboutUs, setAboutUs] = useState({
     description_en: "",
+    description_nl: "",
   });
-
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchTermsAndConditions = async () => {
+    const fetchAboutUs = async () => {
       try {
-        const data = await getTermsCondition();
+        const data = await getAboutUs();
         if (data) {
-          setTermsCondition({
+          setAboutUs({
             description_en: data.description_en,
             description_nl: data.description_nl,
           });
         }
-        toast.success("Terms & Conditions fetched successfully!");
+        toast.success("About Us fetched successfully!");
       } catch (error) {
-        toast.error("Failed to fetch Terms & Conditions!");
-        console.error("Error fetching privacy policy:", error);
+        toast.error("Failed to fetch About Us");
+        console.error("Error fetching About Us:", error);
       }
     };
 
-    fetchTermsAndConditions();
+    fetchAboutUs();
   }, []);
 
   const handleSave = async () => {
     setLoading(true);
     try {
-      await addTermsCondition(termsCondition);
-      toast.success("Terms & Conditions saved successfully!");
+      await addAboutUs(aboutUs);
+      toast.success("About Us saved successfully!");
     } catch (error) {
-      toast.error("Failed to save Terms & Conditions!");
+      toast.error("Failed to save About Us");
       console.error("Error:", error);
     } finally {
       setLoading(false);
@@ -52,7 +53,7 @@ export const TermsAndConditions = () => {
   };
 
   const handleChange = (name, value) => {
-    setTermsCondition((prevValues) => ({
+    setAboutUs((prevValues) => ({
       ...prevValues,
       [name]: value,
     }));
@@ -65,16 +66,16 @@ export const TermsAndConditions = () => {
           <img src={ArrowBack} alt="Back" />
         </div>
         <h5 className="xl:text-32 lg:text-28 text-26 font-bold">
-          Terms and Conditions
+          Privacy Policy
         </h5>
       </div>
 
-      <div className="flex gap-8 max-w-[1000px] mx-auto w-full">
+      <div className="flex gap-8 pl-[54px] w-full">
         <div className="w-1/2 relative">
           <RichTextEditor
-            label="Algemene Voorwaarden"
             name="description_nl"
-            value={termsCondition.description_nl} // Ensure the editor is controlled
+            label="Privacy Policy"
+            value={aboutUs.description_nl}
             onChange={(value) => handleChange("description_nl", value)}
           />
           <img
@@ -83,12 +84,11 @@ export const TermsAndConditions = () => {
             className="cursor-pointer h-5 w-5 absolute right-[6px] top-[60px]"
           />
         </div>
-
         <div className="w-1/2 relative">
           <RichTextEditor
-            label="Terms and Conditions"
             name="description_en"
-            value={termsCondition.description_en} // Ensure the editor is controlled
+            label="Privacy Policy"
+            value={aboutUs.description_en}
             onChange={(value) => handleChange("description_en", value)}
           />
           <img

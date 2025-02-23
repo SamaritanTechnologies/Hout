@@ -18,6 +18,7 @@ const AdminSidenav = () => {
     { name: "Why Hout Totaal", link: "/why-hout-totaal/", active: false },
     { name: "Terms and Conditions", link: "/terms-and-conditions/", active: false },
     { name: "Privacy Policy", link: "/admin-privacy-policy/", active: false },
+    { name: "About Us", link: "/admin-about-us/", active: false },
     { name: "FAQ", link: "/admin-FAQ/", active: false },
     // { name: "Order Lists", link: "/order-list/", active: false },
   ]);

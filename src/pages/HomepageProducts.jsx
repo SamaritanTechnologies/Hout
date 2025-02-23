@@ -121,7 +121,7 @@ export const HomePageProducts = () => {
           Homepage Products
         </h5>
       </div>
-      <div className="sm:-mx-8 px-4 sm:px-8 overflow-x-auto pl-[54px] max-w-[848px] mx-auto">
+      <div className="sm:-mx-8 px-4 sm:px-8 overflow-x-auto pl-[90px] max-w-[848px]">
         <div className="flex gap-[20px] mb-[24px]">
           <div className="w-full">
             <div className="flex gap-[30px] flex-wrap my-10">

@@ -23,6 +23,7 @@ const Layout = () => {
     "/why-hout-totaal/",
     "/terms-and-conditions/",
     "/admin-privacy-policy/",
+    "/admin-about-us/",
     "/admin-FAQ/",
     // "/inbox/",
     "/order-list/",

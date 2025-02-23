@@ -33,6 +33,7 @@ import {
   TermsAndConditions,
   AdminPrivacyPolicy,
   AdminFAQ,
+  AdminAboutUs,
 
 } from "./pages";
 
@@ -72,6 +73,7 @@ function Routes() {
           <Route path="/why-hout-totaal/" element={<WhyHoutTotaal />} />
           <Route path="/terms-and-conditions/" element={<TermsAndConditions />} />
           <Route path="/admin-privacy-policy/" element={<AdminPrivacyPolicy />} />
+          <Route path="/admin-about-us/" element={<AdminAboutUs />} />
           <Route path="/admin-FAQ/" element={<AdminFAQ />} />
           <Route path="/product/:id" element={<UpdateProduct />} />
           <Route path="/new-product" element={<AddNewProduct />} />

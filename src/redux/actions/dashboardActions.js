@@ -91,6 +91,16 @@ export const updateCategories = async (payload) => {
   return response.data;
 };
 
+export const addAboutUs = async (payload) => {
+  const response = await axiosWithCredentials.post(`/about-us/`, payload);
+  return response.data;
+};
+
+export const getAboutUs = async () => {
+  const response = await axiosWithCredentials.get(`/about-us/`);
+  return response.data;
+};
+
 export const addFaqs = async (payload) => {
   const response = await axiosWithCredentials.post(`/faqs/`, payload);
   return response.data;

@@ -22,4 +22,5 @@ export {OurAssortment} from "./OurAssortment";
 export {WhyHoutTotaal} from "./WhyHoutTotaal";
 export {TermsAndConditions} from "./TermsAndConditions";
 export {AdminPrivacyPolicy} from "./AdminPrivacyPolicy";
+export {AdminAboutUs} from "./AdminAboutUs"
 export {AdminFAQ} from "./AdminFAQ";

@@ -8,6 +8,7 @@ import Button from "../components/Common/Button";
 import RichTextEditor from "../components/Common/RichTextEditor";
 import countryflag from "../assets/DashboardImages/UK-Flag.svg";
 import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
+import { toast } from "react-toastify";
 
 export const AdminPrivacyPolicy = () => {
   const [policy, setPolicy] = useState({
@@ -26,7 +27,9 @@ export const AdminPrivacyPolicy = () => {
             description_nl: data.description_nl,
           });
         }
+        toast.success("Privacy Policy fetched successfully!");
       } catch (error) {
+        toast.error("Failed to fetch privacy policy");
         console.error("Error fetching privacy policy:", error);
       }
     };
@@ -38,7 +41,9 @@ export const AdminPrivacyPolicy = () => {
     setLoading(true);
     try {
       await addPrivacyPolicies(policy);
+      toast.success("Privacy policy saved successfully!");
     } catch (error) {
+      toast.error("Failed to save Privacy Policy");
       console.error("Error:", error);
     } finally {
       setLoading(false);
