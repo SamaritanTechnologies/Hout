@@ -5,13 +5,13 @@ export const getHomepageImage = async () => {
   return response.data;
 }
 
-export const getOurValues = async () => {
-  const response =  await axiosApi.get(`/our-values`);
+export const getFeaturedProducts = async () => {
+  const response =  await axiosApi.get(`/featured-products-detail`);
   return response.data;
 }
 
-export const getProducts = async () => {
-  const response =  await axiosApi.get(`/product`);
+export const getOurValues = async () => {
+  const response =  await axiosApi.get(`/our-values`);
   return response.data;
 }
 
@@ -48,5 +48,10 @@ export const getTermsCondition = async () => {
 
 export const getFaqs = async () => {
   const response = await axiosApi.get(`/faqs/`);
+  return response.data;
+}
+
+export const getProducts = async () => {
+  const response = await axiosApi.get(`/product`);
   return response.data;
 }

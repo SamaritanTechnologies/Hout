@@ -129,7 +129,7 @@ export const ShopPage = () => {
           <div
             className={`${
               filterDrawer ? "open-filter-drawer" : ""
-            } assortment-filters bg-white py-4 w-full h-0 lg:min-h-[1015px] xl:min-h-[1015px] shadow-xl font-main lg:w-[22%] xl:w-[27.5%] transition-transform duration-300 ease-in-out`}
+            } assortment-filters bg-white py-4 w-full shadow-xl max-w-[300px] transition-transform duration-300 ease-in-out`}
           >
             <div
               className="close-menu xl:hidden lg:hidden flex justify-end"
@@ -154,16 +154,8 @@ export const ShopPage = () => {
           </div>
         )}
 
-        <div className="w-[100%] pt-[75px] xl:px-[100px] lg:px-[60px]  md:px-[40px]  sm:px-[40px]  xs:px-[40px]   ">
-          {" "}
-          <ProductsSection
-            isthree
-            isbuttonReqird
-            notRequired
-            passTypes={getTypes}
-            selectedFilter={state.selectedFilter}
-          />
-        </div>
+        <ProductsSection/>
+        
       </section>
 
       <section>

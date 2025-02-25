@@ -21,12 +21,12 @@ export const addHomepageImage = async (payload) => {
 
 
 export const addHomepageProducts = async (payload) => {
-  const response = await axiosWithCredentials.post(`/web-products/`, payload);
+  const response = await axiosWithCredentials.post(`/featured-products/`, payload);
   return response.data;
 };
 
 export const getHomepageProducts = async () => {
-  const response = await axiosWithCredentials.get(`/web-products/`);
+  const response = await axiosWithCredentials.get(`/featured-products/`);
   return response.data;
 };
 

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import HoutHandelSection from "../components/LandingPageSections/HoutHandelSection";
-import ProductsSection from "../components/ShopComponents/ProductsSection";
+import ProductsSection from "../components/LandingPageSections/ProductsSection";
 import OurValuesSection from "../components/LandingPageSections/OurValuesSection";
 import OurAssortmentSection from "../components/LandingPageSections/OurAssortmentSection";
 import VideoSection from "../components/LandingPageSections/VideoSection";
