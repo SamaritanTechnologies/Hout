@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProductDetailTable from "../components/CustomWood/ProductDetailTable";
 import RelatedProduct from "../components/CustomWood/RelatedProduct";
 import rightArrow from "../assets/customWoodPage/rightArrow.svg";
@@ -15,18 +15,15 @@ import pintrest from "../assets/customWoodPage/pintrest.svg";
 import twitter from "../assets/customWoodPage/twitter.svg";
 import linkdln from "../assets/customWoodPage/linkdln.svg";
 import email from "../assets/customWoodPage/email.svg";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { getProductsById } from "../redux/actions/userActions";
 
-export const CustomWoodPage = () => {
-
-  const navigate = useNavigate()
-  const location = useLocation()
+export const ProductDetail = () => {
+  const {product_id} = useParams();
+  const [productDetail, setProductDetail] = useState(null);
+  const navigate = useNavigate();
 
   console.log(location, "location")
-
-  const [state, setState] = useState({
-    product: location.state?.data
-  })
 
   const [productInfo, setProductInfo] = useState([
     {
@@ -67,6 +64,18 @@ export const CustomWoodPage = () => {
     },
   ]);
 
+  useEffect(() => {
+    const fetchProductDetail = async () => {
+      try {
+        const data = await getProductsById(product_id);
+        setProductDetail(data);
+      } catch (error) {
+        console.error("Error fetching product details:", error);
+      }
+    };
+    fetchProductDetail(product_id);
+  }, [product_id]);
+  
   return (
     <>
       <section className="px-[30px] md:px-[80px] lg:px-[100px] bg-[#F4F5F7]">
@@ -87,7 +96,7 @@ export const CustomWoodPage = () => {
           <td className="h-[px] font-bold text-[#9F9F9F] xs:text-14 sm:text-15 text-16">
             |{" "}
           </td>
-          <td>{state.product.name_en}</td>
+          <td>ddd</td>
         </tr>
       </section>
 
@@ -117,7 +126,7 @@ export const CustomWoodPage = () => {
 
           <div className=" xl:hidden lg:hidden md:hidden mt-20">
             <h1 className="text-20 font-bold">
-              {state.product.name_en}
+              sss
             </h1>
             <div className="flex gap-x-6 pt-6">
               <div>
@@ -163,7 +172,7 @@ export const CustomWoodPage = () => {
             </span>
             <div className="pt-5 text-18 text-start xs:text-15 sm:text-15">
               {" "}
-              {state.product.description_en}
+              hhhhh
             </div>
           </section>
         </section>
@@ -171,21 +180,9 @@ export const CustomWoodPage = () => {
         {/* Right side Content  */}
         <section>
           <h1 className="xl:text-38 lg:text-36 md:text-32 text-28 font-bold">
-          {state.product.name_en}
+            {productDetail.name_en}
           </h1>
-          <div className="flex items-center gap-x-6 xl:pt-6 lg:pt-5 pt-4">
-            <div>
-              <img src={starGroup} />
-            </div>
-            <div>
-              {" "}
-              <img src={line} />
-            </div>
-            <div className="xl:text-18 lg:text-16 md:text-14 text-[13px]
-"> 5 Customer Review</div>
-          </div>
-
-          <div className="pt-6 xl:text-44 lg:text-40 md:text-36 sm:text-32 text-28">{state.product.full_price_ex_vat}</div>
+          <div className="pt-6 text-xl text-[#111727]">€ 2,50</div>
 
           <div className="flex items-center gap-x-4 pt-5 border-b-2 border-[#D9D9D9] pb-[26px]    ">
             <div className="text-14">SHARE THIS PAGE:</div>

@@ -55,3 +55,8 @@ export const getProducts = async () => {
   const response = await axiosApi.get(`/product`);
   return response.data;
 }
+
+export const getProductsById = async (product_id) => {
+  const response = await axiosApi.get(`/product/${product_id}`);
+  return response.data;
+};

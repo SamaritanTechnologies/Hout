@@ -7,7 +7,7 @@ export { Products } from "./Products";
 export { Signup } from "./Signup";
 export { Signin } from "./Signin";
 export { ShopPage } from "./ShopPage";
-export { CustomWoodPage } from "./CustomWoodPage";
+export { ProductDetail } from "./ProductDetail";
 export { AddToCart } from "./AddToCart";
 export { UserProfile } from "./UserProfile";
 export { CustomizedProduct } from "./CustomizedProduct";

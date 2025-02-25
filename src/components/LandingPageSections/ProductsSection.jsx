@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import { createSlice } from "@reduxjs/toolkit";
 
 const ProductsSection = () => {
+  const navigate = useNavigate();
   const [featureProducts, setFeatureProducts] = useState([]);
 
   useEffect(() => {
@@ -23,7 +24,7 @@ const ProductsSection = () => {
 
   const getMinimumPriceObject = (lengths) => {
     if (!lengths || lengths.length === 0) return "N/A";
-  
+
     return lengths.reduce((minObj, currentObj) => {
       const currentPrice = parseFloat(currentObj.full_price_ex_vat);
       const minPrice = parseFloat(minObj.full_price_ex_vat);
@@ -42,8 +43,15 @@ const ProductsSection = () => {
             const minimumPrice = getMinimumPriceObject(product.lengths);
             return (
               <div className="relative" key={product.id}>
-                <div className="w-12 h-12 rounded-full flex items-center justify-center bg-[#E97171] text-white absolute top-6 right-6 text-xs">-{minimumPrice.discount}%</div>
-                <div className="cursor-pointer">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center bg-[#E97171] text-white absolute top-6 right-6 text-xs">
+                  -{minimumPrice.discount}%
+                </div>
+                <div
+                  className="cursor-pointer"
+                  onClick={() =>
+                    navigate(`/porduct-detail/${product.id}`)
+                  }
+                >
                   <img
                     src={product.images[0].image}
                     className="w-full object-cover h-full sm:h-[310px] lg:h-[310px] xl:h-[310px]"
@@ -59,7 +67,9 @@ const ProductsSection = () => {
 
                   <section className="flex gap-x-3 pt-[15px] pb-[20px] md:gap-x-2">
                     <div>$ {minimumPrice.discounted_price}</div>
-                    <div className="text-gray2 line-through">$ {minimumPrice.full_price_ex_vat}</div>
+                    <div className="text-gray2 line-through">
+                      $ {minimumPrice.full_price_ex_vat}
+                    </div>
                   </section>
                   <section className="flex gap-x-4 items-center justify-between">
                     <div className="border-2 cursor-pointer border-[#898989] px-2 flex items-center justify-center py-3  gap-x-3  add-cart-btn md:text-[12px] lg:text-[12px]">

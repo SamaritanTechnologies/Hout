@@ -17,7 +17,7 @@ import {
   Signup,
   Signin,
   ShopPage,
-  CustomWoodPage,
+  ProductDetail,
   AddToCart,
   UserProfile,
   CustomizedProduct,
@@ -53,7 +53,7 @@ function Routes() {
           <Route path="/" element={<Landingpage />} />
           <Route path="/shop-page" element={<ShopPage />} />
 
-          <Route path="/wood-page" element={<CustomWoodPage />} />
+          <Route path="/porduct-detail/:product_id" element={<ProductDetail />} />
           <Route path="/cart" element={<AddToCart />} />
           <Route path="/customized-product" element={<CustomizedProduct />} />
 
