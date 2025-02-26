@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ProductDetailTable from "../components/CustomWood/ProductDetailTable";
+import ProductVaritants from "../components/CustomWood/ProductVaritants";
 import RelatedProduct from "../components/CustomWood/RelatedProduct";
 import rightArrow from "../assets/customWoodPage/rightArrow.svg";
 import { Tab } from "@headlessui/react";
@@ -245,7 +245,7 @@ export const ProductDetail = () => {
       </section>
 
       <div>
-        <ProductDetailTable />
+        <ProductVaritants variants={productDetail?.lengths}/>
       </div>
 
       <div>
