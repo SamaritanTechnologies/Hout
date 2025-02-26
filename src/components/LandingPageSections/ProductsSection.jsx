@@ -97,6 +97,9 @@ const ProductsSection = () => {
             paddingX="72px"
             fontbold
             paddingY="22px"
+            onClick={() =>
+              navigate(`/shop-page`)
+            }
           />
         </div>
       </section>

@@ -2,15 +2,17 @@ import React, { useEffect, useState } from "react";
 import productHeart from "../../assets/LandingPageImages/products/productHeart.svg";
 import addToCartt from "../../assets/LandingPageImages/products/addToCart.svg";
 import { getProducts } from "../../redux/actions/userActions";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ProductsSection = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const data = await getProducts();
-        setProducts(data.results); // Assuming the API response has a 'results' field
+        setProducts(data.results);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -39,18 +41,20 @@ const ProductsSection = () => {
               <div className="w-12 h-12 rounded-full flex items-center justify-center bg-[#E97171] text-white absolute top-6 right-6 text-xs">
                 -{minimumPrice.discount}%
               </div>
-              <div className="cursor-pointer">
+              <div
+                className="cursor-pointer"
+                onClick={() => navigate(`/porduct-detail/${product.id}`)}
+              >
                 <img
-                  src={product.images[0]?.image || ""}
-                  alt={product.name_en}
+                  src={product.images[0].image}
                   className="w-full object-cover h-full sm:h-[310px] lg:h-[310px] xl:h-[310px]"
                 />
               </div>
               <section className="bg-[#F4F5F7] pb-4 px-4">
-                <div className="font-semibold text-24 pt-[15px]">
+                <div className="font-semibold  text-24 pt-[15px]">
                   {product.name_en}
                 </div>
-                <div className="font-medium text-16 text-gray2 pt-[15px]">
+                <div className=" font-medium  text-16  text-gray2 pt-[15px]">
                   {product.description_en}
                 </div>
 
@@ -61,12 +65,18 @@ const ProductsSection = () => {
                   </div>
                 </section>
                 <section className="flex gap-x-4 items-center justify-between">
-                  <div className="border-2 cursor-pointer border-[#898989] px-2 flex items-center justify-center py-3 gap-x-3 add-cart-btn md:text-[12px] lg:text-[12px]">
-                    <img src={addToCartt} alt="Add to Cart" />
+                  <div className="border-2 cursor-pointer border-[#898989] px-2 flex items-center justify-center py-3  gap-x-3  add-cart-btn md:text-[12px] lg:text-[12px]">
+                    {/* <img src={item.addToCart} className="bg-red" /> */}
+                    <img src={addToCartt} />
                     Add to Cart
                   </div>
-                  <div className="cursor-pointer">
-                    <img src={productHeart} alt="Add to Wishlist" />
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => {
+                      handleAddToWishlist(item.product_id);
+                    }}
+                  >
+                    <img src={productHeart} />
                   </div>
                 </section>
               </section>
