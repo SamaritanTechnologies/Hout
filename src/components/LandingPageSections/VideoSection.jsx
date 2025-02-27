@@ -30,18 +30,15 @@ const VideoSection = () => {
 
   return (
     <>
-      <section
-        className=" bg-[#E9E6D6] py-[40px] md:py-[80px] lg:pt-[119px] xl:pt-[119px]"
-        id="why-hout"
-      >
-        <div className="max-w-[1180px] mx-auto">
-          <div className="font-bold text-30 md:text-40 lg:text-50 xl:text-60 text-center ">
-            {content.title_en}
+      <section className="bg-[#E9E6D6] py-12 xl:py-20 xxl:py-28 px-4">
+        <div className="flex flex-col gap-10 max-w-[1180px] mx-auto">
+          <div className="flex flex-col gap-10 text-center">
+            <h2 className="text-2xl lg:text-4xl xl:text-5xl font-bold text-center text-[#111727]">
+              {content.title_en}
+            </h2>
+            <p className="text-lg text-[#111727]">{content.description_en}</p>
           </div>
-          <div className="text-lg text-center text-[#111727]">
-            {content.description_en}
-          </div>
-          <div className="font-bold text-60 max-w-[991px] mx-auto pt-[40px]">
+          <div className="max-w-full xl:max-w-[991px] mx-auto">
             <Swiper
               navigation={true}
               modules={[Navigation]}

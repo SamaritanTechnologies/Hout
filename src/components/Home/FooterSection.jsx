@@ -8,11 +8,12 @@ import phone from "../../assets/HeaderAndFooter/phoneFooter.svg";
 import footerLogo from "../../assets/new-logo.png";
 import whatsp from "../../assets/HeaderAndFooter/whatspFooter.svg";
 import facebook from "../../assets/HeaderAndFooter/facebookFooter.svg";
-import { API_BASE_URL, axiosApi } from "../../providers";
 import { toast } from "react-toastify";
 import { scrollToTop } from "../../utils/helper";
-import axios from "axios";
-import { getOpeningHours, subscribeToNewsletter } from "../../redux/actions/userActions";
+import {
+  getOpeningHours,
+  subscribeToNewsletter,
+} from "../../redux/actions/userActions";
 
 const FooterSection = ({ isShow }) => {
   const navigate = useNavigate();
@@ -37,29 +38,25 @@ const FooterSection = ({ isShow }) => {
   const handleNewsLetter = async (e) => {
     e.preventDefault();
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
-      setMessage("Please enter a valid email.");
+      toast.error("Please enter a valid email."); // Use toaster for error
       return;
     }
     setLoading(true);
     try {
       const response = await subscribeToNewsletter({ email });
-      if (response.success) {
-        toast.success("🎉 Successfully subscribed to our newsletter!");
-        setEmail("");
-      } else {
-        throw new Error(response.message || "Subscription failed.");
-      }
+      toast.success("Thank you for subscribing!"); 
+      setEmail("");
     } catch (error) {
-      toast.error("❌ " + (error.response?.data?.message || "Something went wrong."));
+      const errorMessage = error.message || "An unexpected error occurred.";
+      toast.error("Error: " + errorMessage);
     } finally {
       setLoading(false);
     }
-  };
-
+  };  
   return (
     <>
       <footer className="bg-[#E9E6D6] relative">
-        <section className="w-full absolute top-[-72px] left-[50%] right-[50%] transform -translate-x-1/2 -translate-y-1/2sF justify-center bg-white rounded-2xl max-w-[95%] xl:max-w-[1130px] mx-auto gap-x-3 py-3 md:py-7 lg:py-7 xl:py-7 px-4 md:px-7 lg:px-9 xl:px-9">
+        <div className="w-full max-w-[1130px] absolute top-[-72px] left-1/2 right-1/2 transform -translate-x-1/2 bg-white rounded-2xl gap-x-3 p-5 xl:px-10 xl:py-7">
           <div className="flex flex-col flex-1 gap-2">
             <div className="flex flex-col md:flex-row lg:flex-row xl:flex-row gap-4 items-start md:items-center lg:items-center xl:items-center">
               <div className="font-semibold text-[#000] text-[25px] vietnam">
@@ -76,7 +73,7 @@ const FooterSection = ({ isShow }) => {
                   value={email}
                   required={true}
                   placeholder="Enter Email Address"
-                  className="bg-[#F5F4F8] flex-grow input-field"
+                  className="bg-[#F5F4F8] flex-grow input-field text-[#111727] rounded-tl-[12px] rounded-bl-[12px] rounded-tr-[0px] rounded-br-[0px] focus:outline-none text-base p-[18px_30px]"
                 />
                 <button
                   disabled={loading}
@@ -91,20 +88,20 @@ const FooterSection = ({ isShow }) => {
               Subscribe to Our Newsletter and get updated every time.
             </div>
           </div>
-        </section>
+        </div>
 
         {/* footer top end */}
         <div className="xs:pt-[200px] sm:pt-[200] pt-[120px] pb-[37px] max-w-[1240px] mx-auto px-[30px]">
           <img src={footerLogo} className="w-[160px] h-[60px]" />
         </div>
-        <section className="footer-content">
-          <div className="flex flex-wrap justify-center sm:justify-normal gap-y-12  text-[#000] mt-7 max-w-[1240px] px-[30px] mx-auto sm:mb-4 xs:mb-4">
-            <div className=" w-[100%] sm:w-[50%] md:w-[25%] lg:w-[25%] xl:w-[25%]">
-              <div className="mb-6  vietnam text-[18px] md:text-[20px] lg:text-[22px] xl:text-[22px] font-semibold text-[#000]">
+        <div className="footer-content p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-7 pt-4 max-w-[1308px] mx-auto">
+            <div className="flex flex-col gap-5">
+              <h3 className="text-[#111727] font-semibold text-base lg:text-xl xl:text-[22px] mb-1">
                 Home
-              </div>
+              </h3>
               <div
-                className="mb-5 text-[14px] vietnam cursor-pointer "
+                className="text-sm text-[#111727] cursor-pointer "
                 onClick={() => {
                   scrollToTop();
                   navigate("/");
@@ -113,7 +110,7 @@ const FooterSection = ({ isShow }) => {
                 Home
               </div>
               <div
-                className="mb-5 text-[14px] vietnam cursor-pointer "
+                className="text-sm text-[#111727] cursor-pointer "
                 onClick={() => {
                   scrollToTop();
                   navigate("/about");
@@ -122,7 +119,7 @@ const FooterSection = ({ isShow }) => {
                 About Us
               </div>
               <div
-                className="mb-5 text-[14px] vietnam cursor-pointer"
+                className="text-sm text-[#111727] cursor-pointer"
                 onClick={() => {
                   navigate("/");
                   setTimeout(() => {
@@ -138,7 +135,7 @@ const FooterSection = ({ isShow }) => {
                 Products
               </div>
               <div
-                className="mb-5 text-[14px] vietnam cursor-pointer"
+                className="text-sm text-[#111727] cursor-pointer"
                 onClick={() => {
                   navigate("/");
                   setTimeout(() => {
@@ -151,9 +148,8 @@ const FooterSection = ({ isShow }) => {
               >
                 Our Values
               </div>
-              <div className="mb-5"></div>
               <div
-                className="mb-5 text-[14px] vietnam cursor-pointer"
+                className="text-sm text-[#111727] cursor-pointer"
                 onClick={() => {
                   navigate("/");
                   setTimeout(() => {
@@ -169,7 +165,7 @@ const FooterSection = ({ isShow }) => {
                 Our assortment
               </div>
               <div
-                className="mb-5 text-[14px] vietnam cursor-pointer"
+                className="text-sm text-[#111727] cursor-pointer"
                 onClick={() => {
                   navigate("/");
                   setTimeout(() => {
@@ -183,7 +179,7 @@ const FooterSection = ({ isShow }) => {
                 Why Hout Total
               </div>
               <div
-                className="mb-5 text-[14px] vietnam cursor-pointer"
+                className="text-sm text-[#111727] cursor-pointer"
                 onClick={() => {
                   navigate("/");
                   setTimeout(() => {
@@ -197,7 +193,7 @@ const FooterSection = ({ isShow }) => {
                 Contact Us
               </div>
               <div
-                className="mb-5 text-[14px] vietnam cursor-pointer"
+                className="text-sm text-[#111727] cursor-pointer"
                 onClick={() => {
                   navigate("/terms-conditions");
                   scrollToTop();
@@ -206,7 +202,7 @@ const FooterSection = ({ isShow }) => {
                 <Link to="/terms-conditions">Terms & Conditions</Link>
               </div>
               <div
-                className="mb-5 text-[14px] vietnam cursor-pointer"
+                className="text-sm text-[#111727] cursor-pointer"
                 onClick={() => {
                   navigate("/privacy-policy");
                   scrollToTop();
@@ -215,7 +211,7 @@ const FooterSection = ({ isShow }) => {
                 <Link to="/privacy-policy">Privacy Policy</Link>
               </div>
               <div
-                className="mb-5 text-[14px] vietnam cursor-pointer "
+                className="text-sm text-[#111727] cursor-pointer "
                 onClick={() => {
                   navigate("/faq");
                   scrollToTop();
@@ -225,42 +221,42 @@ const FooterSection = ({ isShow }) => {
               </div>
             </div>
 
-            <div className=" w-[100%] sm:w-[50%] md:w-[25%] lg:w-[25%] xl:w-[25%]">
-              <div className="mb-6 text-[18px] md:text-[20px] lg:text-[22px] xl:text-[22px] font-semibold text-[#000]">
+            <div className="flex flex-col gap-5">
+              <h3 className="mb-1 text-[#111727] font-semibold text-base lg:text-xl xl:text-[22px]">
                 Opening Hours
-              </div>
+              </h3>
               {openingHour.weekday_text?.map((item, index) => (
-                <div key={index} className="mb-5 text-[14px] vietnam">
+                <div key={index} className="text-sm text-[#111727]">
                   {item}
                 </div>
               ))}
             </div>
 
-            <div className=" w-[100%] sm:w-[50%] md:w-[25%] lg:w-[25%] xl:w-[25%]">
-              <div className="mb-6 text-[18px] vietnam  md:text-[20px] lg:text-[22px] xl:text-[22px] font-semibold text-[#000]">
+            <div className="flex flex-col gap-5">
+              <h3 className="mb-1 text-[#111727] font-semibold text-base lg:text-xl xl:text-[22px]">
                 Contact Us
-              </div>
-              <div className="flex items-start gap-x-2 mb-5 text-[14px] vietnam ">
+              </h3>
+              <div className="flex items-start gap-x-5 text-[#111727] text-sm vietnam ">
                 {" "}
                 <img src={location} /> Lageweg 35K <br />
                 2222AG Katwijk aan Zee <br />
                 The Netherlands{" "}
               </div>
-              <div className="flex items-center mb-5 text-[14px] gap-x-2 vietnam ">
+              <div className="flex items-center text-[#111727] text-sm gap-x-5 vietnam ">
                 {" "}
                 <img src={whatsp} /> +316 339 66 002
               </div>
-              <div className="flex items-center mb-5 text-[14px] gap-x-2 vietnam ">
+              <div className="flex items-center text-[#111727] text-sm gap-x-5 vietnam ">
                 {" "}
                 <img src={phone} /> +31 71 203 40 90
               </div>
               <a
                 href="mailto:info@makeyourplank.nl"
-                className="flex items-center mb-5 text-[14px] gap-x-2 vietnam cursor-pointer"
+                className="flex items-center text-[#111727] text-sm gap-x-5 vietnam cursor-pointer"
               >
                 <img src={emailFooter} alt="Email Icon" /> info@makeyourplank.nl
               </a>
-              <div className="flex items-center mb-5 text-[14px] gap-x-6">
+              <div className="flex items-center text-[#111727] text-sm gap-x-6">
                 <div
                   className="flex items-center cursor-pointer"
                   onClick={() =>
@@ -284,18 +280,18 @@ const FooterSection = ({ isShow }) => {
               </div>
             </div>
 
-            <div className=" w-[100%] sm:w-[50%] md:w-[25%] lg:w-[25%] xl:w-[25%]">
-              <div className="mb-6 text-[18px] vietnam  md:text-[20px] lg:text-[22px] xl:text-[22px] font-semibold text-[#000]">
+            <div className="flex flex-col gap-5">
+              <h3 className="mb-1 text-[#111727] font-semibold text-base lg:text-xl xl:text-[22px]">
                 Chamber of Commerce
-              </div>
-              <div className="mb-5 text-[14px] vietnam ">61392421</div>
-              <div className="mb-5 text-[14px] font-semibold vietnam ">
+              </h3>
+              <div className="text-sm text-[#111727]">61392421</div>
+              <div className="text-sm text-[#111727] font-semibold">
                 Bank
               </div>
-              <div className="mb-5 text-[14px] vietnam ">
-                {/* NL65 BUNQ 2064 2611 33 */}
+              <div className="text-sm text-[#111727]">
+                NL65 BUNQ 2064 2611 33
               </div>
-              <div className=" mt-5 pay-button">
+              <div className="pay-button">
                 {" "}
                 <Button
                   btnText="Pay"
@@ -311,7 +307,7 @@ const FooterSection = ({ isShow }) => {
               </div>
             </div>
           </div>
-        </section>
+        </div>
         <div className="copyright-sect xs:flex-col-reverse flex justify-center items-center sm:gap-[30px] xs:gap-[30px] gap-[100px] py-[30px] px-[30px]">
           <div className="text-[14px] vietnam text-[#111727s]">
             Copyright © 2024 Hout Totaal
