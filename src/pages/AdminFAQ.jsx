@@ -199,9 +199,8 @@ export const AdminFAQ = () => {
           loading={false}
           type="submit"
           btnText="Save FAQs"
-          paddingX="20px"
           textColor="#000000"
-          breakpoint="w-auto text-[12px]"
+          breakpoint="w-full max-w-[280px]"
           onClick={handleSaveFAQs}
         />
       </div>

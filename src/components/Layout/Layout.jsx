@@ -53,7 +53,7 @@ const Layout = () => {
             </div>
             <div className="flex-1 min-h-screen overflow-x-hidden">
               <AdminMainNav />
-              <div className="!pt-2 dashboard-content overflow-y-auto">
+              <div className="dashboard-content overflow-y-auto bg-[#fafafa] px-5 py-8">
                 <Outlet />
               </div>
             </div>
@@ -62,15 +62,13 @@ const Layout = () => {
       ) : (
         <>
           {!hasHeaderFooter ? (
-            <div className="">
-              <div className="">
-                <HeaderSection />
-                <div className=" xl:!pt-20 lg:!pt-18 md:!pt-16 !pt-14 w-full flex-1 ">
-                  <Outlet />
-                </div>
-                <FooterSection />
+            <>
+              <HeaderSection />
+              <div className=" xl:!pt-20 lg:!pt-18 md:!pt-16 !pt-14 w-full flex-1 ">
+                <Outlet />
               </div>
-            </div>
+              <FooterSection />
+            </>
           ) : (
             <>
               <div className="">

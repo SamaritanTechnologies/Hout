@@ -30,7 +30,7 @@ const VideoSection = () => {
 
   return (
     <>
-      <section className="bg-[#E9E6D6] py-12 xl:py-20 xxl:py-28 px-4">
+      <section className="bg-[#E9E6D6] py-12 xl:py-20 xxl:py-28 px-4" id="why-hout">
         <div className="flex flex-col gap-10 max-w-[1180px] mx-auto">
           <div className="flex flex-col gap-10 text-center">
             <h2 className="text-2xl lg:text-4xl xl:text-5xl font-bold text-center text-[#111727]">

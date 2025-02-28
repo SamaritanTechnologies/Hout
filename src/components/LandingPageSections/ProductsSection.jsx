@@ -28,7 +28,7 @@ const ProductsSection = () => {
 
   return (
     <>
-      <section className="py-12 xl:py-20 xxl:py-28 max-w-[1268px] mx-auto px-4 flex flex-col items-center gap-10 lg:gap xl:gap-[80px]">
+      <section className="py-12 xl:py-20 xxl:py-28 max-w-[1268px] mx-auto px-4 flex flex-col items-center gap-10 lg:gap xl:gap-[80px]" id="products-section">
         <h2 className="text-2xl lg:text-4xl xl:text-5xl font-bold text-center text-[#111727]">
           Products
         </h2>

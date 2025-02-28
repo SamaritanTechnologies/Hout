@@ -9,8 +9,11 @@ import {
 } from "../redux/actions/productActions";
 import { setProductCategories } from "../redux";
 import { toast } from "react-toastify";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { useNavigate } from "react-router-dom";
 
 export const ProductOptions = () => {
+  const navigate = useNavigate();
   const categories = [
     "Group",
     "Type",
@@ -93,24 +96,36 @@ export const ProductOptions = () => {
   };
 
   return (
-    <form onSubmit={handleUpdate}>
-      <div className="lg:pt-[50px] pt-[30px] xl:pb-[30px] lg:pb-[25px] pb-[20px] px-[20px] bg-[rgb(250,250,250)] h-full min-h-[86vh]">
-        <div className="flex justify-end pr-3">
-          <Button loading={isSubmitting} type="submit" btnText="Update" />
-        </div>
-
-        <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-14 overflow-x-auto pl-[54px]">
-          {categories.map((category) => (
-            <ProductCategoryItem
-              key={category}
-              name={category}
-              loading={isSubmitting}
-              categoryData={categoryData}
-              setCategoryData={setCategoryData}
-            />
-          ))}
-        </div>
+    <div className="flex flex-col gap-12 xl:gap-16">
+      <div
+        onClick={() => {
+          navigate("/dashboard/");
+        }}
+        className="flex cursor-pointer gap-2 items-center"
+      >
+        <ArrowLeftIcon class="h-6 w-6 text-black" />
+        <span className="xl:text-32 lg:text-28 text-26 font-bold">
+          Product options
+        </span>
       </div>
-    </form>
+      <form onSubmit={handleUpdate} className="max-w-[848px] mx-auto">
+        {categories.map((category) => (
+          <ProductCategoryItem
+            key={category}
+            name={category}
+            loading={isSubmitting}
+            categoryData={categoryData}
+            setCategoryData={setCategoryData}
+          />
+        ))}
+        <Button
+          loading={isSubmitting}
+          type="submit"
+          btnText="Update"
+          textColor="#000000"
+          breakpoint="w-full max-w-[280px]"
+        />
+      </form>
+    </div>
   );
 };

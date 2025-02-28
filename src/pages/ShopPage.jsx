@@ -81,7 +81,7 @@ export const ShopPage = () => {
           {" "}
           <div className="flex items-center gap-x-6 md:gap-x-5 xs:gap-x-4 font-footer1">
             <div
-              className="flex items-center gap-3 cursor-pointer"
+              className="flex lg:hidden xl:hidden items-center gap-3 cursor-pointer"
               onClick={filterToggler}
               role="button"
               aria-pressed={filterDrawer}
@@ -92,12 +92,12 @@ export const ShopPage = () => {
                 Filter{" "}
               </h4>
             </div>
-            <div>
+            {/* <div>
               <img src={gridView} className="md:size-4  xs:size-3 " />
             </div>
             <div>
               <img src={listView} className="md:size-5 xs:size-3.5" />
-            </div>
+            </div> */}
             <div className="pops md:text-14 sm:text-14 xs:text-12  ">
               Showing 1-16 of 32 results
             </div>
