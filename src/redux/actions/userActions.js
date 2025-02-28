@@ -46,7 +46,7 @@ export const getPrivacyPolicy = async () => {
 };
 
 export const getTermsCondition = async () => {
-  const response = await axiosApi.get(`/terms-and-conditions/`);
+  const response = await axiosApi.get(`/terms-and-conditions`);
   return response.data;
 };
 

@@ -90,10 +90,10 @@ export const UpdateProduct = () => {
         // Initialize related products
         const relatedProductsArray = res.related_products || [];
         const formattedRelatedProducts = {
-          product1: relatedProductsArray[0] || null,
-          product2: relatedProductsArray[1] || null,
-          product3: relatedProductsArray[2] || null,
-          product4: relatedProductsArray[3] || null,
+          product1: relatedProductsArray[0] ? { value: relatedProductsArray[0]?.id, label: relatedProductsArray[0]?.name_en } : null,
+          product2: relatedProductsArray[1] ? { value: relatedProductsArray[1]?.id, label: relatedProductsArray[1]?.name_en } : null,
+          product3: relatedProductsArray[2] ? { value: relatedProductsArray[2]?.id, label: relatedProductsArray[2]?.name_en } : null,
+          product4: relatedProductsArray[3] ? { value: relatedProductsArray[3]?.id, label: relatedProductsArray[3]?.name_en } : null,
         };
 
         setRelatedProducts(formattedRelatedProducts);

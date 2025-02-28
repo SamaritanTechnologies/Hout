@@ -63,21 +63,21 @@ function Routes() {
         </Route>
 
         <Route element={<AdminRoutes />}>
-          <Route path="/dashboard/" element={<Dashboard />} />
-          <Route path="/products/" element={<Products />} />
-          <Route path="/product-options/" element={<ProductOptions />} />
-          <Route path="/homepage-image/" element={<HomePageImage />} />
-          <Route path="/homepage-products/" element={<HomePageProducts />} />
-          <Route path="/our-values/" element={<OurValues />} />
-          <Route path="/our-assortment/" element={<OurAssortment />} />
-          <Route path="/why-hout-totaal/" element={<WhyHoutTotaal />} />
-          <Route path="/terms-and-conditions/" element={<TermsAndConditions />} />
-          <Route path="/admin-privacy-policy/" element={<AdminPrivacyPolicy />} />
-          <Route path="/admin-about-us/" element={<AdminAboutUs />} />
-          <Route path="/admin-FAQ/" element={<AdminFAQ />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/product-options" element={<ProductOptions />} />
+          <Route path="/homepage-image" element={<HomePageImage />} />
+          <Route path="/homepage-products" element={<HomePageProducts />} />
+          <Route path="/our-values" element={<OurValues />} />
+          <Route path="/our-assortment" element={<OurAssortment />} />
+          <Route path="/why-hout-totaal" element={<WhyHoutTotaal />} />
+          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+          <Route path="/admin-privacy-policy" element={<AdminPrivacyPolicy />} />
+          <Route path="/admin-about-us" element={<AdminAboutUs />} />
+          <Route path="/admin-FAQ" element={<AdminFAQ />} />
           <Route path="/product/:id" element={<UpdateProduct />} />
           <Route path="/new-product" element={<AddNewProduct />} />
-          {/* <Route path="/order-list/" element={<OrderList />} /> */}
+          {/* <Route path="/order-list" element={<OrderList />} /> */}
           {/* <Route path="/user-profile" element={<UserProfile />} /> */}
         </Route>
 

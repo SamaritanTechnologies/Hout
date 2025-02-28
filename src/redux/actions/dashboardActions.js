@@ -1,16 +1,16 @@
 import { axiosWithCredentials } from "../../providers";
 
 export const getStats = async () => {
-  const response = await axiosWithCredentials.get(`/dashboard/`);
+  const response = await axiosWithCredentials.get(`/dashboard`);
   return response.data;
 };
 export const getProducts = async () => {
-  const response = await axiosWithCredentials.get(`/product/`);
+  const response = await axiosWithCredentials.get(`/product`);
   return response.data;
 };
 
 export const getHomepageImage = async () => {
-  const response = await axiosWithCredentials.get(`/images/`);
+  const response = await axiosWithCredentials.get(`/images`);
   return response.data;
 };
 
@@ -26,7 +26,7 @@ export const addHomepageProducts = async (payload) => {
 };
 
 export const getHomepageProducts = async () => {
-  const response = await axiosWithCredentials.get(`/featured-products/`);
+  const response = await axiosWithCredentials.get(`/featured-products`);
   return response.data;
 };
 
@@ -36,7 +36,7 @@ export const addOurValues = async (payload) => {
 };
 
 export const getOurValues = async () => {
-  const response = await axiosWithCredentials.get(`/our-value/`);
+  const response = await axiosWithCredentials.get(`/our-value`);
   return response.data;
 };
 
@@ -46,7 +46,7 @@ export const addOurAssortment = async (payload) => {
 };
 
 export const getOurAssortment = async () => {
-  const response = await axiosWithCredentials.get(`/our-assortment/`);
+  const response = await axiosWithCredentials.get(`/our-assortment`);
   return response.data;
 };
 
@@ -56,7 +56,7 @@ export const createWhyHoutTotal = async (payload) => {
 };
 
 export const fetchWhyHoutTotal = async () => {
-  const response = await axiosWithCredentials.get(`/why-hout-total/`);
+  const response = await axiosWithCredentials.get(`/why-hout-total`);
   return response.data;
 };
 
@@ -66,7 +66,7 @@ export const addPrivacyPolicies = async (payload) => {
 };
 
 export const getPrivacyPolicy = async () => {
-  const response = await axiosWithCredentials.get(`/privacy-policy/`);
+  const response = await axiosWithCredentials.get(`/privacy-policy`);
   return response.data;
 };
 
@@ -79,7 +79,7 @@ export const addTermsCondition = async (payload) => {
 };
 
 export const getTermsCondition = async () => {
-  const response = await axiosWithCredentials.get(`/terms-and-conditions/`);
+  const response = await axiosWithCredentials.get(`/terms-and-conditions`);
   return response.data;
 };
 
@@ -97,7 +97,7 @@ export const addAboutUs = async (payload) => {
 };
 
 export const getAboutUs = async () => {
-  const response = await axiosWithCredentials.get(`/about-us/`);
+  const response = await axiosWithCredentials.get(`/about-us`);
   return response.data;
 };
 

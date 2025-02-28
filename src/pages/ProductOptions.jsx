@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ProductCategoryItem } from "../components/Dashboard/ProductCategoryItem";
 import Button from "../components/Common/Button";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateCategories } from "../redux/actions/dashboardActions";
 import {
   getProductCategories,
@@ -13,6 +13,7 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 
 export const ProductOptions = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const categories = [
     "Group",
