@@ -96,18 +96,10 @@ export const ProductOptions = () => {
   };
 
   return (
-    <div className="flex flex-col gap-12 xl:gap-16">
-      <div
-        onClick={() => {
-          navigate("/dashboard/");
-        }}
-        className="flex cursor-pointer gap-2 items-center"
-      >
-        <ArrowLeftIcon class="h-6 w-6 text-black" />
-        <span className="xl:text-32 lg:text-28 text-26 font-bold">
-          Product options
-        </span>
-      </div>
+    <div className="flex flex-col gap-10 xl:gap-12">
+      <h2 className="xl:text-32 lg:text-28 text-26 font-bold">
+        Product options
+      </h2>
       <form onSubmit={handleUpdate} className="max-w-[848px] mx-auto">
         {categories.map((category) => (
           <ProductCategoryItem

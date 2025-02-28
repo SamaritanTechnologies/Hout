@@ -65,9 +65,9 @@ export const AdminFAQ = () => {
   // Remove a FAQ from a specific section
   const handleRemoveFaq = (sectionIndex, faqIndex) => {
     const updatedSections = [...faqSections];
-    updatedSections[sectionIndex].faqs = updatedSections[sectionIndex].faqs.filter(
-      (_, i) => i !== faqIndex
-    );
+    updatedSections[sectionIndex].faqs = updatedSections[
+      sectionIndex
+    ].faqs.filter((_, i) => i !== faqIndex);
     setFaqSections(updatedSections);
   };
 
@@ -92,7 +92,7 @@ export const AdminFAQ = () => {
           answer_nl: faq.answer_nl || null, // Ensure answer_nl is included, default to empty string
         })),
       }));
-  
+
       // Call the API to save FAQs
       const response = await addFaqs(payload);
       console.log("FAQs saved successfully:", response);
@@ -104,97 +104,91 @@ export const AdminFAQ = () => {
   };
 
   return (
-    <div className="lg:pt-[50px] pt-[30px] xl:pb-[30px] lg:pb-[25px] pb-[20px] px-[20px] bg-[rgb(250,250,250)] h-full min-h-[86vh]">
-      <div className="flex gap-2 items-center">
-        <div className="cursor-pointer">
-          <img src={ArrowBack} alt="Back" />
-        </div>
-        <h5 className="xl:text-32 lg:text-28 text-26 font-bold">FAQ</h5>
-      </div>
-
+    <div className="flex flex-col gap-10 xl:gap-12">
+      <h2 className="xl:text-32 lg:text-28 text-26 font-bold">FAQ</h2>
       {/* Add New FAQ Section */}
-      <div className="flex gap-3 items-center mb-4 mt-8">
-        <InputField
-          placeholder="New Main Subject"
-          value={newSubject}
-          onChange={(e) => setNewSubject(e.target.value)}
-        />
-        <Button
-          loading={false}
-          type="submit"
-          btnText="Add Main Subject"
-          paddingX="20px"
-          textColor="#000000"
-          breakpoint="w-auto text-[12px] ml-[40px]"
-          onClick={handleAddSection}
-        />
-      </div>
-
-      {/* Display FAQ Sections */}
-      {faqSections.map((section, sectionIndex) => (
-        <div key={sectionIndex} className="mb-8">
-          <div className="flex gap-3 items-center mb-4">
-            <label className="text-black text-xs font-semibold block">
-              Main Subject
-            </label>
-            <InputField
-              placeholder="Main Subject"
-              value={section.name_en}
-              onChange={(e) => {
-                const updatedSections = [...faqSections];
-                updatedSections[sectionIndex].name_en = e.target.value;
-                setFaqSections(updatedSections);
-              }}
-            />
-            <Button
-              loading={false}
-              type="submit"
-              btnText="Remove Group"
-              paddingX="20px"
-              textColor="#000000"
-              breakpoint="w-auto text-[12px] ml-auto"
-              onClick={() => handleRemoveSection(sectionIndex)}
-            />
-          </div>
-
-          {/* Display FAQs in the Section */}
-          <div className="inline-block min-w-full rounded-lg overflow-hidden mb-[50px]">
-            <table className="min-w-full leading-normal">
-              <thead>
-                <tr>
-                <th className="px-[24px] py-[16px] text-left text-14 font-bold rounded-ss-2xl bg-[#cbcbcb] relative">
-                    Question (EN)
-                  <img
-                    src={countryflag}
-                    alt="Flag"
-                    className="cursor-pointer h-5 w-5 absolute right-4 top-5"
-                  />
-                  </th>
-                  <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold rounded-se-2xl relative">
-                    Answer (EN)
-                    <img
-                      src={countryflag2}
-                      alt="Flag"
-                      className="cursor-pointer h-5 w-5 absolute right-4 top-5"
-                    />
-                  </th>
-                </tr>
-              </thead>
-              <TableBody2
-                faqs={section.faqs}
-                onAddFaq={() => handleAddFaq(sectionIndex)}
-                onRemoveFaq={(faqIndex) => handleRemoveFaq(sectionIndex, faqIndex)}
-                onEditFaq={(faqIndex, updatedFaq) =>
-                  handleEditFaq(sectionIndex, faqIndex, updatedFaq)
-                }
-              />
-            </table>
-          </div>
+      <div className="w-full max-w-[848px] mx-auto">
+        <div className="flex gap-3 items-center mb-8">
+          <InputField
+            placeholder="New Main Subject"
+            value={newSubject}
+            onChange={(e) => setNewSubject(e.target.value)}
+          />
+          <Button
+            loading={false}
+            type="submit"
+            btnText="Add"
+            paddingX="20px"
+            textColor="#000000"
+            breakpoint="w-auto text-[12px]"
+            onClick={handleAddSection}
+          />
         </div>
-      ))}
 
-      {/* Save Button */}
-      <div className="mt-8">
+        {/* Display FAQ Sections */}
+        {faqSections.map((section, sectionIndex) => (
+          <div key={sectionIndex} className="mb-8">
+            <div className="flex gap-3 items-center mb-4">
+              <label className="text-black text-xs font-semibold block">
+                Main Subject
+              </label>
+              <InputField
+                placeholder="Main Subject"
+                value={section.name_en}
+                onChange={(e) => {
+                  const updatedSections = [...faqSections];
+                  updatedSections[sectionIndex].name_en = e.target.value;
+                  setFaqSections(updatedSections);
+                }}
+              />
+              <Button
+                loading={false}
+                type="submit"
+                btnText="Remove Group"
+                paddingX="20px"
+                textColor="#000000"
+                breakpoint="w-auto text-[12px] ml-auto"
+                onClick={() => handleRemoveSection(sectionIndex)}
+              />
+            </div>
+
+            {/* Display FAQs in the Section */}
+            <div className="inline-block min-w-full rounded-lg overflow-hidden">
+              <table className="min-w-full leading-normal">
+                <thead>
+                  <tr>
+                    <th className="px-[24px] py-[16px] text-left text-14 font-bold rounded-ss-2xl bg-[#cbcbcb] relative">
+                      Question (EN)
+                      <img
+                        src={countryflag}
+                        alt="Flag"
+                        className="cursor-pointer h-5 w-5 absolute right-4 top-5"
+                      />
+                    </th>
+                    <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold rounded-se-2xl relative">
+                      Answer (EN)
+                      <img
+                        src={countryflag2}
+                        alt="Flag"
+                        className="cursor-pointer h-5 w-5 absolute right-4 top-5"
+                      />
+                    </th>
+                  </tr>
+                </thead>
+                <TableBody2
+                  faqs={section.faqs}
+                  onAddFaq={() => handleAddFaq(sectionIndex)}
+                  onRemoveFaq={(faqIndex) =>
+                    handleRemoveFaq(sectionIndex, faqIndex)
+                  }
+                  onEditFaq={(faqIndex, updatedFaq) =>
+                    handleEditFaq(sectionIndex, faqIndex, updatedFaq)
+                  }
+                />
+              </table>
+            </div>
+          </div>
+        ))}
         <Button
           loading={false}
           type="submit"

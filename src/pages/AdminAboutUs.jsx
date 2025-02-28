@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { addAboutUs, getAboutUs } from "../redux/actions/dashboardActions";
 import ArrowBack from "../assets/DashboardImages/arrowback.svg";
 import Button from "../components/Common/Button";
-import { Formik, Form, Field } from "formik"; 
+import { Formik, Form, Field } from "formik";
 import Textarea from "../components/Common/Textarea";
 import countryflag from "../assets/DashboardImages/UK-Flag.svg";
 import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
@@ -14,7 +14,7 @@ export const AdminAboutUs = () => {
     description_nl: "",
   });
   const [loading, setLoading] = useState(false);
-  const [dataLoaded, setDataLoaded] = useState(false); 
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   useEffect(() => {
     const fetchAboutUs = async () => {
@@ -57,23 +57,17 @@ export const AdminAboutUs = () => {
   }
 
   return (
-    <div className="lg:pt-[50px] pt-[30px] xl:pb-[30px] lg:pb-[25px] pb-[20px] px-[20px] bg-[rgb(250,250,250)] h-full min-h-[86vh]">
-      <div className="flex gap-2 items-center mb-6">
-        <div className="cursor-pointer">
-          <img src={ArrowBack} alt="Back" />
-        </div>
-        <h5 className="xl:text-32 lg:text-28 text-26 font-bold">About Us</h5>
-      </div>
-
+    <div className="flex flex-col gap-10 xl:gap-12">
+      <h2 className="xl:text-32 lg:text-28 text-26 font-bold">About Us</h2>
       {/* Formik Wrapper */}
       <Formik
-        initialValues={initialData} 
+        initialValues={initialData}
         onSubmit={handleSubmit}
         enableReinitialize
       >
         {({ isSubmitting }) => (
-          <Form>
-            <div className="flex gap-8 pl-[54px] w-full">
+          <Form className="flex flex-col gap-10 max-w-[848px] mx-auto w-full">
+            <div className="flex gap-4">
               <div className="w-1/2 relative">
                 <Field
                   name="description_nl"
@@ -107,7 +101,7 @@ export const AdminAboutUs = () => {
               type="submit"
               btnText="Save"
               textColor="#000000"
-              breakpoint="xl:w-[354px] lg:w-[280px] w-[240px] mt-[40px] ml-[54px]"
+              breakpoint="w-full max-w-[280px]"
             />
           </Form>
         )}

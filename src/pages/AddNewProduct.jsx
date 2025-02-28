@@ -149,7 +149,18 @@ export const AddNewProduct = () => {
   }, []);
 
   return (
-    <div>
+    <>
+      <div className="flex gap-2 items-center">
+        <div
+          onClick={() => {
+            navigate("/products");
+          }}
+          className="cursor-pointer"
+        >
+          <img src={ArrowBack} alt="" />
+        </div>
+        <h5 className="xl:text-32 lg:text-28 text-26 font-bold">Products</h5>
+      </div>
       <Formik
         initialValues={{
           name_nl: "",
@@ -196,537 +207,509 @@ export const AddNewProduct = () => {
         }}
       >
         {({ values, setFieldValue, isSubmitting }) => (
-          <Form>
-            <div className="lg:pt-[50px] pt-[30px] xl:pb-[30px] lg:pb-[25px] pb-[20px] px-[20px] bg-[rgb(250,250,250)] h-full min-h-[86vh]">
-              <div className="flex gap-2 items-center">
-                <div
-                  onClick={() => {
-                    navigate("/products");
-                  }}
-                  className="cursor-pointer"
-                >
-                  <img src={ArrowBack} alt="" />
-                </div>
-                <h5 className="xl:text-32 lg:text-28 text-26 font-bold">
-                  Products
-                </h5>
-              </div>
-
-              <div className="myCard rounded-[4px] xl:mb-[30px] lg:mb-[25px] mb-[20px] mx-auto max-w-[912px]">
-                <div className="flex mb-4">
-                  <h5 className="xl:text-26 lg:text-24 text-22 font-semibold">
-                    Add New Product
-                  </h5>
-                </div>
-                <div className="formSec">
-                  <div className="flex gap-[20px] mb-[24px]">
-                    <div className="w-1/2">
-                      <div className="w-full md:mb-0 relative">
-                        <Field
-                          type="text"
-                          name="name_nl"
-                          id="name_nl"
-                          as="sele"
-                          placeholder="Naam"
-                          label="Naam"
-                          component={FormikField}
-                          flag={countryflag}
-                        />
-                      </div>
-                    </div>
-                    <div className="w-1/2">
-                      <div className="w-full md:mb-0 relative">
-                        <Field
-                          type="text"
-                          name="name_en"
-                          id="name_en"
-                          as="sele"
-                          placeholder="Name"
-                          label="Name"
-                          component={FormikField}
-                          flag={countryflag2}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex gap-[20px] mb-[25px]">
-                    <div className="w-full  md:mb-0">
-                      <label className="text-sm">Groep | Group</label>
-                      <Multiselect
-                        closeIcon="close"
-                        style={styleMultiSelect}
-                        name="group"
-                        id="group"
-                        options={getChoicesByName("group")}
-                        displayValue="name_en"
-                        selectedValues={values.group}
-                        onSelect={(selectedList) => {
-                          setFieldValue("group", selectedList);
-                        }}
-                        onRemove={(selectedList) =>
-                          setFieldValue("group", selectedList)
-                        }
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-[20px] mb-[24px]">
-                    <div className="w-full md:mb-0">
-                      <label className="text-sm">Soort | Type</label>
-                      <Multiselect
-                        closeIcon="close"
-                        style={styleMultiSelect}
-                        name="product_type"
-                        id="product_type"
-                        options={getChoicesByName("type")}
-                        displayValue="name_en"
-                        selectedValues={values.product_type}
-                        onSelect={(selectedList) => {
-                          setFieldValue("product_type", selectedList);
-                        }}
-                      />
-                    </div>
-                    <div className="w-full">
-                      <label className="text-sm">Materiaal | Material</label>
-                      <Multiselect
-                        closeIcon="close"
-                        style={styleMultiSelect}
-                        name="material"
-                        id="material"
-                        options={getChoicesByName("material")}
-                        displayValue="name_en"
-                        selectedValues={values.material}
-                        onSelect={(selectedList) => {
-                          setFieldValue("material", selectedList);
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-[20px] mb-[24px]">
-                    <div className="w-full md:mb-0">
-                      <label className="text-sm">Profiel | Profile</label>
-                      <Multiselect
-                        closeIcon="close"
-                        style={styleMultiSelect}
-                        name="profile"
-                        id="profile"
-                        options={getChoicesByName("profile")}
-                        displayValue="name_en"
-                        selectedValues={values.profile}
-                        onSelect={(selectedList) => {
-                          setFieldValue("profile", selectedList);
-                        }}
-                      />
-                    </div>
-                    <div className="w-full">
-                      <label className="text-sm">
-                        Duurzaamheidsklasse | Durability Class
-                      </label>
-                      <Multiselect
-                        closeIcon="close"
-                        style={styleMultiSelect}
-                        name="durability_class"
-                        id="durability_class"
-                        options={getChoicesByName("durability")}
-                        displayValue="name_en"
-                        selectedValues={values.durability_class}
-                        onSelect={(selectedList) => {
-                          setFieldValue("durability_class", selectedList);
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-[20px] mb-[24px]">
-                    <div className="w-full md:mb-0">
-                      <label className="text-sm">Kwaliteit | Quality</label>
-                      <Multiselect
-                        closeIcon="close"
-                        style={styleMultiSelect}
-                        name="quality"
-                        id="quality"
-                        options={getChoicesByName("quality")}
-                        displayValue="name_en"
-                        selectedValues={values.quality}
-                        onSelect={(selectedList) => {
-                          setFieldValue("quality", selectedList);
-                        }}
-                      />
-                    </div>
-                    <div className="w-full">
-                      <label className="text-sm">
-                        Toepassing | Application
-                      </label>
-                      <Multiselect
-                        closeIcon="close"
-                        style={styleMultiSelect}
-                        name="application"
-                        id="application"
-                        options={getChoicesByName("application")}
-                        displayValue="name_en"
-                        selectedValues={values.application}
-                        onSelect={(selectedList) => {
-                          setFieldValue("application", selectedList);
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div className="flex gap-[20px] mb-[24px]">
-                    <div className="w-1/2 inline-block rounded-lg overflow-hidden relative">
-                      <Field
-                        type="text"
-                        name="description_nl"
-                        id="description_nl"
-                        as="sele"
-                        placeholder="Omschrijving"
-                        label="Product omschrijving"
-                        component={Textarea}
-                      />
-                      <img
-                        src={countryflag}
-                        alt="Flag"
-                        className="cursor-pointer h-5 w-5 absolute right-4 top-8"
-                      />
-                    </div>
-                    <div className="w-1/2 inline-block rounded-lg overflow-hidden relative">
-                      <Field
-                        type="text"
-                        name="description_en"
-                        id="description_en"
-                        as="sele"
-                        placeholder="Description"
-                        label="Product Description"
-                        component={Textarea}
-                      />
-                      <img
-                        src={countryflag2}
-                        alt="Flag"
-                        className="cursor-pointer h-5 w-5 absolute right-4 top-8"
-                      />
-                    </div>
-                  </div>
-                  <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
-                  <div className="flex gap-[20px] mb-[24px]">
-                    <div className="w-1/2 md:mb-0">
-                      <Field
-                        type="number"
-                        min={0}
-                        postfix="mm"
-                        name="width"
-                        id="width"
-                        placeholder="Width"
-                        label="Breedte | Width"
-                        component={FormikField}
-                      />
-                    </div>
-                    <div className="w-1/2">
-                      <Field
-                        type="number"
-                        min={0}
-                        postfix="mm"
-                        name="thickness"
-                        id="thickness"
-                        placeholder="Thickness"
-                        label="Dikte | Thickness"
-                        component={FormikField}
-                      />
-                    </div>
-                  </div>
-                  <div className="flex gap-[20px] mb-[24px]">
-                    <div className="w-1/2">
-                      <Field
-                        type="number"
-                        min={0}
-                        postfix="kg"
-                        name="weight_per_m3"
-                        id="weight_per_m3"
-                        placeholder="1200"
-                        label="Gewicht per m3 | Weight per m3"
-                        component={FormikField}
-                      />
-                    </div>
-                    <div className="w-1/2 md:mb-0"></div>
-                  </div>
-
-                  <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
-                    <div className="inline-block min-w-full rounded-lg overflow-hidden">
-                      <table className="min-w-full leading-normal">
-                        <thead>
-                          <tr>
-                            <th className="px-[24px] py-[16px] text-left text-14 font-bold rounded-ss-2xl bg-[#cbcbcb]">
-                              Lengte | Lenght
-                            </th>
-                            <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold	">
-                              Full Price ex Vat
-                            </th>
-                            <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold	">
-                              Discount
-                            </th>
-                            <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold rounded-se-2xl	">
-                              Stock
-                            </th>
-
-                            <th className="px-[2px] py-[16px] text-end text-16 font-semibold">
-                              <button
-                                type="button"
-                                onClick={handleAddRow}
-                                className="flex justify-end"
-                              >
-                                <img src={PlusCircle} alt="Add" />
-                              </button>
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {lengths?.map((product, index) => (
-                            <tr key={index}>
-                              <td className="px-[24px] py-[16px] text-left text-16 font-normal border border-[#D9D9D9]">
-                                <input
-                                  type="number"
-                                  min={0}
-                                  value={product.length}
-                                  required
-                                  placeholder="300 cm"
-                                  onChange={(e) =>
-                                    handleChange(
-                                      index,
-                                      "length",
-                                      e.target.value
-                                    )
-                                  }
-                                  className="w-full outline-none bg-transparent"
-                                />
-                              </td>
-                              <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
-                                <input
-                                  required
-                                  type="number"
-                                  min={0}
-                                  value={product.full_price_ex_vat}
-                                  placeholder="30,000"
-                                  onChange={(e) =>
-                                    handleChange(
-                                      index,
-                                      "full_price_ex_vat",
-                                      e.target.value
-                                    )
-                                  }
-                                  className="w-full outline-none bg-transparent"
-                                />
-                              </td>
-                              <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
-                                <input
-                                  type="number"
-                                  min={0}
-                                  value={product.discount}
-                                  placeholder="12%"
-                                  onChange={(e) =>
-                                    handleChange(
-                                      index,
-                                      "discount",
-                                      e.target.value
-                                    )
-                                  }
-                                  className="w-full outline-none bg-transparent"
-                                />
-                              </td>
-                              <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
-                                <input
-                                  required
-                                  type="number"
-                                  min={0}
-                                  placeholder="140"
-                                  value={product.stock}
-                                  onChange={(e) =>
-                                    handleChange(index, "stock", e.target.value)
-                                  }
-                                  className="w-full outline-none bg-transparent"
-                                />
-                              </td>
-                              <td className="px-[2px] py-[16px] text-end">
-                                {lengths?.length > 1 ? (
-                                  <img
-                                    src={CrossCircle}
-                                    alt="Remove"
-                                    onClick={() => handleRemoveRow(index)}
-                                    className="cursor-pointer h-5 w-5"
-                                  />
-                                ) : (
-                                  ""
-                                )}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                  <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
-                  <div className="flex gap-5 items-center mb-[24px]">
-                    <img src={checkSquareIcon} alt="check square" />
-                    <p className="font-semibold text-lg text-[#111727]">
-                      Place Product on GoedGeplaatst via API
-                    </p>
-                  </div>
-                  <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
-                  <div className="flex gap-[20px] mb-[24px]">
-                    <div className="w-full md:mb-0 relative">
-                      <label
-                        htmlFor="images"
-                        className="text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
-                      >
-                        Product Image
-                        <br />
-                        <span className="text-[#6C7275] font-normal text-12">
-                          You can Upload Multiple Images of product in different
-                          dimensions
-                        </span>
-                      </label>
-                      <div className="flex gap-[14px] flex-wrap">
-                        <Dropzone
-                          width="215px"
-                          height="215px"
-                          onDrop={handleDrop}
-                        />
-                        <div className="w-full max-w-[215px] h-[215px] border border-dashed border-[#4C5B66] rounded-lg p-3 flex items-center justify-center">
-                          <input
-                            type="file"
-                            accept="image/jpeg, image/png, image/webp"
-                            style={{ display: "none" }}
-                            onChange={handleImageSelect} // Trigger when an image is selected
-                            id="image-upload"
-                          />
-                          <label
-                            htmlFor="image-upload"
-                            className="w-full h-full flex items-center justify-center cursor-pointer"
-                          >
-                            <img
-                              src={addImg}
-                              className="xl:w-[82px] lg:w-[70px] w-[60px]"
-                              alt="Add"
-                            />
-                          </label>
-                        </div>
-
-                        {/* Display uploaded images */}
-                        {images?.map((image, index) => (
-                          <div
-                            key={index}
-                            className="relative w-[215px] h-[215px] rounded-lg overflow-hidden"
-                          >
-                            <img
-                              src={image.preview}
-                              alt={`product-${index}`}
-                              className="w-full h-full object-cover"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => handleRemoveImage(index)}
-                              className="absolute top-2 right-2"
-                            >
-                              <XCircleIcon class="h-6 w-6 text-gray-500" />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                      {isErrors.images && (
-                        <p className="text-sm text-red mt-2">
-                          Please upload atleast 1 image
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-[20px] mb-[60px]">
-                    <h2 className="text-sm">Related Products</h2>
-                    <div className="w-full md:mb-0">
-                      <label className="text-sm">Product 1</label>
-                      <Select
-                        classNamePrefix="select"
-                        isClearable
-                        isSearchable
-                        name="product1"
-                        placeholder="Product 1"
-                        options={relatedProductsOptions}
-                        value={relatedProducts.product1}
-                        onChange={(value) => {
-                          setRelatedProducts((prev) => ({
-                            ...prev,
-                            product1: value,
-                          }));
-                        }}
-                      />
-                    </div>
-                    <div className="w-full">
-                      <label className="text-sm">Product 2</label>
-                      <Select
-                        classNamePrefix="select"
-                        isClearable
-                        isSearchable
-                        name="product2"
-                        placeholder="Product 2"
-                        options={relatedProductsOptions}
-                        value={relatedProducts.product2}
-                        onChange={(value) => {
-                          setRelatedProducts((prev) => ({
-                            ...prev,
-                            product2: value,
-                          }));
-                        }}
-                      />
-                    </div>
-                    <div className="w-full">
-                      <label className="text-sm">Product 3</label>
-                      <Select
-                        classNamePrefix="select"
-                        isClearable
-                        isSearchable
-                        name="product3"
-                        placeholder="Product 3"
-                        options={relatedProductsOptions}
-                        value={relatedProducts.product3}
-                        onChange={(value) => {
-                          setRelatedProducts((prev) => ({
-                            ...prev,
-                            product3: value,
-                          }));
-                        }}
-                      />
-                    </div>
-                    <div className="w-full">
-                      <label className="text-sm">Product 4</label>
-                      <Select
-                        classNamePrefix="select"
-                        isClearable
-                        isSearchable
-                        name="product4"
-                        placeholder="Product 4"
-                        options={relatedProductsOptions}
-                        value={relatedProducts.product4}
-                        onChange={(value) => {
-                          setRelatedProducts((prev) => ({
-                            ...prev,
-                            product4: value,
-                          }));
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Button
-                      loading={isSubmitting}
-                      type="submit"
-                      btnText="Add Product"
-                      paddingX="20px"
-                      textColor="#000000"
-                      breakpoint="xl:w-[354px] lg:w-[280px] w-[240px]"
+          <Form className="mx-auto max-w-[840px]">
+            <div className="flex mb-4">
+              <h5 className="xl:text-26 lg:text-24 text-22 font-semibold">
+                Add New Product
+              </h5>
+            </div>
+            <div className="formSec">
+              <div className="flex gap-[20px] mb-[24px]">
+                <div className="w-1/2">
+                  <div className="w-full md:mb-0 relative">
+                    <Field
+                      type="text"
+                      name="name_nl"
+                      id="name_nl"
+                      as="sele"
+                      placeholder="Naam"
+                      label="Naam"
+                      component={FormikField}
+                      flag={countryflag}
                     />
                   </div>
                 </div>
+                <div className="w-1/2">
+                  <div className="w-full md:mb-0 relative">
+                    <Field
+                      type="text"
+                      name="name_en"
+                      id="name_en"
+                      as="sele"
+                      placeholder="Name"
+                      label="Name"
+                      component={FormikField}
+                      flag={countryflag2}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-[20px] mb-[25px]">
+                <div className="w-full  md:mb-0">
+                  <label className="text-sm">Groep | Group</label>
+                  <Multiselect
+                    closeIcon="close"
+                    style={styleMultiSelect}
+                    name="group"
+                    id="group"
+                    options={getChoicesByName("group")}
+                    displayValue="name_en"
+                    selectedValues={values.group}
+                    onSelect={(selectedList) => {
+                      setFieldValue("group", selectedList);
+                    }}
+                    onRemove={(selectedList) =>
+                      setFieldValue("group", selectedList)
+                    }
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col gap-[20px] mb-[24px]">
+                <div className="w-full md:mb-0">
+                  <label className="text-sm">Soort | Type</label>
+                  <Multiselect
+                    closeIcon="close"
+                    style={styleMultiSelect}
+                    name="product_type"
+                    id="product_type"
+                    options={getChoicesByName("type")}
+                    displayValue="name_en"
+                    selectedValues={values.product_type}
+                    onSelect={(selectedList) => {
+                      setFieldValue("product_type", selectedList);
+                    }}
+                  />
+                </div>
+                <div className="w-full">
+                  <label className="text-sm">Materiaal | Material</label>
+                  <Multiselect
+                    closeIcon="close"
+                    style={styleMultiSelect}
+                    name="material"
+                    id="material"
+                    options={getChoicesByName("material")}
+                    displayValue="name_en"
+                    selectedValues={values.material}
+                    onSelect={(selectedList) => {
+                      setFieldValue("material", selectedList);
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col gap-[20px] mb-[24px]">
+                <div className="w-full md:mb-0">
+                  <label className="text-sm">Profiel | Profile</label>
+                  <Multiselect
+                    closeIcon="close"
+                    style={styleMultiSelect}
+                    name="profile"
+                    id="profile"
+                    options={getChoicesByName("profile")}
+                    displayValue="name_en"
+                    selectedValues={values.profile}
+                    onSelect={(selectedList) => {
+                      setFieldValue("profile", selectedList);
+                    }}
+                  />
+                </div>
+                <div className="w-full">
+                  <label className="text-sm">
+                    Duurzaamheidsklasse | Durability Class
+                  </label>
+                  <Multiselect
+                    closeIcon="close"
+                    style={styleMultiSelect}
+                    name="durability_class"
+                    id="durability_class"
+                    options={getChoicesByName("durability")}
+                    displayValue="name_en"
+                    selectedValues={values.durability_class}
+                    onSelect={(selectedList) => {
+                      setFieldValue("durability_class", selectedList);
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-[20px] mb-[24px]">
+                <div className="w-full md:mb-0">
+                  <label className="text-sm">Kwaliteit | Quality</label>
+                  <Multiselect
+                    closeIcon="close"
+                    style={styleMultiSelect}
+                    name="quality"
+                    id="quality"
+                    options={getChoicesByName("quality")}
+                    displayValue="name_en"
+                    selectedValues={values.quality}
+                    onSelect={(selectedList) => {
+                      setFieldValue("quality", selectedList);
+                    }}
+                  />
+                </div>
+                <div className="w-full">
+                  <label className="text-sm">Toepassing | Application</label>
+                  <Multiselect
+                    closeIcon="close"
+                    style={styleMultiSelect}
+                    name="application"
+                    id="application"
+                    options={getChoicesByName("application")}
+                    displayValue="name_en"
+                    selectedValues={values.application}
+                    onSelect={(selectedList) => {
+                      setFieldValue("application", selectedList);
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="flex gap-[20px] mb-[24px]">
+                <div className="w-1/2 inline-block rounded-lg overflow-hidden relative">
+                  <Field
+                    type="text"
+                    name="description_nl"
+                    id="description_nl"
+                    as="sele"
+                    placeholder="Omschrijving"
+                    label="Product omschrijving"
+                    component={Textarea}
+                  />
+                  <img
+                    src={countryflag}
+                    alt="Flag"
+                    className="cursor-pointer h-5 w-5 absolute right-4 top-8"
+                  />
+                </div>
+                <div className="w-1/2 inline-block rounded-lg overflow-hidden relative">
+                  <Field
+                    type="text"
+                    name="description_en"
+                    id="description_en"
+                    as="sele"
+                    placeholder="Description"
+                    label="Product Description"
+                    component={Textarea}
+                  />
+                  <img
+                    src={countryflag2}
+                    alt="Flag"
+                    className="cursor-pointer h-5 w-5 absolute right-4 top-8"
+                  />
+                </div>
+              </div>
+              <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
+              <div className="flex gap-[20px] mb-[24px]">
+                <div className="w-1/2 md:mb-0">
+                  <Field
+                    type="number"
+                    min={0}
+                    postfix="mm"
+                    name="width"
+                    id="width"
+                    placeholder="Width"
+                    label="Breedte | Width"
+                    component={FormikField}
+                  />
+                </div>
+                <div className="w-1/2">
+                  <Field
+                    type="number"
+                    min={0}
+                    postfix="mm"
+                    name="thickness"
+                    id="thickness"
+                    placeholder="Thickness"
+                    label="Dikte | Thickness"
+                    component={FormikField}
+                  />
+                </div>
+              </div>
+              <div className="flex gap-[20px] mb-[24px]">
+                <div className="w-1/2">
+                  <Field
+                    type="number"
+                    min={0}
+                    postfix="kg"
+                    name="weight_per_m3"
+                    id="weight_per_m3"
+                    placeholder="1200"
+                    label="Gewicht per m3 | Weight per m3"
+                    component={FormikField}
+                  />
+                </div>
+                <div className="w-1/2 md:mb-0"></div>
+              </div>
+
+              <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
+                <div className="inline-block min-w-full rounded-lg overflow-hidden">
+                  <table className="min-w-full leading-normal">
+                    <thead>
+                      <tr>
+                        <th className="px-[24px] py-[16px] text-left text-14 font-bold rounded-ss-2xl bg-[#cbcbcb]">
+                          Lengte | Lenght
+                        </th>
+                        <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold	">
+                          Full Price ex Vat
+                        </th>
+                        <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold	">
+                          Discount
+                        </th>
+                        <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold rounded-se-2xl	">
+                          Stock
+                        </th>
+
+                        <th className="px-[2px] py-[16px] text-end text-16 font-semibold">
+                          <button
+                            type="button"
+                            onClick={handleAddRow}
+                            className="flex justify-end"
+                          >
+                            <img src={PlusCircle} alt="Add" />
+                          </button>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {lengths?.map((product, index) => (
+                        <tr key={index}>
+                          <td className="px-[24px] py-[16px] text-left text-16 font-normal border border-[#D9D9D9]">
+                            <input
+                              type="number"
+                              min={0}
+                              value={product.length}
+                              required
+                              placeholder="300 cm"
+                              onChange={(e) =>
+                                handleChange(index, "length", e.target.value)
+                              }
+                              className="w-full outline-none bg-transparent"
+                            />
+                          </td>
+                          <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
+                            <input
+                              required
+                              type="number"
+                              min={0}
+                              value={product.full_price_ex_vat}
+                              placeholder="30,000"
+                              onChange={(e) =>
+                                handleChange(
+                                  index,
+                                  "full_price_ex_vat",
+                                  e.target.value
+                                )
+                              }
+                              className="w-full outline-none bg-transparent"
+                            />
+                          </td>
+                          <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
+                            <input
+                              type="number"
+                              min={0}
+                              value={product.discount}
+                              placeholder="12%"
+                              onChange={(e) =>
+                                handleChange(index, "discount", e.target.value)
+                              }
+                              className="w-full outline-none bg-transparent"
+                            />
+                          </td>
+                          <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
+                            <input
+                              required
+                              type="number"
+                              min={0}
+                              placeholder="140"
+                              value={product.stock}
+                              onChange={(e) =>
+                                handleChange(index, "stock", e.target.value)
+                              }
+                              className="w-full outline-none bg-transparent"
+                            />
+                          </td>
+                          <td className="px-[2px] py-[16px] text-end">
+                            {lengths?.length > 1 ? (
+                              <img
+                                src={CrossCircle}
+                                alt="Remove"
+                                onClick={() => handleRemoveRow(index)}
+                                className="cursor-pointer h-5 w-5"
+                              />
+                            ) : (
+                              ""
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
+              <div className="flex gap-5 items-center mb-[24px]">
+                <img src={checkSquareIcon} alt="check square" />
+                <p className="font-semibold text-lg text-[#111727]">
+                  Place Product on GoedGeplaatst via API
+                </p>
+              </div>
+              <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
+              <div className="flex gap-[20px] mb-[24px]">
+                <div className="w-full md:mb-0 relative">
+                  <label
+                    htmlFor="images"
+                    className="text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
+                  >
+                    Product Image
+                    <br />
+                    <span className="text-[#6C7275] font-normal text-12">
+                      You can Upload Multiple Images of product in different
+                      dimensions
+                    </span>
+                  </label>
+                  <div className="flex gap-[14px] flex-wrap">
+                    <Dropzone
+                      width="215px"
+                      height="215px"
+                      onDrop={handleDrop}
+                    />
+                    <div className="w-full max-w-[215px] h-[215px] border border-dashed border-[#4C5B66] rounded-lg p-3 flex items-center justify-center">
+                      <input
+                        type="file"
+                        accept="image/jpeg, image/png, image/webp"
+                        style={{ display: "none" }}
+                        onChange={handleImageSelect} // Trigger when an image is selected
+                        id="image-upload"
+                      />
+                      <label
+                        htmlFor="image-upload"
+                        className="w-full h-full flex items-center justify-center cursor-pointer"
+                      >
+                        <img
+                          src={addImg}
+                          className="xl:w-[82px] lg:w-[70px] w-[60px]"
+                          alt="Add"
+                        />
+                      </label>
+                    </div>
+
+                    {/* Display uploaded images */}
+                    {images?.map((image, index) => (
+                      <div
+                        key={index}
+                        className="relative w-[215px] h-[215px] rounded-lg overflow-hidden"
+                      >
+                        <img
+                          src={image.preview}
+                          alt={`product-${index}`}
+                          className="w-full h-full object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage(index)}
+                          className="absolute top-2 right-2"
+                        >
+                          <XCircleIcon class="h-6 w-6 text-gray-500" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  {isErrors.images && (
+                    <p className="text-sm text-red mt-2">
+                      Please upload atleast 1 image
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-col gap-[20px] mb-[60px]">
+                <h2 className="text-sm">Related Products</h2>
+                <div className="w-full md:mb-0">
+                  <label className="text-sm">Product 1</label>
+                  <Select
+                    classNamePrefix="select"
+                    isClearable
+                    isSearchable
+                    name="product1"
+                    placeholder="Product 1"
+                    options={relatedProductsOptions}
+                    value={relatedProducts.product1}
+                    onChange={(value) => {
+                      setRelatedProducts((prev) => ({
+                        ...prev,
+                        product1: value,
+                      }));
+                    }}
+                  />
+                </div>
+                <div className="w-full">
+                  <label className="text-sm">Product 2</label>
+                  <Select
+                    classNamePrefix="select"
+                    isClearable
+                    isSearchable
+                    name="product2"
+                    placeholder="Product 2"
+                    options={relatedProductsOptions}
+                    value={relatedProducts.product2}
+                    onChange={(value) => {
+                      setRelatedProducts((prev) => ({
+                        ...prev,
+                        product2: value,
+                      }));
+                    }}
+                  />
+                </div>
+                <div className="w-full">
+                  <label className="text-sm">Product 3</label>
+                  <Select
+                    classNamePrefix="select"
+                    isClearable
+                    isSearchable
+                    name="product3"
+                    placeholder="Product 3"
+                    options={relatedProductsOptions}
+                    value={relatedProducts.product3}
+                    onChange={(value) => {
+                      setRelatedProducts((prev) => ({
+                        ...prev,
+                        product3: value,
+                      }));
+                    }}
+                  />
+                </div>
+                <div className="w-full">
+                  <label className="text-sm">Product 4</label>
+                  <Select
+                    classNamePrefix="select"
+                    isClearable
+                    isSearchable
+                    name="product4"
+                    placeholder="Product 4"
+                    options={relatedProductsOptions}
+                    value={relatedProducts.product4}
+                    onChange={(value) => {
+                      setRelatedProducts((prev) => ({
+                        ...prev,
+                        product4: value,
+                      }));
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Button
+                  loading={isSubmitting}
+                  type="submit"
+                  btnText="Add Product"
+                  paddingX="20px"
+                  textColor="#000000"
+                  breakpoint="xl:w-[354px] lg:w-[280px] w-[240px]"
+                />
               </div>
             </div>
           </Form>
         )}
       </Formik>
-    </div>
+    </>
   );
 };

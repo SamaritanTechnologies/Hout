@@ -59,55 +59,50 @@ export const TermsAndConditions = () => {
   };
 
   return (
-    <div className="lg:pt-[50px] pt-[30px] xl:pb-[30px] lg:pb-[25px] pb-[20px] px-[20px] bg-[rgb(250,250,250)] h-full min-h-[86vh]">
-      <div className="flex gap-2 items-center mb-6">
-        <div className="cursor-pointer">
-          <img src={ArrowBack} alt="Back" />
+    <div className="flex flex-col gap-12 xl:gap-12">
+      <h2 className="xl:text-32 lg:text-28 text-26 font-bold">
+        Terms and Conditions
+      </h2>
+      <div className="flex flex-col gap-10 w-full max-w-[848px] mx-auto">
+        <div className="flex gap-4">
+          <div className="w-1/2 relative">
+            <RichTextEditor
+              label="Algemene Voorwaarden"
+              name="description_nl"
+              value={termsCondition.description_nl} // Ensure the editor is controlled
+              onChange={(value) => handleChange("description_nl", value)}
+            />
+            <img
+              src={countryflag}
+              alt="Flag"
+              className="cursor-pointer h-5 w-5 absolute right-[6px] top-[60px]"
+            />
+          </div>
+
+          <div className="w-1/2 relative">
+            <RichTextEditor
+              label="Terms and Conditions"
+              name="description_en"
+              value={termsCondition.description_en} // Ensure the editor is controlled
+              onChange={(value) => handleChange("description_en", value)}
+            />
+            <img
+              src={countryflag2}
+              alt="Flag"
+              className="cursor-pointer h-5 w-5 absolute right-[6px] top-[60px]"
+            />
+          </div>
         </div>
-        <h5 className="xl:text-32 lg:text-28 text-26 font-bold">
-          Terms and Conditions
-        </h5>
+        <Button
+          loading={loading}
+          type="submit"
+          btnText="Save"
+          paddingX="20px"
+          textColor="#000000"
+          breakpoint="w-full max-w-[280px]"
+          onClick={handleSave}
+        />
       </div>
-
-      <div className="flex gap-8 max-w-[1000px] mx-auto w-full">
-        <div className="w-1/2 relative">
-          <RichTextEditor
-            label="Algemene Voorwaarden"
-            name="description_nl"
-            value={termsCondition.description_nl} // Ensure the editor is controlled
-            onChange={(value) => handleChange("description_nl", value)}
-          />
-          <img
-            src={countryflag}
-            alt="Flag"
-            className="cursor-pointer h-5 w-5 absolute right-[6px] top-[60px]"
-          />
-        </div>
-
-        <div className="w-1/2 relative">
-          <RichTextEditor
-            label="Terms and Conditions"
-            name="description_en"
-            value={termsCondition.description_en} // Ensure the editor is controlled
-            onChange={(value) => handleChange("description_en", value)}
-          />
-          <img
-            src={countryflag2}
-            alt="Flag"
-            className="cursor-pointer h-5 w-5 absolute right-[6px] top-[60px]"
-          />
-        </div>
-      </div>
-
-      <Button
-        loading={loading}
-        type="submit"
-        btnText="Save"
-        paddingX="20px"
-        textColor="#000000"
-        breakpoint="xl:w-[354px] lg:w-[280px] w-[240px] ml-[54px] mt-[100px]"
-        onClick={handleSave}
-      />
     </div>
   );
 };

@@ -58,54 +58,50 @@ export const AdminPrivacyPolicy = () => {
   };
 
   return (
-    <div className="lg:pt-[50px] pt-[30px] xl:pb-[30px] lg:pb-[25px] pb-[20px] px-[20px] bg-[rgb(250,250,250)] h-full min-h-[86vh]">
-      <div className="flex gap-2 items-center mb-6">
-        <div className="cursor-pointer">
-          <img src={ArrowBack} alt="Back" />
+    <div className="flex flex-col gap-10 xl:gap-12">
+      <h2 className="xl:text-32 lg:text-28 text-26 font-bold">
+        Privacy Policy
+      </h2>
+      <div className="flex flex-col max-w-[848px] mx-auto gap-10">
+        <div className="flex gap-4">
+          <div className="w-1/2 relative">
+            <RichTextEditor
+              name="description_nl"
+              label="Privacy Policy"
+              value={policy.description_nl}
+              onChange={(value) => handleChange("description_nl", value)}
+            />
+            <img
+              src={countryflag}
+              alt="Flag"
+              className="cursor-pointer h-5 w-5 absolute right-[6px] top-[60px]"
+            />
+          </div>
+          <div className="w-1/2 relative">
+            <RichTextEditor
+              name="description_en"
+              label="Privacy Policy"
+              value={policy.description_en}
+              onChange={(value) => handleChange("description_en", value)}
+            />
+            <img
+              src={countryflag2}
+              alt="Flag"
+              className="cursor-pointer h-5 w-5 absolute right-[6px] top-[60px]"
+            />
+          </div>
         </div>
-        <h5 className="xl:text-32 lg:text-28 text-26 font-bold">
-          Privacy Policy
-        </h5>
-      </div>
 
-      <div className="flex gap-8 pl-[54px] w-full">
-        <div className="w-1/2 relative">
-          <RichTextEditor
-            name="description_nl"
-            label="Privacy Policy"
-            value={policy.description_nl}
-            onChange={(value) => handleChange("description_nl", value)}
-          />
-          <img
-            src={countryflag}
-            alt="Flag"
-            className="cursor-pointer h-5 w-5 absolute right-[6px] top-[60px]"
-          />
-        </div>
-        <div className="w-1/2 relative">
-          <RichTextEditor
-            name="description_en"
-            label="Privacy Policy"
-            value={policy.description_en}
-            onChange={(value) => handleChange("description_en", value)}
-          />
-          <img
-            src={countryflag2}
-            alt="Flag"
-            className="cursor-pointer h-5 w-5 absolute right-[6px] top-[60px]"
-          />
-        </div>
+        <Button
+          loading={loading}
+          type="submit"
+          btnText="Save"
+          paddingX="20px"
+          textColor="#000000"
+          breakpoint="w-full max-w-[280px]"
+          onClick={handleSave}
+        />
       </div>
-
-      <Button
-        loading={loading}
-        type="submit"
-        btnText="Save"
-        paddingX="20px"
-        textColor="#000000"
-        breakpoint="xl:w-[354px] lg:w-[280px] w-[240px] ml-[54px] mt-[100px]"
-        onClick={handleSave}
-      />
     </div>
   );
 };
