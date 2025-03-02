@@ -1,6 +1,7 @@
 export { About } from "./About";
 export { Landingpage } from "./Landingpage";
 export { Dashboard } from "./Dashboard";
+export { VatValue } from "./VatValue";
 export { Inbox } from "./Inbox";
 export { OrderList } from "./OrderList";
 export { Products } from "./Products";
@@ -12,15 +13,15 @@ export { AddToCart } from "./AddToCart";
 export { UserProfile } from "./UserProfile";
 export { CustomizedProduct } from "./CustomizedProduct";
 export { AddNewProduct } from "./AddNewProduct";
-export {UpdateProduct} from "./UpdateProduct"
+export { UpdateProduct } from "./UpdateProduct";
 export { MyAccount } from "./MyAccount";
-export {ProductOptions} from "./ProductOptions";
-export {HomePageImage} from "./HomePageImage";
-export {HomePageProducts} from "./HomePageProducts";
-export {OurValues} from "./OurValues";
-export {OurAssortment} from "./OurAssortment";
-export {WhyHoutTotaal} from "./WhyHoutTotaal";
-export {TermsAndConditions} from "./TermsAndConditions";
-export {AdminPrivacyPolicy} from "./AdminPrivacyPolicy";
-export {AdminAboutUs} from "./AdminAboutUs"
-export {AdminFAQ} from "./AdminFAQ";
+export { ProductOptions } from "./ProductOptions";
+export { HomePageImage } from "./HomePageImage";
+export { HomePageProducts } from "./HomePageProducts";
+export { OurValues } from "./OurValues";
+export { OurAssortment } from "./OurAssortment";
+export { WhyHoutTotaal } from "./WhyHoutTotaal";
+export { TermsAndConditions } from "./TermsAndConditions";
+export { AdminPrivacyPolicy } from "./AdminPrivacyPolicy";
+export { AdminAboutUs } from "./AdminAboutUs";
+export { AdminFAQ } from "./AdminFAQ";

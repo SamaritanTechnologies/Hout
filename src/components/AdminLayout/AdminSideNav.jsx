@@ -9,6 +9,7 @@ const AdminSidenav = () => {
 
   const [navs, setNavs] = useState([
     { name: "Dashboard", link: "/dashboard", active: true },
+    { name: "Add VAT", link: "/vat-value", active: false },
     { name: "Products", link: "/products", active: false },
     { name: "Product Options", link: "/product-options", active: false },
     { name: "Homepage Image", link: "/homepage-image", active: false },

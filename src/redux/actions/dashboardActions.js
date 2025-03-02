@@ -1,7 +1,7 @@
 import { axiosWithCredentials } from "../../providers";
 
 export const getStats = async () => {
-  const response = await axiosWithCredentials.get(`/dashboard`);
+  const response = await axiosWithCredentials.get(`/dashboard/`);
   return response.data;
 };
 export const getProducts = async () => {

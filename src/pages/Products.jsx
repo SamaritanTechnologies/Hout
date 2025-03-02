@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import editImg from "../assets/DashboardImages/edit.svg";
 import dltImg from "../assets/DashboardImages/delete.svg";
-import filterImg from "../assets/DashboardImages/filter-funnel.svg";
+import { FunnelIcon } from "@heroicons/react/24/outline";
 import Button from "../components/Common/Button";
 import DropdownFilter from "../components/Dashboard/DropdownFilter";
 import { useNavigate } from "react-router-dom";
@@ -101,7 +101,7 @@ export const Products = () => {
 
     return (
       <div className="relative">
-        <img src={filterImg} alt="Filter" />
+        <FunnelIcon className="h-6 w-6 text-gray-500" />
         {hasSelectedOptions && (
           <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-yellow-400" />
         )}
@@ -131,7 +131,7 @@ export const Products = () => {
       <div className="max-w-screen mx-auto overflow-x-auto">
         <table className="table-auto productsTable w-full min-w-[1154px] min-h-52">
           <thead>
-            <tr className="bg-[#F1F4F9] border-t border-b border-[#CACACA33] rounded-tl-lg rounded-tr-lg">
+            <tr className="bg-[#F1F4F9] border-b border-[#CACACA33] rounded-tl-lg rounded-tr-lg">
               <th className="px-[10px] py-[12px] text-sm font-semibold rounded-tl-lg">
                 Product ID
               </th>

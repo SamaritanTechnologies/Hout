@@ -17,7 +17,7 @@ export const PrivacyPolicy = () => {
       setData(DOMPurify.sanitize(data.description_en));
     } catch (error) {
       console.error("Error fetching privacy policy", error);
-      setData("<p class='text-center'>Failed to load Privacy Policy.</p>");
+      setData("<p className='text-center'>Failed to load Privacy Policy.</p>");
     }
   };
 

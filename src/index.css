@@ -249,6 +249,7 @@ button:focus-visible {
 }
 .dashboard-content {
   max-height: calc(100vh - 90px);
+  min-height: calc(100vh - 90px);
 }
 .sideBarMain {
   max-height: calc(100vh - 102px);

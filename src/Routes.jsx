@@ -34,6 +34,7 @@ import {
   AdminPrivacyPolicy,
   AdminFAQ,
   AdminAboutUs,
+  VatValue,
 
 } from "./pages";
 
@@ -64,6 +65,7 @@ function Routes() {
 
         <Route element={<AdminRoutes />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/vat-value" element={<VatValue />} />
           <Route path="/products" element={<Products />} />
           <Route path="/product-options" element={<ProductOptions />} />
           <Route path="/homepage-image" element={<HomePageImage />} />

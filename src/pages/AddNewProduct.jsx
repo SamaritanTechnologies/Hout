@@ -608,7 +608,7 @@ export const AddNewProduct = () => {
                           onClick={() => handleRemoveImage(index)}
                           className="absolute top-2 right-2"
                         >
-                          <XCircleIcon class="h-6 w-6 text-gray-500" />
+                          <XCircleIcon className="h-6 w-6 text-gray-500" />
                         </button>
                       </div>
                     ))}

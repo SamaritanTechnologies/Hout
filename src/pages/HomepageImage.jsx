@@ -102,7 +102,7 @@ export const HomePageImage = () => {
                 onClick={handleRemoveImage}
                 className="absolute top-2 right-2"
               >
-                <XCircleIcon class="h-6 w-6 text-[#FBC700]" />
+                <XCircleIcon className="h-6 w-6 text-[#FBC700]" />
               </button>
             </div>
           ) : existingImage ? (
@@ -117,7 +117,7 @@ export const HomePageImage = () => {
                 onClick={handleRemoveImage}
                 className="absolute top-2 right-2"
               >
-                <XCircleIcon class="h-6 w-6 text-[#FBC700]" />
+                <XCircleIcon className="h-6 w-6 text-[#FBC700]" />
               </button>
             </div>
           ) : (

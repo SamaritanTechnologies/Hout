@@ -14,7 +14,7 @@ export const TermsConditions = () => {
         setData(DOMPurify.sanitize(data.description_en));
       } catch (error) {
         console.error("Error fetching terms and conditions", error);
-        setData("<p class='text-center'>Failed to load terms and conditions.</p>");
+        setData("<p className='text-center'>Failed to load terms and conditions.</p>");
       }
     };
 

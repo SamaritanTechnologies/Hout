@@ -44,7 +44,7 @@ const HeaderSection = () => {
     >
       <div className="justify-between flex items-center w-full max-w-[1240px] mx-auto">
         <div className="menu-cons xl:hidden lg:hidden" onClick={toggleMenu}>
-          <Bars3Icon class="h-6 w-6 text-gray-500" />
+          <Bars3Icon className="h-6 w-6 text-gray-500" />
         </div>
 
         <div
@@ -56,7 +56,7 @@ const HeaderSection = () => {
             className="close-menu xl:hidden lg:hidden ml-auto p-4"
             onClick={toggleMenu}
           >
-            <XMarkIcon class="h-6 w-6 text-gray-500" />
+            <XMarkIcon className="h-6 w-6 text-gray-500" />
           </div>
           {role === "admin" && (
             <span

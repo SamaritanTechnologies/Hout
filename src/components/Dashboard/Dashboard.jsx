@@ -13,7 +13,7 @@ const Dashboard = () => {
               <div className="max-w-md">
                 <div className="relative flex items-center w-[80%] h-12 rounded-full focus-within:shadow-lg bg-white overflow-hidden border-inherit	border-[0.5px]">
                   <div className="grid place-items-center h-full w-12 text-gray-300 bg-[#fefbeb]  min-w-[50px]">
-                    <MagnifyingGlassIcon class="h-6 w-6 text-[#00000080]" />
+                    <MagnifyingGlassIcon className="h-6 w-6 text-[#00000080]" />
                   </div>
 
                   <input

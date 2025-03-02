@@ -256,10 +256,6 @@ input[type="radio"]:checked + .box-content {
 }
 
 /* web screens css fk end */
-
-/* .open-sidebar {
-  overflow: hidden;
-} */
 .number-box {
   width: 43px;
   height: 36px;
