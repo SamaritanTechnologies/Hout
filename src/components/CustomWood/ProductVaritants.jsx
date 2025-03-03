@@ -57,7 +57,7 @@ const ProductVaritants = ({ variants }) => {
                         </span>
                       </div>
                       <div className="text-14 text-[#111727] font-medium">
-                        ${variant.discounted_price_inclusive_vat}
+                        ${variant.discounted_price_in_vat}
                       </div>
                     </div>
                   </td>
@@ -78,48 +78,48 @@ const ProductVaritants = ({ variants }) => {
                     </div>
                   </td>
                   <td className="p-[10px]">
-  {variant.stock != 0 && (
-    <div className="flex items-center gap-2">
-      <button
-        className="px-2 py-1 border border-gray-300 rounded-md hover:bg-gray-100"
-        onClick={() => {
-          const input = document.getElementById(`quantity-${variant.id}`);
-          let value = parseInt(input.value, 10);
-          if (value > 0) {
-            input.value = value - 1;
-          }
-        }}
-      >
-        -
-      </button>
-      <input
-        id={`quantity-${variant.id}`}
-        type="number"
-        min={0}
-        max={variant.stock}
-        defaultValue={0}
-        className="w-[60px] text-center border border-gray-300 rounded-md p-1"
-        onChange={(e) => {
-          const value = parseInt(e.target.value, 10);
-          if (value < 0) e.target.value = 0;
-          if (value > variant.stock) e.target.value = variant.stock;
-        }}
-      />
-      <button
-        className="px-2 py-1 border border-gray-300 rounded-md hover:bg-gray-100"
-        onClick={() => {
-          const input = document.getElementById(`quantity-${variant.id}`);
-          let value = parseInt(input.value, 10);
-          if (value < variant.stock) {
-            input.value = value + 1;
-          }
-        }}
-      >
-        +
-      </button>
-    </div>
-  )}
-</td>
+                    {variant.stock != 0 && (
+                      <div className="flex items-center gap-2">
+                        <button
+                          className="px-2 py-1 border border-gray-300 rounded-md hover:bg-gray-100"
+                          onClick={() => {
+                            const input = document.getElementById(`quantity-${variant.id}`);
+                            let value = parseInt(input.value, 10);
+                            if (value > 0) {
+                              input.value = value - 1;
+                            }
+                          }}
+                        >
+                          -
+                        </button>
+                        <input
+                          id={`quantity-${variant.id}`}
+                          type="number"
+                          min={0}
+                          max={variant.stock}
+                          defaultValue={0}
+                          className="w-[60px] text-center border border-gray-300 rounded-md p-1"
+                          onChange={(e) => {
+                            const value = parseInt(e.target.value, 10);
+                            if (value < 0) e.target.value = 0;
+                            if (value > variant.stock) e.target.value = variant.stock;
+                          }}
+                        />
+                        <button
+                          className="px-2 py-1 border border-gray-300 rounded-md hover:bg-gray-100"
+                          onClick={() => {
+                            const input = document.getElementById(`quantity-${variant.id}`);
+                            let value = parseInt(input.value, 10);
+                            if (value < variant.stock) {
+                              input.value = value + 1;
+                            }
+                          }}
+                        >
+                          +
+                        </button>
+                      </div>
+                    )}
+                  </td>
                   <td className="p-[10px]">
                     {variant.stock == 0 ? (
                       <span className="text-14 text-[#111727]">

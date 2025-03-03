@@ -2,15 +2,14 @@ import React, { useEffect, useState } from "react";
 import rightArrow from "../assets/shopPage/rightArrow.svg";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import filter from "../assets/shopPage/filter.svg";
-import ProductsSection from "../components/ShopComponents/ProductsSection";
+import ProductsList from "../components/ShopComponents/ProductsList";
 import Filters from "../components/ShopComponents/Filters";
 import QualitySection from "../components/Common/QualitySection";
 import Switch from "../components/Common/Switch";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 export const ShopPage = () => {
-  const navigate = useNavigate();
   const { productCategories } = useSelector((state) => state.admin);
   const categories = [
     "Group",
@@ -40,22 +39,22 @@ export const ShopPage = () => {
 
   return (
     <>
-      <div className="shop">
-        <section className="about flex justify-center items-center">
+      <nav aria-label="breadcrumb" className="shop">
+        <div className="about flex justify-center items-center">
           <div className="w-[320px] m-auto text-center bg-transparentGray text-white py-[35px] rounded-lg">
-            <div className="text-white text-48 font-medium">Shop</div>
-            <div className="text-white flex items-center justify-center gap-x-3 pt-5">
-              <div className="flex items-center gap-x-3 font-medium">
-                <p className="cursor-pointer" onClick={() => navigate("/")}>
-                  Home
-                </p>
+            <h1 className="text-white text-48 font-medium">Shop</h1>
+            <ol className="flex items-center justify-center gap-x-3 pt-5 font-medium text-white">
+              <li>
+                <Link to="/" className="cursor-pointer">Home</Link>
+              </li>
+              <li>
                 <img src={rightArrow} alt="right arrow" />
-              </div>
-              <div className="font-light">Shop</div>
-            </div>
+              </li>
+              <li className="font-light">Shop</li>
+            </ol>
           </div>
-        </section>
-      </div>
+        </div>
+      </nav>
 
       <section className="flex justify-between sm:flex-col xs:flex-col items-center py-[36px] font-poppins bg-[#F4F5F7] xl:px-[80px] lg:px-[50px] md:px-[40px]">
         <div className="flex items-center gap-x-6 md:gap-x-5 xs:gap-x-4 font-footer1">
@@ -75,7 +74,7 @@ export const ShopPage = () => {
           </div>
         </div>
 
-        <section className="sm:pt-4 xs:pt-4">
+        <div className="sm:pt-4 xs:pt-4">
           <div className="flex gap-x-6 md:gap-x-5 items-center font-footer1">
             <div className="pops md:text-14 sm:text-14 xs:text-12">Show Prices</div>
             <div className="pops md:text-14 sm:text-14 xs:text-12">Incl. VAT</div>
@@ -84,7 +83,7 @@ export const ShopPage = () => {
             </div>
             <div className="pops md:text-14 sm:text-14 xs:text-12">Excl. VAT</div>
           </div>
-        </section>
+        </div>
       </section>
 
       <section className="flex pb-[200px] md:flex-col sm:flex-col xs:flex-col">
@@ -99,12 +98,10 @@ export const ShopPage = () => {
           <Filters categories={categoryArray} />
         </div>
 
-        <ProductsSection />
+        <ProductsList />
       </section>
 
-      <section>
-        <QualitySection />
-      </section>
+      <QualitySection />
     </>
   );
 };

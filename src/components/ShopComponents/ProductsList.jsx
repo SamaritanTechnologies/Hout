@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getProducts } from "../../redux/actions/userActions";
 import ProductCard from "../Common/ProductCard";
 
-const ProductsSection = () => {
+const ProductsList = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -46,4 +46,4 @@ const ProductsSection = () => {
   );
 };
 
-export default ProductsSection;
+export default ProductsList;
