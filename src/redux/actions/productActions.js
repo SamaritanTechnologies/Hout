@@ -1,6 +1,16 @@
 import { toast } from "react-toastify";
 import { axiosWithCredentials } from "../../providers";
 
+export const addVatRate = async (payload) => {
+  const response = await axiosWithCredentials.post(`/vat-rate/`,payload);
+  return response.data;
+}
+
+export const getVatRate = async () => {
+  const response = await axiosWithCredentials.get("/vat-rate");
+    return response.data;
+}
+
 export const getProducts = async (filters = {}) => {
   try {
     // Construct query string from filters

@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
-import productHeart from "../../assets/LandingPageImages/products/productHeart.svg";
-import addToCartt from "../../assets/LandingPageImages/products/addToCart.svg";
 import { getProducts } from "../../redux/actions/userActions";
-import { useLocation, useNavigate } from "react-router-dom";
+import ProductCard from "../Common/ProductCard";
 
 const ProductsSection = () => {
-  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -33,54 +30,15 @@ const ProductsSection = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-7 w-full pt-24 max-w-[915px] mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-7 w-full pt-24 max-w-[915px] mx-auto px-4">
         {products.map((product) => {
           const minimumPrice = getMinimumPriceObject(product.lengths);
           return (
-            <div className="relative" key={product.id}>
-              <div className="w-12 h-12 rounded-full flex items-center justify-center bg-[#E97171] text-white absolute top-6 right-6 text-xs">
-                -{minimumPrice.discount}%
-              </div>
-              <div
-                className="cursor-pointer"
-                onClick={() => navigate(`/porduct-detail/${product.id}`)}
-              >
-                <img
-                  src={product.images[0].image}
-                  className="w-full object-cover h-full sm:h-[310px] lg:h-[310px] xl:h-[310px]"
-                />
-              </div>
-              <section className="bg-[#F4F5F7] pb-4 px-4">
-                <div className="font-semibold  text-24 pt-[15px]">
-                  {product.name_en}
-                </div>
-                <div className=" font-medium  text-16  text-gray2 pt-[15px]">
-                  {product.description_en}
-                </div>
-
-                <section className="flex gap-x-3 pt-[15px] pb-[20px] md:gap-x-2">
-                  <div>$ {minimumPrice.discounted_price}</div>
-                  <div className="text-gray2 line-through">
-                    $ {minimumPrice.full_price_ex_vat}
-                  </div>
-                </section>
-                <section className="flex gap-x-4 items-center justify-between">
-                  <div className="border-2 cursor-pointer border-[#898989] px-2 flex items-center justify-center py-3  gap-x-3  add-cart-btn md:text-[12px] lg:text-[12px]">
-                    {/* <img src={item.addToCart} className="bg-red" /> */}
-                    <img src={addToCartt} />
-                    Add to Cart
-                  </div>
-                  <div
-                    className="cursor-pointer"
-                    onClick={() => {
-                      handleAddToWishlist(item.product_id);
-                    }}
-                  >
-                    <img src={productHeart} />
-                  </div>
-                </section>
-              </section>
-            </div>
+            <ProductCard
+              key={product.id}
+              product={product}
+              minimumPrice={minimumPrice}
+            />
           );
         })}
       </div>

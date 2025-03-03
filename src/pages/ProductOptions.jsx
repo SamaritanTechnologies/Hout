@@ -25,7 +25,9 @@ export const ProductOptions = () => {
     "Application",
   ];
 
+  const [selectedChoices, setSelectedChoices] = useState();
   const { productCategories } = useSelector((state) => state.admin);
+  console.log(productCategories,"hhhhhhhh")
   const [categoryData, setCategoryData] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
