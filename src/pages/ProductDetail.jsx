@@ -243,14 +243,8 @@ export const ProductDetail = () => {
           </section>
         </section>
       </section>
-
-      <div>
-        <ProductVaritants variants={productDetail?.lengths}/>
-      </div>
-
-      <div>
-        <RelatedProduct relatedProducts={productDetail?.related_products}/>
-      </div>
+      <ProductVaritants variants={productDetail?.lengths}/>
+      <RelatedProduct relatedProducts={productDetail?.related_products}/>
     </>
   );
 };

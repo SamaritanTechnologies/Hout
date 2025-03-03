@@ -20,41 +20,29 @@ const Filters = ({ categories, filterCheck }) => {
     );
   };
 
-  const handleCheck = (category, choice) => {
-    setSelectedFilters((prev) => {
-      const updatedCategory = prev[category]?.includes(choice)
-        ? prev[category].filter((item) => item !== choice)
-        : [...(prev[category] || []), choice];
-
-      return { ...prev, [category]: updatedCategory };
-    });
-
-    filterCheck(choice);
-  };
-
   return (
     <>
-      {Object.keys(categories).map((category) => (
+      {categories?.map((category) => (
         <Accordion
-          key={category}
-          expanded={expanded.includes(category)}
-          onChange={handleAccordionChange(category)}
+          key={category.name}
+          expanded={expanded.includes(category.name)}
+          onChange={handleAccordionChange(category.name)}
         >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography>{category}</Typography>
+            <Typography>{category?.name}</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <FormGroup>
-              {categories[category]?.choices?.map((choice) => (
+              {category?.choices?.map((choice) => (
                 <FormControlLabel
-                  key={choice}
+                  key={choice.id}
                   control={
                     <Checkbox
-                      checked={selectedFilters[category]?.includes(choice)}
-                      onChange={() => handleCheck(category, choice)}
+                      checked=""
+                      onChange=""
                     />
                   }
-                  label={choice}
+                  label={choice.name_en}
                 />
               ))}
             </FormGroup>

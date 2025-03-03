@@ -12,8 +12,6 @@ import { useSelector } from "react-redux";
 export const ShopPage = () => {
   const navigate = useNavigate();
   const { productCategories } = useSelector((state) => state.admin);
-  console.log(productCategories,"hhhhhhhh")
-  // Define filter categories
   const categories = [
     "Group",
     "Type",
@@ -23,10 +21,7 @@ export const ShopPage = () => {
     "Quality",
     "Application",
   ];
-  
-  // Store categories from API
   const [categoryData, setCategoryData] = useState({});
-  
   useEffect(() => {
     const initialData = categories.reduce((acc, category) => {
       const foundCategory = productCategories?.find(
@@ -35,29 +30,13 @@ export const ShopPage = () => {
       acc[category] = foundCategory || { name: category, choices: [] };
       return acc;
     }, {});
-    
+
     setCategoryData(initialData);
   }, [productCategories]);
-
-  console.log(categoryData, "categoryData");
-
-  const [state, setState] = useState({
-    openfilter: true,
-    selectedFilter: "",
-  });
+  const categoryArray = Object.values(categoryData);
 
   const [filterDrawer, setFilterDrawer] = useState(false);
-
   const filterToggler = () => setFilterDrawer((prev) => !prev);
-  const toggleFilterPanel = () =>
-    setState((prev) => ({ ...prev, openfilter: !prev.openfilter }));
-
-  const handleFilterCheck = (item) => {
-    setState((prev) => ({
-      ...prev,
-      selectedFilter: item.checked ? item.filter : "",
-    }));
-  };
 
   return (
     <>
@@ -117,7 +96,7 @@ export const ShopPage = () => {
           <div className="close-menu xl:hidden lg:hidden flex justify-end" onClick={filterToggler}>
             <XMarkIcon className="h-6 w-6 text-gray-500" />
           </div>
-          <Filters categories={categoryData} filterCheck={handleFilterCheck} />
+          <Filters categories={categoryArray} />
         </div>
 
         <ProductsSection />

@@ -7,9 +7,11 @@ const ProductCard = ({ product, minimumPrice }) => {
 
   return (
     <div className="relative bg-[#F4F5F7]">
-      <div className="w-12 h-12 rounded-full flex items-center justify-center bg-[#E97171] text-white absolute top-6 right-6 text-xs">
-        -{minimumPrice.discount}%
-      </div>
+      {minimumPrice.discount > 0 && (
+        <div className="w-12 h-12 rounded-full flex items-center justify-center bg-[#E97171] text-white absolute top-6 right-6 text-xs">
+          -{minimumPrice.discount}%
+        </div>
+      )}
       <div
         className="cursor-pointer h-[250px] xl:h-[310px]"
         onClick={() => navigate(`/porduct-detail/${product.id}`)}
@@ -30,9 +32,11 @@ const ProductCard = ({ product, minimumPrice }) => {
           <span className="text-xl font-semibold text-[#111727]">
             $ {minimumPrice.discounted_price}
           </span>
-          <span className="text-[#B0B0B0] line-throug self-center">
-            $ {minimumPrice.full_price_ex_vat}
-          </span>
+          {minimumPrice.discount > 0 && (
+            <span className="text-[#B0B0B0] line-through self-center">
+              $ {minimumPrice.full_price_ex_vat}
+            </span>
+          )}
         </div>
         <div className="flex gap-x-4 items-center justify-between">
           <div className="border-2 cursor-pointer border-[#898989] px-2 flex items-center justify-center py-3  gap-x-3  add-cart-btn md:text-[12px] lg:text-[12px]">

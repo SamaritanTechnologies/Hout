@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "../Common/Button";
 import cartIcon from "../../assets/customWoodPage/cart-icon.svg";
+import InputField from "../Common/InputField";
 const ProductVaritants = ({ variants }) => {
   return (
     <>
@@ -68,124 +69,74 @@ const ProductVaritants = ({ variants }) => {
                         </span>
                       ) : (
                         <div className="flex flex-col gap-3">
-                          <span className="text-sm font-semibold text-[#888888]">Inventory quantity</span>
+                          <span className="text-sm font-semibold text-[#888888]">
+                            Inventory quantity
+                          </span>
                           <span className="text-sm">{variant.stock}</span>
                         </div>
                       )}
                     </div>
                   </td>
                   <td className="p-[10px]">
-                    <div className="number-box flex items-center justify-center text-[#111727]">
-                      0
-                    </div>
-                  </td>
+  {variant.stock != 0 && (
+    <div className="flex items-center gap-2">
+      <button
+        className="px-2 py-1 border border-gray-300 rounded-md hover:bg-gray-100"
+        onClick={() => {
+          const input = document.getElementById(`quantity-${variant.id}`);
+          let value = parseInt(input.value, 10);
+          if (value > 0) {
+            input.value = value - 1;
+          }
+        }}
+      >
+        -
+      </button>
+      <input
+        id={`quantity-${variant.id}`}
+        type="number"
+        min={0}
+        max={variant.stock}
+        defaultValue={0}
+        className="w-[60px] text-center border border-gray-300 rounded-md p-1"
+        onChange={(e) => {
+          const value = parseInt(e.target.value, 10);
+          if (value < 0) e.target.value = 0;
+          if (value > variant.stock) e.target.value = variant.stock;
+        }}
+      />
+      <button
+        className="px-2 py-1 border border-gray-300 rounded-md hover:bg-gray-100"
+        onClick={() => {
+          const input = document.getElementById(`quantity-${variant.id}`);
+          let value = parseInt(input.value, 10);
+          if (value < variant.stock) {
+            input.value = value + 1;
+          }
+        }}
+      >
+        +
+      </button>
+    </div>
+  )}
+</td>
                   <td className="p-[10px]">
-                    <button className="cart-button flex items-center justify-center">
-                      <img src={cartIcon} alt="" srcset="" />
-                    </button>
+                    {variant.stock == 0 ? (
+                      <span className="text-14 text-[#111727]">
+                        Out of stock
+                      </span>
+                    ) : (
+                      <button className="cart-button flex items-center justify-center">
+                        <img src={cartIcon} alt="" srcset="" />
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
-              <tr>
-                <td className="p-[10px]">
-                  <div className="flex flex-col gap-[2px]">
-                    <div className="font-bold text-14 text-[#111727]">
-                      {" "}
-                      Variant
-                    </div>
-                    <div className="text-14 text-[#111727]">100cm</div>
-                  </div>
-                </td>
-                <td className="p-[10px]">
-                  <div className="flex flex-col gap-[2px]">
-                    <div className="font-bold text-14 text-[#111727]">
-                      Article number
-                    </div>
-                    <div className="text-14 text-[#111727]">BEZ2098_C_100</div>
-                  </div>
-                </td>
-                <td className="p-[10px]">
-                  <div className="flex flex-col gap-[3px]">
-                    <div className="font-bold text-14 text-[#111727]">
-                      Price{" "}
-                      <span className="text-[#888888] text-[11px] font-normal">
-                        Inc BTW
-                      </span>
-                    </div>
-                    <div className="text-14 text-[#111727] font-medium">
-                      €10,91
-                    </div>
-                  </div>
-                </td>
-                <td className="p-[10px]">
-                  <div className="text-14 text-[#111727]">
-                    If you are interested, please contact us
-                  </div>
-                </td>
-                <td className="p-[10px]">
-                  <div className="number-box flex items-center justify-center text-[#111727]">
-                    0
-                  </div>
-                </td>
-                <td className="p-[10px]">
-                  <div className="text-14 text-[#111727]">Out of stock</div>
-                </td>
-              </tr>
-              <tr>
-                <td className="p-[10px]">
-                  <div className="flex flex-col gap-[2px]">
-                    <div className="font-bold text-14 text-[#111727]">
-                      {" "}
-                      Variant
-                    </div>
-                    <div className="text-14 text-[#111727]">100cm</div>
-                  </div>
-                </td>
-                <td className="p-[10px]">
-                  <div className="flex flex-col gap-[2px]">
-                    <div className="font-bold text-14 text-[#111727]">
-                      Article number
-                    </div>
-                    <div className="text-14 text-[#111727]">BEZ2098_C_100</div>
-                  </div>
-                </td>
-                <td className="p-[10px]">
-                  <div className="flex flex-col gap-[3px]">
-                    <div className="font-bold text-14 text-[#111727]">
-                      Price{" "}
-                      <span className="text-[#888888] text-[11px] font-normal">
-                        Inc BTW
-                      </span>
-                    </div>
-                    <div className="text-14 text-[#111727] font-medium">
-                      €10,91
-                    </div>
-                  </div>
-                </td>
-                <td className="p-[10px]">
-                  <div className="text-14 text-[#111727]">
-                    If you are interested, please contact us
-                  </div>
-                </td>
-                <td className="p-[10px]">
-                  <div className="number-box flex items-center justify-center text-[#111727]">
-                    0
-                  </div>
-                </td>
-                <td className="p-[10px]">
-                  <button className="cart-button flex items-center justify-center">
-                    <img src={cartIcon} alt="" srcset="" />
-                  </button>
-                </td>
-              </tr>
             </tbody>
           </table>
         </div>
       </section>
-      <div className="flex justify-center pt-[50px]">
-        {" "}
-        <Button btnText="Add to Cart" paddingX="72px" py="21px" />
-      </div>
     </>
   );
 };
