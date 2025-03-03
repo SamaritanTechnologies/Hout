@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { axiosWithCredentials } from "../../providers";
+import { axiosApi, axiosWithCredentials } from "../../providers";
 
 export const addVatRate = async (payload) => {
   const response = await axiosWithCredentials.post(`/vat-rate/`,payload);
@@ -64,7 +64,7 @@ export const deleteWishList = async (values) => {
 
 export const getProductCategories = async () => {
   try {
-    const response = await axiosWithCredentials.get(
+    const response = await axiosApi.get(
       `/product/category-choices/`
     );
     return response.data;
