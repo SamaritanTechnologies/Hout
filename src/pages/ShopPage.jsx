@@ -21,6 +21,11 @@ export const ShopPage = () => {
     "Application",
   ];
   const [categoryData, setCategoryData] = useState({});
+  const [filters, setFilters] = useState({
+    selectedFilters: {},
+    price: [0, 1000],
+  });
+
   useEffect(() => {
     const initialData = categories.reduce((acc, category) => {
       const foundCategory = productCategories?.find(
@@ -32,10 +37,16 @@ export const ShopPage = () => {
 
     setCategoryData(initialData);
   }, [productCategories]);
+
   const categoryArray = Object.values(categoryData);
 
   const [filterDrawer, setFilterDrawer] = useState(false);
   const filterToggler = () => setFilterDrawer((prev) => !prev);
+
+  // Handle filter changes from the Filters component
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
+  };
 
   return (
     <>
@@ -95,10 +106,10 @@ export const ShopPage = () => {
           <div className="close-menu xl:hidden lg:hidden flex justify-end" onClick={filterToggler}>
             <XMarkIcon className="h-6 w-6 text-gray-500" />
           </div>
-          <Filters categories={categoryArray} />
+          <Filters categories={categoryArray} onFilterChange={handleFilterChange} />
         </div>
 
-        <ProductsList />
+        <ProductsList filters={filters} />
       </section>
 
       <QualitySection />

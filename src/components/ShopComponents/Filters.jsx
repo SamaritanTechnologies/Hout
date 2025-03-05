@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Checkbox,
@@ -10,17 +10,20 @@ import {
   AccordionDetails,
 } from "@mui/material";
 import ReactSlider from "react-slider";
-import { json } from "react-router-dom";
 
-const Filters = ({ categories, filterCheck }) => {
+const Filters = ({ categories, onFilterChange }) => {
   const [expanded, setExpanded] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState({});
+  const [price, setPrice] = useState([0, 1000]);
+
+  // Handle accordion expansion
   const handleAccordionChange = (panel) => (event, isExpanded) => {
     setExpanded((prev) =>
       isExpanded ? [...prev, panel] : prev.filter((p) => p !== panel)
     );
   };
 
+  // Handle checkbox changes for categories
   const handleCheckboxChange = (category) => (choiceId) => {
     setSelectedFilters((prevFilters) => {
       const updatedFilters = { ...prevFilters };
@@ -45,11 +48,15 @@ const Filters = ({ categories, filterCheck }) => {
     });
   };
 
-  const [price, setPrice] = useState([50, 100]);
-
+  // Handle price range changes
   const handlePriceChange = (values) => {
     setPrice(values);
   };
+
+  // Notify parent component when filters change
+  useEffect(() => {
+    onFilterChange({ selectedFilters, price });
+  }, [selectedFilters, price]);
 
   return (
     <>
@@ -105,7 +112,7 @@ const Filters = ({ categories, filterCheck }) => {
               ></div>
             )}
             min={0}
-            max={200}
+            max={1000}
             defaultValue={price}
             value={price}
             onChange={handlePriceChange}

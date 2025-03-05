@@ -213,6 +213,10 @@ button:focus-visible {
 .example-track.example-track-2 {
   background: #fff;
 }
+.ql-container.ql-snow {
+  max-height: 400px;
+  overflow-y: auto;
+}
 @media only screen and (max-width: 767.98px) {
   footer .input-field {
     border-radius: 8px;

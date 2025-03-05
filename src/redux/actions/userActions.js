@@ -56,8 +56,8 @@ export const getFaqs = async () => {
   return response.data;
 }
 
-export const getProducts = async () => {
-  const response = await axiosApi.get(`/product`);
+export const getProducts = async (queryParams = "") => {
+  const response = await axiosApi.get(`/product/?${queryParams}`);
   return response.data;
 }
 

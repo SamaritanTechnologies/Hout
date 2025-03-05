@@ -2,13 +2,26 @@ import React, { useEffect, useState } from "react";
 import { getProducts } from "../../redux/actions/userActions";
 import ProductCard from "../Common/ProductCard";
 
-const ProductsList = () => {
+const ProductsList = ({ filters }) => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const data = await getProducts();
+        const queryParams = new URLSearchParams();
+
+        // Add price range
+        queryParams.append("min_price", filters.price[0]);
+        queryParams.append("max_price", filters.price[1]);
+
+        // Add selected filters
+        Object.entries(filters.selectedFilters).forEach(([category, data]) => {
+          data.choices.forEach((choiceId) => {
+            queryParams.append(category.toLowerCase(), choiceId);
+          });
+        });
+
+        const data = await getProducts(queryParams.toString());
         setProducts(data.results);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -16,7 +29,7 @@ const ProductsList = () => {
     };
 
     fetchProduct();
-  }, []);
+  }, [filters]);
 
   const getMinimumPriceObject = (lengths) => {
     if (!lengths || lengths.length === 0) return "N/A";
