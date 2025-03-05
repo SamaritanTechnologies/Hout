@@ -6,11 +6,12 @@ import ProductsList from "../components/ShopComponents/ProductsList";
 import Filters from "../components/ShopComponents/Filters";
 import QualitySection from "../components/Common/QualitySection";
 import Switch from "../components/Common/Switch";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 export const ShopPage = () => {
   const { productCategories } = useSelector((state) => state.admin);
+
   const categories = [
     "Group",
     "Type",
@@ -21,9 +22,11 @@ export const ShopPage = () => {
     "Application",
   ];
   const [categoryData, setCategoryData] = useState({});
+  const [includeVAT, setIncludeVAT] = useState(false);
   const [filters, setFilters] = useState({
     selectedFilters: {},
     price: [0, 1000],
+    includeVAT: false,
   });
 
   useEffect(() => {
@@ -48,6 +51,11 @@ export const ShopPage = () => {
     setFilters(newFilters);
   };
 
+  const handleVATToggle = () => {
+    setIncludeVAT((prev) => !prev);
+    setFilters((prev) => ({ ...prev, includeVAT: !prev.includeVAT }));
+  };
+
   return (
     <>
       <nav aria-label="breadcrumb" className="shop">
@@ -56,7 +64,9 @@ export const ShopPage = () => {
             <h1 className="text-white text-48 font-medium">Shop</h1>
             <ol className="flex items-center justify-center gap-x-3 pt-5 font-medium text-white">
               <li>
-                <Link to="/" className="cursor-pointer">Home</Link>
+                <Link to="/" className="cursor-pointer">
+                  Home
+                </Link>
               </li>
               <li>
                 <img src={rightArrow} alt="right arrow" />
@@ -90,14 +100,14 @@ export const ShopPage = () => {
             <div className="pops md:text-14 sm:text-14 xs:text-12">Show Prices</div>
             <div className="pops md:text-14 sm:text-14 xs:text-12">Incl. VAT</div>
             <div className="recPasswrd">
-              <Switch optional />
+              <Switch optional checked={includeVAT} onChange={handleVATToggle} />
             </div>
             <div className="pops md:text-14 sm:text-14 xs:text-12">Excl. VAT</div>
           </div>
         </div>
       </section>
 
-      <section className="flex pb-[200px] md:flex-col sm:flex-col xs:flex-col">
+      <section className="flex items-start pb-[200px] md:flex-col sm:flex-col xs:flex-col">
         <div
           className={`${
             filterDrawer ? "open-filter-drawer" : ""

@@ -16,10 +16,20 @@ const ProductsList = ({ filters }) => {
 
         // Add selected filters
         Object.entries(filters.selectedFilters).forEach(([category, data]) => {
-          data.choices.forEach((choiceId) => {
-            queryParams.append(category.toLowerCase(), choiceId);
+          let paramName =
+            category.toLowerCase() === "type"
+              ? "product_type"
+              : category.toLowerCase() === "durability"
+              ? "durability_class"
+              : category.toLowerCase();
+
+          data.choices?.forEach((choiceId) => {
+            queryParams.append(paramName, choiceId);
           });
         });
+
+        // Add VAT selection
+        queryParams.append("use_inclusive_prices", filters.includeVAT);
 
         const data = await getProducts(queryParams.toString());
         setProducts(data.results);

@@ -6,7 +6,7 @@ const ProductCard = ({ product, minimumPrice }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="relative bg-[#F4F5F7]">
+    <div className="relative bg-[#F4F5F7] h-auto">
       {minimumPrice.discount > 0 && (
         <div className="w-12 h-12 rounded-full flex items-center justify-center bg-[#E97171] text-white absolute top-6 right-6 text-xs">
           -{minimumPrice.discount}%
