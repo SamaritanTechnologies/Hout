@@ -29,7 +29,7 @@ const ProductsList = ({ filters, currentPage, pageSize, setTotalItems }) => {
         });
 
         // Add VAT selection
-        queryParams.append("use_inclusive_prices", filters.includeVAT);
+        queryParams.append("use_inclusive_prices", filters.includeVAT || false);
 
         // Add pagination parameters
         queryParams.append("page", currentPage + 1); // API uses 1-based indexing

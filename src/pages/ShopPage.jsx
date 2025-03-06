@@ -9,6 +9,7 @@ import Switch from "../components/Common/Switch";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Pagination from "../components/Common/Pagination";
+import { PRODUCT_MAX_PRICE, PRODUCT_MIN_PRICE, PRODUCT_PAGE_SIZE } from "../utils/const";
 
 export const ShopPage = () => {
   const { productCategories } = useSelector((state) => state.admin);
@@ -26,11 +27,11 @@ export const ShopPage = () => {
   const [includeVAT, setIncludeVAT] = useState(false);
   const [filters, setFilters] = useState({
     selectedFilters: {},
-    price: [0, 1000],
+    price: [PRODUCT_MIN_PRICE, PRODUCT_MAX_PRICE],
     includeVAT: false,
   });
   const [currentPage, setCurrentPage] = useState(0);
-  const [pageSize, setPageSize] = useState(9);
+  const pageSize = PRODUCT_PAGE_SIZE;
   const [totalItems, setTotalItems] = useState(0);
 
   useEffect(() => {

@@ -10,11 +10,12 @@ import {
   AccordionDetails,
 } from "@mui/material";
 import ReactSlider from "react-slider";
+import { PRODUCT_MAX_PRICE, PRODUCT_MIN_PRICE } from "../../utils/const";
 
 const Filters = ({ categories, onFilterChange }) => {
   const [expanded, setExpanded] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState({});
-  const [price, setPrice] = useState([0, 1000]);
+  const [price, setPrice] = useState([PRODUCT_MIN_PRICE, PRODUCT_MAX_PRICE]);
 
   // Handle accordion expansion
   const handleAccordionChange = (panel) => (event, isExpanded) => {
