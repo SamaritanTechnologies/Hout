@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import dummyPic from "../assets/no-user.webp";
-import profilebtn from "../assets/myAccount/profileBtn.svg";
 import Account from "../components/Address/Account";
 import AddressCard from "../components/Address/AddressCard";
 import OrderHistory from "../components/Address/OrderHistory";
@@ -9,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { setAccessToken } from "../providers";
 import { uploadProfilePic } from "../redux/actions/profileActions";
 import { toast } from "react-toastify";
+import { CameraIcon } from "@heroicons/react/24/outline";
 
 export const MyAccount = () => {
   const location = useLocation();
@@ -75,73 +75,67 @@ export const MyAccount = () => {
 
   return (
     <>
-      <section className="px-40 xs:px-8 sm:px-10 md:px-10 lg:px-12 my-20 xs:my-8 sm:my-10 md:my-13 lg:my-14">
-        <h1 className="text-[48px] xs:text-[20px] sm:text-[25px] md:text-[30px] lg:text-[35px] text-center text-[#000000] mb-[80px] xs:mb-[25px] sm:mb-[30px] md:mb-[50px] lg:mb-[70px] pt-4">
+      <section className="max-w-[1120px] mx-auto my-8 lg:my-16 xl:my-20 px-4">
+        <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center text-[#000000] font-semibold mb-8 md:mb-12 lg:mb-16 xl:mb-20">
           My Account
         </h1>
-        <div className="flex xs:flex-col xs:items-center sm:flex-col sm:items-center mb-32 justify-center">
-          <div className="px-[16px] py-[40px] bg-[#F3F5F7] w-[262px] xs:w-[100%] sm:w-[100%] flex justify-center items-center flex-col rounded-[8px] mr-[79px] xs:mr-0 sm:mr-0 md:mr-7 h-[fit-content]">
-            <div className="w-[80px] h-[80px] rounded-[50%] relative">
-              <img
-                src={getImageSrc()}
-                className="w-[100%] rounded-full"
-                alt="Profile"
-              />
-              <input
-                type="file"
-                id="profileImageInput"
-                className="hidden"
-                accept="image/*"
-                onChange={handleFileChange} // You will need to implement this function
-              />
-              <label
-                htmlFor="profileImageInput"
-                className="w-[30px] h-[30px] absolute bottom-0 right-0 cursor-pointer"
-              >
-                <span>
-                  <img
-                    src={profilebtn}
-                    className="w-[100%] rounded-full"
-                    alt="Edit Profile"
-                  />
-                </span>
-              </label>
-            </div>
-
-            <h1 className="text-[16px] text-[#000000] text-center mt-[8px] mb-[48px] font-semibold">
-              {userrName}
-            </h1>
-
-            {data.map((item) => {
-              const isSelected =
-                selectedComponent?.type?.name === item.component?.type?.name;
-              return (
-                <div
-                  key={item.id}
-                  className={`w-[100%] cursor-pointer ${
-                    isSelected ? "border-b-[#FBC700]" : ""
-                  }`}
-                  onClick={() => {
-                    if (item.name === "LogOut") {
-                      handleLogout();
-                    } else {
-                      setSelectedComponent(item.component);
-                    }
-                  }}
+        <div className="flex flex-col lg:flex-row xl:flex-col items-start mb-32 justify-center">
+          <div className="px-4 py-10 bg-[#F3F5F7] w-full max-w-[262px] flex flex-col gap-10 items-center rounded-lg">
+            <div className="flex flex-col gap-2">
+              <div className="relative">
+                <img
+                  src={getImageSrc()}
+                  className="w-20 h-20 rounded-full border border-[#F3F5F7]"
+                  alt="Profile"
+                />
+                <input
+                  type="file"
+                  id="profileImageInput"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
+                <label
+                  htmlFor="profileImageInput"
+                  className="flex items-center justify-center w-[30px] h-[30px] bg-[#111727] border border-white rounded-full absolute bottom-0 right-0 cursor-pointer"
                 >
-                  <h1
-                    className={`text-[16px] pb-[8px] mb-[12px] ${
-                      isSelected ? "text-[#000000]" : "text-[#7b7b7b]"
+                  <CameraIcon class="h-4 w-4 text-white" />
+                </label>
+              </div>
+              <h1 className="text-[#111727] font-semibold">{userrName}</h1>
+            </div>
+            <div className="flex flex-col gap-3 w-full">
+              {data.map((item) => {
+                const isSelected =
+                  selectedComponent?.type?.name === item.component?.type?.name;
+                return (
+                  <div
+                    key={item.id}
+                    className={`py-2 cursor-pointer ${
+                      isSelected ? "border-b border-[#111727]" : ""
                     }`}
+                    onClick={() => {
+                      if (item.name === "LogOut") {
+                        handleLogout();
+                      } else {
+                        setSelectedComponent(item.component);
+                      }
+                    }}
                   >
-                    {item.name}
-                  </h1>
-                </div>
-              );
-            })}
+                    <h1
+                      className={`font-semibold  ${
+                        isSelected ? "text-[#111727]" : "text-[#7b7b7b]"
+                      }`}
+                    >
+                      {item.name}
+                    </h1>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
-          <div className="w-[100%]">{selectedComponent}</div>
+          <div className="flex-grow max-w-[740px] px-4 mx-auto">{selectedComponent}</div>
         </div>
       </section>
     </>
