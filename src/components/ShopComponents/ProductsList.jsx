@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getProducts } from "../../redux/actions/userActions";
 import ProductCard from "../Common/ProductCard";
 
-const ProductsList = ({ filters }) => {
+const ProductsList = ({ filters, currentPage, pageSize, setTotalItems }) => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -31,15 +31,20 @@ const ProductsList = ({ filters }) => {
         // Add VAT selection
         queryParams.append("use_inclusive_prices", filters.includeVAT);
 
+        // Add pagination parameters
+        queryParams.append("page", currentPage + 1); // API uses 1-based indexing
+        queryParams.append("page_size", pageSize);
+
         const data = await getProducts(queryParams.toString());
         setProducts(data.results);
+        setTotalItems(data.count); // Update total items from API
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     };
 
     fetchProduct();
-  }, [filters]);
+  }, [filters, currentPage, pageSize, setTotalItems]);
 
   const getMinimumPriceObject = (lengths) => {
     if (!lengths || lengths.length === 0) return "N/A";

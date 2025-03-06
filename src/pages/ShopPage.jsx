@@ -8,6 +8,7 @@ import QualitySection from "../components/Common/QualitySection";
 import Switch from "../components/Common/Switch";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Pagination from "../components/Common/Pagination";
 
 export const ShopPage = () => {
   const { productCategories } = useSelector((state) => state.admin);
@@ -28,6 +29,9 @@ export const ShopPage = () => {
     price: [0, 1000],
     includeVAT: false,
   });
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageSize, setPageSize] = useState(9);
+  const [totalItems, setTotalItems] = useState(0);
 
   useEffect(() => {
     const initialData = categories.reduce((acc, category) => {
@@ -46,14 +50,18 @@ export const ShopPage = () => {
   const [filterDrawer, setFilterDrawer] = useState(false);
   const filterToggler = () => setFilterDrawer((prev) => !prev);
 
-  // Handle filter changes from the Filters component
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
+    setCurrentPage(0);
   };
 
   const handleVATToggle = () => {
     setIncludeVAT((prev) => !prev);
     setFilters((prev) => ({ ...prev, includeVAT: !prev.includeVAT }));
+  };
+
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected);
   };
 
   return (
@@ -91,7 +99,9 @@ export const ShopPage = () => {
             </h4>
           </div>
           <div className="pops md:text-14 sm:text-14 xs:text-12">
-            Showing 1-16 of 32 results
+            Showing {currentPage * pageSize + 1}-
+            {Math.min((currentPage + 1) * pageSize, totalItems)} of {totalItems}{" "}
+            results
           </div>
         </div>
 
@@ -118,8 +128,19 @@ export const ShopPage = () => {
           </div>
           <Filters categories={categoryArray} onFilterChange={handleFilterChange} />
         </div>
-
-        <ProductsList filters={filters} />
+        <div className="flex flex-col w-full gap-10">
+          <ProductsList
+            filters={filters}
+            currentPage={currentPage}
+            pageSize={pageSize}
+            setTotalItems={setTotalItems}
+          />
+          <Pagination
+            pageCount={Math.ceil(totalItems / pageSize)} 
+            onPageChange={handlePageChange}
+            forcePage={currentPage}
+          />
+        </div>
       </section>
 
       <QualitySection />
