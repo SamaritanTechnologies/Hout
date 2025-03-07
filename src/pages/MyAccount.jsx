@@ -79,8 +79,8 @@ export const MyAccount = () => {
         <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center text-[#000000] font-semibold mb-8 md:mb-12 lg:mb-16 xl:mb-20">
           My Account
         </h1>
-        <div className="flex flex-col lg:flex-row xl:flex-col items-start mb-32 justify-center">
-          <div className="px-4 py-10 bg-[#F3F5F7] w-full max-w-[262px] flex flex-col gap-10 items-center rounded-lg">
+        <div className="flex flex-col lg:flex-row xl:flex-row items-start mb-32 justify-center">
+          <div className="px-4 py-10 bg-[#F3F5F7] w-full max-w-[500px] lg:max-w-[262px] xl:max-w-[262px] flex flex-col gap-10 items-center rounded-lg">
             <div className="flex flex-col gap-2">
               <div className="relative">
                 <img
@@ -135,7 +135,9 @@ export const MyAccount = () => {
             </div>
           </div>
 
-          <div className="flex-grow max-w-[740px] px-4 mx-auto">{selectedComponent}</div>
+          <div className="flex-grow w-full lg:max-w-[740px] xl:max-w-[740px] px-4 mx-auto">
+            {selectedComponent}
+          </div>
         </div>
       </section>
     </>
