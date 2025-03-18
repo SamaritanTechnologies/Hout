@@ -13,9 +13,14 @@ import thumbsUp from "../assets/authImages/thumbsUp.svg";
 import signinBlur from "../assets/authImages/signinBlur.png";
 import InputField from "../components/Common/InputField";
 import Switch from "../components/Common/Switch";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux";
+
 
 export const Signin = () => {
   const navigate = useNavigate();
+  const dispatch=useDispatch();
+
 
   const [btnLoading, setBtnLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -53,8 +58,11 @@ export const Signin = () => {
       const { token, cart_id } = response.data;
 
       setAccessToken(token);
+      // const userDetail=JSON.stringify(response.data);
+      console.log("detail",response)
       localStorage.setItem("userData", JSON.stringify(response.data));
       localStorage.setItem("cartId", JSON.stringify(cart_id));
+      // dispatch(setUser(userDetail));
 
       navigate("/");
       toast.success("Successfully logged in");

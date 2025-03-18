@@ -97,7 +97,7 @@ export const MyAccount = () => {
                 />
                 <label
                   htmlFor="profileImageInput"
-                  className="flex items-center justify-center w-[30px] h-[30px] bg-[#111727] border border-white rounded-full absolute bottom-0 right-0 cursor-pointer"
+                  className="flex items-center justify-center w-[30px] h-[30px] bg-[#111727] border border-white rounded-full absolute bottom-0  left-16 cursor-pointer"
                 >
                   <CameraIcon class="h-4 w-4 text-white" />
                 </label>
