@@ -3,8 +3,9 @@ import { Navigate, Outlet } from "react-router-dom";
 
 const AdminRoutes = ({ children }) => {
   const userData = JSON.parse(localStorage.getItem("userData"));
+  const token = localStorage.getItem("access_token");
 
-  if (!userData || !userData.token) {
+  if (!userData || !token) {
     return <Navigate to="/sign-in" />;
   }
 

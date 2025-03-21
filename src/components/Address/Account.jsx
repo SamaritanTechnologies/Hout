@@ -55,7 +55,7 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
 
   const fetchUser = async () => {
     try {
-      const res = await getProfile(userData?.user_id);
+      const res = await getProfile(userData?.id);
       setState((prev) => ({
         ...prev,
         userData: res?.data,
@@ -64,6 +64,7 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
       console.error("Error fetching user data:", error);
     }
   };
+
   const fetchDeliveryAddress = async () => {
     try {
       const res = await getDeliveryAddress();
@@ -75,6 +76,7 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
       console.error("Error fetching user data:", error);
     }
   };
+
   const fetchInvoiceAddress = async () => {
     try {
       const res = await getInvoiceAddress();

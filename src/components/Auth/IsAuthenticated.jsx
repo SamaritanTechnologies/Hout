@@ -3,9 +3,10 @@ import { Outlet, Navigate } from "react-router-dom";
 
 const UserRoutes = ({ children }) => {
   const userData = JSON.parse(localStorage.getItem("userData"));
+  const token = localStorage.getItem("access_token");
 
   //* Check if user is authenticated
-  if (!userData || !userData.token) {
+  if (!userData || !token) {
     return <Navigate to="/sign-in" />;
   }
 
