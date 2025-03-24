@@ -31,7 +31,7 @@ const RelatedProduct = ({ relatedProducts }) => {
                 </div>
                 <div
                   className="cursor-pointer"
-                  onClick={() => navigate(`/porduct-detail/${product.id}`)}
+                  onClick={() => navigate(`/product-detail/${product.id}`)}
                 >
                   <img
                     src={product.images[0].image}

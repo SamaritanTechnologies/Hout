@@ -14,7 +14,7 @@ const ProductCard = ({ product, minimumPrice }) => {
       )}
       <div
         className="cursor-pointer h-[250px] xl:h-[310px]"
-        onClick={() => navigate(`/porduct-detail/${product.id}`)}
+        onClick={() => navigate(`/product-detail/${product.id}`)}
       >
         <img
           src={product.images[0].image}

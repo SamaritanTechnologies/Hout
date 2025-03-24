@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { useSelector } from "react-redux";
 
 const initialState = {
   user: null,
@@ -11,15 +12,6 @@ const authSlice = createSlice({
   name: "auth",
   initialState: initialState,
   reducers: {
-    setUser: (state, action) => {
-      state.user = {
-        // email: action.payload.email,
-        // firstName: action.payload.first_name,
-        // lastName: action.payload.last_name,
-      };
-      // state.user = action.payload;
-      // state.userRole = action.payload?.roleName;
-    },
     setUserInfoLoading: (state, action) => {
       state.isLoading = action.payload;
     },
@@ -27,29 +19,17 @@ const authSlice = createSlice({
       state.isError = action.payload;
       state.isLoading = false;
     },
-    loginUserDetail: (state, action) => {
+    loginUser: (state, action) => {
       state.isLoggedIn = true;
       state.isLoading = false;
       state.isError = false;
-      state.user = {
-        role: action.payload.is_superuser,
-        accessToken: action.payload.token,
-        refreshToken: action.payload.refresh_token,
-        id: action.payload.user_id,
-        email: action.payload.email,
-        firstName: action.payload.first_name,
-        lastName: action.payload.last_name,
-        phone: action.payload.phone,
-        profileImg: action.payload.profile_pic,
-      };
-      state.userRole = action.payload?.roleName;
+      state.user = action.payload;
     },
     logoutUser: (state) => {
       state.isLoggedIn = false;
       state.isLoading = false;
       state.isError = false;
       state.user = null;
-      state.userRole = "";
     },
   },
 });
@@ -58,8 +38,22 @@ export const {
   setUser,
   setUserInfoLoading,
   setUserInfoError,
-  loginUserDetail,
+  loginUser,
   logoutUser,
 } = authSlice.actions;
+
+export const selectUser = (state) => state.auth.user;
+export const selectUserId = (state) => state.auth.user?.id;
+export const selectUserRole = (state) => state.auth.user?.is_superuser;
+
+export const isSuperUser = () => {
+  return useSelector(selectUserRole);
+};
+export const getUserId = () => {
+  return useSelector(selectUserId);
+};;
+export const getLoggedInUser = () => {
+  return useSelector(selectUser);
+};
 
 export default authSlice.reducer;

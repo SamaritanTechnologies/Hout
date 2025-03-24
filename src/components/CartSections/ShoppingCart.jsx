@@ -10,8 +10,10 @@ import { debounce } from "lodash";
 import { deleteCartItem } from "../../redux/actions/orderActions";
 import { toast } from "react-toastify";
 import { axiosWithCredentials } from "../../providers";
+import { getLoggedInUser } from "../../redux";
 
 const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
+  const user = getLoggedInUser();
   const [cartItems, setCartItems] = useState(cartData?.cart_items || []);
   const [updatedItem, setUpdatedItem] = useState(null);
 
@@ -20,11 +22,10 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
   }, [cartData]);
 
   const updateQuantity = async ({ id, productId, price, newQuantity }) => {
-    const userData = JSON.parse(localStorage.getItem("userData"));
     try {
       const payload = {
-        cart: userData.card_id,
-        user: userData?.user_id,
+        cart: user?.card_id,
+        user: user?.user_id,
         product: productId,
         quantity: newQuantity,
         product_price: price,

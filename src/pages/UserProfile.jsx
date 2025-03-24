@@ -15,7 +15,7 @@ import {
 import {
   getDeliveryAddress,
   getInvoiceAddress,
-  getProfile,
+  getProfileInfo,
   updateDeliveryAddress,
   updateInvoiceAddress,
   updateInvoiceDelivery,
@@ -34,10 +34,10 @@ export const UserProfile = () => {
 
   const fetchUser = async () => {
     try {
-      const res = await getProfile();
+      const res = await getProfileInfo();
       setState((prev) => ({
         ...prev,
-        userData: res?.data,
+        userData: res,
       }));
       console.log(res, "fetchUser");
     } catch (error) {

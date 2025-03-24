@@ -24,7 +24,6 @@ export const ProductDetail = () => {
       try {
         const data = await getProductsById(product_id);
         setProductDetail(data);
-        toast.success("Product details fetched successfully!");
       } catch (error) {
         console.error("Error fetching product details:", error);
         toast.error("Failed to fetch product details. Please try again.");

@@ -8,8 +8,10 @@ import productImg3 from "../../assets/myAccount/image 3.svg";
 import { addToCart, getWishList } from "../../redux/actions/orderActions";
 import DeleteModal from "../Modals/DeleteModal";
 import { deleteWishList } from "../../redux/actions/productActions";
+import { getLoggedInUser } from "../../redux";
 
 const Wishlist = () => {
+  const userData = getLoggedInUser();
   const [state, setState] = useState({
     wishlistData: null,
   });
@@ -50,8 +52,11 @@ const Wishlist = () => {
   const handleAddToCart = async (id) => {
     try {
       if (id) {
-        const res = await addToCart({ id });
-        console.log(res, "fetchUser");
+        const res = await addToCart({
+          id,
+          cart_id: userData?.cart_id,
+          user_id: userData?.id,
+        });
       }
     } catch (error) {
       console.error("Error fetching user data:", error);

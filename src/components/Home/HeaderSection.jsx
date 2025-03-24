@@ -5,17 +5,18 @@ import persons from "../../assets/HeaderAndFooter/persons.svg";
 import headerImage from "../../assets/new-logo.png";
 import search from "../../assets/HeaderAndFooter/searchh.svg";
 import { useNavigate } from "react-router-dom";
-import { getAccessToken } from "../../providers";
 import { scrollToTop } from "../../utils/helper";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useSelector } from "react-redux";
 
 
 const HeaderSection = () => {
   const navigate = useNavigate();
-  const token = getAccessToken();
+  const authState = useSelector((state) => state.auth);
+  const isAuthenticated = authState.isLoggedIn;
   const [isActive, setIsActive] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-
+  
   const toggleMenu = () => {
     setIsActive(!isActive);
   };
@@ -151,7 +152,7 @@ const HeaderSection = () => {
               src={persons}
               className="cursor-pointer h-[18px]"
               onClick={() => {
-                if (token) {
+                if (isAuthenticated) {
                   navigate("/myaccount");
                 } else {
                   navigate("/sign-in");
@@ -166,7 +167,6 @@ const HeaderSection = () => {
             <img
               src={heart}
               className="cursor-pointer h-[20px]"
-              // onClick={() => navigate("/myaccount", { state: { key: "wish" } })}
               onClick={() => {
                 scrollToTop();
                 setIsActive(false);

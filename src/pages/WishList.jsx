@@ -10,6 +10,7 @@ import DeleteModal from "../Modals/DeleteModal";
 import { deleteWishList } from "../../redux/actions/productActions";
 
 const Wishlist = () => {
+  const userData = getLoggedInUser();
   const [state, setState] = useState({
     wishlistData: null,
   });
@@ -50,7 +51,11 @@ const Wishlist = () => {
   const handleAddToCart = async (id) => {
     try {
       if (id) {
-        const res = await addToCart({ id });
+        const res = await addToCart({
+          id,
+          cart_id: userData?.cart_id,
+          user_id: userData?.id,
+        });
         console.log(res, "fetchUser");
       }
     } catch (error) {

@@ -66,10 +66,6 @@ export const UpdateProduct = () => {
   const [relatedProducts, setRelatedProducts] = useState(relatedInitial);
   const [relatedProductsOptions, setRelatedProductsOptions] = useState([]);
 
-  useEffect(() => {
-    console.log("=-= images", images);
-  }, [images]);
-
   const getProductDetails = async (id) => {
     try {
       const res = await getProductDetailsById(id);

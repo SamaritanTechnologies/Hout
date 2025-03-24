@@ -10,18 +10,20 @@ import { uploadProfilePic } from "../redux/actions/profileActions";
 import { toast } from "react-toastify";
 import { CameraIcon } from "@heroicons/react/24/outline";
 import { useSelector, useDispatch } from "react-redux";
-import { logoutUser } from "../redux";
+import { getLoggedInUser, logoutUser } from "../redux";
 import { BASE_URL } from "../providers/AxiosInstance";
+
 export const MyAccount = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { state } = location;
+  const dispatch = useDispatch();
+  const userData = getLoggedInUser();
 
-  const userData = JSON.parse(localStorage.getItem("userData"));
   const [selectedPic, setSelectedPic] = useState(null);
   const [userrName, setUserName] = useState("");
   const userDetail = useSelector((state) => state.auth.user);
-  const dispatch = useDispatch();
+
   const [selectedComponent, setSelectedComponent] = useState(
     state?.key === "wish" ? (
       <Wishlist />
@@ -47,12 +49,15 @@ export const MyAccount = () => {
   ];
 
   const handleLogout = () => {
-    setAccessToken(null);
-    localStorage.removeItem("userData");
-    localStorage.clear();
     dispatch(logoutUser());
-    navigate("/sign-in");
+    setAccessToken("");
+    setRefreshToken("");
+
     toast.success("Logged Out!");
+
+    setTimeout(() => {
+      navigate("/sign-in");
+    }, 700);
   };
 
   const getImageSrc = () => {

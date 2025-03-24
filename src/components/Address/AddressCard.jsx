@@ -135,7 +135,6 @@ import profilebtn from "../../assets/myAccount/profileBtn.svg";
 import {
   getDeliveryAddress,
   getInvoiceAddress,
-  getProfile,
   updateDeliverAddress,
   updateDeliveryAddress,
   updateInvoiceAddress,

@@ -15,7 +15,6 @@ export const getOrderDetails = async (month, payment, day) => {
   }
 };
 export const getCart = async () => {
-  const cartId = localStorage.getItem("cartId");
   try {
     const response = await axiosWithCredentials.get(`/cart/`);
     return response.data;
@@ -34,14 +33,14 @@ export const getWishList = async () => {
     throw error;
   }
 };
-export const addToCart = async (values) => {
-  const userData = JSON.parse(localStorage.getItem("userData"));
 
-  const { id, price } = values;
+export const addToCart = async (values) => {
+
+  const { id, price, card_id, user_id } = values;
 
   const payload = {
-    cart: userData.card_id,
-    user: userData?.user_id,
+    cart: card_id,
+    user: user_id,
     product: id,
     quantity: 1,
     product_price: price,
@@ -63,13 +62,9 @@ export const addToCart = async (values) => {
 };
 
 // export const changeQuantity = async (values) => {
-//   const userData = JSON.parse(localStorage.getItem("userData"));
-
-//   const { id, price, productId, quantity } = values;
+//   const { id, price, productId, quantity, card_id, user_id } = values;
 
 //   const payload = {
-//     cart: userData.card_id,
-//     user: userData?.user_id,
 //     product: productId,
 //     quantity,
 //     product_price: price,

@@ -16,10 +16,12 @@ import FormikField from "../Common/FormikField";
 import * as Yup from "yup";
 import {
   getDeliveryAddress,
-  getProfile,
+  getProfileInfo,
 } from "../../redux/actions/profileActions";
+import { getLoggedInUser } from "../../redux";
 
 const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
+  const user = getLoggedInUser();
   const [state, setState] = useState({
     deliveryAddress: null,
     userData: null,
@@ -41,10 +43,10 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
 
   const fetchUser = async () => {
     try {
-      const res = await getProfile();
+      const res = await getProfileInfo();
       setState((prev) => ({
         ...prev,
-        userData: res?.data,
+        userData: res,
       }));
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -56,11 +58,11 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
   }, [cartData]);
 
   const updateQuantity = async ({ id, productId, price, newQuantity }) => {
-    const userData = JSON.parse(localStorage.getItem("userData"));
+
     try {
       const payload = {
-        cart: userData.card_id,
-        user: userData?.user_id,
+        cart: user?.card_id,
+        user: user?.id,
         product: productId,
         quantity: newQuantity,
         product_price: price,

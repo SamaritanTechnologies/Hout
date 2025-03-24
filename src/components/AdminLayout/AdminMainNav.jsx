@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import notfiIcon from "../../assets/DashboardImages/notfiIcon.svg";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import HeadLessDropDown from "../Common/HeadLessDropDown";
-import { getAccessToken } from "../../providers";
-import { useDispatch } from "react-redux";
+
 
 const AdminMainNav = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const userData = JSON.parse(localStorage.getItem("userData"));
-  const token = userData?.token;
   const [isScrolled, setIsScrolled] = useState(false);
-  const isAdmin = false;
-
   const handleScroll = () => {
     if (window.scrollY > 0) {
       setIsScrolled(true);
@@ -68,7 +60,7 @@ const AdminMainNav = () => {
             </a>
           </div> */}
           <div className="">
-            <HeadLessDropDown token={token} />
+            <HeadLessDropDown />
           </div>
         </div>
       </div>

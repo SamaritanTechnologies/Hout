@@ -1,15 +1,30 @@
 import { Menu, Transition } from "@headlessui/react";
-import { Fragment, useEffect, useRef, useState } from "react";
-// import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import ProfileDD from "../../assets/DashboardImages/ProfileDD.svg";
+import { Fragment } from "react";
 import avatars from "../../assets/DashboardImages/avatars.svg";
 import more from "../../assets/DashboardImages/more.svg";
 import { useNavigate } from "react-router-dom";
-import { setAccessToken } from "../../providers";
+import { setAccessToken, setRefreshToken } from "../../providers";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "../../redux";
 
-const HeadLessDropDown = ({ token }) => {
+const HeadLessDropDown = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const authState = useSelector((state) => state.auth);
+  const isAuthenticated = authState.isLoggedIn;
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    setAccessToken("");
+    setRefreshToken("");
+
+    toast.success("Logged Out!");
+
+    setTimeout(() => {
+      navigate("/sign-in");
+    }, 700);
+  };
 
   return (
     <Menu as="div" className="relative inline-block text-left z-10 ">
@@ -17,7 +32,7 @@ const HeadLessDropDown = ({ token }) => {
         <Menu.Button className="inline-flex  z-10 w-full justify-center rounded-md bg-black/20 px-4 py-2 text-sm font-medium text-black hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
           <div className="flex items-center gap-x-5 z-10">
             <div className="shrink-0">
-              <img src={avatars}/>
+              <img src={avatars} />
             </div>
             <div className="flex-col">
               <div className="text-[14px] w-[max-content]">Admin</div>
@@ -47,16 +62,8 @@ const HeadLessDropDown = ({ token }) => {
               >
                 Profile
               </li> */}
-              <li
-                className="text-center text-red"
-                onClick={() => {
-                  navigate("/sign-in");
-                  setAccessToken(null);
-                  localStorage.clear();
-                  toast.success("Logged Out!");
-                }}
-              >
-                {token ? "Logout" : "Login"}
+              <li className="text-center text-red" onClick={handleLogout}>
+                {isAuthenticated ? "Logout" : "Login"}
               </li>
             </ul>
           </div>

@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { axiosApi, setAccessToken, BASE_URL } from "../providers";
+import {
+  axiosApi,
+  setAccessToken,
+  BASE_URL,
+  setRefreshToken,
+} from "../providers";
 import { toast } from "react-toastify";
 
 import signInRight from "../assets/authImages/signInRight.svg";
@@ -14,7 +19,7 @@ import signinBlur from "../assets/authImages/signinBlur.png";
 import InputField from "../components/Common/InputField";
 import Switch from "../components/Common/Switch";
 import { useDispatch } from "react-redux";
-import { setUser, loginUserDetail } from "../redux";
+import { loginUser } from "../redux";
 
 export const Signin = () => {
   const navigate = useNavigate();
@@ -36,7 +41,7 @@ export const Signin = () => {
     });
   };
 
-  const loginUser = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (!formData.email.trim() || !formData.password.trim()) {
       toast.error("Please fill in all fields");
@@ -52,38 +57,16 @@ export const Signin = () => {
 
     try {
       const response = await axiosApi.post("/accounts/login/", data);
-      const { access_token, refresh_token, access_expires_at, user } =
-        response.data;
-      console.log("access_expires_at", access_token, refresh_token);
+      const { access_token, refresh_token, user } = response.data;
 
       setAccessToken(access_token);
-      const userDetail = JSON.stringify(response.data);
-      console.log("detail", response.data);
-
-      //  const { access_token, refresh_token, user } = response.data;
-
-      localStorage.setItem("userData", JSON.stringify(user));
-      localStorage.setItem("cartId", user.cart_id);
-      localStorage.setItem("access_token", access_token);
-      localStorage.setItem("refresh_token", refresh_token);
-      localStorage.setItem("access_expires_at", access_expires_at);
-
-      dispatch(
-        loginUserDetail({
-          is_superuser: user.is_superuser,
-          token: access_token,
-          refresh_token: refresh_token,
-          user_id: user.id,
-          email: user.email,
-          first_name: user.first_name,
-          last_name: user.last_name,
-          phone: user.phone,
-          profileImg: user.profile_pic,
-        })
-      );
-
-      navigate("/");
+      setRefreshToken(refresh_token);
+      dispatch(loginUser(user));
+      
       toast.success("Successfully logged in");
+      setTimeout(() => {
+        navigate("/");
+      }, 500);
     } catch (error) {
       const errorMessage =
         error?.response?.data?.message || "Wrong credentials!";
@@ -152,7 +135,7 @@ export const Signin = () => {
                   Login into your account
                 </span>
               </div>
-              <form className="w-full" onSubmit={loginUser}>
+              <form className="w-full" onSubmit={handleLogin}>
                 {/* social auth row  */}
                 <div className="mx-auto socialAuthRow flex gap-2.5 mb-[12px]">
                   <a
@@ -227,7 +210,6 @@ export const Signin = () => {
                   <div className="w-full ">
                     <button
                       type="submit"
-                      onClick={loginUser}
                       disabled={btnLoading}
                       className="bg-[#FBC700] block text-black text-center xl:py-[16px] lg:py-[16px] py-[12px] px-[25px] w-full font-semibold mb-[23px] xl:text-[18px] text-[16px]"
                     >
