@@ -1,8 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import productHeart from "../../assets/LandingPageImages/products/productHeart.svg";
 import addToCartt from "../../assets/LandingPageImages/products/addToCart.svg";
+import { useSelector } from "react-redux";
 
 const ProductCard = ({ product, minimumPrice }) => {
+  const authState = useSelector((state) => state.auth);
+  const isAuthenticated = authState.isLoggedIn;
   const navigate = useNavigate();
 
   return (
@@ -39,12 +42,22 @@ const ProductCard = ({ product, minimumPrice }) => {
           )}
         </div>
         <div className="flex gap-x-4 items-center justify-between">
-          <div className="border-2 cursor-pointer border-[#898989] px-2 flex items-center justify-center py-3  gap-x-3  add-cart-btn md:text-[12px] lg:text-[12px]">
+          <div
+            onClick={() => {
+              !isAuthenticated && navigate("/cart");
+            }}
+            className="border-2 cursor-pointer border-[#898989] px-2 flex items-center justify-center py-3  gap-x-3  add-cart-btn md:text-[12px] lg:text-[12px]"
+          >
             {/* <img src={item.addToCart} className="bg-red" /> */}
             <img src={addToCartt} />
             Add to Cart
           </div>
-          <div className="cursor-pointer">
+          <div
+            className="cursor-pointer"
+            onClick={() => {
+              !isAuthenticated && navigate("/wishlist");
+            }}
+          >
             <img src={productHeart} />
           </div>
         </div>

@@ -21,7 +21,7 @@ const publicPaths = [
   "/shop-page",
   "/product-detail/:product_id",
   "/customized-product",
- 
+
   "/faq",
   "/about",
   "/terms-conditions",
@@ -81,7 +81,6 @@ export function AuthProvider({ children }) {
 
   const handleLogoutUser = async (redirect = true) => {
     dispatch(logoutUser());
-
     if (redirect && !isPublicRoute) {
       navigate("/");
     }
