@@ -12,8 +12,13 @@ const authSlice = createSlice({
   initialState: initialState,
   reducers: {
     setUser: (state, action) => {
-      state.user = action.payload;
-      state.userRole = action.payload?.roleName;
+      state.user = {
+        // email: action.payload.email,
+        // firstName: action.payload.first_name,
+        // lastName: action.payload.last_name,
+      };
+      // state.user = action.payload;
+      // state.userRole = action.payload?.roleName;
     },
     setUserInfoLoading: (state, action) => {
       state.isLoading = action.payload;
@@ -22,11 +27,21 @@ const authSlice = createSlice({
       state.isError = action.payload;
       state.isLoading = false;
     },
-    loginUser: (state, action) => {
+    loginUserDetail: (state, action) => {
       state.isLoggedIn = true;
       state.isLoading = false;
       state.isError = false;
-      state.user = action.payload;
+      state.user = {
+        role: action.payload.is_superuser,
+        accessToken: action.payload.token,
+        refreshToken: action.payload.refresh_token,
+        id: action.payload.user_id,
+        email: action.payload.email,
+        firstName: action.payload.first_name,
+        lastName: action.payload.last_name,
+        phone: action.payload.phone,
+        profileImg: action.payload.profile_pic,
+      };
       state.userRole = action.payload?.roleName;
     },
     logoutUser: (state) => {
@@ -43,7 +58,7 @@ export const {
   setUser,
   setUserInfoLoading,
   setUserInfoError,
-  loginUser,
+  loginUserDetail,
   logoutUser,
 } = authSlice.actions;
 

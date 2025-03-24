@@ -7,7 +7,7 @@ export const updatePass = async (values, { setSubmitting }) => {
     const { oldPassword, newPassword, repeatNewPassword } = values;
 
     const response = await axiosWithCredentials.put(
-      `/accounts/change-password/${userData?.user_id}/`,
+      `/accounts/change-password/${userData?.id}/`,
       {
         old_password: oldPassword,
         password: newPassword,
@@ -33,12 +33,10 @@ export const updatePass = async (values, { setSubmitting }) => {
   }
 };
 
-export const getProfile = async (id) => {
+export const getProfile = async (user_id) => {
   const userData = JSON.parse(localStorage.getItem("userData"));
   try {
-    const response = await axiosWithCredentials.get(
-      `/accounts/retrieve-user/${userData?.user_id}/`
-    );
+    const response = await axiosWithCredentials.get(`/accounts/retrieve-user/`);
     return response;
   } catch (error) {
     console.error("Error:", error);
@@ -59,7 +57,7 @@ export const updateProfile = async (values, { setSubmitting }) => {
     };
 
     const response = await axiosWithCredentials.put(
-      `/accounts/update-profile/${userData?.user_id}/`,
+      `/accounts/update-profile/${userData?.id}/`,
       payload
     );
     toast.success("Successfully Updated");
@@ -139,6 +137,7 @@ export const updateInvoiceDelivery = async (values, { setSubmitting }) => {
 };
 
 export const uploadProfilePic = async (formData) => {
+  console.log("Imge Data:", formData);
   try {
     if (!formData) {
       toast.error("No image selected.");
@@ -166,7 +165,7 @@ export const getDeliveryAddress = async () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
   try {
     const response = await axiosWithCredentials.get(
-      `/accounts/update-delivery-address/${userData?.user_id}/`
+      `/accounts/update-delivery-address/${userData?.id}/`
     );
     return response;
   } catch (error) {
@@ -206,7 +205,7 @@ export const getInvoiceAddress = async () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
   try {
     const response = await axiosWithCredentials.get(
-      `/accounts/update-invoice-address/${userData?.user_id}/`
+      `/accounts/update-invoice-address/${userData?.id}/`
     );
     return response;
   } catch (error) {
@@ -214,30 +213,79 @@ export const getInvoiceAddress = async () => {
   }
 };
 
-export const updateInvoiceAddress = async (values, { setSubmitting }) => {
+// export const updateInvoiceAddress = async (values, { setSubmitting }) => {
+//   const userData = JSON.parse(localStorage.getItem("userData"));
+
+//   try {
+//     const { stNumber, zCode, city, country } = values;
+
+//     const payload = {
+//       user: userData?.id,
+//       street_and_number: stNumber,
+//       zip_code: zCode,
+//       city,
+//       country: country || null,
+//     };
+
+//     const response = await axiosWithCredentials.put(
+//       `/accounts/update-invoice-address/${userData?.id}/`,
+//       payload
+//     );
+//     toast.success("Successfuly Updated");
+//     console.log("Response:", response.data);
+
+//     setSubmitting(false);
+//   } catch (error) {
+//     console.error("Error:", error);
+//     toast.error("Something went wrong!");
+//   }
+// };
+
+export const updateInvoiceAddress = async (values) => {
   const userData = JSON.parse(localStorage.getItem("userData"));
 
   try {
-    const { stNumber, zCode, city, country } = values;
-
     const payload = {
-      user: userData?.user_id,
-      street_and_number: stNumber,
-      zip_code: zCode,
-      city,
-      country: country || null,
+      user: userData?.id,
+      street_and_number: values.street_and_number,
+      zip_code: values.zip_code,
+      city: values.city,
+      country: values.country || "Netherland",
     };
 
     const response = await axiosWithCredentials.put(
-      `/accounts/update-invoice-address/${userData?.user_id}/`,
+      `/accounts/update-invoice-address/${userData?.id}/`,
       payload
     );
-    toast.success("Successfuly Updated");
-    console.log("Response:", response.data);
-
-    setSubmitting(false);
+    toast.success("Successfully Updated");
+    return response.data;
   } catch (error) {
     console.error("Error:", error);
     toast.error("Something went wrong!");
+    throw error;
+  }
+};
+export const updateDeliverAddress = async (values) => {
+  const userData = JSON.parse(localStorage.getItem("userData"));
+
+  try {
+    const payload = {
+      user: userData?.id,
+      street_and_number: values.street_and_number,
+      zip_code: values.zip_code,
+      city: values.city,
+      country: values.country || "Netherland",
+    };
+
+    const response = await axiosWithCredentials.put(
+      `/accounts/update-delivery-address/${userData?.id}/`,
+      payload
+    );
+    toast.success("Successfully Updated");
+    return response.data;
+  } catch (error) {
+    console.error("Error:", error);
+    toast.error("Something went wrong!");
+    throw error;
   }
 };

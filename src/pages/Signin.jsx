@@ -13,9 +13,12 @@ import thumbsUp from "../assets/authImages/thumbsUp.svg";
 import signinBlur from "../assets/authImages/signinBlur.png";
 import InputField from "../components/Common/InputField";
 import Switch from "../components/Common/Switch";
+import { useDispatch } from "react-redux";
+import { setUser, loginUserDetail } from "../redux";
 
 export const Signin = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [btnLoading, setBtnLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -35,7 +38,6 @@ export const Signin = () => {
 
   const loginUser = async (e) => {
     e.preventDefault();
-    // Validate form fields
     if (!formData.email.trim() || !formData.password.trim()) {
       toast.error("Please fill in all fields");
       return;
@@ -50,11 +52,35 @@ export const Signin = () => {
 
     try {
       const response = await axiosApi.post("/accounts/login/", data);
-      const { token, cart_id } = response.data;
+      const { access_token, refresh_token, access_expires_at, user } =
+        response.data;
+      console.log("access_expires_at", access_token, refresh_token);
 
-      setAccessToken(token);
-      localStorage.setItem("userData", JSON.stringify(response.data));
-      localStorage.setItem("cartId", JSON.stringify(cart_id));
+      setAccessToken(access_token);
+      const userDetail = JSON.stringify(response.data);
+      console.log("detail", response.data);
+
+      //  const { access_token, refresh_token, user } = response.data;
+
+      localStorage.setItem("userData", JSON.stringify(user));
+      localStorage.setItem("cartId", user.cart_id);
+      localStorage.setItem("access_token", access_token);
+      localStorage.setItem("refresh_token", refresh_token);
+      localStorage.setItem("access_expires_at", access_expires_at);
+
+      dispatch(
+        loginUserDetail({
+          is_superuser: user.is_superuser,
+          token: access_token,
+          refresh_token: refresh_token,
+          user_id: user.id,
+          email: user.email,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          phone: user.phone,
+          profileImg: user.profile_pic,
+        })
+      );
 
       navigate("/");
       toast.success("Successfully logged in");

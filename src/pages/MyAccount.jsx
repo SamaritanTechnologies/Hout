@@ -9,7 +9,9 @@ import { setAccessToken } from "../providers";
 import { uploadProfilePic } from "../redux/actions/profileActions";
 import { toast } from "react-toastify";
 import { CameraIcon } from "@heroicons/react/24/outline";
-
+import { useSelector, useDispatch } from "react-redux";
+import { logoutUser } from "../redux";
+import { BASE_URL } from "../providers/AxiosInstance";
 export const MyAccount = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -18,7 +20,8 @@ export const MyAccount = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const [selectedPic, setSelectedPic] = useState(null);
   const [userrName, setUserName] = useState("");
-
+  const userDetail = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
   const [selectedComponent, setSelectedComponent] = useState(
     state?.key === "wish" ? (
       <Wishlist />
@@ -46,11 +49,12 @@ export const MyAccount = () => {
   const handleLogout = () => {
     setAccessToken(null);
     localStorage.removeItem("userData");
+    localStorage.clear();
+    dispatch(logoutUser());
     navigate("/sign-in");
     toast.success("Logged Out!");
   };
 
-  console.log("selectedPic", selectedPic);
   const getImageSrc = () => {
     if (selectedPic instanceof File) {
       return URL.createObjectURL(selectedPic);
@@ -73,6 +77,11 @@ export const MyAccount = () => {
     }
   };
 
+  useEffect(() => {
+    if (userData) {
+      setSelectedPic(userData?.profile_pic);
+    }
+  }, [userData]);
   return (
     <>
       <section className="max-w-[1120px] mx-auto my-8 lg:my-16 xl:my-20 px-4">
@@ -84,10 +93,15 @@ export const MyAccount = () => {
             <div className="flex flex-col gap-2">
               <div className="relative">
                 <img
-                  src={getImageSrc()}
+                  src={
+                    userData?.profile_pic
+                      ? `${BASE_URL}${userData.profile_pic}`
+                      : getImageSrc()
+                  }
                   className="w-20 h-20 rounded-full border border-[#F3F5F7]"
                   alt="Profile"
                 />
+
                 <input
                   type="file"
                   id="profileImageInput"
@@ -97,12 +111,14 @@ export const MyAccount = () => {
                 />
                 <label
                   htmlFor="profileImageInput"
-                  className="flex items-center justify-center w-[30px] h-[30px] bg-[#111727] border border-white rounded-full absolute bottom-0 right-0 cursor-pointer"
+                  className="flex items-center justify-center w-[30px] h-[30px] bg-[#111727] border border-white rounded-full absolute bottom-0  left-16 cursor-pointer"
                 >
                   <CameraIcon class="h-4 w-4 text-white" />
                 </label>
               </div>
-              <h1 className="text-[#111727] font-semibold">{userrName}</h1>
+              <h1 className="text-[#111727] font-semibold">
+                {userDetail.firstName} {userDetail.lastName}
+              </h1>
             </div>
             <div className="flex flex-col gap-3 w-full">
               {data.map((item) => {
