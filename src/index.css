@@ -110,25 +110,12 @@ button:focus-visible {
 }
 
 .landing {
-  /* Background image */
-  background-image: url(./assets/LandingPageImages/backWood.svg);
+  /* background-image: url(./assets/LandingPageImages/backWood.svg); */
   background-repeat: no-repeat;
   background-size: cover;
   background-position: bottom;
-
-  /* Height and Width */
-  min-height: 765px; /* Adjust based on your Figma design */
-  width: 100%; /* Take full width of the container */
-
-  /* Padding */
-  /* Adjust padding as needed */
-  /* padding-top: 2px;
-  padding-right: 2px;
-  padding-bottom: 2px;
-  padding-left: 2px; */
-
-  /* Positioning if necessary */
-  /* position: relative; */
+  min-height: 765px;
+  width: 100%;
 }
 
 .shop {
@@ -167,12 +154,6 @@ button:focus-visible {
   line-height: 28px;
   color: #000;
 }
-footer .input-field {
-  border-radius: 12px 0px 0px 12px;
-  font-size: 16px;
-  color: #878788;
-  padding: 18px 30px;
-}
 .subscribe-btn {
   border-radius: 0px 12px 12px 0px;
   background-color: #fbc700;
@@ -203,6 +184,9 @@ footer .input-field {
   font-weight: 600;
   gap: 10px;
 }
+.multiselect-container .closeIcon {
+  background: #6C7275;
+}
 
 .assortment-filters .MuiAccordion-root.MuiAccordion-rounded {
   box-shadow: none;
@@ -228,6 +212,10 @@ footer .input-field {
 }
 .example-track.example-track-2 {
   background: #fff;
+}
+.ql-container.ql-snow {
+  max-height: 400px;
+  overflow-y: auto;
 }
 @media only screen and (max-width: 767.98px) {
   footer .input-field {
@@ -262,4 +250,11 @@ footer .input-field {
 
     margin: 0;
   }
+}
+.dashboard-content {
+  max-height: calc(100vh - 90px);
+  min-height: calc(100vh - 90px);
+}
+.sideBarMain {
+  max-height: calc(100vh - 102px);
 }

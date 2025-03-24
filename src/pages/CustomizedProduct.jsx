@@ -31,10 +31,10 @@ export const CustomizedProduct = () => {
               {/* account detail card  */}
               <div className="myCard rounded-[4px] xl:mb-[30px] lg:mb-[15px] mb-[5px] px-[15px] h-full">
                 <div className="formSec">
-                  <div class=" mb-[24px]">
-                    <div class="w-full md:mb-0">
+                  <div className=" mb-[24px]">
+                    <div className="w-full md:mb-0">
                       <label
-                        class=" text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
+                        className=" text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
                         for="prodname"
                       >
                         Product Name
@@ -54,12 +54,12 @@ export const CustomizedProduct = () => {
                     </div>
                   </div>
                   <div
-                    class=" flex gap-[20px] xl:mb-[25px] mb-[12px]"
+                    className=" flex gap-[20px] xl:mb-[25px] mb-[12px]"
                     style={{ overflowX: "auto" }}
                   >
-                    <div class="w-full  mb-[12px]">
+                    <div className="w-full  mb-[12px]">
                       <label
-                        class=" text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
+                        className=" text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
                         for="name"
                       >
                         Wood Type
@@ -146,10 +146,10 @@ export const CustomizedProduct = () => {
                       </div>
                     </div>
                   </div>
-                  <div class=" flex gap-[20px] mb-[24px]">
-                    <div class="w-1/2 md:mb-0">
+                  <div className=" flex gap-[20px] mb-[24px]">
+                    <div className="w-1/2 md:mb-0">
                       <label
-                        class=" text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
+                        className=" text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
                         for="Hangings"
                       >
                         Hangings
@@ -159,9 +159,9 @@ export const CustomizedProduct = () => {
                         id="Hangings"
                       />
                     </div>
-                    <div class="w-1/2">
+                    <div className="w-1/2">
                       <label
-                        class=" text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
+                        className=" text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
                         for="Sandeed"
                       >
                         Sanded
@@ -172,10 +172,10 @@ export const CustomizedProduct = () => {
                       />
                     </div>
                   </div>
-                  <div class=" flex gap-[20px] mb-[24px]">
-                    <div class="w-1/2 md:mb-0">
+                  <div className=" flex gap-[20px] mb-[24px]">
+                    <div className="w-1/2 md:mb-0">
                       <label
-                        class=" text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
+                        className=" text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
                         for="typeProd"
                       >
                         To Color
@@ -185,9 +185,9 @@ export const CustomizedProduct = () => {
                         id="typeProd"
                       />
                     </div>
-                    <div class="w-1/2">
+                    <div className="w-1/2">
                       <label
-                        class=" text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
+                        className=" text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
                         for="durability"
                       >
                         Price
@@ -195,10 +195,10 @@ export const CustomizedProduct = () => {
                       <InputField placeholder="USD" id="durability" />
                     </div>
                   </div>
-                  <div class=" flex  mb-[24px]">
-                    <div class="w-full md:mb-0">
+                  <div className=" flex  mb-[24px]">
+                    <div className="w-full md:mb-0">
                       <label
-                        class=" text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
+                        className=" text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
                         for="planks"
                       >
                         Planks Inventory
@@ -207,10 +207,10 @@ export const CustomizedProduct = () => {
                     </div>
                   </div>
 
-                  <div class=" flex mb-[5px]">
-                    <div class="w-full md:mb-0">
+                  <div className=" flex mb-[5px]">
+                    <div className="w-full md:mb-0">
                       <label
-                        class=" text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
+                        className=" text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
                         for="pDescrp"
                       >
                         Description
@@ -235,10 +235,10 @@ export const CustomizedProduct = () => {
             {/* add new product price table row  */}
             <div className="xl:w-2/4 w-full pt-[30px] pb-[20px] h-full">
               <div className="myCard rounded-[4px] px-[15px]">
-                <div class=" flex gap-[20px] mb-[24px]">
-                  <div class="w-full md:mb-0 relative">
+                <div className=" flex gap-[20px] mb-[24px]">
+                  <div className="w-full md:mb-0 relative">
                     <label
-                      class=" text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
+                      className=" text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
                       for="weight"
                     >
                       Product Image

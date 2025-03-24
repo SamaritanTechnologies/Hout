@@ -12,14 +12,25 @@ const Layout = () => {
     "/reset-password",
   ];
   const adminPaths = [
-    "/dashboard/",
-    // "/inbox/",
-    "/order-list/",
-    "/products/",
-    "/product/",
-    "/user-profile/",
-    "/new-product/",
-    "/customized-product/",
+    "/dashboard",
+    "/vat-value",
+    "/products",
+    "/new-product",
+    "/product-options",
+    "/homepage-image",
+    "/homepage-products",
+    "/our-values",
+    "/our-assortment",
+    "/why-hout-totaal",
+    "/terms-and-conditions",
+    "/admin-privacy-policy",
+    "/admin-about-us",
+    "/admin-FAQ",
+    // "/inbox",
+    "/order-list",
+    "/product",
+    "/user-profile",
+    "/customized-product",
   ];
 
   const currentPath = useLocation().pathname;
@@ -43,7 +54,7 @@ const Layout = () => {
             </div>
             <div className="flex-1 min-h-screen overflow-x-hidden">
               <AdminMainNav />
-              <div className="!pt-2">
+              <div className="dashboard-content overflow-y-auto bg-[#fafafa] px-5 py-8">
                 <Outlet />
               </div>
             </div>
@@ -52,15 +63,13 @@ const Layout = () => {
       ) : (
         <>
           {!hasHeaderFooter ? (
-            <div className="">
-              <div className="">
-                <HeaderSection />
-                <div className=" xl:!pt-20 lg:!pt-18 md:!pt-16 !pt-14 w-full flex-1 ">
-                  <Outlet />
-                </div>
-                <FooterSection />
+            <>
+              <HeaderSection />
+              <div className=" xl:!pt-20 lg:!pt-18 md:!pt-16 !pt-14 w-full flex-1 ">
+                <Outlet />
               </div>
-            </div>
+              <FooterSection />
+            </>
           ) : (
             <>
               <div className="">

@@ -1,13 +1,18 @@
 import { toast } from "react-toastify";
-import { axiosApi, axiosWithCredentials } from "../../providers";
+import {
+  axiosApi,
+  axiosWithCredentials,
+  getRefreshToken,
+} from "../../providers";
+import { getUserId } from "../slices/authSlice";
 
 export const updatePass = async (values, { setSubmitting }) => {
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  const id = getUserId();
   try {
     const { oldPassword, newPassword, repeatNewPassword } = values;
 
     const response = await axiosWithCredentials.put(
-      `/accounts/change-password/${userData?.user_id}/`,
+      `/accounts/change-password/${id}/`,
       {
         old_password: oldPassword,
         password: newPassword,
@@ -15,7 +20,6 @@ export const updatePass = async (values, { setSubmitting }) => {
       }
     );
 
-    console.log(response.data, "ressppp");
     toast.success("Successfuly Updated");
     setSubmitting(false);
   } catch (error) {
@@ -33,20 +37,18 @@ export const updatePass = async (values, { setSubmitting }) => {
   }
 };
 
-export const getProfile = async (id) => {
-  const userData = JSON.parse(localStorage.getItem("userData"));
+export const getProfileInfo = async () => {
   try {
-    const response = await axiosWithCredentials.get(
-      `/accounts/retrieve-user/${userData?.user_id}/`
-    );
-    return response;
+    const response = await axiosWithCredentials.get(`/accounts/retrieve-user/`);
+    return response.data;
   } catch (error) {
     console.error("Error:", error);
   }
 };
 
 export const updateProfile = async (values, { setSubmitting }) => {
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  const id = getUserId();
+
   try {
     const { first_name, last_name, email, company_name, phone } = values;
 
@@ -59,7 +61,7 @@ export const updateProfile = async (values, { setSubmitting }) => {
     };
 
     const response = await axiosWithCredentials.put(
-      `/accounts/update-profile/${userData?.user_id}/`,
+      `/accounts/update-profile/${id}/`,
       payload
     );
     toast.success("Successfully Updated");
@@ -139,6 +141,7 @@ export const updateInvoiceDelivery = async (values, { setSubmitting }) => {
 };
 
 export const uploadProfilePic = async (formData) => {
+  console.log("Imge Data:", formData);
   try {
     if (!formData) {
       toast.error("No image selected.");
@@ -163,10 +166,11 @@ export const uploadProfilePic = async (formData) => {
 };
 
 export const getDeliveryAddress = async () => {
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  const id = getUserId();
+
   try {
     const response = await axiosWithCredentials.get(
-      `/accounts/update-delivery-address/${userData?.user_id}/`
+      `/accounts/update-delivery-address/${id}/`
     );
     return response;
   } catch (error) {
@@ -175,13 +179,13 @@ export const getDeliveryAddress = async () => {
 };
 
 export const updateDeliveryAddress = async (values, { setSubmitting }) => {
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  const id = getUserId();
 
   try {
     const { stNumber, zCode, city, country } = values;
 
     const payload = {
-      user: userData?.user_id,
+      user: id,
       street_and_number: stNumber,
       zip_code: zCode,
       city,
@@ -189,7 +193,7 @@ export const updateDeliveryAddress = async (values, { setSubmitting }) => {
     };
 
     const response = await axiosWithCredentials.put(
-      `/accounts/update-delivery-address/${userData?.user_id}/`,
+      `/accounts/update-delivery-address/${id}/`,
       payload
     );
     toast.success("Successfuly Updated");
@@ -203,10 +207,11 @@ export const updateDeliveryAddress = async (values, { setSubmitting }) => {
 };
 
 export const getInvoiceAddress = async () => {
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  const id = getUserId();
+
   try {
     const response = await axiosWithCredentials.get(
-      `/accounts/update-invoice-address/${userData?.user_id}/`
+      `/accounts/update-invoice-address/${id}/`
     );
     return response;
   } catch (error) {
@@ -214,30 +219,86 @@ export const getInvoiceAddress = async () => {
   }
 };
 
-export const updateInvoiceAddress = async (values, { setSubmitting }) => {
-  const userData = JSON.parse(localStorage.getItem("userData"));
+// export const updateInvoiceAddress = async (values, { setSubmitting }) => {
+//    const id = getUserId();
+
+//   try {
+//     const { stNumber, zCode, city, country } = values;
+
+//     const payload = {
+//       user: id,
+//       street_and_number: stNumber,
+//       zip_code: zCode,
+//       city,
+//       country: country || null,
+//     };
+
+//     const response = await axiosWithCredentials.put(
+//       `/accounts/update-invoice-address/${id}/`,
+//       payload
+//     );
+//     toast.success("Successfuly Updated");
+//     console.log("Response:", response.data);
+
+//     setSubmitting(false);
+//   } catch (error) {
+//     console.error("Error:", error);
+//     toast.error("Something went wrong!");
+//   }
+// };
+
+export const updateInvoiceAddress = async (values) => {
+  const id = getUserId();
 
   try {
-    const { stNumber, zCode, city, country } = values;
-
     const payload = {
-      user: userData?.user_id,
-      street_and_number: stNumber,
-      zip_code: zCode,
-      city,
-      country: country || null,
+      user: id,
+      street_and_number: values.street_and_number,
+      zip_code: values.zip_code,
+      city: values.city,
+      country: values.country || "Netherland",
     };
 
     const response = await axiosWithCredentials.put(
-      `/accounts/update-invoice-address/${userData?.user_id}/`,
+      `/accounts/update-invoice-address/${id}/`,
       payload
     );
-    toast.success("Successfuly Updated");
-    console.log("Response:", response.data);
-
-    setSubmitting(false);
+    toast.success("Successfully Updated");
+    return response.data;
   } catch (error) {
     console.error("Error:", error);
     toast.error("Something went wrong!");
+    throw error;
   }
+};
+export const updateDeliverAddress = async (values) => {
+  const id = getUserId();
+
+  try {
+    const payload = {
+      user: id,
+      street_and_number: values.street_and_number,
+      zip_code: values.zip_code,
+      city: values.city,
+      country: values.country || "Netherland",
+    };
+
+    const response = await axiosWithCredentials.put(
+      `/accounts/update-delivery-address/${id}/`,
+      payload
+    );
+    toast.success("Successfully Updated");
+    return response.data;
+  } catch (error) {
+    console.error("Error:", error);
+    toast.error("Something went wrong!");
+    throw error;
+  }
+};
+
+export const getAccessFromRefresh = async () => {
+  const response = await axiosWithCredentials.post("/accounts/refresh_token/", {
+    refresh_token: getRefreshToken(),
+  });
+  return response.data;
 };

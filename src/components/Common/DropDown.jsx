@@ -39,7 +39,7 @@ const DropDown = ({
       </option>
 
       {options?.map((item) => (
-        <option value={item?.value} style={{ color: headerTextColor }}>
+        <option key={item?.value} value={item?.value} style={{ color: headerTextColor }}>
           {item?.name}
         </option>
       ))}

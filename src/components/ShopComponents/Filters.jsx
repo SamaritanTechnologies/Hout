@@ -1,6 +1,4 @@
-import React, { useState } from "react";
-import ReactSlider from "react-slider";
-import PaymentCard from "../Common/PaymentCard";
+import React, { useState, useEffect } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Checkbox,
@@ -11,140 +9,94 @@ import {
   AccordionSummary,
   AccordionDetails,
 } from "@mui/material";
-const Filters = ({ filters, filterCheck }) => {
-  console.log(filters, "kkjkj");
-  const [state, setState] = useState({
-    filters: filters,
-  });
+import ReactSlider from "react-slider";
+import { PRODUCT_MAX_PRICE, PRODUCT_MIN_PRICE } from "../../utils/const";
 
-  const handleChange = (clickedItem) => {
-    setState((prev) => ({
-      ...prev,
-      filters: filters.map((item) => {
-        if (item.filter === clickedItem.filter) {
-          const updatedItem = { ...item, checked: !item.checked };
-          filterCheck(updatedItem);
-          return updatedItem;
-        }
-        return item;
-      }),
-    }));
-  };
-  const [price, setPrice] = useState([50, 100]);
+const Filters = ({ categories, onFilterChange }) => {
+  const [expanded, setExpanded] = useState([]);
+  const [selectedFilters, setSelectedFilters] = useState({});
+  const [price, setPrice] = useState([PRODUCT_MIN_PRICE, PRODUCT_MAX_PRICE]);
 
-  const handlePriceChange = (values) => {
-    setPrice(values);
-  };
-  const [expanded, setExpanded] = useState(["netto", "material", "type"]);
+  // Handle accordion expansion
   const handleAccordionChange = (panel) => (event, isExpanded) => {
     setExpanded((prev) =>
       isExpanded ? [...prev, panel] : prev.filter((p) => p !== panel)
     );
   };
 
-  const [selected, setSelected] = useState({
-    netto: [],
-    material: false,
-    type: [],
-  });
+  // Handle checkbox changes for categories
+  const handleCheckboxChange = (category) => (choiceId) => {
+    setSelectedFilters((prevFilters) => {
+      const updatedFilters = { ...prevFilters };
 
-  const handleCheck = (category, value) => {
-    setSelected((prev) => ({
-      ...prev,
-      [category]: prev[category].includes(value)
-        ? prev[category].filter((item) => item !== value)
-        : [...prev[category], value],
-    }));
+      if (!updatedFilters[category.name]) {
+        updatedFilters[category.name] = {
+          name: category.name,
+          name_nl: category.name_nl,
+          choices: [],
+        };
+      }
+
+      if (updatedFilters[category.name].choices.includes(choiceId)) {
+        updatedFilters[category.name].choices = updatedFilters[
+          category.name
+        ].choices.filter((id) => id !== choiceId);
+      } else {
+        updatedFilters[category.name].choices.push(choiceId);
+      }
+
+      return updatedFilters;
+    });
   };
 
-  return (
-    // <div className="max-w-[300px] md:max-w-[100%]  sm:max-w-[100%]    xs:max-w-[100%]   xl:min-h-[1050px] shadow-xl md:overflow-auto sm:overflow-auto  xs:overflow-auto   ">
-    //   <span className="pt-[50px] md:pt-4 sm:pt-3 xs:pt-3   text-22 lg:text-20  flex px-8   justify-start   font-bold ">
-    //     Our assortment
-    //   </span>
+  // Handle price range changes
+  const handlePriceChange = (values) => {
+    setPrice(values);
+  };
 
-    //   <section className="md:flex sm:flex xs:flex filterRowMain ">
-    //     {state.filters.map((item, index) => {
-    //       return (
-    //         <div
-    //           key={index}
-    //           className="filterRowBox flex justify-start px-6 md:pr-1 sm:pr-1 xs:pr-1  items-center py-[2px] md:min-w-[160px] sm:min-w-[163px] xs:min-w-[163px]"
-    //         >
-    //           <PaymentCard
-    //             item={item}
-    //             name={item.filter}
-    //             isChecked={item.isChecked}
-    //             removeBg
-    //             onChange={handleChange}
-    //           />
-    //         </div>
-    //       );
-    //     })}
-    //   </section>
-    // </div>
+  // Notify parent component when filters change
+  useEffect(() => {
+    onFilterChange({ selectedFilters, price });
+  }, [selectedFilters, price]);
+
+  return (
     <>
-      <Accordion  expanded={expanded.includes("netto")} onChange={handleAccordionChange("netto")}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Netmaat (mm)</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <FormGroup>
-            {["40×40", "44×68", "45×70", "50×50", "60×60"].map((size) => (
-              <FormControlLabel
-                key={size}
-                control={
-                  <Checkbox
-                    checked={selected.netto.includes(size)}
-                    onChange={() => handleCheck("netto", size)}
-                  />
-                }
-                label={size}
-              />
-            ))}
-          </FormGroup>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion expanded={expanded.includes("material")} onChange={handleAccordionChange("material")}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Materiaal</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={selected.material}
-                onChange={() =>
-                  setSelected((prev) => ({ ...prev, material: !prev.material }))
-                }
-              />
-            }
-            label="Hardhout"
-          />
-        </AccordionDetails>
-      </Accordion>
-      <Accordion expanded={expanded.includes("type")} onChange={handleAccordionChange("type")}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Type</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <FormGroup>
-            {["geschaafd hardhout", "paal hardhout"].map((type) => (
-              <FormControlLabel
-                key={type}
-                control={
-                  <Checkbox
-                    checked={selected.type.includes(type)}
-                    onChange={() => handleCheck("type", type)}
-                  />
-                }
-                label={type}
-              />
-            ))}
-          </FormGroup>
-        </AccordionDetails>
-      </Accordion>
+      {categories?.map((category) => (
+        <Accordion
+          key={category.name}
+          expanded={expanded.includes(category.name)}
+          onChange={handleAccordionChange(category.name)}
+        >
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography>{category?.name}</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <FormGroup>
+              {category?.choices?.map((choice) => (
+                <FormControlLabel
+                  key={choice.id}
+                  control={
+                    <Checkbox
+                      checked={
+                        selectedFilters[category.name]?.choices.includes(
+                          choice.id
+                        ) || false
+                      }
+                      onChange={() => handleCheckboxChange(category)(choice.id)}
+                    />
+                  }
+                  label={choice.name_en}
+                />
+              ))}
+            </FormGroup>
+          </AccordionDetails>
+        </Accordion>
+      ))}
+
       <div className="w-full max-w-md p-4 ">
-        <h4 className="text-base xl:text-[22px] font-semibold text-[#2A353D] font-main mb-2.5">Price</h4>
+        <h4 className="text-base xl:text-[22px] font-semibold text-[#2A353D] font-main mb-2.5">
+          Price
+        </h4>
         <div className="bg-[#F4F5F7] py-4 px-7 rounded-2xl">
           <div className="flex justify-between mb-3 text-sm font-medium font-main text-[#2A353D] max-w-[180px] mx-auto">
             <span>${price[0]}</span>
@@ -161,7 +113,7 @@ const Filters = ({ filters, filterCheck }) => {
               ></div>
             )}
             min={0}
-            max={200}
+            max={1000}
             defaultValue={price}
             value={price}
             onChange={handlePriceChange}

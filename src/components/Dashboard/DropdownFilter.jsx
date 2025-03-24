@@ -20,7 +20,7 @@ export default function DropdownFilter({ options, selected, onChange, label }) {
               {({ active }) => (
                 <div
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevent menu from closing
+                    e.stopPropagation();
                     handleSelect(option.value);
                   }}
                   className={`${

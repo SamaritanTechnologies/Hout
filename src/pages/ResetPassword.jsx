@@ -47,7 +47,12 @@ export const ResetPassword = () => {
     }
   };
 
-  console.log(uid, "nnnn");
+  useEffect(() => {
+    if (!uid) {
+      navigate("/sign-in");
+    }
+  }, [uid]);
+
   return (
     <div>
       <div className="signUpMain flex flex-row-reverse md:flex-col sm:flex-col xs:flex-col min-h-screen">

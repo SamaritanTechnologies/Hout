@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { useSelector } from "react-redux";
 
 const initialState = {
   user: null,
@@ -11,10 +12,6 @@ const authSlice = createSlice({
   name: "auth",
   initialState: initialState,
   reducers: {
-    setUser: (state, action) => {
-      state.user = action.payload;
-      state.userRole = action.payload?.roleName;
-    },
     setUserInfoLoading: (state, action) => {
       state.isLoading = action.payload;
     },
@@ -27,14 +24,12 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.isError = false;
       state.user = action.payload;
-      state.userRole = action.payload?.roleName;
     },
     logoutUser: (state) => {
       state.isLoggedIn = false;
       state.isLoading = false;
       state.isError = false;
       state.user = null;
-      state.userRole = "";
     },
   },
 });
@@ -46,5 +41,19 @@ export const {
   loginUser,
   logoutUser,
 } = authSlice.actions;
+
+export const selectUser = (state) => state.auth.user;
+export const selectUserId = (state) => state.auth.user?.id;
+export const selectUserRole = (state) => state.auth.user?.is_superuser;
+
+export const isSuperUser = () => {
+  return useSelector(selectUserRole);
+};
+export const getUserId = () => {
+  return useSelector(selectUserId);
+};;
+export const getLoggedInUser = () => {
+  return useSelector(selectUser);
+};
 
 export default authSlice.reducer;

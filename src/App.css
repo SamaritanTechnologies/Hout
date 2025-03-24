@@ -76,14 +76,11 @@ button:hover {
 }
 .sideBarMain a {
   width: 100%;
-  padding: 0 40px;
   display: flex;
-  /* justify-content: center; */
   align-items: center;
 }
 a.sideActive {
   background: #fbc700;
-  /* padding:0 40px; */
   text-align: center;
   color: #fff;
   position: relative;
@@ -259,10 +256,6 @@ input[type="radio"]:checked + .box-content {
 }
 
 /* web screens css fk end */
-
-/* .open-sidebar {
-  overflow: hidden;
-} */
 .number-box {
   width: 43px;
   height: 36px;
@@ -386,7 +379,7 @@ input[type="number"] {
   }
   .landing {
     height: 100vh;
-    min-height: auto !important;
+    min-height: auto;
   }
 }
 
@@ -417,79 +410,8 @@ input[type="date"] {
 } */
 .swiper-button-prev:after, 
 .swiper-button-next:after {
-
   color: rgb(213, 162, 132) !important;
-  position: absolute;
-  bottom: -100% !important;
 }
-.swiper-button-prev:after {
-
-  left: 230px !important;
-}
-.swiper-button-next:after {
-
-  right: 270px !important;
-}
-@media(max-width:1024px){
-
-.swiper-button-prev:after {
-
-  left: 200px !important;
-}
-.swiper-button-next:after {
-
-  right: 200px !important;
-}
-}
-@media(max-width:768px){
-  .swiper-button-prev:after, 
-.swiper-button-next:after {
-
-  font-size: 20px;
-  bottom: -80% !important;
-}
-.swiper-button-prev:after {
-
-  left: 130px !important;
-}
-.swiper-button-next:after {
-
-  right: 130px !important;
-}
-}
-@media(max-width:425px){
-  .swiper-button-prev:after, 
-.swiper-button-next:after {
-
-  font-size: 15px;
-  bottom: -35% !important;
-}
-.swiper-button-prev:after {
-
-  left: 50px !important;
-}
-.swiper-button-next:after {
-
-  right: 50px !important;
-}
-}
-@media(max-width:320px){
-  .swiper-button-prev:after, 
-.swiper-button-next:after {
-
-  font-size: 14px;
-  bottom: -15% !important;
-}
-.swiper-button-prev:after {
-
-  left: 50px !important;
-}
-.swiper-button-next:after {
-
-  right: 50px !important;
-}
-}
-
 /* Hide the Google Translate toolbar */
 .goog-te-banner-frame.skiptranslate {
   display: none !important;
@@ -519,4 +441,11 @@ input[type="date"] {
 
 .VIpgJd-ZVi9od-l4eHX-hSRGPd{
   display: none;
+}
+.ql-container.ql-snow {
+  border: none !important; 
+}
+.ql-toolbar.ql-snow {
+  border: none !important;
+  border-bottom: 1px solid #ccc !important;
 }

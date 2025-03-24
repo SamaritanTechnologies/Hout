@@ -5,8 +5,7 @@ import stars from "../../assets/about/stars.svg";
 const Rating = () => {
   return (
     <>
-      <div className="flex justify-center items-center pt-[30px] md:pt-[40px] lg:pt-[65px] xl:pt-[65px]">
-        <section className="flex-col">
+      <div className="flex flex-col justify-center items-center pt-8 lg:pt-12 xl:pt-20">
           <div className="flex items-center gap-x-3">
             <div className="flex items-center">
               <img src={avatars} />
@@ -23,7 +22,6 @@ const Rating = () => {
               <img src={stars} />
             </div>
           </div>
-        </section>
       </div>
     </>
   );

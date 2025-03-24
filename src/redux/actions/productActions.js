@@ -1,5 +1,15 @@
 import { toast } from "react-toastify";
-import { axiosWithCredentials } from "../../providers";
+import { axiosApi, axiosWithCredentials } from "../../providers";
+
+export const addVatRate = async (payload) => {
+  const response = await axiosWithCredentials.post(`/vat-rate/`,payload);
+  return response.data;
+}
+
+export const getVatRate = async () => {
+  const response = await axiosWithCredentials.get("/vat-rate");
+    return response.data;
+}
 
 export const getProducts = async (filters = {}) => {
   try {
@@ -15,7 +25,7 @@ export const getProducts = async (filters = {}) => {
     });
 
     const queryString = params.toString();
-    const url = queryString ? `/products?${queryString}` : `/products`;
+    const url = queryString ? `/product?${queryString}` : `/product`;
 
     const response = await axiosWithCredentials.get(url);
     return response.data;
@@ -25,11 +35,9 @@ export const getProducts = async (filters = {}) => {
   }
 };
 
-export const deleteProduct = async (values) => {
+export const deleteProduct = async (id) => {
   try {
-    const { id, parentId } = values;
-
-    await axiosWithCredentials.delete(`/products/${parentId}/delete/${id}/`);
+    await axiosWithCredentials.delete(`/product/${id}/delete/`);
 
     toast.success("Successfully deleted");
   } catch (error) {
@@ -56,7 +64,9 @@ export const deleteWishList = async (values) => {
 
 export const getProductCategories = async () => {
   try {
-    const response = await axiosWithCredentials.get(`/choice-categories/`);
+    const response = await axiosApi.get(
+      `/product/category-choices/`
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching cetegories details:", error);
@@ -67,7 +77,7 @@ export const getProductCategories = async () => {
 export const getProductStaticValuesByName = async (field) => {
   try {
     const response = await axiosWithCredentials.get(
-      `/product-field-values/?field=${field}`
+      `/product/field-values/?field=${field}`
     );
     return response.data;
   } catch (error) {
@@ -78,7 +88,9 @@ export const getProductStaticValuesByName = async (field) => {
 
 export const getProductDetailsById = async (id) => {
   try {
-    const response = await axiosWithCredentials.get(`/products/${id}/detail/`);
+    const response = await axiosWithCredentials.get(
+      `/product/?product_id=${id}`
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching product details:", error);
@@ -86,63 +98,76 @@ export const getProductDetailsById = async (id) => {
   }
 };
 
-export const addProduct = async (values, products, images) => {
+// Function to fetch an image URL and convert it to a File object
+export const fetchImageAsFile = async (url) => {
+  const filename = url.split("/").pop();
+  const response = await fetch(url);
+  const blob = await response.blob();
+  return new File([blob], filename, { type: blob.type });
+};
+
+export const addProduct = async (values, lengths, images, relatedProducts) => {
   const formData = new FormData();
-  formData.append("name_nl", values.nameNl);
-  formData.append("name_en", values.name);
-  formData.append("description_nl", values.productDescriptionNl);
-  formData.append("description_en", values.productDescription);
+
+  // Append basic product details
+  formData.append("name_nl", values.name_nl);
+  formData.append("name_en", values.name_en);
+  formData.append("description_nl", values.description_nl);
+  formData.append("description_en", values.description_en);
+
+  // Ensure `width`, `thickness`, `weight_per_m3` are valid numbers
   formData.append("width", values.width);
   formData.append("thickness", values.thickness);
-  formData.append("weight_per_m3", values.weight);
+  formData.append("weight_per_m3", values.weight_per_m3);
 
   // Append groups, types, materials, etc.
-
-  values.group?.forEach((group, index) =>
-    formData.append(`group[${index}]`, group.id)
-  );
-  values.type?.forEach((type, index) =>
-    formData.append(`type[${index}]`, type.id)
+  values.group?.forEach((group, index) => formData.append(`group`, group.id));
+  values.product_type?.forEach((type, index) =>
+    formData.append(`product_type`, type.id)
   );
   values.material?.forEach((material, index) =>
-    formData.append(`material[${index}]`, material.id)
+    formData.append(`material`, material.id)
   );
   values.durability_class?.forEach((durability, index) =>
-    formData.append(`durability_class[${index}]`, durability.id)
+    formData.append(`durability_class`, durability.id)
   );
   values.quality?.forEach((quality, index) =>
-    formData.append(`quality[${index}]`, quality.id)
+    formData.append(`quality`, quality.id)
   );
   values.application?.forEach((application, index) =>
-    formData.append(`application[${index}]`, application.id)
+    formData.append(`application`, application.id)
   );
   values.profile?.forEach((profile, index) =>
-    formData.append(`profile[${index}]`, profile.id)
+    formData.append(`profile`, profile.id)
   );
 
-  // Append images
+  // Append related products variations
+  Object.entries(relatedProducts).forEach(([key, related]) => {
+    if (related) {
+      formData.append(`related_products`, related.value); // Use related.value as the ID
+    }
+  });
+
+  // Append lengths variations
   images?.forEach((image, index) => {
-    formData.append(`images[${index}][product_image]`, image.file);
+    formData.append(`images`, image.file);
   });
 
-  // Append product variations
-  products?.forEach((product, index) => {
-    formData.append(`products[${index}][length]`, product.length || 0);
-    formData.append(`products[${index}][discount]`, product.discount || 0);
-    formData.append(`products[${index}][stock]`, product.stock || 0);
+  // Append lengths variations
+  lengths?.forEach((length, index) => {
+    formData.append(`lengths[${index}][length]`, length.length || 0);
+    formData.append(`lengths[${index}][discount]`, length.discount || 0);
+    formData.append(`lengths[${index}][stock]`, length.stock || 0);
     formData.append(
-      `products[${index}][product_id_prefix]`,
-      product.product_id_prefix || ""
-    );
-    formData.append(
-      `products[${index}][full_price_ex_vat]`,
-      product.full_price_ex_vat || 0
+      `lengths[${index}][full_price_ex_vat]`,
+      length.full_price_ex_vat || 0
     );
   });
 
+  // Send the request to the backend
   try {
     const response = await axiosWithCredentials.post(
-      `/products/create/`,
+      `/product/create/`,
       formData,
       {
         headers: { "Content-Type": "multipart/form-data" },
@@ -157,70 +182,81 @@ export const addProduct = async (values, products, images) => {
   }
 };
 
-export const updateProduct = async (id, values, products, images) => {
+export const updateProduct = async (
+  id,
+  values,
+  lengths,
+  images,
+  relatedProducts
+) => {
   const formData = new FormData();
-  formData.append("name_nl", values.nameNl);
-  formData.append("name_en", values.name);
-  formData.append("description_nl", values.productDescriptionNl);
-  formData.append("description_en", values.productDescription);
-  formData.append("width", values.width);
-  formData.append("thickness", values.thickness);
-  formData.append("weight_per_m3", values.weight);
+
+  // Append basic product details
+  formData.append("name_nl", values.name_nl || "");
+  formData.append("name_en", values.name_en || "");
+  formData.append("description_nl", values.description_nl || "");
+  formData.append("description_en", values.description_en || "");
+
+  // Append numeric fields (ensure they are valid numbers)
+  formData.append("width", values.width || 0);
+  formData.append("thickness", values.thickness || 0);
+  formData.append("weight_per_m3", values.weight_per_m3 || 0);
 
   // Append groups, types, materials, etc.
-
-  values.group?.forEach((group, index) =>
-    formData.append(`group[${index}]`, group.id)
-  );
-  values.type?.forEach((type, index) =>
-    formData.append(`type[${index}]`, type.id)
+  values.group?.forEach((group, index) => formData.append(`group`, group.id));
+  values.product_type?.forEach((type, index) =>
+    formData.append(`product_type`, type.id)
   );
   values.material?.forEach((material, index) =>
-    formData.append(`material[${index}]`, material.id)
+    formData.append(`material`, material.id)
   );
   values.durability_class?.forEach((durability, index) =>
-    formData.append(`durability_class[${index}]`, durability.id)
+    formData.append(`durability_class`, durability.id)
   );
   values.quality?.forEach((quality, index) =>
-    formData.append(`quality[${index}]`, quality.id)
+    formData.append(`quality`, quality.id)
   );
   values.application?.forEach((application, index) =>
-    formData.append(`application[${index}]`, application.id)
+    formData.append(`application`, application.id)
   );
   values.profile?.forEach((profile, index) =>
-    formData.append(`profile[${index}]`, profile.id)
+    formData.append(`profile`, profile.id)
   );
 
-  // Append images
-  images?.forEach((image, index) => {
-    if (image.file?.id) {
-      formData.append(`images[${index}][id]`, image.file?.id);
-    } else {
-      formData.append(`images[${index}][product_image]`, image.file);
+  // Append related products variations
+  Object.entries(relatedProducts).forEach(([key, related]) => {
+    if (related) {
+      formData.append(`related_products`, related.value); // Use related.value as the ID
     }
   });
 
-  // Append product variations
-  products?.forEach((product, index) => {
-    if (product.id) {
-      formData.append(`products[${index}][id]`, product.id);
+  // Append images (handle existing and new images)
+  for (const image of images || []) {
+    if (image.id) {
+      const file = await fetchImageAsFile(image.preview); // already added image, make it binary
+      formData.append(`images`, file);
+    } else {
+      formData.append(`images`, image.file); // newly added image
     }
-    formData.append(`products[${index}][length]`, product.length || 0);
-    formData.append(`products[${index}][discount]`, product.discount || 0);
-    formData.append(`products[${index}][stock]`, product.stock || 0);
+  }
+
+  // Append lengths (handle existing and new lengths)
+  lengths?.forEach((length, index) => {
+    if (length.id) {
+      formData.append(`lengths[${index}][id]`, length.id);
+    }
+    formData.append(`lengths[${index}][length]`, length.length || 0);
+    formData.append(`lengths[${index}][discount]`, length.discount || 0);
+    formData.append(`lengths[${index}][stock]`, length.stock || 0);
     formData.append(
-      `products[${index}][full_price_ex_vat]`,
-      product.full_price_ex_vat || 0
-    );
-    formData.append(
-      `products[${index}][product_id_prefix]`,
-      product.product_id_prefix || ""
+      `lengths[${index}][full_price_ex_vat]`,
+      length.full_price_ex_vat || 0
     );
   });
 
   try {
     const response = await axiosWithCredentials.put(
-      `/products/${id}/update/`,
+      `/product/${id}/update/`,
       formData,
       {
         headers: { "Content-Type": "multipart/form-data" },

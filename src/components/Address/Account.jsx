@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import {
   getDeliveryAddress,
   getInvoiceAddress,
-  getProfile,
+  getProfileInfo,
   updateDeliveryAddress,
   updateInvoiceAddress,
   updatePass,
@@ -55,15 +55,16 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
 
   const fetchUser = async () => {
     try {
-      const res = await getProfile(userData?.user_id);
+      const res = await getProfileInfo();
       setState((prev) => ({
         ...prev,
-        userData: res?.data,
+        userData: res,
       }));
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
   };
+
   const fetchDeliveryAddress = async () => {
     try {
       const res = await getDeliveryAddress();
@@ -75,6 +76,7 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
       console.error("Error fetching user data:", error);
     }
   };
+
   const fetchInvoiceAddress = async () => {
     try {
       const res = await getInvoiceAddress();

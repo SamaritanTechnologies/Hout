@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { axiosApi, setAccessToken, BASE_URL } from "../providers";
+import {
+  axiosApi,
+  setAccessToken,
+  BASE_URL,
+  setRefreshToken,
+} from "../providers";
 import { toast } from "react-toastify";
 
 import signInRight from "../assets/authImages/signInRight.svg";
@@ -13,9 +18,12 @@ import thumbsUp from "../assets/authImages/thumbsUp.svg";
 import signinBlur from "../assets/authImages/signinBlur.png";
 import InputField from "../components/Common/InputField";
 import Switch from "../components/Common/Switch";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../redux";
 
 export const Signin = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [btnLoading, setBtnLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -33,9 +41,8 @@ export const Signin = () => {
     });
   };
 
-  const loginUser = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Validate form fields
     if (!formData.email.trim() || !formData.password.trim()) {
       toast.error("Please fill in all fields");
       return;
@@ -50,14 +57,16 @@ export const Signin = () => {
 
     try {
       const response = await axiosApi.post("/accounts/login/", data);
-      const { token, cart_id } = response.data;
+      const { access_token, refresh_token, user } = response.data;
 
-      setAccessToken(token);
-      localStorage.setItem("userData", JSON.stringify(response.data));
-      localStorage.setItem("cartId", JSON.stringify(cart_id));
-
-      navigate("/");
+      setAccessToken(access_token);
+      setRefreshToken(refresh_token);
+      dispatch(loginUser(user));
+      
       toast.success("Successfully logged in");
+      setTimeout(() => {
+        navigate("/");
+      }, 500);
     } catch (error) {
       const errorMessage =
         error?.response?.data?.message || "Wrong credentials!";
@@ -126,7 +135,7 @@ export const Signin = () => {
                   Login into your account
                 </span>
               </div>
-              <form className="w-full" onSubmit={loginUser}>
+              <form className="w-full" onSubmit={handleLogin}>
                 {/* social auth row  */}
                 <div className="mx-auto socialAuthRow flex gap-2.5 mb-[12px]">
                   <a
@@ -201,7 +210,6 @@ export const Signin = () => {
                   <div className="w-full ">
                     <button
                       type="submit"
-                      onClick={loginUser}
                       disabled={btnLoading}
                       className="bg-[#FBC700] block text-black text-center xl:py-[16px] lg:py-[16px] py-[12px] px-[25px] w-full font-semibold mb-[23px] xl:text-[18px] text-[16px]"
                     >
