@@ -33,7 +33,7 @@ const Wishlist = () => {
         ...prev,
         wishlistData: res,
       }));
-      console.log(res, "fetchUser");
+      console.log("fetchUser", res);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -123,20 +123,22 @@ const Wishlist = () => {
                               </button>
                               <div className="w-[60px] h-[72px] mr-[16px] md:w-[50px] md:h-[60px] md:mr-[12px] sm:w-[40px] sm:h-[50px] sm:mr-[10px]">
                                 <img
-                                  src={item.images_url?.[0]}
+                                  src={item.images[0]?.image}
                                   className="w-[100%] rounded-2xl h-20"
                                   alt="Product"
                                 />
                               </div>
                               <div className="flex flex-col  gap-[8px]">
-                                <h1 className="text-[14px]">{item.name}</h1>
-                                <p className="text-[#6C7275] text-left  text-[12px]">
+                                <h1 className="text-[14px]">{item.name_en}</h1>
+                                {/* <p className="text-[#6C7275] text-left  text-[12px]">
                                   Color: {item.productColor}
-                                </p>
+                                </p> */}
                               </div>
                             </div>
                           </td>
-                          <td className="w-[20%] text-left">€{item.price}</td>
+                          <td className="w-[20%] text-left">
+                            $ {item.lengths[0].discounted_price_ex_vat}
+                          </td>
                           <td className="w-[40%] flex justify-center items-center">
                             <button
                               className="px-[24px] py-[6px] bg-[#FBC700] rounded-[8px]"

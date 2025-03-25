@@ -9,7 +9,11 @@ import Switch from "../components/Common/Switch";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Pagination from "../components/Common/Pagination";
-import { PRODUCT_MAX_PRICE, PRODUCT_MIN_PRICE, PRODUCT_PAGE_SIZE } from "../utils/const";
+import {
+  PRODUCT_MAX_PRICE,
+  PRODUCT_MIN_PRICE,
+  PRODUCT_PAGE_SIZE,
+} from "../utils/const";
 
 export const ShopPage = () => {
   const { productCategories } = useSelector((state) => state.admin);
@@ -94,7 +98,11 @@ export const ShopPage = () => {
             role="button"
             aria-pressed={filterDrawer}
           >
-            <img src={filter} className="md:size-5 xs:size-5 mb-[1px]" alt="filter icon" />
+            <img
+              src={filter}
+              className="md:size-5 xs:size-5 mb-[1px]"
+              alt="filter icon"
+            />
             <h4 className="prop text-xl sm:text-16 xs:text-14 xs:leading-[22px] font-footer1 text-[#111727]">
               Filter
             </h4>
@@ -108,12 +116,22 @@ export const ShopPage = () => {
 
         <div className="sm:pt-4 xs:pt-4">
           <div className="flex gap-x-6 md:gap-x-5 items-center font-footer1">
-            <div className="pops md:text-14 sm:text-14 xs:text-12">Show Prices</div>
-            <div className="pops md:text-14 sm:text-14 xs:text-12">Incl. VAT</div>
-            <div className="recPasswrd">
-              <Switch optional checked={includeVAT} onChange={handleVATToggle} />
+            <div className="pops md:text-14 sm:text-14 xs:text-12">
+              Show Prices
             </div>
-            <div className="pops md:text-14 sm:text-14 xs:text-12">Excl. VAT</div>
+            <div className="pops md:text-14 sm:text-14 xs:text-12">
+              Incl. VAT
+            </div>
+            <div className="recPasswrd">
+              <Switch
+                optional
+                checked={includeVAT}
+                onChange={handleVATToggle}
+              />
+            </div>
+            <div className="pops md:text-14 sm:text-14 xs:text-12">
+              Excl. VAT
+            </div>
           </div>
         </div>
       </section>
@@ -124,10 +142,16 @@ export const ShopPage = () => {
             filterDrawer ? "open-filter-drawer" : ""
           } assortment-filters bg-white py-4 w-full shadow-xl max-w-[300px] transition-transform duration-300 ease-in-out`}
         >
-          <div className="close-menu xl:hidden lg:hidden flex justify-end" onClick={filterToggler}>
+          <div
+            className="close-menu xl:hidden lg:hidden flex justify-end"
+            onClick={filterToggler}
+          >
             <XMarkIcon className="h-6 w-6 text-gray-500" />
           </div>
-          <Filters categories={categoryArray} onFilterChange={handleFilterChange} />
+          <Filters
+            categories={categoryArray}
+            onFilterChange={handleFilterChange}
+          />
         </div>
         <div className="flex flex-col w-full gap-10">
           <ProductsList
@@ -137,7 +161,7 @@ export const ShopPage = () => {
             setTotalItems={setTotalItems}
           />
           <Pagination
-            pageCount={Math.ceil(totalItems / pageSize)} 
+            pageCount={Math.ceil(totalItems / pageSize)}
             onPageChange={handlePageChange}
             forcePage={currentPage}
           />

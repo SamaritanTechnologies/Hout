@@ -2,14 +2,14 @@ import { toast } from "react-toastify";
 import { axiosApi, axiosWithCredentials } from "../../providers";
 
 export const addVatRate = async (payload) => {
-  const response = await axiosWithCredentials.post(`/vat-rate/`,payload);
+  const response = await axiosWithCredentials.post(`/vat-rate/`, payload);
   return response.data;
-}
+};
 
 export const getVatRate = async () => {
   const response = await axiosWithCredentials.get("/vat-rate");
-    return response.data;
-}
+  return response.data;
+};
 
 export const getProducts = async (filters = {}) => {
   try {
@@ -48,9 +48,8 @@ export const deleteProduct = async (id) => {
 export const deleteWishList = async (values) => {
   try {
     const { id } = values;
-
     const response = await axiosWithCredentials.delete(
-      `/delete-wishlist/${id}/`
+      `/wishlist/${id}/delete/`
     );
     console.log(response.data, "ressppp");
     toast.success("Successfuly Deleted");
@@ -64,9 +63,7 @@ export const deleteWishList = async (values) => {
 
 export const getProductCategories = async () => {
   try {
-    const response = await axiosApi.get(
-      `/product/category-choices/`
-    );
+    const response = await axiosApi.get(`/product/category-choices/`);
     return response.data;
   } catch (error) {
     console.error("Error fetching cetegories details:", error);
