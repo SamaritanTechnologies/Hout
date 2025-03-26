@@ -225,12 +225,12 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
                           </div>
                         </div>
                       </td>
-                      <td className="px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
+                      {/* <td className="px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
                         €{item?.product?.price?.toFixed(2)}
                       </td>
                       <td className="px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
                         €{item?.product_price?.toFixed(2)}
-                      </td>
+                      </td> */}
                     </tr>
                   );
                 })}
@@ -312,7 +312,7 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
               <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
                 Subtotal
               </div>
-              <div>€{cartItems?.length ? totalPrice?.toFixed(2) : 0}</div>
+              {/* <div>€{cartItems?.length ? totalPrice?.toFixed(2) : 0}</div> */}
             </section>
             <section className="flex justify-between pt-[25px]">
               <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
@@ -331,7 +331,7 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
                 Total
               </div>
               <div className="text-customYellow font-medium xl:text-18 lg:text-16 text-14">
-                USD €{cartItems?.length ? total?.toFixed(2) : 0}
+                {/* USD €{cartItems?.length ? total?.toFixed(2) : 0} */}
               </div>
             </section>
           </section>

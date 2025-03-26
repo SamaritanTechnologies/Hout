@@ -3,10 +3,14 @@ import editImg from "../../assets/myAccount/edit-icon.svg";
 import {
   getDeliveryAddress,
   getInvoiceAddress,
+  getProfileInfo,
   updateDeliverAddress,
   updateInvoiceAddress,
 } from "../../redux/actions/profileActions";
 import InputField from "../Common/InputField";
+import { useSelector } from "react-redux";
+import { axiosWithCredentials } from "../../providers";
+import { toast } from "react-toastify";
 
 const AddressCard = () => {
   const [state, setState] = useState({
@@ -14,6 +18,8 @@ const AddressCard = () => {
     invoiceAddress: null,
     userData: null,
   });
+  const userDetail = useSelector((state) => state.auth.user);
+
   const [showEditModal, setShowEditModal] = useState(false);
   const [addressType, setAddressType] = useState(null);
   const [currentAddressData, setCurrentAddressData] = useState(null);
@@ -38,55 +44,106 @@ const AddressCard = () => {
     }
   }, [currentAddressData, state.userData]);
 
-  const fetchDeliveryAddress = async () => {
-    try {
-      const res = await getDeliveryAddress();
-      setState((prev) => ({ ...prev, deliveryAddress: res?.data }));
-    } catch (error) {
-      console.error("Error fetching delivery address:", error);
-    }
-  };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const payload = {
+  //       ...formData,
+  //       user: state.userData?.id,
+  //     };
 
-  const fetchInvoiceAddress = async () => {
-    try {
-      const res = await getInvoiceAddress();
-      setState((prev) => ({ ...prev, invoiceAddress: res?.data }));
-    } catch (error) {
-      console.error("Error fetching invoice address:", error);
-    }
-  };
+  //     if (addressType === "billing") {
+  //       try {
+  //         const payload = {
+  //           user: id,
+  //           street_and_number: values.street_and_number,
+  //           zip_code: values.zip_code,
+  //           city: values.city,
+  //           country: values.country || "Netherland",
+  //         };
 
-  const fetchUser = async () => {
-    try {
-      const res = await getProfile();
-      setState((prev) => ({ ...prev, userData: res?.data }));
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  };
+  //         const response = await axiosWithCredentials.put(
+  //           `/accounts/update-invoice-address/${userDetail.id}/`,
+  //           payload
+  //         );
+  //         toast.success("Successfully Updated");
+  //         return response.data;
+  //       } catch (error) {
+  //         console.error("Error:", error);
+  //         toast.error("Something went wrong!");
+  //         throw error;
+  //       }
+  //     } else {
+  //       try {
+  //         const payload = {
+  //           user: id,
+  //           street_and_number: values.street_and_number,
+  //           zip_code: values.zip_code,
+  //           city: values.city,
+  //           country: values.country || "Netherland",
+  //         };
 
-  useEffect(() => {
-    fetchDeliveryAddress();
-    fetchInvoiceAddress();
-    fetchUser();
-  }, []);
+  //         const response = await axiosWithCredentials.put(
+  //           `/accounts/update-delivery-address/${userDetail.id}/`,
+  //           payload
+  //         );
+  //         toast.success("Successfully Updated");
+  //         return response.data;
+  //       } catch (error) {
+  //         console.error("Error:", error);
+  //         toast.error("Something went wrong!");
+  //         throw error;
+  //       }
+  //     }
 
+  //     // await fetchDeliveryAddress();
+  //     // await fetchInvoiceAddress();
+  //     setShowEditModal(false);
+  //   } catch (error) {
+  //     console.error("Error updating address:", error);
+  //   }
+  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const payload = {
         ...formData,
-        user: state.userData?.id,
+        user: state.userData?.id, // Ensure user ID is taken from state.userData
       };
 
+      const userId = userDetail?.id || state.userData?.id;
+
       if (addressType === "billing") {
-        await updateInvoiceAddress(payload);
+        try {
+          const response = await axiosWithCredentials.put(
+            `/accounts/update-invoice-address/${userId}/`,
+            payload
+          );
+          setShowEditModal(false);
+          toast.success("Successfully Updated");
+          return response.data;
+        } catch (error) {
+          console.error("Error:", error);
+          toast.error("Something went wrong!");
+          throw error;
+        }
       } else {
-        await updateDeliverAddress(payload);
+        try {
+          const response = await axiosWithCredentials.put(
+            `/accounts/update-delivery-address/${userId}/`,
+            payload
+          );
+          toast.success("Successfully Updated");
+          setShowEditModal(false);
+
+          return response.data;
+        } catch (error) {
+          console.error("Error:", error);
+          toast.error("Something went wrong!");
+          throw error;
+        }
       }
 
-      await fetchDeliveryAddress();
-      await fetchInvoiceAddress();
       setShowEditModal(false);
     } catch (error) {
       console.error("Error updating address:", error);
@@ -110,7 +167,7 @@ const AddressCard = () => {
                 <button
                   onClick={() => {
                     setAddressType("billing");
-                    setCurrentAddressData(state.invoiceAddress);
+                    setCurrentAddressData(userDetail.invoice_address);
                     setShowEditModal(true);
                   }}
                 >
@@ -122,8 +179,8 @@ const AddressCard = () => {
               </div>
 
               <p className="text-[16px] text-[#535353] mt-[4px]">
-                {state?.invoiceAddress
-                  ? `${state.invoiceAddress.street_and_number}, ${state.invoiceAddress.city}, ${state.invoiceAddress.country}`
+                {userDetail?.invoice_address
+                  ? `${userDetail?.invoice_address.street_and_number}, ${userDetail?.invoice_address.city}, ${userDetail?.invoice_address?.country}`
                   : "Loading..."}
               </p>
             </div>
@@ -137,7 +194,7 @@ const AddressCard = () => {
                 <button
                   onClick={() => {
                     setAddressType("shipping");
-                    setCurrentAddressData(state.deliveryAddress);
+                    setCurrentAddressData(userDetail.delivery_address);
                     setShowEditModal(true);
                   }}
                 >
@@ -156,8 +213,8 @@ const AddressCard = () => {
               </p> */}
 
               <p className="text-[16px] text-[#535353] mt-[4px]">
-                {state?.deliveryAddress
-                  ? `${state.deliveryAddress.street_and_number}, ${state.deliveryAddress.city}, ${state.deliveryAddress.country}`
+                {userDetail?.delivery_address
+                  ? `${userDetail.delivery_address.street_and_number}, ${userDetail.delivery_address.city}, ${userDetail.delivery_address.country}`
                   : "Loading..."}
               </p>
             </div>
@@ -166,7 +223,7 @@ const AddressCard = () => {
       </div>
 
       {showEditModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg max-w-md w-full">
             <h2 className="text-xl font-semibold mb-4">
               Edit {addressType} Address
@@ -249,7 +306,7 @@ const AddressCard = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                  className="px-4 py-2 text-sm font-medium text-white bg-[#FBC700] rounded-md "
                 >
                   Update Address
                 </button>

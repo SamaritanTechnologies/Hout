@@ -167,18 +167,16 @@ const Wishlist = () => {
         </section>
       ) : (
         <div className="flex justify-center items-center h-60 w-full">
-          <div className="">
-            Please
-            <Button
-              btnText="Sign-in"
-              paddingY=""
-              paddingX=""
-              fontbold
+          <div className=" flex gap-1 items-center">
+            <span> Please sign-in to view the Wishlist.</span>
+            <button
+              className="bg-[#FBC700] text-[#161922] p-2 rounded-md "
               onClick={() => {
                 navigate("/sign-in");
               }}
-            />
-            to view the Wishlist.
+            >
+              Sign-in
+            </button>
           </div>
         </div>
       )}
