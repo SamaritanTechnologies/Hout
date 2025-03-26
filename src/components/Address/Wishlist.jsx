@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
-import profileImg from "../../assets/myAccount/profile.png";
 import crossImg from "../../assets/myAccount/Shape.svg";
-import profilebtn from "../../assets/myAccount/profileBtn.svg";
-import productImg from "../../assets/myAccount/image 1.svg";
-import productImg2 from "../../assets/myAccount/image 2.svg";
-import productImg3 from "../../assets/myAccount/image 3.svg";
 import { addToCart, getWishList } from "../../redux/actions/orderActions";
 import DeleteModal from "../Modals/DeleteModal";
 import { deleteWishList } from "../../redux/actions/productActions";
@@ -12,6 +7,7 @@ import { getLoggedInUser } from "../../redux";
 import { useSelector } from "react-redux";
 import Button from "../Common/Button";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Wishlist = () => {
   const navigate = useNavigate();
@@ -33,7 +29,6 @@ const Wishlist = () => {
         ...prev,
         wishlistData: res,
       }));
-      console.log("fetchUser", res);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -46,9 +41,9 @@ const Wishlist = () => {
   const handleDelete = async () => {
     try {
       if (selectedItem) {
-        const res = await deleteWishList({ id: selectedItem });
-        console.log(res, "fetchUser");
+        await deleteWishList({ id: selectedItem });
         setIsDeleted(!isDeleted);
+        toast.success("Product removed from wishlist!");
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -77,10 +72,10 @@ const Wishlist = () => {
             isOpen={showModal}
             closeModal={() => setShowModal(!showModal)}
             handleDelete={handleDelete}
+            actionText="Remove"
+            description="Are you sure you want to remove product from wishlist?"
           />
-          {/* <h1 className="text-[48px] xs:text-[20px] sm:text-[25px] md:text-[30px] lg:text-[35px] text-center text-[#000000] mb-[80px] xs:mb-[25px] sm:mb-[30px] md:mb-[50px] lg:mb-[70px]">
-        My Account
-      </h1> */}
+
           <div className="flex xs:flex-col xs:items-center sm:flex-col sm:items-center mb-32 justify-center">
             <div className="w-[100%]">
               <h1 className="text-20 font-semibold mb-[18px] sm:mt-12 text-center xs:mt-10 xs:text-center">
@@ -92,6 +87,9 @@ const Wishlist = () => {
                     <tr className=" border-solid border-b-[1px] border-[#E8ECEF] flex w-[100%] justify-between py-[22px]">
                       <th className="text-[14px] text-[#6C7275] w-[40%] text-left">
                         Product
+                      </th>
+                      <th className="text-[14px] text-[#6C7275] w-[20%] text-left">
+                        Description
                       </th>
                       <th className="text-[14px] text-[#6C7275] w-[20%] text-left">
                         Price
@@ -130,11 +128,11 @@ const Wishlist = () => {
                               </div>
                               <div className="flex flex-col  gap-[8px]">
                                 <h1 className="text-[14px]">{item.name_en}</h1>
-                                {/* <p className="text-[#6C7275] text-left  text-[12px]">
-                                  Color: {item.productColor}
-                                </p> */}
                               </div>
                             </div>
+                          </td>
+                          <td className="w-[20%] text-left truncate">
+                            {item?.description_en}
                           </td>
                           <td className="w-[20%] text-left">
                             $ {item.lengths[0].discounted_price_ex_vat}
@@ -157,7 +155,7 @@ const Wishlist = () => {
                           colSpan="3"
                           className="text-[14px] text-bold text-[#141718] text-center py-[22px]"
                         >
-                          No data
+                          No products in wishlist
                         </td>
                       </tr>
                     )}

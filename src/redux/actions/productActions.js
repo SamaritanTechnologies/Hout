@@ -51,8 +51,6 @@ export const deleteWishList = async (values) => {
     const response = await axiosWithCredentials.delete(
       `/wishlist/${id}/delete/`
     );
-    console.log(response.data, "ressppp");
-    toast.success("Successfuly Deleted");
     return response;
   } catch (error) {
     toast.error("Something went wrong ");

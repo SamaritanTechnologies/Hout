@@ -6,36 +6,53 @@ import { useSelector } from "react-redux";
 import { axiosWithCredentials } from "../../providers";
 import { toast } from "react-toastify";
 import { deleteWishList } from "../../redux/actions/productActions";
+import { useState } from "react";
 
 const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
   const authState = useSelector((state) => state.auth);
-  console.log("is_Wishlist", product.is_wishlist);
+
   const isAuthenticated = authState.isLoggedIn;
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
   const addWishlist = async (id) => {
+    if (loading) return;
+    setLoading(true);
+
     try {
-      const response = await axiosWithCredentials.post("/wishlist/", {
+      await axiosWithCredentials.post("/wishlist/", {
         product_id: id,
       });
-      console.log("WishList response:", response.data);
-      toast.success("Product added to wishlist!");
       fetchProduct();
+
+      setTimeout(() => {
+        toast.success("Product added to wishlist!");
+      }, 1000);
     } catch (error) {
       toast.error("Failed to add product to wishlist!");
+    } finally {
+      setLoading(false);
     }
   };
-  const handleDeleteWishlist = async () => {
+
+  const handleDeleteWishlist = async (id) => {
+    if (loading) return;
+    setLoading(true);
+
     try {
-      if (selectedItem) {
-        const res = await deleteWishList({ id: selectedItem });
-        console.log("fetchUser", res);
-        setIsDeleted(!isDeleted);
-        fetchProduct();
-      }
+      await deleteWishList({ id });
+      fetchProduct();
+
+      setTimeout(() => {
+        toast.success("Product removed from wishlist!");
+      }, 1000);
     } catch (error) {
       console.error("Error fetching user data:", error);
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
     <div className="relative bg-[#F4F5F7] h-auto">
       {minimumPrice.discount > 0 && (
@@ -92,7 +109,7 @@ const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
               <img
                 src={productHeartFilled}
                 onClick={() => {
-                  handleDeleteWishlist(product.product_id);
+                  handleDeleteWishlist(product.id);
                 }}
               />
             ) : (

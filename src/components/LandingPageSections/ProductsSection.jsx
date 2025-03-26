@@ -8,11 +8,12 @@ const ProductsSection = () => {
   const navigate = useNavigate();
   const [featureProducts, setFeatureProducts] = useState([]);
 
+  const fetchFeaturedProducts = async () => {
+    const data = await getFeaturedProducts();
+    setFeatureProducts(data.products);
+  };
+
   useEffect(() => {
-    const fetchFeaturedProducts = async () => {
-      const data = await getFeaturedProducts();
-      setFeatureProducts(data.products);
-    };
     fetchFeaturedProducts();
   }, []);
 
@@ -43,6 +44,7 @@ const ProductsSection = () => {
                 key={product.id}
                 product={product}
                 minimumPrice={minimumPrice}
+                fetchProduct={fetchFeaturedProducts}
               />
             );
           })}

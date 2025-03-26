@@ -1,4 +1,4 @@
-import { axiosApi } from "../../providers";
+import { axiosApi, axiosWithCredentials } from "../../providers";
 
 export const getHomepageImage = async () => {
   const response = await axiosApi.get(`/images/`);
@@ -6,7 +6,7 @@ export const getHomepageImage = async () => {
 }
 
 export const getFeaturedProducts = async () => {
-  const response =  await axiosApi.get(`/featured-products-detail`);
+  const response =  await axiosWithCredentials.get(`/featured-products-detail`);
   return response.data;
 }
 
@@ -57,11 +57,11 @@ export const getFaqs = async () => {
 }
 
 export const getProducts = async (queryParams = "") => {
-  const response = await axiosApi.get(`/product/?${queryParams}`);
+  const response = await axiosWithCredentials.get(`/product/?${queryParams}`);
   return response.data;
 }
 
 export const getProductsById = async (product_id) => {
-  const response = await axiosApi.get(`/product/${product_id}`);
+  const response = await axiosWithCredentials.get(`/product/${product_id}`);
   return response.data;
 };

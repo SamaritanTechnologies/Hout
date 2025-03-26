@@ -137,7 +137,7 @@ const OrderHistory = () => {
                       colSpan="5"
                       className="text-[14px] text-[#141718] text-center py-[22px]"
                     >
-                      No items
+                      No order history
                     </td>
                   </tr>
                 )}
