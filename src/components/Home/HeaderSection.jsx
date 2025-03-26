@@ -9,14 +9,13 @@ import { scrollToTop } from "../../utils/helper";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useSelector } from "react-redux";
 
-
 const HeaderSection = () => {
   const navigate = useNavigate();
   const authState = useSelector((state) => state.auth);
   const isAuthenticated = authState.isLoggedIn;
   const [isActive, setIsActive] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  
+
   const toggleMenu = () => {
     setIsActive(!isActive);
   };
@@ -147,18 +146,28 @@ const HeaderSection = () => {
             Shop
           </div>
           <div>
-            {isAuthenticated?<img
-              src={persons}
-              className="cursor-pointer h-[18px]"
-              onClick={() => {
-                if (isAuthenticated) {
-                  navigate("/myaccount");
-                } else {
+            {isAuthenticated ? (
+              <img
+                src={persons}
+                className="cursor-pointer h-[18px]"
+                onClick={() => {
+                  if (isAuthenticated) {
+                    navigate("/myaccount");
+                  } else {
+                    navigate("/sign-in");
+                  }
+                }}
+              />
+            ) : (
+              <button
+                className="bg-[#FBC700] text-[#161922] px-2 py-1 rounded-md "
+                onClick={() => {
                   navigate("/sign-in");
-                }
-              }}
-            />:<div className="cursor-pointer" onClick={()=>{navigate("/sign-in")}}>Sign-in</div>}
-            
+                }}
+              >
+                Sign-in
+              </button>
+            )}
           </div>
           <div>
             <img src={search} className="cursor-pointer h-[20px] " />

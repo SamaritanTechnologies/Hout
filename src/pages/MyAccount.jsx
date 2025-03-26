@@ -5,7 +5,7 @@ import AddressCard from "../components/Address/AddressCard";
 import OrderHistory from "../components/Address/OrderHistory";
 import Wishlist from "../components/Address/Wishlist";
 import { useLocation, useNavigate } from "react-router-dom";
-import { setAccessToken } from "../providers";
+import { setAccessToken, setRefreshToken } from "../providers";
 import { uploadProfilePic } from "../redux/actions/profileActions";
 import { toast } from "react-toastify";
 import { CameraIcon } from "@heroicons/react/24/outline";
@@ -52,11 +52,10 @@ export const MyAccount = () => {
     dispatch(logoutUser());
     setAccessToken("");
     setRefreshToken("");
-
     toast.success("Logged Out!");
 
     setTimeout(() => {
-      navigate("/sign-in");
+      navigate("/");
     }, 700);
   };
 
@@ -122,7 +121,7 @@ export const MyAccount = () => {
                 </label>
               </div>
               <h1 className="text-[#111727] font-semibold">
-                {userDetail.firstName} {userDetail.lastName}
+                {userDetail?.firstName} {userDetail?.lastName}
               </h1>
             </div>
             <div className="flex flex-col gap-3 w-full">

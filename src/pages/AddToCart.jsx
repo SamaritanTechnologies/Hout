@@ -161,8 +161,7 @@ export const AddToCart = () => {
                       navigate("/");
                     }}
                   >
-                    {" "}
-                    Home{" "}
+                    Home
                   </a>
                 </h5>
                 <div>
@@ -180,8 +179,7 @@ export const AddToCart = () => {
                       navigate("/shop-page");
                     }}
                   >
-                    {" "}
-                    Shop{" "}
+                    Shop
                   </a>
                 </h5>
                 <div>
@@ -201,8 +199,7 @@ export const AddToCart = () => {
           </section>
           <section className="xl:pt-[50px] lg:pt-[35px] md:pt-[25px] pt-[15px] flex justify-center">
             <div className="font-medium xl:text-54 lg:text-50 md:text-46 sm:text-44 text-40  ">
-              {" "}
-              Cart{" "}
+              Cart
             </div>
           </section>
           {/* <Stepper activeStep={3}>
@@ -309,18 +306,16 @@ export const AddToCart = () => {
         </>
       ) : (
         <div className="flex justify-center items-center h-60 w-full">
-          <div className="">
-            Please{" "}
-            <Button
-              btnText="Sign-in"
-              paddingY=""
-              paddingX=""
-              fontbold
+          <div className=" flex gap-1 items-center">
+            <span> Please sign-in to view the items in your cart.</span>
+            <button
+              className="bg-[#FBC700] text-[#161922] p-2 rounded-md "
               onClick={() => {
                 navigate("/sign-in");
               }}
-            />{" "}
-            to view the items in your cart.
+            >
+              Sign-in
+            </button>
           </div>
         </div>
       )}
