@@ -35,7 +35,6 @@ export const getWishList = async () => {
 };
 
 export const addToCart = async (values) => {
-
   const { id, price, card_id, user_id } = values;
 
   const payload = {

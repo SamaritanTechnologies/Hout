@@ -9,7 +9,7 @@ const OurAssortmentSection = () => {
     const fetchOurValues = async () => {
       try {
         const data = await getOurAssortment();
-        setAssortments(data);
+        setAssortments(data || []);
       } catch (error) {
         toast.error("An error occurred while fetching data: " + error.message);
       }
@@ -29,7 +29,7 @@ const OurAssortmentSection = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 max-w-[1150px] mx-auto gap-x-8 xl:gap-x-[50px] gap-y-10 lg:gap-y-12 xl:gap-y-16">
-        {assortments.map((assortment, index) => {
+        {assortments?.map((assortment, index) => {
           return (
             <div key={index} className="flex flex-col gap-5">
               <div className="h-[250px] lg:h-[320px] xl:h-[350px]">

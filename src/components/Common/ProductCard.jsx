@@ -1,10 +1,41 @@
 import { useNavigate } from "react-router-dom";
 import productHeart from "../../assets/LandingPageImages/products/productHeart.svg";
+import productHeartFilled from "../../assets/LandingPageImages/products/productHeartFilled.svg";
 import addToCartt from "../../assets/LandingPageImages/products/addToCart.svg";
+import { useSelector } from "react-redux";
+import { axiosWithCredentials } from "../../providers";
+import { toast } from "react-toastify";
+import { deleteWishList } from "../../redux/actions/productActions";
 
-const ProductCard = ({ product, minimumPrice }) => {
+const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
+  const authState = useSelector((state) => state.auth);
+  console.log("is_Wishlist", product.is_wishlist);
+  const isAuthenticated = authState.isLoggedIn;
   const navigate = useNavigate();
-
+  const addWishlist = async (id) => {
+    try {
+      const response = await axiosWithCredentials.post("/wishlist/", {
+        product_id: id,
+      });
+      console.log("WishList response:", response.data);
+      toast.success("Product added to wishlist!");
+      fetchProduct();
+    } catch (error) {
+      toast.error("Failed to add product to wishlist!");
+    }
+  };
+  const handleDeleteWishlist = async () => {
+    try {
+      if (selectedItem) {
+        const res = await deleteWishList({ id: selectedItem });
+        console.log("fetchUser", res);
+        setIsDeleted(!isDeleted);
+        fetchProduct();
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
   return (
     <div className="relative bg-[#F4F5F7] h-auto">
       {minimumPrice.discount > 0 && (
@@ -39,13 +70,39 @@ const ProductCard = ({ product, minimumPrice }) => {
           )}
         </div>
         <div className="flex gap-x-4 items-center justify-between">
-          <div className="border-2 cursor-pointer border-[#898989] px-2 flex items-center justify-center py-3  gap-x-3  add-cart-btn md:text-[12px] lg:text-[12px]">
+          <div
+            onClick={() => {
+              !isAuthenticated && navigate("/cart");
+            }}
+            className="border-2 cursor-pointer border-[#898989] px-2 flex items-center justify-center py-3  gap-x-3  add-cart-btn md:text-[12px] lg:text-[12px]"
+          >
             {/* <img src={item.addToCart} className="bg-red" /> */}
             <img src={addToCartt} />
             Add to Cart
           </div>
           <div className="cursor-pointer">
-            <img src={productHeart} />
+            {!isAuthenticated ? (
+              <img
+                src={productHeart}
+                onClick={() => {
+                  navigate("/wishlist");
+                }}
+              />
+            ) : product.is_wishlist ? (
+              <img
+                src={productHeartFilled}
+                onClick={() => {
+                  handleDeleteWishlist(product.product_id);
+                }}
+              />
+            ) : (
+              <img
+                src={productHeart}
+                onClick={() => {
+                  addWishlist(product.id);
+                }}
+              />
+            )}
           </div>
         </div>
       </div>

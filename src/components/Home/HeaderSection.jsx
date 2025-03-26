@@ -147,8 +147,7 @@ const HeaderSection = () => {
             Shop
           </div>
           <div>
-            {" "}
-            <img
+            {isAuthenticated?<img
               src={persons}
               className="cursor-pointer h-[18px]"
               onClick={() => {
@@ -158,7 +157,8 @@ const HeaderSection = () => {
                   navigate("/sign-in");
                 }
               }}
-            />
+            />:<div className="cursor-pointer" onClick={()=>{navigate("/sign-in")}}>Sign-in</div>}
+            
           </div>
           <div>
             <img src={search} className="cursor-pointer h-[20px] " />

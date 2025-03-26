@@ -10,7 +10,7 @@ import DeleteModal from "../Modals/DeleteModal";
 import { deleteWishList } from "../../redux/actions/productActions";
 
 const Wishlist = () => {
-  const userData = getLoggedInUser();
+  // const userData = getLoggedInUser();
   const [state, setState] = useState({
     wishlistData: null,
   });
@@ -22,11 +22,12 @@ const Wishlist = () => {
   const fetchWishlist = async () => {
     try {
       const res = await getWishList();
-      setState((prev) => ({
-        ...prev,
-        wishlistData: res,
-      }));
-      console.log(res, "fetchUser");
+      // setState((prev) => ({
+      //   ...prev,
+      //   wishlistData: res,
+      // }));
+      // setState("resData", res);
+      console.log("fetchUser", state);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -34,13 +35,13 @@ const Wishlist = () => {
 
   useEffect(() => {
     fetchWishlist();
-  }, [isDeleted]);
+  }, []);
 
   const handleDelete = async () => {
     try {
       if (selectedItem) {
         const res = await deleteWishList({ id: selectedItem });
-        console.log(res, "fetchUser");
+        console.log("fetchUser", res);
         setIsDeleted(!isDeleted);
       }
     } catch (error) {
