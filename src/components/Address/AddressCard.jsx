@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
 import editImg from "../../assets/myAccount/edit-icon.svg";
-import {
-  getDeliveryAddress,
-  getInvoiceAddress,
-  getProfileInfo,
-  updateDeliverAddress,
-  updateInvoiceAddress,
-} from "../../redux/actions/profileActions";
 import InputField from "../Common/InputField";
 import { useSelector } from "react-redux";
 import { axiosWithCredentials } from "../../providers";
@@ -44,65 +37,6 @@ const AddressCard = () => {
     }
   }, [currentAddressData, state.userData]);
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const payload = {
-  //       ...formData,
-  //       user: state.userData?.id,
-  //     };
-
-  //     if (addressType === "billing") {
-  //       try {
-  //         const payload = {
-  //           user: id,
-  //           street_and_number: values.street_and_number,
-  //           zip_code: values.zip_code,
-  //           city: values.city,
-  //           country: values.country || "Netherland",
-  //         };
-
-  //         const response = await axiosWithCredentials.put(
-  //           `/accounts/update-invoice-address/${userDetail.id}/`,
-  //           payload
-  //         );
-  //         toast.success("Successfully Updated");
-  //         return response.data;
-  //       } catch (error) {
-  //         console.error("Error:", error);
-  //         toast.error("Something went wrong!");
-  //         throw error;
-  //       }
-  //     } else {
-  //       try {
-  //         const payload = {
-  //           user: id,
-  //           street_and_number: values.street_and_number,
-  //           zip_code: values.zip_code,
-  //           city: values.city,
-  //           country: values.country || "Netherland",
-  //         };
-
-  //         const response = await axiosWithCredentials.put(
-  //           `/accounts/update-delivery-address/${userDetail.id}/`,
-  //           payload
-  //         );
-  //         toast.success("Successfully Updated");
-  //         return response.data;
-  //       } catch (error) {
-  //         console.error("Error:", error);
-  //         toast.error("Something went wrong!");
-  //         throw error;
-  //       }
-  //     }
-
-  //     // await fetchDeliveryAddress();
-  //     // await fetchInvoiceAddress();
-  //     setShowEditModal(false);
-  //   } catch (error) {
-  //     console.error("Error updating address:", error);
-  //   }
-  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -150,6 +84,8 @@ const AddressCard = () => {
     }
   };
 
+  console.log("=-= userDetail", userDetail);
+
   return (
     <section className="">
       <div className="flex xs:flex-col xs:items-center sm:flex-col sm:items-center lg:mb-32 justify-center">
@@ -180,7 +116,13 @@ const AddressCard = () => {
 
               <p className="text-[16px] text-[#535353] mt-[4px]">
                 {userDetail?.invoice_address
-                  ? `${userDetail?.invoice_address.street_and_number}, ${userDetail?.invoice_address.city}, ${userDetail?.invoice_address?.country}`
+                  ? [
+                      userDetail?.invoice_address?.street_and_number,
+                      userDetail?.invoice_address?.city,
+                      userDetail?.invoice_address?.country,
+                    ]
+                      .filter(Boolean)
+                      .join(", ")
                   : "Loading..."}
               </p>
             </div>
@@ -204,17 +146,16 @@ const AddressCard = () => {
                   </span>
                 </button>
               </div>
-              {/* <p className="text-[16px] text-[#535353] mt-[4px]">
-                {state?.userData?.first_name} {state?.userData?.last_name}
-              </p>
-
-              <p className="text-[16px] text-[#535353] mt-[4px]">
-                {state?.userData?.phone}
-              </p> */}
 
               <p className="text-[16px] text-[#535353] mt-[4px]">
                 {userDetail?.delivery_address
-                  ? `${userDetail.delivery_address.street_and_number}, ${userDetail.delivery_address.city}, ${userDetail.delivery_address.country}`
+                  ? [
+                      userDetail.delivery_address.street_and_number,
+                      userDetail.delivery_address.city,
+                      userDetail.delivery_address.country,
+                    ]
+                      .filter(Boolean)
+                      .join(", ")
                   : "Loading..."}
               </p>
             </div>

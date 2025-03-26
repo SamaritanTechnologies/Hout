@@ -88,13 +88,13 @@ const Wishlist = () => {
                       <th className="text-[14px] text-[#6C7275] w-[40%] text-left">
                         Product
                       </th>
-                      <th className="text-[14px] text-[#6C7275] w-[20%] text-left">
+                      <th className="text-[14px] text-[#6C7275] w-[30%] text-left">
                         Description
                       </th>
                       <th className="text-[14px] text-[#6C7275] w-[20%] text-left">
                         Price
                       </th>
-                      <th className="text-[14px] text-[#6C7275] w-[40%] text-left flex justify-center items-center">
+                      <th className="text-[14px] text-[#6C7275] w-[30%] text-left flex justify-center items-center">
                         Action
                       </th>
                     </tr>
@@ -119,10 +119,11 @@ const Wishlist = () => {
                                   <img src={crossImg} alt="Cross" />
                                 </span>
                               </button>
+
                               <div className="w-[60px] h-[72px] mr-[16px] md:w-[50px] md:h-[60px] md:mr-[12px] sm:w-[40px] sm:h-[50px] sm:mr-[10px]">
                                 <img
                                   src={item.images[0]?.image}
-                                  className="w-[100%] rounded-2xl h-20"
+                                  className="w-[100%] rounded-2xl szie-20"
                                   alt="Product"
                                 />
                               </div>
@@ -131,13 +132,13 @@ const Wishlist = () => {
                               </div>
                             </div>
                           </td>
-                          <td className="w-[20%] text-left truncate">
+                          <td className="w-[30%] text-left truncate">
                             {item?.description_en}
                           </td>
                           <td className="w-[20%] text-left">
                             $ {item.lengths[0].discounted_price_ex_vat}
                           </td>
-                          <td className="w-[40%] flex justify-center items-center">
+                          <td className="w-[30%] flex justify-center items-center">
                             <button
                               className="px-[24px] py-[6px] bg-[#FBC700] rounded-[8px]"
                               onClick={() => {

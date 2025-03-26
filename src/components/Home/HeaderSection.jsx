@@ -135,6 +135,21 @@ const HeaderSection = () => {
         </div>
 
         <section className="flex  gap-x-[24px] items-center xl:gap-x-[40px] ">
+          {isAuthenticated ? (
+            ""
+          ) : (
+            <div>
+              <button
+                className="bg-[#FBC700] text-[#161922] px-2 py-1 rounded-md "
+                onClick={() => {
+                  navigate("/sign-in");
+                }}
+              >
+                Login
+              </button>
+            </div>
+          )}
+
           <div
             className="cursor-pointer xs:hidden sm:hidden md:hidden "
             onClick={() => {
@@ -145,30 +160,19 @@ const HeaderSection = () => {
           >
             Shop
           </div>
-          <div>
-            {isAuthenticated ? (
+
+          {isAuthenticated ? (
+            <div>
               <img
                 src={persons}
                 className="cursor-pointer h-[18px]"
-                onClick={() => {
-                  if (isAuthenticated) {
-                    navigate("/myaccount");
-                  } else {
-                    navigate("/sign-in");
-                  }
-                }}
+                onClick={() => navigate("/myaccount")}
               />
-            ) : (
-              <button
-                className="bg-[#FBC700] text-[#161922] px-2 py-1 rounded-md "
-                onClick={() => {
-                  navigate("/sign-in");
-                }}
-              >
-                Sign-in
-              </button>
-            )}
-          </div>
+            </div>
+          ) : (
+            ""
+          )}
+
           <div>
             <img src={search} className="cursor-pointer h-[20px] " />
           </div>
