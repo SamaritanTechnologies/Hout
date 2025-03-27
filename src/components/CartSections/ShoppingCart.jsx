@@ -102,11 +102,16 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
       toast.error("Failed to remove item from the cart.");
     }
   };
-  const totalPrice = cartItems?.reduce((acc, item) => {
-    return acc + item.product_price;
-  }, 0);
 
-  const total = totalPrice + delivery + taxData;
+  const totalPrice = cartItems.reduce(
+    (sum, item) => sum + parseFloat(item.product_price),
+    0
+  );
+  const calculateTotal = (totalPrice, delivery, taxData) => {
+    const total = (totalPrice || 0) + (delivery || 0) + (taxData || 0);
+    return total;
+  };
+  const total = calculateTotal(totalPrice, delivery, taxData);
   return (
     <>
       <section className="w-full flex xl:gap-[40px] lg:gap-[30px] md:gap-[20px] gap-[10px] justify-between xl:px-[135px] lg:px-[80px] px-[20px]  xl:pb-[100px] lg:pb-[70px] md:pb-[80px] pb-[70px] md:flex-col sm:flex-col xs:flex-col  ">
@@ -160,14 +165,14 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
                           </div>
                           <div>
                             <img
-                              src={item?.product?.images_url?.[0]}
+                              src={item?.product_length?.product.image}
                               className="xl:w-[80px] xl:h-[96px] lg:w-[70px] lg:h-[80px] min-w-[60px] min-h-[60px] xs:w-[60px] xs:h-[60px]"
                               alt={item.name}
                             />
                           </div>
                           <div className="flex flex-col xl:min-w-[220px]">
                             <div className="xl:text-18 lg:text-16 text-14">
-                              {item?.product?.name}
+                              {item?.product_length?.product.name_en}
                             </div>
                             <div className="flex gap-[15px] items-center">
                               <div>
@@ -175,7 +180,7 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
                                   THICKNESS
                                 </div>
                                 <div className="xl:text-14 text-[13px]">
-                                  {item?.thickness} mm
+                                  {item?.product_length?.product.thickness} mm
                                 </div>
                               </div>
                               <div>
@@ -183,7 +188,7 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
                                   WIDTH
                                 </div>
                                 <div className="xl:text-14 text-[13px]">
-                                  {item?.width} mm
+                                  {item?.product_length?.product.width} mm
                                 </div>
                               </div>
                               <div>
@@ -191,7 +196,7 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
                                   LENGTH
                                 </div>
                                 <div className="xl:text-14 text-[13px]">
-                                  {item?.length} mm
+                                  {item?.product_length?.product.length} mm
                                 </div>
                               </div>
                             </div>
@@ -225,12 +230,12 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
                           </div>
                         </div>
                       </td>
-                      {/* <td className="px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
-                        €{item?.product?.price?.toFixed(2)}
+                      <td className="px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
+                        €{item?.product_length?.discounted_price_ex_vat}
                       </td>
                       <td className="px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
-                        €{item?.product_price?.toFixed(2)}
-                      </td> */}
+                        €{item?.product_price}
+                      </td>
                     </tr>
                   );
                 })}
@@ -298,7 +303,7 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
                 <img src={coupon} />
                 <span className="pt-[4px] text-[#6C7275]">Coupon Code</span>
               </div>
-              <div className="cursor-pointer p-4 cursor-pointer rounded-md rounded-l-none">
+              <div className="cursor-pointer p-4  rounded-md rounded-l-none">
                 Apply
               </div>
             </div>
@@ -312,7 +317,7 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
               <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
                 Subtotal
               </div>
-              {/* <div>€{cartItems?.length ? totalPrice?.toFixed(2) : 0}</div> */}
+              <div>€{cartItems?.length ? totalPrice?.toFixed(2) : 0}</div>
             </section>
             <section className="flex justify-between pt-[25px]">
               <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
@@ -331,7 +336,7 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
                 Total
               </div>
               <div className="text-customYellow font-medium xl:text-18 lg:text-16 text-14">
-                {/* USD €{cartItems?.length ? total?.toFixed(2) : 0} */}
+                USD €{cartItems?.length ? total?.toFixed(2) : 0}
               </div>
             </section>
           </section>
