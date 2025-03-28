@@ -10,7 +10,6 @@ import { useState } from "react";
 
 const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
   const authState = useSelector((state) => state.auth);
-
   const isAuthenticated = authState.isLoggedIn;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -18,7 +17,6 @@ const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
   const addWishlist = async (id) => {
     if (loading) return;
     setLoading(true);
-
     try {
       await axiosWithCredentials.post("/wishlist/", {
         product_id: id,
@@ -26,7 +24,7 @@ const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
       fetchProduct();
 
       setTimeout(() => {
-        toast.success("Product added to wishlist!");
+        toast.success("Successfully Product add to wishlist!");
       }, 1000);
     } catch (error) {
       toast.error("Failed to add product to wishlist!");
@@ -51,6 +49,35 @@ const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleAddToCart = async (product) => {
+    try {
+      const payload = {
+        product_length: product?.lengths[0]?.id,
+        quantity: 1,
+      };
+      const res = await axiosWithCredentials.post(`/add-to-cart/`, payload);
+      console.log("add product:", res.data);
+      toast.success("Successfully Product add to cart");
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        if (error.response.data.message === "No more product left in stock.") {
+          toast.error("This product is out of stock.");
+        } else {
+          toast.error(error.response.data.message);
+        }
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
+
+    // console.log("product:", product);
+    // console.log("id:", product?.lengths[0]?.id);
   };
 
   return (
@@ -89,7 +116,7 @@ const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
         <div className="flex gap-x-4 items-center justify-between">
           <div
             onClick={() => {
-              !isAuthenticated && navigate("/cart");
+              !isAuthenticated ? navigate("/cart") : handleAddToCart(product);
             }}
             className="border-2 cursor-pointer border-[#898989] px-2 flex items-center justify-center py-3  gap-x-3  add-cart-btn md:text-[12px] lg:text-[12px]"
           >

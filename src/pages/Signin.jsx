@@ -62,10 +62,14 @@ export const Signin = () => {
       setAccessToken(access_token);
       setRefreshToken(refresh_token);
       dispatch(loginUser(user));
-      
+
       toast.success("Successfully logged in");
       setTimeout(() => {
-        navigate("/");
+        if (user.is_superuser) {
+          navigate("/dashboard");
+        } else {
+          navigate("/");
+        }
       }, 500);
     } catch (error) {
       const errorMessage =

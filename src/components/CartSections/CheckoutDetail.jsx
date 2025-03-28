@@ -19,8 +19,11 @@ import {
   getProfileInfo,
 } from "../../redux/actions/profileActions";
 import { getLoggedInUser } from "../../redux";
+import { useSelector } from "react-redux";
 
 const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
+  const userDetail = useSelector((state) => state.auth.user);
+
   const user = getLoggedInUser();
   const [state, setState] = useState({
     deliveryAddress: null,
@@ -58,7 +61,6 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
   }, [cartData]);
 
   const updateQuantity = async ({ id, productId, price, newQuantity }) => {
-
     try {
       const payload = {
         cart: user?.card_id,
@@ -149,11 +151,17 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
     }
   };
 
-  const totalPrice = cartItems?.reduce((acc, item) => {
-    return acc + item.product_price;
-  }, 0);
+  const totalPrice = cartItems?.reduce(
+    (sum, item) => sum + parseFloat(item.product_price),
+    0
+  );
+  const calculateTotal = (totalPrice, delivery, taxData) => {
+    const total = (totalPrice || 0) + (delivery || 0) + (taxData || 0);
+    return total;
+  };
+  const total = calculateTotal(totalPrice, delivery, taxData);
 
-  const total = totalPrice + delivery + taxData;
+  console.log("total: ", total);
 
   const confirmOrder = async () => {
     const payload = {
@@ -215,7 +223,7 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
                 <section className="flex pt-5 items-center">
                   <div>
                     <img
-                      src={item?.product?.images_url?.[0]}
+                      src={item?.product_length?.product.image}
                       className="xl:w-[80px] xl:h-[96px] lg:w-[70px] lg:h-[80px] min-w-[60px] min-h-[60px] xs:w-[60px] xs:h-[60px]"
                     />
                   </div>
@@ -226,21 +234,21 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
                         <div className="text-12 font-medium text-[#BABABA]">
                           Thickness
                         </div>
-                        <div>{item.thickness} mm</div>
+                        <div>{item?.product_length?.product?.thickness} mm</div>
                       </div>
 
                       <div>
                         <div className="text-12 font-medium text-[#BABABA]">
                           Width
                         </div>
-                        <div>{item.width} mm</div>
+                        <div>{item?.product_length?.product?.width} mm</div>
                       </div>
 
                       <div>
                         <div className="text-12 font-medium text-[#BABABA]">
                           Length
                         </div>
-                        <div>{item.length} mm</div>
+                        <div>{item?.product_length?.length} mm</div>
                       </div>
                     </section>
                   </div>
@@ -272,6 +280,7 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
                 subtotal={totalPrice}
                 deliveryFee={delivery}
                 tax={taxData}
+                // subtotal={totalPrice}
                 total={total}
                 cartItems={cartItems}
               />

@@ -43,7 +43,7 @@ export const ProductDetail = () => {
             className="text-[#9F9F9F] xs:text-14 sm:text-15 text-16 cursor-pointer"
             onClick={() => navigate("/")}
           >
-            Home{" "}
+            Home
           </td>
           <td>
             <img src={rightArrow} alt="Right Arrow" />
@@ -242,8 +242,11 @@ export const ProductDetail = () => {
           </section>
         </section>
       </section>
-      <ProductVaritants variants={productDetail?.lengths}/>
-      <RelatedProduct relatedProducts={productDetail?.related_products}/>
+      <ProductVaritants
+        variants={productDetail?.lengths}
+        product={product_id}
+      />
+      <RelatedProduct relatedProducts={productDetail?.related_products} />
     </>
   );
 };

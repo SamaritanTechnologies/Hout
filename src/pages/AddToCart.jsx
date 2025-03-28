@@ -108,7 +108,6 @@ export const AddToCart = () => {
         ...prev,
         cartData: res,
       }));
-      console.log(res, "fetchUser");
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -138,23 +137,10 @@ export const AddToCart = () => {
     <>
       {isAuthenticated ? (
         <>
-          <section className="xl:px-[100px] lg:px-[60px] md:px-[40px] px-[20px] bg-[#F4F5F7]">
-            {/* <tr className="gap-x-6 flex  items-center  py-[40px]">
-          <td className="text-[#9F9F9F] text-16">Home </td>
-          <td>
-            <img src={rightArrow} />
-          </td>
-          <td className="text-[#9F9F9F] xs:text-14 sm:text-15 text-16"> Shop</td>
-          <td>
-            <img src={rightArrow} />
-          </td>
-          <td className="h-[px] font-bold text-[#9F9F9F] ">| </td>
-          <td>Cart </td>
-        </tr> */}
-            <div className="flex items-center gap-[24px] pt-10">
-              <div className="gap-x-6 flex  items-center  xl:py-[31.5px] lg:py-[24px] md-[20px] py-[12px]">
+          <section className="xl:px-[100px] lg:px-[60px] md:px-[40px] px-[20px] mt-2 bg-[#F4F5F7]">
+            <div className="flex items-center gap-[24px] pt-3">
+              <div className="gap-x-6 flex  items-center  xl:py-[20px] lg:py-[20px] md-[20px] py-[12px]">
                 <h5 className="text-[#9F9F9F] xl:text-16 lg:text-15 md:text-14 text-[13px]">
-                  {" "}
                   <a
                     className="cursor-pointer"
                     onClick={() => {
@@ -171,7 +157,7 @@ export const AddToCart = () => {
                   />
                 </div>
               </div>
-              <div className="gap-x-6 flex  items-center  xl:py-[31.5px] lg:py-[24px] md-[20px] py-[12px]">
+              <div className="gap-x-6 flex  items-center  xl:py-[20px] lg:py-[20px] md-[20px] py-[12px]">
                 <h5 className="text-[#9F9F9F] xl:text-16 lg:text-15 md:text-14 text-[13px] ">
                   <a
                     className="cursor-pointer"
@@ -189,7 +175,7 @@ export const AddToCart = () => {
                   />
                 </div>
               </div>
-              <div className="gap-x-6 flex  items-center  xl:py-[31.5px] lg:py-[24px] md-[20px] py-[12px]">
+              <div className="gap-x-6 flex  items-center  xl:py-[20px] lg:py-[20px] md-[20px] py-[12px]">
                 {/* <h5 className="font-bold text-[#9F9F9F]  text-16">|</h5> */}
                 <h5 className="bcCartLink flex items-center xl:text-16 lg:text-15 md:text-14 text-[13px]">
                   Cart
@@ -197,7 +183,7 @@ export const AddToCart = () => {
               </div>
             </div>
           </section>
-          <section className="xl:pt-[50px] lg:pt-[35px] md:pt-[25px] pt-[15px] flex justify-center">
+          <section className="xl:pt-[20px] lg:pt-[20px] md:pt-[20px] pt-[15px] flex justify-center">
             <div className="font-medium xl:text-54 lg:text-50 md:text-46 sm:text-44 text-40  ">
               Cart
             </div>

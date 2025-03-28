@@ -87,7 +87,7 @@ export const deleteCartItem = async (id) => {
     const response = await axiosWithCredentials.delete(
       `/delete/add-to-cart/${id}/`
     );
-    toast.success("Successfully deleted item");
+    toast.success("Item removed from cart");
 
     return response.data;
   } catch (error) {
