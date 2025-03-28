@@ -24,7 +24,7 @@ const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
       fetchProduct();
 
       setTimeout(() => {
-        toast.success("Product added to wishlist!");
+        toast.success("Successfully Product add to wishlist!");
       }, 1000);
     } catch (error) {
       toast.error("Failed to add product to wishlist!");
@@ -61,7 +61,19 @@ const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
       console.log("add product:", res.data);
       toast.success("Successfully Product add to cart");
     } catch (error) {
-      toast.error("Something went wrong!");
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        if (error.response.data.message === "No more product left in stock.") {
+          toast.error("This product is out of stock.");
+        } else {
+          toast.error(error.response.data.message);
+        }
+      } else {
+        toast.error("Something went wrong");
+      }
     }
 
     // console.log("product:", product);

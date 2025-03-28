@@ -32,7 +32,7 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
       };
       await axiosWithCredentials.put(`/change-quantity/${id}/`, payload);
 
-      toast.success("Successfully updated the cart");
+      toast.success("Successfully updated the Item");
 
       fetchCart();
     } catch (error) {

@@ -141,7 +141,6 @@ export const AddToCart = () => {
             <div className="flex items-center gap-[24px] pt-3">
               <div className="gap-x-6 flex  items-center  xl:py-[20px] lg:py-[20px] md-[20px] py-[12px]">
                 <h5 className="text-[#9F9F9F] xl:text-16 lg:text-15 md:text-14 text-[13px]">
-                  {" "}
                   <a
                     className="cursor-pointer"
                     onClick={() => {
