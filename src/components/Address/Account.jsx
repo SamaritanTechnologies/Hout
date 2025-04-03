@@ -387,7 +387,9 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
             await updatePass(values, { setSubmitting });
             resetForm(false);
             setSubmitting(false);
+            toast.success("Password updated successfully!");
           } catch (error) {
+            toast.error("Password not updated");
             console.error("Error updating password:", error);
             setSubmitting(false);
           }
