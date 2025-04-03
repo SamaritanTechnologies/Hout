@@ -63,7 +63,6 @@ export const Signin = () => {
       setRefreshToken(refresh_token);
       dispatch(loginUser(user));
 
-      toast.success("Successfully logged in");
       setTimeout(() => {
         if (user.is_superuser) {
           navigate("/dashboard");

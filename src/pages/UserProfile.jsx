@@ -39,7 +39,6 @@ export const UserProfile = () => {
         ...prev,
         userData: res,
       }));
-      console.log(res, "fetchUser");
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -52,7 +51,6 @@ export const UserProfile = () => {
         ...prev,
         deliveryAddress: res?.data,
       }));
-      console.log(res, "fetchUser");
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -65,7 +63,6 @@ export const UserProfile = () => {
         ...prev,
         invoiceAddress: res?.data,
       }));
-      console.log(res, "fetchUser");
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -102,8 +99,6 @@ export const UserProfile = () => {
     fetchDeliveryAddress();
     fetchInvoiceAddress();
   }, []);
-
-  console.log(state?.deliveryAddress, "jjj");
 
   return (
     <div>

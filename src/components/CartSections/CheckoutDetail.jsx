@@ -71,8 +71,6 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
       };
       await axiosWithCredentials.put(`/change-quantity/${id}/`, payload);
 
-      toast.success("Successfully updated the cart");
-
       fetchCart();
     } catch (error) {
       let errorMessage = "Something went wrong!";
@@ -103,7 +101,6 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
     []
   );
 
-  console.log(state, "state");
   useEffect(() => {
     fetchUser();
     fetchDeliveryAddress();
@@ -161,8 +158,6 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
   };
   const total = calculateTotal(totalPrice, delivery, taxData);
 
-  console.log("total: ", total);
-
   const confirmOrder = async () => {
     const payload = {
       gross_total: cartItems?.[0]?.product_price,
@@ -184,7 +179,6 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
             `/confirm-order/`,
             payload
           );
-          console.log(response, "kkkkk");
           if (response?.data?.checkout_url) {
             window.location.href = response?.data?.checkout_url;
           }
@@ -348,7 +342,7 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
                   resetForm(false);
                   toast.success("Successfully updated");
                 } catch (error) {
-                  console.log(error, "klklkl");
+                  console.log(error, "error");
                   toast.error("Something went wrong");
                   setSubmitting(false);
                 }

@@ -84,8 +84,6 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
         ...prev,
         invoiceAddress: res?.data,
       }));
-
-      console.log(res, "fetchUser");
     } catch (error) {
       console.error("Error fetching user data:", error);
     }

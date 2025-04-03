@@ -42,7 +42,7 @@ export const deleteProduct = async (id) => {
     toast.success("Successfully deleted");
   } catch (error) {
     toast.error("Something went wrong ");
-    console.log(error, "nbbb");
+    console.log(error, "error");
   }
 };
 export const deleteWishList = async (values) => {
@@ -55,7 +55,7 @@ export const deleteWishList = async (values) => {
   } catch (error) {
     toast.error("Something went wrong ");
 
-    console.log(error, "nbbb");
+    console.log(error, "error");
   }
 };
 

@@ -10,7 +10,6 @@ const OrderComplete = ({
   orderAmount,
   handleClick,
 }) => {
-  console.log(orderDate, "orderDate");
 
   const formattedOrderDate = moment(
     orderDate,

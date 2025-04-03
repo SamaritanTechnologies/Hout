@@ -184,7 +184,6 @@ const ProductVaritants = ({ variants }) => {
         };
         console.log("payload", payload);
         await axiosWithCredentials.post(`/add-to-cart/`, payload);
-        toast.success("Successfully updated the cart");
       } else {
         toast.warning("Please enter a valid quantity");
       }

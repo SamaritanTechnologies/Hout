@@ -48,7 +48,6 @@ export const ContactusSection = () => {
     setLoading(true);
     try {
       const response = await submitContactForm(formData);
-      console.log("Contact detail:",response);
       if (response?.status === 201 || response?.status === 200) {
         toast.success("Your message has been sent! We will get back to you as soon as possible.");
         resetForm();

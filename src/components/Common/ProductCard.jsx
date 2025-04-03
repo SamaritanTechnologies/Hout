@@ -13,6 +13,7 @@ const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
   const isAuthenticated = authState.isLoggedIn;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [cartLoading, setCartLoading] = useState("");
 
   const addWishlist = async (id) => {
     if (loading) return;
@@ -52,14 +53,16 @@ const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
   };
 
   const handleAddToCart = async (product) => {
+    if (cartLoading) return;
+    setCartLoading(product?.id);
+
     try {
       const payload = {
         product_length: product?.lengths[0]?.id,
         quantity: 1,
       };
-      const res = await axiosWithCredentials.post(`/add-to-cart/`, payload);
-      console.log("add product:", res.data);
-      toast.success("Successfully Product add to cart");
+      await axiosWithCredentials.post(`/add-to-cart/`, payload);
+      toast.success("Product added to cart!");
     } catch (error) {
       if (
         error.response &&
@@ -74,15 +77,14 @@ const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
       } else {
         toast.error("Something went wrong");
       }
+    } finally {
+      setCartLoading("");
     }
-
-    // console.log("product:", product);
-    // console.log("id:", product?.lengths[0]?.id);
   };
 
   return (
     <div className="relative bg-[#F4F5F7] h-auto">
-      {minimumPrice.discount > 0 && (
+      {minimumPrice?.discount > 0 && (
         <div className="w-12 h-12 rounded-full flex items-center justify-center bg-[#E97171] text-white absolute top-6 right-6 text-xs">
           -{minimumPrice.discount}%
         </div>
@@ -91,10 +93,14 @@ const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
         className="cursor-pointer h-[250px] xl:h-[310px]"
         onClick={() => navigate(`/product-detail/${product.id}`)}
       >
-        <img
-          src={product.images[0].image}
-          className="w-full h-full object-cover"
-        />
+        {product.images?.length ? (
+          <img
+            src={product.images[0].image}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div />
+        )}
       </div>
       <div className="flex flex-col gap-4 px-4 py-5">
         <h3 className="font-semibold text-[#111727] text-2xl overflow-hidden whitespace-nowrap text-ellipsis">
@@ -120,9 +126,14 @@ const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
             }}
             className="border-2 cursor-pointer border-[#898989] px-2 flex items-center justify-center py-3  gap-x-3  add-cart-btn md:text-[12px] lg:text-[12px]"
           >
-            {/* <img src={item.addToCart} className="bg-red" /> */}
-            <img src={addToCartt} />
-            Add to Cart
+            {cartLoading === product.id ? (
+              "Adding..."
+            ) : (
+              <>
+                <img src={addToCartt} />
+                Add to Cart
+              </>
+            )}
           </div>
           <div className="cursor-pointer">
             {!isAuthenticated ? (

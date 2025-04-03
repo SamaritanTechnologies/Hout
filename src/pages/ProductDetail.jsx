@@ -242,10 +242,12 @@ export const ProductDetail = () => {
           </section>
         </section>
       </section>
+
       <ProductVaritants
         variants={productDetail?.lengths}
         product={product_id}
       />
+
       <RelatedProduct relatedProducts={productDetail?.related_products} />
     </>
   );

@@ -30,9 +30,7 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
         quantity: newQuantity,
         product_price: price,
       };
-      await axiosWithCredentials.put(`/change-quantity/${id}/`, payload);
-
-      toast.success("Successfully updated the Item");
+      await axiosWithCredentials.put(`/change-quantity/${id}/`, payload);;
 
       fetchCart();
     } catch (error) {

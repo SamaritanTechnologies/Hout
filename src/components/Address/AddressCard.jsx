@@ -84,8 +84,6 @@ const AddressCard = () => {
     }
   };
 
-  console.log("=-= userDetail", userDetail);
-
   return (
     <section className="">
       <div className="flex xs:flex-col xs:items-center sm:flex-col sm:items-center lg:mb-32 justify-center">

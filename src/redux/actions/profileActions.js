@@ -23,7 +23,7 @@ export const updatePass = async (values, { setSubmitting }) => {
     toast.success("Successfuly Updated");
     setSubmitting(false);
   } catch (error) {
-    console.log(error, "nbbb");
+    console.log(error, "error");
     if (error?.response?.data?.password) {
       error?.response?.data?.password.map((item) => {
         toast.error(item);
@@ -60,12 +60,8 @@ export const updateProfile = async (values, { setSubmitting }) => {
       phone: phone || null,
     };
 
-    const response = await axiosWithCredentials.put(
-      `/accounts/update-profile/${id}/`,
-      payload
-    );
+    await axiosWithCredentials.put(`/accounts/update-profile/${id}/`, payload);
     toast.success("Successfully Updated");
-    console.log("Response:", response.data);
 
     setSubmitting(false);
   } catch (error) {
@@ -126,12 +122,8 @@ export const updateInvoiceDelivery = async (values, { setSubmitting }) => {
       country: country || null,
     };
 
-    const response = await axiosWithCredentials.post(
-      "/update-address/",
-      payload
-    );
+    await axiosWithCredentials.post("/update-address/", payload);
     toast.success("Successfuly Updated");
-    console.log("Response:", response.data);
 
     setSubmitting(false);
   } catch (error) {
@@ -141,7 +133,6 @@ export const updateInvoiceDelivery = async (values, { setSubmitting }) => {
 };
 
 export const uploadProfilePic = async (formData) => {
-  console.log("Imge Data:", formData);
   try {
     if (!formData) {
       toast.error("No image selected.");
@@ -192,12 +183,11 @@ export const updateDeliveryAddress = async (values, { setSubmitting }) => {
       country: country || null,
     };
 
-    const response = await axiosWithCredentials.put(
+    await axiosWithCredentials.put(
       `/accounts/update-delivery-address/${id}/`,
       payload
     );
     toast.success("Successfuly Updated");
-    console.log("Response:", response.data);
 
     setSubmitting(false);
   } catch (error) {
@@ -218,34 +208,6 @@ export const getInvoiceAddress = async () => {
     console.error("Error:", error);
   }
 };
-
-// export const updateInvoiceAddress = async (values, { setSubmitting }) => {
-//    const id = getUserId();
-
-//   try {
-//     const { stNumber, zCode, city, country } = values;
-
-//     const payload = {
-//       user: id,
-//       street_and_number: stNumber,
-//       zip_code: zCode,
-//       city,
-//       country: country || null,
-//     };
-
-//     const response = await axiosWithCredentials.put(
-//       `/accounts/update-invoice-address/${id}/`,
-//       payload
-//     );
-//     toast.success("Successfuly Updated");
-//     console.log("Response:", response.data);
-
-//     setSubmitting(false);
-//   } catch (error) {
-//     console.error("Error:", error);
-//     toast.error("Something went wrong!");
-//   }
-// };
 
 export const updateInvoiceAddress = async (values) => {
   const id = getUserId();

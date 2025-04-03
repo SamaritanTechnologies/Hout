@@ -9,6 +9,7 @@ import { deleteWishList } from "../../redux/actions/productActions";
 
 const RelatedProduct = ({ relatedProducts }) => {
   const navigate = useNavigate();
+
   const getMinimumPriceObject = (lengths) => {
     if (!lengths || lengths.length === 0) return "N/A";
 
@@ -18,21 +19,20 @@ const RelatedProduct = ({ relatedProducts }) => {
       return currentPrice < minPrice ? currentObj : minObj;
     });
   };
+
   const handleAddToCart = async (product) => {
     try {
       const payload = {
         product_length: product?.lengths[0]?.id,
         quantity: 1,
       };
-      const res = await axiosWithCredentials.post(`/add-to-cart/`, payload);
-      console.log("add product:", res.data);
-      toast.success("Successfully Product add to cart");
+      await axiosWithCredentials.post(`/add-to-cart/`, payload);
+      toast.success("Product added to cart!");
     } catch (error) {
       toast.error("Something went wrong!");
     }
-    // console.log("product:", product);
-    // console.log("id:", product?.lengths[0]?.id);
   };
+
   const addWishlist = async (id) => {
     try {
       await axiosWithCredentials.post("/wishlist/", {
@@ -63,6 +63,8 @@ const RelatedProduct = ({ relatedProducts }) => {
       setLoading(false);
     }
   };
+
+  if(!relatedProducts?.length) return;
 
   return (
     <>
@@ -105,16 +107,10 @@ const RelatedProduct = ({ relatedProducts }) => {
                       className="border-2 cursor-pointer border-[#898989] px-2 flex items-center justify-center py-3  gap-x-3  add-cart-btn md:text-[12px] lg:text-[12px]"
                       onClick={() => handleAddToCart(product)}
                     >
-                      {/* <img src={item.addToCart} className="bg-red" /> */}
                       <img src={addToCart} />
                       Add to Cart
                     </div>
-                    <div
-                      className="cursor-pointer"
-                      onClick={() => {
-                        handleAddToWishlist(item.product_id);
-                      }}
-                    >
+                    <div className="cursor-pointer">
                       <div
                         className="cursor-pointer"
                         onClick={() => {
@@ -132,8 +128,6 @@ const RelatedProduct = ({ relatedProducts }) => {
                           alt="Wishlist Icon"
                         />
                       </div>
-
-                      {/* <img src={productHeart} /> */}
                     </div>
                   </section>
                 </section>
@@ -142,7 +136,6 @@ const RelatedProduct = ({ relatedProducts }) => {
           })}
         </section>
         <div className="pt-[50px] flex justify-center mb-24">
-          {/* <Button btnText="Show More" px="100px" py="16px" textColor border /> */}
           <div className="  border-2 border-customYellow">
             <button className="text-customYellow px-10 py-3 font-semibold text-18">
               Show more
