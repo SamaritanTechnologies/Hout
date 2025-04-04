@@ -7,7 +7,9 @@ import search from "../../assets/HeaderAndFooter/searchh.svg";
 import { useNavigate } from "react-router-dom";
 import { scrollToTop } from "../../utils/helper";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getCart } from "../../redux/actions/orderActions";
+import { setCartItems } from "../../redux/slices/cartSlice";
 
 const HeaderSection = () => {
   const navigate = useNavigate();
@@ -15,6 +17,9 @@ const HeaderSection = () => {
   const isAuthenticated = authState.isLoggedIn;
   const [isActive, setIsActive] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.data);
+  const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   const toggleMenu = () => {
     setIsActive(!isActive);
@@ -33,6 +38,17 @@ const HeaderSection = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        const res = await getCart();
+        dispatch(setCartItems(res.cart_items));
+      } catch (error) {
+        console.error("Failed to fetch cart:", error);
+      }
+    };
+    fetchCart();
+  }, [dispatch]);
 
   let role = "user";
 
@@ -188,6 +204,7 @@ const HeaderSection = () => {
             />
           </div>
           <div
+            className="relative"
             onClick={() => {
               scrollToTop();
               setIsActive(false);
@@ -195,6 +212,15 @@ const HeaderSection = () => {
             }}
           >
             <img src={cart} className="cursor-pointer h-[20px] " />
+            {totalQuantity > 0 && (
+              <span
+                className="absolute text-white text-[12px] w-5 h-5 
+            bg-[#FFDD00] rounded-full flex items-center justify-center 
+            -top-4 -right-2"
+              >
+                {totalQuantity}
+              </span>
+            )}
           </div>
         </section>
       </div>
