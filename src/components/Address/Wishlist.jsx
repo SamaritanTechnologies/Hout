@@ -120,7 +120,7 @@ const Wishlist = () => {
                                 </span>
                               </button>
 
-                              <div className="w-[60px] h-[72px] mr-[16px] md:w-[50px] md:h-[60px] md:mr-[12px] sm:w-[40px] sm:h-[50px] sm:mr-[10px]">
+                              <div className="flex items-center w-[60px] h-[72px] mr-[16px] md:w-[50px] md:h-[60px] md:mr-[12px] sm:w-[40px] sm:h-[50px] sm:mr-[10px]">
                                 <img
                                   src={item.images[0]?.image}
                                   className="w-[100%] rounded-2xl szie-20"

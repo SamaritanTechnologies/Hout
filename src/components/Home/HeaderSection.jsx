@@ -18,8 +18,8 @@ const HeaderSection = () => {
   const [isActive, setIsActive] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const dispatch = useDispatch();
-  const cartItems = useSelector((state) => state.cart.data);
-  const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const cartItems = useSelector((state) => state.cart?.data);
+  const totalQuantity = cartItems?.length || 0;
 
   const toggleMenu = () => {
     setIsActive(!isActive);
@@ -38,17 +38,21 @@ const HeaderSection = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  const fetchCart = async () => {
+    try {
+      const res = await getCart();
+      dispatch(setCartItems(res.cart_items));
+    } catch (error) {
+      console.error("Failed to fetch cart:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const res = await getCart();
-        dispatch(setCartItems(res.cart_items));
-      } catch (error) {
-        console.error("Failed to fetch cart:", error);
-      }
-    };
-    fetchCart();
-  }, [dispatch]);
+    if (isAuthenticated) {
+      fetchCart();
+    }
+  }, [dispatch, isAuthenticated]);
 
   let role = "user";
 
@@ -216,7 +220,7 @@ const HeaderSection = () => {
               <span
                 className="absolute text-white text-[12px] w-5 h-5 
             bg-[#FFDD00] rounded-full flex items-center justify-center 
-            -top-4 -right-2"
+            -top-4 -right-2 font-medium"
               >
                 {totalQuantity}
               </span>

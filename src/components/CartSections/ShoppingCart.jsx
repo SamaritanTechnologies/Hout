@@ -16,7 +16,7 @@ import { setCartItems } from "../../redux/slices/cartSlice";
 
 const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
   const user = getLoggedInUser();
-  const [cartItems, setCartItem] = useState(cartData?.cart_items || []);
+  const [cartItem, setCartItem] = useState(cartData?.cart_items || []);
   const [updatedItem, setUpdatedItem] = useState(null);
   const dispatch = useDispatch();
 
@@ -37,7 +37,6 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
 
       fetchCart();
       const res = await getCart();
-      console.log("cart Items res,", res);
       dispatch(setCartItems(res.cart_items));
     } catch (error) {
       let errorMessage = "Something went wrong!";
@@ -65,7 +64,7 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
   }, [updatedItem]);
 
   const handleIncrement = (id) => {
-    const item = cartItems?.find((item) => item.id === id);
+    const item = cartItem?.find((item) => item.id === id);
     if (item) {
       const newQuantity = item.quantity + 1;
       setCartItem((prevItems) =>
@@ -83,7 +82,7 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
   };
 
   const handleDecrement = (id) => {
-    const item = cartItems?.find((item) => item.id === id);
+    const item = cartItem?.find((item) => item.id === id);
     if (item && item.quantity > 1) {
       const newQuantity = item.quantity - 1;
       setCartItem((prevItems) =>
@@ -109,7 +108,7 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
     }
   };
 
-  const totalPrice = cartItems.reduce(
+  const totalPrice = cartItem.reduce(
     (sum, item) => sum + parseFloat(item.product_price),
     0
   );
@@ -153,7 +152,7 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
                 </tr>
               </thead>
               <tbody>
-                {cartItems?.map((item) => {
+                {cartItem?.map((item) => {
                   return (
                     <tr key={item.id}>
                       <td className="xl:pb-[24px] lg:pb-[18px] pb-[10px]">
@@ -323,26 +322,26 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
               <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
                 Subtotal
               </div>
-              <div>€{cartItems?.length ? totalPrice?.toFixed(2) : 0}</div>
+              <div>€{cartItem?.length ? totalPrice?.toFixed(2) : 0}</div>
             </section>
             <section className="flex justify-between pt-[25px]">
               <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
                 Delivery Fee
               </div>
-              <div>€{cartItems?.length ? delivery?.toFixed(2) : 0}</div>
+              <div>€{cartItem?.length ? delivery?.toFixed(2) : 0}</div>
             </section>
             <section className="flex justify-between pt-[25px] border-b border-[#D9D9D9] pb-3">
               <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
                 Tax
               </div>
-              <div>€{cartItems?.length ? taxData?.toFixed(2) : 0}</div>
+              <div>€{cartItem?.length ? taxData?.toFixed(2) : 0}</div>
             </section>
             <section className="flex justify-between pt-[25px] pb-5">
               <div className="xl:text-16 lg:text-15 md:text-14 text-[13px] font-medium">
                 Total
               </div>
               <div className="text-customYellow font-medium xl:text-18 lg:text-16 text-14">
-                USD €{cartItems?.length ? total?.toFixed(2) : 0}
+                USD €{cartItem?.length ? total?.toFixed(2) : 0}
               </div>
             </section>
           </section>

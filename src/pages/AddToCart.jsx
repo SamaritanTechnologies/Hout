@@ -132,7 +132,6 @@ export const AddToCart = () => {
     fetchCart();
   }, []);
 
-  console.log(state, "state");
   return (
     <>
       {isAuthenticated ? (

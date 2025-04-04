@@ -66,6 +66,7 @@ const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
       };
       await axiosWithCredentials.post(`/add-to-cart/`, payload);
       toast.success("Product added to cart!");
+
       const res = await getCart();
       dispatch(setCartItems(res.cart_items));
     } catch (error) {
@@ -108,7 +109,10 @@ const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
         )}
       </div>
       <div className="flex flex-col gap-4 px-4 py-5">
-        <h3 className="font-semibold text-[#111727] text-2xl overflow-hidden whitespace-nowrap text-ellipsis">
+        <h3
+          onClick={() => navigate(`/product-detail/${product.id}`)}
+          className="hover:underline cursor-pointer font-semibold text-[#111727] text-2xl overflow-hidden whitespace-nowrap text-ellipsis"
+        >
           {product.name_en}
         </h3>
         <p className="font-medium text-[#898989] overflow-hidden whitespace-nowrap text-ellipsis">

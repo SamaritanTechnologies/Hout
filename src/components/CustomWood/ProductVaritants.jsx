@@ -10,6 +10,8 @@ import { useDispatch } from "react-redux";
 
 const ProductVaritants = ({ variants }) => {
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+
   const handleaddToCart = async (variantId) => {
     try {
       const input = document.getElementById(`quantity-${variantId}`);
@@ -20,7 +22,14 @@ const ProductVaritants = ({ variants }) => {
           product_length: variantId,
           quantity,
         };
+
+        setLoading(true);
         await axiosWithCredentials.post(`/add-to-cart/`, payload);
+        toast.success("Product added to cart!");
+
+        // Clear input value after successful add
+        input.value = 0;
+
         const res = await getCart();
         dispatch(setCartItems(res.cart_items));
       } else {
@@ -40,6 +49,8 @@ const ProductVaritants = ({ variants }) => {
       } else {
         toast.error("Something went wrong");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -162,6 +173,7 @@ const ProductVaritants = ({ variants }) => {
                     <button
                       className="cart-button flex items-center justify-center"
                       onClick={() => handleaddToCart(variant.id)}
+                      disabled={loading}
                     >
                       <img src={cartIcon} alt="Cart" />
                     </button>
