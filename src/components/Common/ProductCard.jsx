@@ -2,11 +2,13 @@ import { useNavigate } from "react-router-dom";
 import productHeart from "../../assets/LandingPageImages/products/productHeart.svg";
 import productHeartFilled from "../../assets/LandingPageImages/products/productHeartFilled.svg";
 import addToCartt from "../../assets/LandingPageImages/products/addToCart.svg";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { axiosWithCredentials } from "../../providers";
 import { toast } from "react-toastify";
 import { deleteWishList } from "../../redux/actions/productActions";
 import { useState } from "react";
+import { setCartItems } from "../../redux/slices/cartSlice";
+import { getCart } from "../../redux/actions/orderActions";
 
 const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
   const authState = useSelector((state) => state.auth);
@@ -14,6 +16,7 @@ const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [cartLoading, setCartLoading] = useState("");
+  const dispatch = useDispatch();
 
   const addWishlist = async (id) => {
     if (loading) return;
@@ -63,6 +66,8 @@ const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
       };
       await axiosWithCredentials.post(`/add-to-cart/`, payload);
       toast.success("Product added to cart!");
+      const res = await getCart();
+      dispatch(setCartItems(res.cart_items));
     } catch (error) {
       if (
         error.response &&

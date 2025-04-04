@@ -7,18 +7,21 @@ import coupon from "../../assets/addToCart/coupon.svg";
 import plus from "../../assets/addToCart/plus.svg";
 import minus from "../../assets/addToCart/minus.svg";
 import { debounce } from "lodash";
-import { deleteCartItem } from "../../redux/actions/orderActions";
+import { deleteCartItem, getCart } from "../../redux/actions/orderActions";
 import { toast } from "react-toastify";
 import { axiosWithCredentials } from "../../providers";
 import { getLoggedInUser } from "../../redux";
+import { useDispatch } from "react-redux";
+import { setCartItems } from "../../redux/slices/cartSlice";
 
 const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
   const user = getLoggedInUser();
-  const [cartItems, setCartItems] = useState(cartData?.cart_items || []);
+  const [cartItems, setCartItem] = useState(cartData?.cart_items || []);
   const [updatedItem, setUpdatedItem] = useState(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setCartItems(cartData?.cart_items || []);
+    setCartItem(cartData?.cart_items || []);
   }, [cartData]);
 
   const updateQuantity = async ({ id, productId, price, newQuantity }) => {
@@ -30,16 +33,21 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
         quantity: newQuantity,
         product_price: price,
       };
-      await axiosWithCredentials.put(`/change-quantity/${id}/`, payload);;
+      await axiosWithCredentials.put(`/change-quantity/${id}/`, payload);
 
       fetchCart();
+      const res = await getCart();
+      console.log("cart Items res,", res);
+      dispatch(setCartItems(res.cart_items));
     } catch (error) {
       let errorMessage = "Something went wrong!";
+
       if (error.response?.data?.product?.length) {
         errorMessage = error.response.data.product[0];
       } else if (error?.response?.data?.message) {
-        errorMessage = error?.response?.data?.message;
+        errorMessage = error.response.data.message;
       }
+
       fetchCart();
       toast.error(errorMessage);
     }
@@ -60,7 +68,7 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
     const item = cartItems?.find((item) => item.id === id);
     if (item) {
       const newQuantity = item.quantity + 1;
-      setCartItems((prevItems) =>
+      setCartItem((prevItems) =>
         prevItems.map((item) =>
           item.id === id ? { ...item, quantity: newQuantity } : item
         )
@@ -78,7 +86,7 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
     const item = cartItems?.find((item) => item.id === id);
     if (item && item.quantity > 1) {
       const newQuantity = item.quantity - 1;
-      setCartItems((prevItems) =>
+      setCartItem((prevItems) =>
         prevItems.map((item) =>
           item.id === id ? { ...item, quantity: newQuantity } : item
         )
@@ -288,7 +296,7 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
                 className="xl:text-16 lg:text-14 text-[13px]
 "
               >
-                Have a coupon?{" "}
+                Have a coupon?
               </h6>
             </div>
             <div className="pt-2">

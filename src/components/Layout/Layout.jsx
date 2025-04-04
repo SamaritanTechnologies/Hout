@@ -34,50 +34,49 @@ const Layout = () => {
   ];
 
   const currentPath = useLocation().pathname;
-  const hasSidnav = adminPaths.map((item, index) => {
-    let splittedRoute = item.split("/")[1];
-    if (currentPath === splittedRoute || currentPath.includes(splittedRoute)) {
-      return true;
-    } else {
-      return false;
-    }
+  // const hasSidnav = adminPaths.map((item, index) => {
+  //   let splittedRoute = item.split("/")[1];
+  //   if (currentPath === splittedRoute || currentPath.includes(splittedRoute)) {
+  //     console.log("admin Path", "true");
+  //     return true;
+  //   } else {
+  //     console.log("admin Path:", "false");
+
+  //     return false;
+  //   }
+  // });
+  const hasSidnav = adminPaths.some((adminPath) => {
+    return currentPath === adminPath || currentPath.startsWith(adminPath + "/");
   });
+
   const hasHeaderFooter = authPaths.includes(currentPath);
 
   return (
     <>
-      {hasSidnav.includes(true) ? (
-        <>
-          <div className="flex">
-            <div className="min-h-screen">
-              <AdminSideNav />
-            </div>
-            <div className="flex-1 min-h-screen overflow-x-hidden">
-              <AdminMainNav />
-              <div className="dashboard-content overflow-y-auto bg-[#fafafa] px-5 py-8">
-                <Outlet />
-              </div>
+      {hasSidnav ? (
+        <div className="flex">
+          <div className="min-h-screen">
+            <AdminSideNav />
+          </div>
+          <div className="flex-1 min-h-screen overflow-x-hidden">
+            <AdminMainNav />
+            <div className="dashboard-content overflow-y-auto bg-[#fafafa] px-5 py-8">
+              <Outlet />
             </div>
           </div>
+        </div>
+      ) : !hasHeaderFooter ? (
+        <>
+          <HeaderSection />
+          <div className="xl:!pt-20 lg:!pt-18 md:!pt-16 !pt-14 w-full flex-1">
+            <Outlet />
+          </div>
+          <FooterSection />
         </>
       ) : (
-        <>
-          {!hasHeaderFooter ? (
-            <>
-              <HeaderSection />
-              <div className=" xl:!pt-20 lg:!pt-18 md:!pt-16 !pt-14 w-full flex-1 ">
-                <Outlet />
-              </div>
-              <FooterSection />
-            </>
-          ) : (
-            <>
-              <div className="">
-                <Outlet />
-              </div>
-            </>
-          )}
-        </>
+        <div>
+          <Outlet />
+        </div>
       )}
     </>
   );
