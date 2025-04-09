@@ -14,7 +14,13 @@ import { getLoggedInUser } from "../../redux";
 import { useDispatch } from "react-redux";
 import { setCartItems } from "../../redux/slices/cartSlice";
 
-const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
+const ShoppingCart = ({
+  cartData,
+  fetchCart,
+  taxData = 0,
+  delivery = 0,
+  handleDivClick,
+}) => {
   const user = getLoggedInUser();
   const [cartItem, setCartItem] = useState(cartData?.cart_items || []);
   const [updatedItem, setUpdatedItem] = useState(null);
@@ -103,6 +109,8 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
     try {
       await deleteCartItem(id);
       fetchCart();
+      const res = await getCart();
+      dispatch(setCartItems(res.cart_items));
     } catch (error) {
       toast.error("Failed to remove item from the cart.");
     }
@@ -112,11 +120,13 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
     (sum, item) => sum + parseFloat(item.product_price),
     0
   );
+
   const calculateTotal = (totalPrice, delivery, taxData) => {
     const total = (totalPrice || 0) + (delivery || 0) + (taxData || 0);
     return total;
   };
   const total = calculateTotal(totalPrice, delivery, taxData);
+
   return (
     <>
       <section className="w-full flex xl:gap-[40px] lg:gap-[30px] md:gap-[20px] gap-[10px] justify-between xl:px-[135px] lg:px-[80px] px-[20px]  xl:pb-[100px] lg:pb-[70px] md:pb-[80px] pb-[70px] md:flex-col sm:flex-col xs:flex-col  ">
@@ -157,17 +167,16 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
                     <tr key={item.id}>
                       <td className="xl:pb-[24px] lg:pb-[18px] pb-[10px]">
                         <section className="flex items-center gap-x-2 pt-5 xs:min-w-[300px]">
-                          <div>
-                            <a
-                              href="#"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleRemove(item?.id);
-                              }}
-                            >
-                              <img src={cross} alt="remove" />
-                            </a>
-                          </div>
+                          <a
+                            href="#"
+                            className="shrink-0"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleRemove(item?.id);
+                            }}
+                          >
+                            <img src={cross} alt="remove" />
+                          </a>
                           <div>
                             <img
                               src={item?.product_length?.product.image}
@@ -247,47 +256,6 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
               </tbody>
             </table>
           </div>
-          {/* <section className="flex items-center  gap-x-2">
-            <section className="flex items-center gap-x-2 pt-5">
-              <div>
-                <img src={cross} />
-              </div>
-              <div>
-                {" "}
-                <img src={image1} />
-              </div>
-
-              <section className="flex-col">
-                <div className="text-18"> Tray Table</div>
-                <section>
-                  <div className="text-12  font-medium ">thickness</div>
-                  <div className="">25 mm </div>
-                </section>
-              </section>
-
-              <section className="pt-6">
-                <div className="text-12  font-medium ">width</div>
-                <div>220 mm </div>
-              </section>
-
-              <section className="pt-6">
-                <div className="text-12  font-medium ">Length</div>
-                <div>220 mm </div>
-              </section>
-            </section>
-            <div className="flex gap-x-3 border items-center px-1  rounded-md">
-              <td>
-                <img src={minus} />
-              </td>
-              <td>2</td>
-              <td>
-                <img src={plus} />
-              </td>
-            </div>
-
-            <div className="min-w-[140px]">$19.00</div>
-            <div className="min-w-[140px]">$38.00</div>
-          </section> */}
 
           <section className="pt-[30px]">
             <div>
@@ -347,7 +315,10 @@ const ShoppingCart = ({ cartData, fetchCart, taxData = 0, delivery = 0 }) => {
           </section>
 
           <div className="xl:py-[30px] py-[15px] flex justify-center">
-            <button className="xl:w-[93.5%] lg:w-[93.5%] w-[100%] bg-[#FBC700] text-white py-2 rounded-lg">
+            <button
+              onClick={() => handleDivClick("secondTab")}
+              className="xl:w-[93.5%] lg:w-[93.5%] w-[100%] bg-[#FBC700] text-white py-2 rounded-lg"
+            >
               Checkout
             </button>
           </div>

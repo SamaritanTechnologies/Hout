@@ -271,7 +271,7 @@ export const Products = () => {
                   </td>
 
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">
-                    <div className="flex flex-col gap-1 items-center">
+                    <div className="flex flex-col gap-1 items-start">
                       {rowData?.group && rowData.group?.length > 0
                         ? rowData.group?.map((item, index) => (
                             <p key={index}>{item.name_en}</p>
@@ -281,7 +281,7 @@ export const Products = () => {
                   </td>
 
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">
-                    <div className="flex flex-col gap-1 items-center">
+                    <div className="flex flex-col gap-1 items-start">
                       {rowData?.product_type && rowData.product_type?.length > 0
                         ? rowData.product_type?.map((item, index) => (
                             <p
@@ -326,7 +326,7 @@ export const Products = () => {
                   </td>
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">
                     <div className="flex xl:gap-3 gap-2 items-center justify-center">
-                      <p className="bg-[#FBC7001A] text-[#FBC700] py-1 px-3 rounded-full min-w-[70px] text-left text-gray-900 whitespace-no-wrap flex gap-2 items-center">
+                      <p className="bg-[#FBC7001A] text-[#FBC700] py-1 px-3 rounded-full min-w-[70px]  text-gray-900 whitespace-no-wrap flex gap-2 items-center">
                         {rowData?.lengths && rowData.lengths.length > 0
                           ? rowData.lengths.reduce(
                               (total, item) => total + item.stock,

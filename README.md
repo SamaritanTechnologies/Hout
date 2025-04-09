@@ -1,31 +1,17 @@
-# React + Vite
+HOUT This is a React.js project powered by Vite, a fast build tool for modern web projects.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🚀 Getting Started Follow the steps below to run the project locally and build it for production.
 
-Currently, two official plugins are available:
+📦 Installation Clone the repository:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+git clone https://github.com/SamaritanTechnologies/Hout cd hout
 
-## 🚀 Project Initiation
+Install dependencies: npm install
 
-### Prerequisites
+💻 Running Locally Start the development server:
 
-- Node.js 22+
-- npm 18+ or yarn 1.22+
+npm run dev The app will be available at http://localhost:3000
 
-### Quick Start
+🏗️ Building for Production To generate a production build, run:
 
-1. Clone the repository:
-   ```bash
-    git clone https://github.com/SamaritanTechnologies/Hout.git
-   cd Hout
-   ```
-2. Install dependencies:
-   npm install
-
-3. Start development server:
-   npm run dev
-
-4. Creates production build:
-   npm run build
+npm run build The optimized output will be in the dist folder.

@@ -28,7 +28,7 @@ export const TermsAndConditions = () => {
             description_nl: data.description_nl,
           });
         }
-        toast.success("Terms & Conditions fetched successfully!");
+        // toast.success("Terms & Conditions fetched successfully!");
       } catch (error) {
         toast.error("Failed to fetch Terms & Conditions!");
         console.error("Error fetching privacy policy:", error);

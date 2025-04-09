@@ -23,6 +23,7 @@ import { useSelector } from "react-redux";
 
 const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
   const userDetail = useSelector((state) => state.auth.user);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
 
   const user = getLoggedInUser();
   const [state, setState] = useState({
@@ -47,10 +48,13 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
   const fetchUser = async () => {
     try {
       const res = await getProfileInfo();
-      setState((prev) => ({
-        ...prev,
-        userData: res,
-      }));
+
+      // setState(
+      //   (prev) => ({
+      //   ...prev,
+      //   userData: res,
+      // }));
+      setState(res);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -84,18 +88,6 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
     }
   };
 
-  const fetchDeliveryAddress = async () => {
-    try {
-      const res = await getDeliveryAddress();
-      setState((prev) => ({
-        ...prev,
-        deliveryAddress: res?.data,
-      }));
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  };
-
   const debouncedUpdateQuantity = useCallback(
     debounce((item) => updateQuantity(item), 500),
     []
@@ -103,7 +95,6 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
 
   useEffect(() => {
     fetchUser();
-    fetchDeliveryAddress();
   }, []);
 
   useEffect(() => {
@@ -158,50 +149,93 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
   };
   const total = calculateTotal(totalPrice, delivery, taxData);
 
+  const handlePaymentMethodChange = (method) => {
+    setSelectedPaymentMethod(method);
+  };
+
   const confirmOrder = async () => {
-    const payload = {
-      gross_total: cartItems?.[0]?.product_price,
-      total: total,
-      delivery_method: "asdasda",
-      delivery_price: delivery,
-    };
-
     if (
-      state?.deliveryAddress?.street_and_number &&
-      state?.deliveryAddress?.city &&
-      state?.deliveryAddress?.zip_code &&
-      state?.deliveryAddress?.country
+      !state?.delivery_address?.street_and_number ||
+      !state?.delivery_address?.city ||
+      !state?.delivery_address?.zip_code ||
+      !state?.delivery_address?.country
     ) {
-      if (terms) {
-        try {
-          setLoading(true);
-          const response = await axiosWithCredentials.post(
-            `/confirm-order/`,
-            payload
-          );
-          if (response?.data?.checkout_url) {
-            window.location.href = response?.data?.checkout_url;
-          }
-          setLoading(false);
-        } catch (error) {
-          setLoading(false);
+      toast.warn("Please provide complete delivery address");
+      return;
+    }
 
-          toast.error("Something went wrong");
+    if (!terms) {
+      toast.warn("Please accept terms and conditions first");
+      return;
+    }
 
-          throw error;
-        }
-      }
-      if (!terms) {
-        toast.warn("Please accept terms and conditions first");
-      }
-    } else {
-      if (!terms) {
-        toast.warn("Please accept terms and conditions first");
+    if (!selectedPaymentMethod) {
+      toast.warn("Please select a payment method");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const payload = {
+        gross_total: totalPrice,
+        total: total,
+        delivery_method: selectedPaymentMethod.name,
+        delivery_price:
+          delivery !== null && delivery !== undefined ? delivery : 0,
+      };
+      const response = await axiosWithCredentials.post(
+        `/confirm-order/`,
+        payload
+      );
+
+      if (response?.data?.checkout_url) {
+        // window.location.href = response.data.checkout_url;
+
+        window.open(response.data.checkout_url, "_blank");
       } else {
-        toast.warn("Please provide complete delivery address");
+        toast.error("Payment initialization failed");
       }
+    } catch (error) {
+      console.error("Payment error:", error);
+      toast.error(error.response?.data?.message || "Payment processing failed");
+    } finally {
+      setLoading(false);
     }
   };
+
+  // useEffect(() => {
+  //   const checkPaymentStatus = async () => {
+  //     const urlParams = new URLSearchParams(window.location.search);
+  //     const paymentId = urlParams.get("payment_id");
+  //     const orderId = urlParams.get("order_id");
+
+  //     if (paymentId) {
+  //       try {
+  //         const response = await axiosWithCredentials.get(
+  //           `/api/payment-status?payment_id=${paymentId}`
+  //         );
+
+  //         if (response.data.status === "paid") {
+  //           toast.success("Payment successful! Your order is confirmed.");
+  //         } else if (response.data.status === "failed") {
+  //           toast.error("Payment failed. Please try again.");
+  //         } else if (response.data.status === "canceled") {
+  //           toast.warn("Payment was canceled.");
+  //         }
+
+  //         window.history.replaceState(
+  //           {},
+  //           document.title,
+  //           window.location.pathname
+  //         );
+  //       } catch (error) {
+  //         console.error("Payment status check error:", error);
+  //       }
+  //     }
+  //   };
+
+  //   checkPaymentStatus();
+  // }, []);
 
   return (
     <>
@@ -311,14 +345,14 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
 
             <Formik
               initialValues={{
-                firstName: state?.userData?.first_name ?? "",
-                lastName: state?.userData?.last_name ?? "",
-                companyName: state?.userData?.company_name ?? "",
+                firstName: state?.first_name ?? "",
+                lastName: state?.last_name ?? "",
+                companyName: state?.company_name ?? "",
                 streetAndNumber:
-                  state?.deliveryAddress?.street_and_number ?? "",
-                city: state?.deliveryAddress?.city ?? "",
-                zipCode: state?.deliveryAddress?.zip_code ?? "",
-                country: state?.deliveryAddress?.country ?? "",
+                  state?.delivery_address?.street_and_number ?? "",
+                city: state?.delivery_address?.city ?? "",
+                zipCode: state?.delivery_address?.zip_code ?? "",
+                country: state?.delivery_address?.country ?? "",
               }}
               enableReinitialize={true}
               validationSchema={validationSchema}
@@ -335,14 +369,13 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
 
                 try {
                   const response = await axiosWithCredentials.patch(
-                    `/accounts/update-personal-details/${state.userData?.id}/`,
+                    `/accounts/update-personal-details/${state.id}/`,
                     payload
                   );
                   setSubmitting(false);
                   resetForm(false);
                   toast.success("Successfully updated");
                 } catch (error) {
-                  console.log(error, "error");
                   toast.error("Something went wrong");
                   setSubmitting(false);
                 }
@@ -442,8 +475,10 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
                   <PaymentCard
                     img={item.img}
                     name={item.name}
-                    isChecked={item.checked}
+                    isChecked={selectedPaymentMethod?.id === item.id}
                     isRadioRequired
+                    onChange={() => handlePaymentMethodChange(item)}
+                    item={item}
                   />
                 </div>
               ))}

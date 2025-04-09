@@ -47,6 +47,7 @@ import {
   PrivateRoute,
   ProtectedRoute,
 } from "./providers/PrivateRoutes";
+import { OAuthCallback } from "./pages/OAuthCallback ";
 
 function Routes() {
   return (
@@ -81,10 +82,10 @@ function Routes() {
           {/* <Route path="/order-list" element={<OrderList />} /> */}
           {/* <Route path="/user-profile" element={<UserProfile />} /> */}
         </Route>
-
         <Route element={<ProtectedRoute />}>
           <Route path="/sign-in" element={<Signin />} />
           <Route path="/sign-up" element={<Signup />} />
+          <Route path="/oauth-callback" element={<OAuthCallback />} />
         </Route>
 
         <Route path="/forget-password" element={<ForgetPassword />} />

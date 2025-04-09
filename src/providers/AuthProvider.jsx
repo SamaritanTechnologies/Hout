@@ -126,6 +126,15 @@ export function AuthProvider({ children }) {
     }
 
     const accessToken = getAccessToken();
+    console.log("accessToken:", accessToken);
+    if (
+      !accessToken ||
+      typeof accessToken !== "string" ||
+      accessToken.trim() === ""
+    ) {
+      handleLogoutUser();
+      return;
+    }
     try {
       const decodedToken = jwtDecode(accessToken);
 

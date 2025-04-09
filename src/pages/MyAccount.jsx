@@ -12,6 +12,7 @@ import { CameraIcon } from "@heroicons/react/24/outline";
 import { useSelector, useDispatch } from "react-redux";
 import { getLoggedInUser, logoutUser } from "../redux";
 import { BASE_URL } from "../providers/AxiosInstance";
+import { setCartItems } from "../redux/slices/cartSlice";
 
 export const MyAccount = () => {
   const location = useLocation();
@@ -52,6 +53,8 @@ export const MyAccount = () => {
     dispatch(logoutUser());
     setAccessToken("");
     setRefreshToken("");
+    dispatch(setCartItems(null));
+
     toast.success("Logged Out!");
 
     setTimeout(() => {
