@@ -85,9 +85,8 @@ function Routes() {
         <Route element={<ProtectedRoute />}>
           <Route path="/sign-in" element={<Signin />} />
           <Route path="/sign-up" element={<Signup />} />
-          <Route path="/oauth-callback" element={<OAuthCallback />} />
         </Route>
-
+        <Route path="/oauth-callback" element={<OAuthCallback />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
 

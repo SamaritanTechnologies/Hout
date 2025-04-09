@@ -10,6 +10,7 @@ const Layout = () => {
     "/sign-up",
     "/forget-password",
     "/reset-password",
+    "/oauth-callback",
   ];
   const adminPaths = [
     "/dashboard",
@@ -34,17 +35,6 @@ const Layout = () => {
   ];
 
   const currentPath = useLocation().pathname;
-  // const hasSidnav = adminPaths.map((item, index) => {
-  //   let splittedRoute = item.split("/")[1];
-  //   if (currentPath === splittedRoute || currentPath.includes(splittedRoute)) {
-  //     console.log("admin Path", "true");
-  //     return true;
-  //   } else {
-  //     console.log("admin Path:", "false");
-
-  //     return false;
-  //   }
-  // });
   const hasSidnav = adminPaths.some((adminPath) => {
     return currentPath === adminPath || currentPath.startsWith(adminPath + "/");
   });
