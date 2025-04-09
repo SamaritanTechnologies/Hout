@@ -23,7 +23,6 @@ export const HomePageProducts = () => {
   const [productOptions, setProductOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch products for dropdown options
   useEffect(() => {
     const fetchProducts = async () => {
       try {
