@@ -120,11 +120,11 @@ const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
         </p>
         <div className="flex gap-4">
           <span className="text-xl font-semibold text-[#111727]">
-            $ {minimumPrice.discounted_price_ex_vat}
+            € {minimumPrice.discounted_price_ex_vat}
           </span>
           {minimumPrice.discount > 0 && (
             <span className="text-[#B0B0B0] line-through self-center">
-              $ {minimumPrice.full_price_ex_vat}
+              € {minimumPrice.full_price_ex_vat}
             </span>
           )}
         </div>

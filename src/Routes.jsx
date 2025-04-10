@@ -85,18 +85,17 @@ function Routes() {
         <Route element={<ProtectedRoute />}>
           <Route path="/sign-in" element={<Signin />} />
           <Route path="/sign-up" element={<Signup />} />
+          <Route path="/oauth-callback" element={<OAuthCallback />} />
         </Route>
-        <Route path="/oauth-callback" element={<OAuthCallback />} />
+
         <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-
         <Route path="/" element={<Landingpage />} />
         <Route path="/cart" element={<AddToCart />} />
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/shop-page" element={<ShopPage />} />
         <Route path="/product-detail/:product_id" element={<ProductDetail />} />
         <Route path="/customized-product" element={<CustomizedProduct />} />
-
         <Route path="/terms-conditions" element={<TermsConditions />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/faq" element={<Faq />} />

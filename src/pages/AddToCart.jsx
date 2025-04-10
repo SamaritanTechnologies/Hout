@@ -40,6 +40,24 @@ export const AddToCart = () => {
     tax: 0,
     deliveryFee: 0,
   });
+  useEffect(() => {
+    if (orderCompleteData.hasResponse) {
+      setSelectedTab("thirdTab");
+      setSelectedDiv({
+        firstTab: true,
+        secondTab: true,
+        thirdTab: true,
+      });
+    } else if (selectedTab === "thirdTab") {
+      // If somehow user got to third tab without response, redirect back
+      setSelectedTab("firstTab");
+      setSelectedDiv({
+        firstTab: true,
+        secondTab: false,
+        thirdTab: false,
+      });
+    }
+  }, [orderCompleteData.hasResponse, selectedTab]);
 
   useEffect(() => {
     if (orderCompleteData.hasResponse) {
@@ -80,7 +98,12 @@ export const AddToCart = () => {
   ];
 
   const handleDivClick = (tab) => {
-    if (orderCompleteData.response) return;
+    // if (orderCompleteData.response) return;
+    // If we have a completed order response, block all tab changes
+    if (orderCompleteData.hasResponse) return;
+
+    // If trying to go to third tab without response, block it
+    if (tab === "thirdTab" && !orderCompleteData.hasResponse) return;
 
     setSelectedTab(tab);
     setSelectedDiv((prev) => {
@@ -209,7 +232,11 @@ export const AddToCart = () => {
           {tabs.map((tab, idx) => (
             <div
               key={tab.name}
-              className="4xll:gap-x-16 4xl:gap-x-14 3xll:gap-x-12 3xl:gap-x-10 2xll:gap-x-8 2xl:gap-x-6 flex-center gap-x-4 xs:flex-col sm:flex-col md:flex-col xs:w-[33%] xs:items-center xs:justify-center md:gap-[12px] sm:gap-[12px] xs:gap-[12px] cursor-pointer"
+              className={`4xll:gap-x-16 4xl:gap-x-14 3xll:gap-x-12 3xl:gap-x-10 2xll:gap-x-8 2xl:gap-x-6 flex-center gap-x-4 xs:flex-col sm:flex-col md:flex-col xs:w-[33%] xs:items-center xs:justify-center md:gap-[12px] sm:gap-[12px] xs:gap-[12px] cursor-pointer ${
+                orderCompleteData.hasResponse
+                  ? "pointer-events-none opacity-50"
+                  : ""
+              }`}
               onClick={() => handleDivClick(tab.name)}
             >
               <div

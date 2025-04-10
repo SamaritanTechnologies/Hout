@@ -3,11 +3,12 @@ import { axiosWithCredentials } from "../../providers";
 
 export const getOrderDetails = async (month, payment, day) => {
   try {
-    const response = await axiosWithCredentials.get(
-      `/order-filter/?month=${month ?? null}&payment_method=${
-        payment ?? null
-      }&day=${day ?? null}`
-    );
+    // const response = await axiosWithCredentials.get(
+    //   `/order-filter/?month=${month ?? null}&payment_method=${
+    //     payment ?? null
+    //   }&day=${day ?? null}`
+    // );
+    const response = await axiosWithCredentials.get("/order");
     return response.data;
   } catch (error) {
     console.error("Error fetching order details:", error);

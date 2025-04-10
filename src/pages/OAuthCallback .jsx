@@ -1,52 +1,67 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../redux";
 import { toast } from "react-toastify";
 import { setAccessToken, setRefreshToken } from "../providers";
+import { getProfileInfo } from "../redux/actions/profileActions";
+import PageLoader from "../components/Common/PageLoader";
 
 export const OAuthCallback = () => {
-  console.log("OAuthCallback component mounted");
+  const [isProcessing, setIsProcessing] = useState(true);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    console.log("oauth-callback");
-    const token = searchParams.get("token");
-    const userId = searchParams.get("user_id");
-    const cartId = searchParams.get("cart_id");
-
-    if (token && userId) {
-      try {
-        setAccessToken(token);
-        dispatch(
-          loginUser({
-            id: userId,
-          })
-        );
-
-        if (cartId) {
-          localStorage.setItem("cart_id", cartId);
-        }
-
-        // navigate("/");
-      } catch (error) {
-        toast.error("Login failed");
-        console.error("OAuth callback error:", error);
-        navigate("/login");
-      }
-    } else {
-      toast.error("Login failed - no token received");
-      navigate("/login");
+  const fetchUser = async () => {
+    try {
+      const res = await getProfileInfo();
+      return res;
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      throw error;
     }
-  }, []);
+  };
+
+  useEffect(() => {
+    const processOAuthCallback = async () => {
+      console.log("Processing OAuth callback");
+      const refreshToken = searchParams.get("refresh_token");
+      const accessToken = searchParams.get("access_token");
+
+      if (!accessToken || !refreshToken) {
+        console.error("Missing required parameters in callback");
+        toast.error("Login failed - missing authentication data");
+        navigate("/sign-in");
+        return;
+      }
+
+      try {
+        setAccessToken(accessToken);
+        setRefreshToken(refreshToken);
+        const userDetail = await fetchUser();
+
+        dispatch(loginUser(userDetail));
+
+        console.log("Login successful");
+        navigate("/");
+        toast.success("Login successful!");
+      } catch (error) {
+        console.error("OAuth callback error:", error);
+        toast.error("Login failed - processing error");
+        navigate("/sign-in");
+      } finally {
+        setIsProcessing(false);
+      }
+    };
+
+    processOAuthCallback();
+  }, [dispatch, navigate, searchParams]);
 
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="text-center">
-        <h2 className="text-2xl font-bold mb-4">Processing login...</h2>
-        <p>Please wait while we authenticate your account.</p>
+        <PageLoader />
       </div>
     </div>
   );

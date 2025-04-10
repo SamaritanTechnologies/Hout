@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import Button from "../Common/Button";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { axiosWithCredentials } from "../../providers";
 
 const Wishlist = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const Wishlist = () => {
   const [state, setState] = useState({
     wishlistData: null,
   });
+  const [loadingStates, setLoadingStates] = useState({});
 
   const [selectedItem, setSelectedItem] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -50,17 +52,32 @@ const Wishlist = () => {
     }
   };
 
-  const handleAddToCart = async (id) => {
+  const handleAddToCart = async (product) => {
+    setLoadingStates((prev) => ({ ...prev, [product.id]: true }));
     try {
-      if (id) {
-        const res = await addToCart({
-          id,
-          cart_id: userData?.cart_id,
-          user_id: userData?.id,
-        });
-      }
+      const payload = {
+        product_length: product?.lengths[0]?.id,
+        quantity: 1,
+      };
+
+      await axiosWithCredentials.post(`/add-to-cart/`, payload);
+      toast.success("Product added to cart!");
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        if (error.response.data.message === "No more product left in stock.") {
+          toast.error("This product is out of stock.");
+        } else {
+          toast.error(error.response.data.message);
+        }
+      } else {
+        toast.error("Something went wrong");
+      }
+    } finally {
+      setLoadingStates((prev) => ({ ...prev, [product.id]: false }));
     }
   };
 
@@ -142,10 +159,15 @@ const Wishlist = () => {
                             <button
                               className="px-[24px] py-[6px] bg-[#FBC700] rounded-[8px]"
                               onClick={() => {
-                                handleAddToCart(item?.id);
+                                handleAddToCart(item);
+                                disabled = { cartLoading };
                               }}
                             >
-                              <span className="text-[#fff]">Add to cart</span>
+                              <span className="text-[#fff]">
+                                {loadingStates[item.id]
+                                  ? "Adding..."
+                                  : "Add to cart"}
+                              </span>
                             </button>
                           </td>
                         </tr>

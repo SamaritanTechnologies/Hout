@@ -233,9 +233,14 @@ export const Dashboard = () => {
                         </td>
                         <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
                           <div className="flex gap-3 items-center">
-                            <p className="text-gray-900 whitespace-no-wrap">
-                              €{item?.gross_total}
-                            </p>
+                            <td className="text-[14px] text-[#141718] w-[20%] md:w-[auto] sm:w-[auto] text-left">
+                              {(() => {
+                                const amount = parseFloat(item?.gross_total);
+                                return isNaN(amount)
+                                  ? "€0.00"
+                                  : `€${amount.toFixed(2)}`;
+                              })()}
+                            </td>
                           </div>
                         </td>
                         <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
