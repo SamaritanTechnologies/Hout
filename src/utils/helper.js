@@ -37,7 +37,7 @@ export const itemDescription = [
 ];
 
 export const paymentMethods = [
-  { id: 1, name: " buy on Credit ", img: buyCredit, checked: false },
+  { id: 1, name: "Buy on Credit ", img: buyCredit, checked: false },
   { id: 2, name: "iDeal", img: ideal, checked: false },
   { id: 3, name: "Soft/Klarna", img: klarna, checked: false },
   { id: 4, name: "Bancontact", img: bancontact, checked: true },

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PlusCircle from "../../assets/DashboardImages/plusCricle.svg";
 import CrossCircle from "../../assets/DashboardImages/cancelCircle.svg";
+import dltImg from "../../assets/DashboardImages/delete.svg";
 
 const TableBody2 = ({ faqs, onAddFaq, onRemoveFaq, onEditFaq }) => {
   // Add a new FAQ row
@@ -34,7 +35,9 @@ const TableBody2 = ({ faqs, onAddFaq, onRemoveFaq, onEditFaq }) => {
               type="text"
               value={faq.question_en}
               placeholder="Question (EN)"
-              onChange={(e) => handleChange(index, "question_en", e.target.value)}
+              onChange={(e) =>
+                handleChange(index, "question_en", e.target.value)
+              }
               className="w-full outline-none bg-transparent"
             />
           </td>
@@ -51,7 +54,7 @@ const TableBody2 = ({ faqs, onAddFaq, onRemoveFaq, onEditFaq }) => {
           {/* Remove FAQ Button */}
           <td className="px-[2px] py-[16px] text-end">
             <img
-              src={CrossCircle}
+              src={dltImg}
               alt="Remove"
               onClick={() => handleRemoveRow(index)}
               className="cursor-pointer h-5 w-5"

@@ -1,4 +1,4 @@
-const PaymentCard = ({
+export default function PaymentCard({
   img,
   name,
   isChecked,
@@ -6,16 +6,17 @@ const PaymentCard = ({
   onChange,
   item,
   isRadioRequired,
-}) => {
+}) {
   return (
-    <div className={`${removeBg ? "" : "bg-[#F5F4F8] rounded-md"} flex py-2 px-3`}>
-      <label className="inline-flex items-center my-2 w-[] ">
-
+    <div
+      className={`${removeBg ? "" : "bg-[#F5F4F8] rounded-md"} flex py-2 px-3`}
+    >
+      <label className="inline-flex items-center my-2 w-full cursor-pointer">
         {isRadioRequired ? (
           <div className="px-[17px] py-[18px] mr-[12px] flex items-center">
             <input
               type="radio"
-              value="option1"
+              name="paymentMethod"
               checked={isChecked}
               onChange={() => onChange(item)}
               style={{ display: "block" }}
@@ -36,6 +37,4 @@ const PaymentCard = ({
       </label>
     </div>
   );
-};
-
-export default PaymentCard;
+}

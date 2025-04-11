@@ -27,6 +27,7 @@ export const ProductDetail = () => {
       try {
         const data = await getProductsById(product_id);
         setProductDetail(data);
+        console.log("Data:", data);
       } catch (error) {
         console.error("Error fetching product details:", error);
         toast.error("Failed to fetch product details. Please try again.");
@@ -166,7 +167,7 @@ export const ProductDetail = () => {
               {productDetail?.name_en}
             </h1>
             <div className="text-xl text-[#111727]">
-              € {productDetail?.price}
+              € {productDetail?.lengths[0]?.discounted_price_in_vat}
             </div>
 
             <div className="flex items-center gap-x-4 pt-5 border-b-2 border-[#D9D9D9] pb-[26px]">

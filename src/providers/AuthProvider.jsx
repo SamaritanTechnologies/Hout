@@ -29,6 +29,7 @@ const publicPaths = [
   "/forget-password",
   "/reset-password",
 ];
+const AuthPaths = ["/sign-in", "/sign-up", "/oauth-callback"];
 
 export function AuthProvider({ children }) {
   const dispatch = useDispatch();
@@ -38,6 +39,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   const isPublicRoute = publicPaths.some((path) => location.pathname === path);
+  const isAuthRoute = AuthPaths.some((path) => location.pathname === path);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -81,7 +83,7 @@ export function AuthProvider({ children }) {
 
   const handleLogoutUser = async (redirect = true) => {
     dispatch(logoutUser());
-    if (redirect && !isPublicRoute) {
+    if (redirect && !isPublicRoute && !isAuthRoute) {
       navigate("/");
     }
     setLoading(false);
@@ -126,6 +128,15 @@ export function AuthProvider({ children }) {
     }
 
     const accessToken = getAccessToken();
+    console.log("accessToken:", accessToken);
+    if (
+      !accessToken ||
+      typeof accessToken !== "string" ||
+      accessToken.trim() === ""
+    ) {
+      handleLogoutUser();
+      return;
+    }
     try {
       const decodedToken = jwtDecode(accessToken);
 

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import ArrowBack from "../assets/DashboardImages/arrowback.svg";
 import PlusCircle from "../assets/DashboardImages/plusCricle.svg";
-import CrossCircle from "../assets/DashboardImages/cancelCircle.svg";
+// import CrossCircle from "../assets/DashboardImages/cancelCircle.svg";
+import dltImg from "../assets/DashboardImages/delete.svg";
+
 import Textarea from "../components/Common/Textarea";
 import Button from "../components/Common/Button";
 import Dropzone from "../components/Common/Dropzone";
@@ -530,7 +532,7 @@ export const AddNewProduct = () => {
                           <td className="px-[2px] py-[16px] text-end">
                             {lengths?.length > 1 ? (
                               <img
-                                src={CrossCircle}
+                                src={dltImg}
                                 alt="Remove"
                                 onClick={() => handleRemoveRow(index)}
                                 className="cursor-pointer h-5 w-5"
