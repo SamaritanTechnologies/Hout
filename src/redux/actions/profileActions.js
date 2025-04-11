@@ -6,8 +6,8 @@ import {
 } from "../../providers";
 import { getUserId } from "../slices/authSlice";
 
-export const updatePass = async (values, { setSubmitting }) => {
-  const id = getUserId();
+export const updatePass = async (values, id, { setSubmitting }) => {
+  // const id = getUserId();
   try {
     const { oldPassword, newPassword, repeatNewPassword } = values;
 
@@ -46,8 +46,9 @@ export const getProfileInfo = async () => {
   }
 };
 
-export const updateProfile = async (values, { setSubmitting }) => {
-  const id = getUserId();
+export const updateProfile = async (values, id, { setSubmitting }) => {
+  // const id = getUserId();
+  console.log("id", id);
 
   try {
     const { first_name, last_name, email, company_name, phone } = values;
