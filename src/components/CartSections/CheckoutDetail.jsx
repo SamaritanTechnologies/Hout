@@ -143,12 +143,18 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
     (sum, item) => sum + parseFloat(item.product_price),
     0
   );
+  // const calculateTotal = (totalPrice, delivery, taxData) => {
+  //   const total = (totalPrice || 0) + (delivery || 0) + (taxData || 0);
+  //   return total;
+  // };
+  // const total = calculateTotal(totalPrice, delivery, taxData);
+
   const calculateTotal = (totalPrice, delivery, taxData) => {
-    const total = (totalPrice || 0) + (delivery || 0) + (taxData || 0);
+    const total =
+      Number(totalPrice || 0) + Number(delivery || 0) + Number(taxData || 0);
     return total;
   };
   const total = calculateTotal(totalPrice, delivery, taxData);
-
   const handlePaymentMethodChange = (method) => {
     setSelectedPaymentMethod(method);
   };
