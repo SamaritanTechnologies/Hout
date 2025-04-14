@@ -118,7 +118,9 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
           };
 
           try {
-            await updateProfile(updatedVal, { setSubmitting });
+            await updateProfile(updatedVal, userData?.id, {
+              setSubmitting,
+            });
             fetchUser();
             resetForm();
           } catch (error) {
@@ -191,201 +193,14 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
         )}
       </Formik>
 
-      {/* <>
-        <h5 className="text-20 font-semibold mb-[30px] mt-8">
-          Delivery Address
-        </h5>
-        <Formik
-          initialValues={{
-            stNumber: state?.deliveryAddress?.street_and_number ?? "",
-            zCode: state?.deliveryAddress?.zip_code ?? "",
-            city: state?.deliveryAddress?.city ?? "",
-            country: state?.deliveryAddress?.country ?? "",
-          }}
-          enableReinitialize={true}
-          validationSchema={validationDelivery}
-          onSubmit={async (values, { setSubmitting, resetForm }) => {
-            const updatedVal = {
-              stNumber: values?.stNumber,
-              zCode: values?.zCode,
-              city: values?.city,
-              country: values?.country,
-            };
-
-            try {
-              await updateDeliveryAddress(updatedVal, { setSubmitting });
-              await fetchDeliveryAddress();
-              resetForm();
-            } catch (error) {
-              console.error("Error updating user data:", error);
-              setSubmitting(false);
-            }
-          }}
-        >
-          {({ isSubmitting }) => (
-            <Form>
-              <div className="formSec">
-                <div className="flex gap-[20px] mb-[24px]">
-                  <div className="w-1/2 md:mb-0">
-                    <Field
-                      component={FormikField}
-                      name="stNumber"
-                      label="Street and Number"
-                      placeholder="Street and Number"
-                      id="stNumber"
-                    />
-                  </div>
-                  <div className="w-1/2">
-                    <Field
-                      component={FormikField}
-                      name="zCode"
-                      label="Zip Code"
-                      placeholder="12345"
-                      id="zCode"
-                      type="number"
-                    />
-                  </div>
-                </div>
-                <div className="flex gap-[20px] mb-[24px]">
-                  <div className="w-1/2 md:mb-0">
-                    <Field
-                      component={FormikField}
-                      name="city"
-                      label="City"
-                      id="city"
-                      type="text"
-                      placeholder="Add City"
-                    />
-                  </div>
-                  <div className="w-1/2">
-                    <Field
-                      component={FormikField}
-                      name="country"
-                      width="w-[100%]"
-                      paddingY="12px"
-                      label="Country"
-                      firstOptionText="Country"
-                      placeholder="Add Country"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Button
-                    btnText="Save Changes"
-                    paddingX="20px"
-                    breakpoint="w-[207px]"
-                    type="submit"
-                    disabled={isSubmitting}
-                  />
-                </div>
-              </div>
-            </Form>
-          )}
-        </Formik>
-      </>
-      <>
-        <h5 className="text-20 font-semibold mb-[30px]  mt-8">
-          Invoice Address
-        </h5>
-        <Formik
-          initialValues={{
-            stNumber: state?.invoiceAddress?.street_and_number ?? "",
-            zCode: state?.invoiceAddress?.zip_code ?? "",
-            city: state?.invoiceAddress?.city ?? "",
-            country: state?.invoiceAddress?.country ?? "",
-          }}
-          enableReinitialize={true}
-          validationSchema={validationInvoice}
-          onSubmit={async (values, { setSubmitting, resetForm }) => {
-            const updatedVal = {
-              stNumber: values?.stNumber,
-              zCode: values?.zCode,
-              city: values?.city,
-              country: values?.country,
-            };
-
-            try {
-              await updateInvoiceAddress(updatedVal, { setSubmitting });
-              await fetchInvoiceAddress();
-              resetForm();
-            } catch (error) {
-              console.error("Error updating user data:", error);
-              setSubmitting(false);
-            }
-          }}
-        >
-          {({ isSubmitting }) => (
-            <Form>
-              <div className="formSec">
-                <div className="flex gap-[20px] mb-[24px]">
-                  <div className="w-1/2 md:mb-0">
-                    <Field
-                      component={FormikField}
-                      name="stNumber"
-                      label="Street and Number"
-                      placeholder="Street and Number"
-                      id="stNumber"
-                    />
-                  </div>
-                  <div className="w-1/2">
-                    <Field
-                      component={FormikField}
-                      name="zCode"
-                      label="Zip Code"
-                      placeholder="12345"
-                      id="zCode"
-                      type="number"
-                    />
-                  </div>
-                </div>
-                <div className="flex gap-[20px] mb-[24px]">
-                  <div className="w-1/2 md:mb-0">
-                    <Field
-                      component={FormikField}
-                      name="city"
-                      width="w-[100%]"
-                      paddingY="12px"
-                      firstOptionText="City"
-                      label="City"
-                      placeholder="Add city"
-                    />
-                  </div>
-                  <div className="w-1/2">
-                    <Field
-                      component={FormikField}
-                      name="country"
-                      width="w-[100%]"
-                      paddingY="12px"
-                      firstOptionText="Country"
-                      placeholder="Add country"
-                      label="Country"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Button
-                    btnText="Save Changes"
-                    paddingX="20px"
-                    breakpoint="w-[207px]"
-                    type="submit"
-                    disabled={isSubmitting}
-                  />
-                </div>
-              </div>
-            </Form>
-          )}
-        </Formik>
-      </> */}
-
       <Formik
         initialValues={initialValuesPassword}
         validationSchema={passwordValidationSchema}
         onSubmit={async (values, { setSubmitting, resetForm }) => {
           try {
-            await updatePass(values, { setSubmitting });
+            await updatePass(values, userData?.id, { setSubmitting });
             resetForm(false);
             setSubmitting(false);
-            toast.success("Password updated successfully!");
           } catch (error) {
             toast.error("Password not updated");
             console.error("Error updating password:", error);
