@@ -12,7 +12,7 @@ const TotalBalance = ({ subtotal, deliveryFee, tax, total, cartItems }) => {
                 Subtotal
               </div>
               <div className="text-[#111727]">
-                €{cartItems?.length ? subtotal?.toFixed(2) : 0}
+                €{cartItems?.length ? Number(subtotal || 0).toFixed(2) : 0}
               </div>
             </section>
 
@@ -21,22 +21,23 @@ const TotalBalance = ({ subtotal, deliveryFee, tax, total, cartItems }) => {
                 Delivery Fee
               </div>
               <div className="text-[#111727]">
-                €{cartItems?.length ? deliveryFee?.toFixed(2) : 0}
+                €{cartItems?.length ? Number(deliveryFee || 0).toFixed(2) : 0}
               </div>
             </section>
+
             <section className="flex justify-between xl:pt-[25px] lg:pt-[20px] pt-[10px] border-b border-[#D9D9D9] pb-3">
               <div className="text-[#111727] xl:text-16 lg:text-15 text-14">
                 Tax
               </div>
               <div className="text-[#111727]">
-                €{cartItems?.length ? tax?.toFixed(2) : 0}
+                €{cartItems?.length ? Number(tax || 0).toFixed(2) : 0}
               </div>
             </section>
 
             <section className="flex justify-between xl:pt-[25px] lg:pt-[20px] pt-[10px] pb-5">
               <div className="text-16 font-medium text-[#111727]">Total</div>
               <div className="text-customYellow font-medium xl:text-18 lg:text-16 text-14">
-                USD €{cartItems ? total?.toFixed(2) : 0}
+                USD €{cartItems?.length ? Number(total || 0).toFixed(2) : 0}
               </div>
             </section>
           </section>
