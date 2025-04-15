@@ -20,11 +20,12 @@ import {
 } from "../../redux/actions/profileActions";
 import { getLoggedInUser } from "../../redux";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
   const userDetail = useSelector((state) => state.auth.user);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
-
+  const navigate = useNavigate();
   const user = getLoggedInUser();
   const [state, setState] = useState({
     deliveryAddress: null,
@@ -143,17 +144,13 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
     (sum, item) => sum + parseFloat(item.product_price),
     0
   );
-  // const calculateTotal = (totalPrice, delivery, taxData) => {
-  //   const total = (totalPrice || 0) + (delivery || 0) + (taxData || 0);
-  //   return total;
-  // };
-  // const total = calculateTotal(totalPrice, delivery, taxData);
 
   const calculateTotal = (totalPrice, delivery, taxData) => {
     const total =
       Number(totalPrice || 0) + Number(delivery || 0) + Number(taxData || 0);
     return total;
   };
+
   const total = calculateTotal(totalPrice, delivery, taxData);
   const handlePaymentMethodChange = (method) => {
     setSelectedPaymentMethod(method);
@@ -209,288 +206,288 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
     }
   };
 
-  // useEffect(() => {
-  //   const checkPaymentStatus = async () => {
-  //     const urlParams = new URLSearchParams(window.location.search);
-  //     const paymentId = urlParams.get("payment_id");
-  //     const orderId = urlParams.get("order_id");
-
-  //     if (paymentId) {
-  //       try {
-  //         const response = await axiosWithCredentials.get(
-  //           `/api/payment-status?payment_id=${paymentId}`
-  //         );
-
-  //         if (response.data.status === "paid") {
-  //           toast.success("Payment successful! Your order is confirmed.");
-  //         } else if (response.data.status === "failed") {
-  //           toast.error("Payment failed. Please try again.");
-  //         } else if (response.data.status === "canceled") {
-  //           toast.warn("Payment was canceled.");
-  //         }
-
-  //         window.history.replaceState(
-  //           {},
-  //           document.title,
-  //           window.location.pathname
-  //         );
-  //       } catch (error) {
-  //         console.error("Payment status check error:", error);
-  //       }
-  //     }
-  //   };
-
-  //   checkPaymentStatus();
-  // }, []);
+  const hasCartItems = cartData?.cart_items?.length > 0;
 
   return (
     <>
-      <section className="xl:px-[100px] lg:px-[60px] px-[30px] xs:px-[15px]  mb-16">
-        <section className="grid grid-cols-12 gap-4 xs:gap-6 lg:gap-[45px] gap-x-12 ">
-          <section className="col-span-12 xl:col-span-4">
-            <div className="text-22 font-medium border-b border-[#D9D9D9] pb-2">
-              View Order
-            </div>
+      <section className="w-full flex flex-col items-center justify-center">
+        {hasCartItems ? (
+          <>
+            <section className="xl:px-[100px] lg:px-[60px] px-[30px] xs:px-[15px]  mb-16">
+              <section className="grid grid-cols-12 gap-4 xs:gap-6 lg:gap-[45px] gap-x-12 ">
+                <section className="col-span-12 xl:col-span-4">
+                  <div className="text-22 font-medium border-b border-[#D9D9D9] pb-2">
+                    View Order
+                  </div>
 
-            {cartItems?.map((item) => (
-              <div key={item.id}>
-                <section className="flex pt-5 items-center">
+                  {cartItems?.map((item) => (
+                    <div key={item.id}>
+                      <section className="flex pt-5 items-center">
+                        <div>
+                          <img
+                            src={item?.product_length?.product.image}
+                            className="xl:w-[80px] xl:h-[96px] lg:w-[70px] lg:h-[80px] min-w-[60px] min-h-[60px] xs:w-[60px] xs:h-[60px]"
+                          />
+                        </div>
+                        <div>
+                          <div className="px-2 text-18">{item.name}</div>
+                          <section className="flex gap-x-4 px-2 pt-1">
+                            <div>
+                              <div className="text-12 font-medium text-[#BABABA]">
+                                Thickness
+                              </div>
+                              <div>
+                                {item?.product_length?.product?.thickness} mm
+                              </div>
+                            </div>
+
+                            <div>
+                              <div className="text-12 font-medium text-[#BABABA]">
+                                Width
+                              </div>
+                              <div>
+                                {item?.product_length?.product?.width} mm
+                              </div>
+                            </div>
+
+                            <div>
+                              <div className="text-12 font-medium text-[#BABABA]">
+                                Length
+                              </div>
+                              <div>{item?.product_length?.length} mm</div>
+                            </div>
+                          </section>
+                        </div>
+                      </section>
+
+                      <section className="flex justify-between items-center xl:pl-[80px] lg:pl-[80px] md:pl-[80px] sm:pl-[80px] xs:pl-[60px] pl-[50px]">
+                        <div className="flex justify-between border items-center px-[10px] py-[6px] rounded-md xl:min-w-[118px] lg:w-[170px] md:w-[170px] sm:w-[170px] xs:w-[170px]">
+                          <div className="cursor-pointer">
+                            <span onClick={() => handleDecrement(item.id)}>
+                              <img src={minus} alt="decrement" />
+                            </span>
+                          </div>
+                          <h6>{item.quantity}</h6>
+                          <div className="cursor-pointer">
+                            <span onClick={() => handleIncrement(item.id)}>
+                              <img src={plus} alt="increment" />
+                            </span>
+                          </div>
+                        </div>
+                        <div className="xl:text-22 lg:text-20 md:text-18 text-16 font-bold">
+                          €{item?.product_price}
+                        </div>
+                      </section>
+                    </div>
+                  ))}
+
                   <div>
-                    <img
-                      src={item?.product_length?.product.image}
-                      className="xl:w-[80px] xl:h-[96px] lg:w-[70px] lg:h-[80px] min-w-[60px] min-h-[60px] xs:w-[60px] xs:h-[60px]"
+                    <TotalBalance
+                      subtotal={totalPrice}
+                      deliveryFee={delivery}
+                      tax={taxData}
+                      // subtotal={totalPrice}
+                      total={total}
+                      cartItems={cartItems}
                     />
                   </div>
-                  <div>
-                    <div className="px-2 text-18">{item.name}</div>
-                    <section className="flex gap-x-4 px-2 pt-1">
-                      <div>
-                        <div className="text-12 font-medium text-[#BABABA]">
-                          Thickness
-                        </div>
-                        <div>{item?.product_length?.product?.thickness} mm</div>
-                      </div>
+                  <section>
+                    <div className="xl:text-14 lg:text-14 text-[13px] xl:pt-[25px] lg:pt-[20px] pt-[10px]">
+                      <input
+                        type="checkbox"
+                        className="form-checkbox rounded-full mr-4 h-4 w-4 accent-yellow-400"
+                        checked={terms}
+                        onChange={() => setTerms(!terms)}
+                      />{" "}
+                      I Agree to the General Terms and Conditions and waive the
+                      Right of Withdrawal because this is a customized product.
+                    </div>
+                  </section>
 
-                      <div>
-                        <div className="text-12 font-medium text-[#BABABA]">
-                          Width
-                        </div>
-                        <div>{item?.product_length?.product?.width} mm</div>
-                      </div>
-
-                      <div>
-                        <div className="text-12 font-medium text-[#BABABA]">
-                          Length
-                        </div>
-                        <div>{item?.product_length?.length} mm</div>
-                      </div>
-                    </section>
+                  <div className="xl:py-[30px] lg:py-[25px] md:py-[20px] py-[10px]">
+                    <Button
+                      disabled={loading}
+                      btnText={loading ? "Confirming.." : "Confirm Order"}
+                      widthfull
+                      onClick={confirmOrder}
+                    />
                   </div>
                 </section>
 
-                <section className="flex justify-between items-center xl:pl-[80px] lg:pl-[80px] md:pl-[80px] sm:pl-[80px] xs:pl-[60px] pl-[50px]">
-                  <div className="flex justify-between border items-center px-[10px] py-[6px] rounded-md xl:min-w-[118px] lg:w-[170px] md:w-[170px] sm:w-[170px] xs:w-[170px]">
-                    <div className="cursor-pointer">
-                      <span onClick={() => handleDecrement(item.id)}>
-                        <img src={minus} alt="decrement" />
-                      </span>
-                    </div>
-                    <h6>{item.quantity}</h6>
-                    <div className="cursor-pointer">
-                      <span onClick={() => handleIncrement(item.id)}>
-                        <img src={plus} alt="increment" />
-                      </span>
-                    </div>
+                {/* Right Side Section  */}
+
+                <section className="col-span-12 xl:col-span-8 font-bold text-md">
+                  <div className="xl:text-22 lg:text-20 md:text-18 text-16 font-semibold border-b pb-2 border-[#D9D9D9]">
+                    Delivery Address
                   </div>
-                  <div className="xl:text-22 lg:text-20 md:text-18 text-16 font-bold">
-                    €{item?.product_price}
+
+                  <Formik
+                    initialValues={{
+                      firstName: state?.first_name ?? "",
+                      lastName: state?.last_name ?? "",
+                      companyName: state?.company_name ?? "",
+                      streetAndNumber:
+                        state?.delivery_address?.street_and_number ?? "",
+                      city: state?.delivery_address?.city ?? "",
+                      zipCode: state?.delivery_address?.zip_code ?? "",
+                      country: state?.delivery_address?.country ?? "",
+                    }}
+                    enableReinitialize={true}
+                    validationSchema={validationSchema}
+                    onSubmit={async (values, { setSubmitting, resetForm }) => {
+                      const payload = {
+                        first_name: values.firstName,
+                        last_name: values.lastName,
+                        companyt_name: values.companyName,
+                        street_and_number: values.streetAndNumber,
+                        zip_code: values.zipCode,
+                        city: values.city,
+                        country: values.country,
+                      };
+
+                      try {
+                        const response = await axiosWithCredentials.patch(
+                          `/accounts/update-personal-details/${state.id}/`,
+                          payload
+                        );
+                        setSubmitting(false);
+                        resetForm(false);
+                        toast.success("Successfully updated");
+                      } catch (error) {
+                        toast.error("Something went wrong");
+                        setSubmitting(false);
+                      }
+                    }}
+                  >
+                    {({ errors, touched, isSubmitting }) => (
+                      <Form className="grid grid-cols-12 gap-6">
+                        <div className="col-span-12 xl:col-span-6 mt-8">
+                          <div className="mb-4">
+                            <Field
+                              component={FormikField}
+                              name="firstName"
+                              label="First Name"
+                              placeholder="First Name"
+                            />
+                          </div>
+                          <div className="mb-4">
+                            <Field
+                              component={FormikField}
+                              name="companyName"
+                              label="Company Name (Optional)"
+                              placeholder="Company Name (Optional)"
+                            />
+                          </div>
+                          <div className="mb-4">
+                            <Field
+                              component={FormikField}
+                              name="streetAndNumber"
+                              label="Street & Number"
+                              placeholder="Street & Number"
+                            />
+                          </div>
+                          <div>
+                            <Field
+                              component={FormikField}
+                              name="city"
+                              label="City"
+                              placeholder="City"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-span-12 xl:col-span-6 xl:mt-8">
+                          <div className="mb-4">
+                            <Field
+                              component={FormikField}
+                              name="lastName"
+                              label="Last Name"
+                              placeholder="Last Name"
+                            />
+                          </div>
+                          <div className="w-full md:h-20 md:w-0 col-span-6 mb-2 lg:hidden md:hidden sm:hidden xs:hidden"></div>
+                          <div className="mb-4 invisible lg:hidden md:hidden sm:hidden xs:hidden">
+                            <Field
+                              component={FormikField}
+                              name="zipCode"
+                              label="Zip Code"
+                              placeholder="Zip Code"
+                            />
+                          </div>
+                          <div className="mb-4">
+                            <Field
+                              component={FormikField}
+                              name="zipCode"
+                              label="Zip Code"
+                              placeholder="Zip Code"
+                            />
+                          </div>
+                          <div className="mb-4">
+                            <Field
+                              component={FormikField}
+                              name="country"
+                              label="Country"
+                              placeholder="Country"
+                            />
+                          </div>
+                          <div className="mt-4 float-end max-w-[159px] w-full">
+                            <Button
+                              btnText={isSubmitting ? "Saving.." : "Save"}
+                              disabled={isSubmitting}
+                              type="submit"
+                              widthfull
+                            />
+                          </div>
+                        </div>
+                      </Form>
+                    )}
+                  </Formik>
+
+                  <div className="mt-8 pb-[100px] my-4">
+                    <h2 className="text-2xl font-bold my-2 border-b border-[#D9D9D9] pb-3">
+                      Payment Method
+                    </h2>
+
+                    {paymentMethods.map((item) => (
+                      <div
+                        className="my-4 xl:w-2/3 w-full h-auto"
+                        key={item.id}
+                      >
+                        <PaymentCard
+                          img={item.img}
+                          name={item.name}
+                          isChecked={selectedPaymentMethod?.id === item.id}
+                          isRadioRequired
+                          onChange={() => handlePaymentMethodChange(item)}
+                          item={item}
+                        />
+                      </div>
+                    ))}
                   </div>
                 </section>
-              </div>
-            ))}
-
-            <div>
-              <TotalBalance
-                subtotal={totalPrice}
-                deliveryFee={delivery}
-                tax={taxData}
-                // subtotal={totalPrice}
-                total={total}
-                cartItems={cartItems}
-              />
-            </div>
-            <section>
-              <div className="xl:text-14 lg:text-14 text-[13px] xl:pt-[25px] lg:pt-[20px] pt-[10px]">
-                <input
-                  type="checkbox"
-                  className="form-checkbox rounded-full mr-4 h-4 w-4 accent-yellow-400"
-                  checked={terms}
-                  onChange={() => setTerms(!terms)}
-                />{" "}
-                I Agree to the General Terms and Conditions and waive the Right
-                of Withdrawal because this is a customized product.
-              </div>
+              </section>
             </section>
-
-            <div className="xl:py-[30px] lg:py-[25px] md:py-[20px] py-[10px]">
-              <Button
-                disabled={loading}
-                btnText={loading ? "Confirming.." : "Confirm Order"}
-                widthfull
-                onClick={confirmOrder}
-              />
+          </>
+        ) : (
+          <section className="w-full flex flex-col items-center justify-center py-20">
+            <div className="text-center">
+              <h3 className="xl:text-24 lg:text-22 text-20 font-medium mb-4">
+                Your cart is empty
+              </h3>
+              <p className="text-[#6C7275] xl:text-16 lg:text-14 text-13 mb-6">
+                Looks like you haven't added any items to your cart yet
+              </p>
+              <button
+                className="bg-[#FBC700] text-white py-2 px-6 rounded-lg"
+                onClick={() => {
+                  navigate("/shop-page");
+                }}
+              >
+                Continue Shopping
+              </button>
             </div>
           </section>
-
-          {/* Right Side Section  */}
-
-          <section className="col-span-12 xl:col-span-8 font-bold text-md">
-            <div className="xl:text-22 lg:text-20 md:text-18 text-16 font-semibold border-b pb-2 border-[#D9D9D9]">
-              Delivery Address
-            </div>
-
-            <Formik
-              initialValues={{
-                firstName: state?.first_name ?? "",
-                lastName: state?.last_name ?? "",
-                companyName: state?.company_name ?? "",
-                streetAndNumber:
-                  state?.delivery_address?.street_and_number ?? "",
-                city: state?.delivery_address?.city ?? "",
-                zipCode: state?.delivery_address?.zip_code ?? "",
-                country: state?.delivery_address?.country ?? "",
-              }}
-              enableReinitialize={true}
-              validationSchema={validationSchema}
-              onSubmit={async (values, { setSubmitting, resetForm }) => {
-                const payload = {
-                  first_name: values.firstName,
-                  last_name: values.lastName,
-                  companyt_name: values.companyName,
-                  street_and_number: values.streetAndNumber,
-                  zip_code: values.zipCode,
-                  city: values.city,
-                  country: values.country,
-                };
-
-                try {
-                  const response = await axiosWithCredentials.patch(
-                    `/accounts/update-personal-details/${state.id}/`,
-                    payload
-                  );
-                  setSubmitting(false);
-                  resetForm(false);
-                  toast.success("Successfully updated");
-                } catch (error) {
-                  toast.error("Something went wrong");
-                  setSubmitting(false);
-                }
-              }}
-            >
-              {({ errors, touched, isSubmitting }) => (
-                <Form className="grid grid-cols-12 gap-6">
-                  <div className="col-span-12 xl:col-span-6 mt-8">
-                    <div className="mb-4">
-                      <Field
-                        component={FormikField}
-                        name="firstName"
-                        label="First Name"
-                        placeholder="First Name"
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <Field
-                        component={FormikField}
-                        name="companyName"
-                        label="Company Name (Optional)"
-                        placeholder="Company Name (Optional)"
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <Field
-                        component={FormikField}
-                        name="streetAndNumber"
-                        label="Street & Number"
-                        placeholder="Street & Number"
-                      />
-                    </div>
-                    <div>
-                      <Field
-                        component={FormikField}
-                        name="city"
-                        label="City"
-                        placeholder="City"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="col-span-12 xl:col-span-6 xl:mt-8">
-                    <div className="mb-4">
-                      <Field
-                        component={FormikField}
-                        name="lastName"
-                        label="Last Name"
-                        placeholder="Last Name"
-                      />
-                    </div>
-                    <div className="w-full md:h-20 md:w-0 col-span-6 mb-2 lg:hidden md:hidden sm:hidden xs:hidden"></div>
-                    <div className="mb-4 invisible lg:hidden md:hidden sm:hidden xs:hidden">
-                      <Field
-                        component={FormikField}
-                        name="zipCode"
-                        label="Zip Code"
-                        placeholder="Zip Code"
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <Field
-                        component={FormikField}
-                        name="zipCode"
-                        label="Zip Code"
-                        placeholder="Zip Code"
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <Field
-                        component={FormikField}
-                        name="country"
-                        label="Country"
-                        placeholder="Country"
-                      />
-                    </div>
-                    <div className="mt-4 float-end max-w-[159px] w-full">
-                      <Button
-                        btnText={isSubmitting ? "Saving.." : "Save"}
-                        disabled={isSubmitting}
-                        type="submit"
-                        widthfull
-                      />
-                    </div>
-                  </div>
-                </Form>
-              )}
-            </Formik>
-
-            <div className="mt-8 pb-[100px] my-4">
-              <h2 className="text-2xl font-bold my-2 border-b border-[#D9D9D9] pb-3">
-                Payment Method
-              </h2>
-
-              {paymentMethods.map((item) => (
-                <div className="my-4 xl:w-2/3 w-full h-auto" key={item.id}>
-                  <PaymentCard
-                    img={item.img}
-                    name={item.name}
-                    isChecked={selectedPaymentMethod?.id === item.id}
-                    isRadioRequired
-                    onChange={() => handlePaymentMethodChange(item)}
-                    item={item}
-                  />
-                </div>
-              ))}
-            </div>
-          </section>
-        </section>
+        )}
       </section>
     </>
   );

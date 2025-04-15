@@ -44,7 +44,7 @@ const FooterSection = ({ isShow }) => {
     setLoading(true);
     try {
       const response = await subscribeToNewsletter({ email });
-      toast.success("Thank you for subscribing!"); 
+      toast.success("Thank you for subscribing!");
       setEmail("");
     } catch (error) {
       const errorMessage = error.message || "An unexpected error occurred.";
@@ -52,7 +52,7 @@ const FooterSection = ({ isShow }) => {
     } finally {
       setLoading(false);
     }
-  };  
+  };
   return (
     <>
       <footer className="bg-[#E9E6D6] relative">
@@ -285,14 +285,11 @@ const FooterSection = ({ isShow }) => {
                 Chamber of Commerce
               </h3>
               <div className="text-sm text-[#111727]">61392421</div>
-              <div className="text-sm text-[#111727] font-semibold">
-                Bank
-              </div>
+              <div className="text-sm text-[#111727] font-semibold">Bank</div>
               <div className="text-sm text-[#111727]">
                 NL65 BUNQ 2064 2611 33
               </div>
               <div className="pay-button">
-                {" "}
                 <Button
                   btnText="Pay"
                   xl:paddingX="60px"
