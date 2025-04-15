@@ -202,8 +202,8 @@ export const Dashboard = () => {
                           <div className="flex xl:gap-3 gap-1 items-center">
                             <div className="flex-shrink-0 w-10 h-10">
                               <img
-                                src={item?.image || sampleProductImg} // Use item.image or fallback to sampleProductImg
-                                alt={item?.name || "Sample Product Name"} // Use item.name or fallback to "Sample Product Name"
+                                src={item?.image || sampleProductImg}
+                                alt={item?.name || "Sample Product Name"}
                                 className="xl:w-[36px] lg:w-[32px] w-[28px]"
                               />
                             </div>
@@ -217,7 +217,7 @@ export const Dashboard = () => {
                         <td className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-semibold text-gray3">
                           <div className="ml-3">
                             <p className="text-gray-900 whitespace-no-wrap">
-                              {item?.address}
+                              {item?.delivery_address}
                             </p>
                           </div>
                         </td>
@@ -235,7 +235,7 @@ export const Dashboard = () => {
                           <div className="flex gap-3 items-center">
                             <td className="text-[14px] text-[#141718] w-[20%] md:w-[auto] sm:w-[auto] text-left">
                               {(() => {
-                                const amount = parseFloat(item?.gross_total);
+                                const amount = parseFloat(item?.total);
                                 return isNaN(amount)
                                   ? "€0.00"
                                   : `€${amount.toFixed(2)}`;
