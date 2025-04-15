@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import editImg from "../../assets/myAccount/edit-icon.svg";
 import InputField from "../Common/InputField";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { axiosWithCredentials } from "../../providers";
 import { toast } from "react-toastify";
+import { getUserId, loginUser } from "../../redux";
+import { getProfileInfo } from "../../redux/actions/profileActions";
 
 const AddressCard = () => {
   const [state, setState] = useState({
@@ -12,7 +14,7 @@ const AddressCard = () => {
     userData: null,
   });
   const userDetail = useSelector((state) => state.auth.user);
-
+  const dispatch = useDispatch();
   const [showEditModal, setShowEditModal] = useState(false);
   const [addressType, setAddressType] = useState(null);
   const [currentAddressData, setCurrentAddressData] = useState(null);
@@ -42,7 +44,7 @@ const AddressCard = () => {
     try {
       const payload = {
         ...formData,
-        user: state.userData?.id, // Ensure user ID is taken from state.userData
+        user: state.userData?.id,
       };
 
       const userId = userDetail?.id || state.userData?.id;
@@ -54,7 +56,12 @@ const AddressCard = () => {
             payload
           );
           setShowEditModal(false);
+          const userDetail = await getProfileInfo();
+          // const  = await fetchUser();
+
+          dispatch(loginUser(userDetail));
           toast.success("Successfully Updated");
+
           return response.data;
         } catch (error) {
           console.error("Error:", error);
@@ -67,6 +74,8 @@ const AddressCard = () => {
             `/accounts/update-delivery-address/${userId}/`,
             payload
           );
+          const userDetail = await getProfileInfo();
+          dispatch(loginUser(userDetail));
           toast.success("Successfully Updated");
           setShowEditModal(false);
 
