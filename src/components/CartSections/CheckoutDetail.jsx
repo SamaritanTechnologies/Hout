@@ -14,18 +14,20 @@ import { axiosWithCredentials } from "../../providers";
 import { Field, Form, Formik } from "formik";
 import FormikField from "../Common/FormikField";
 import * as Yup from "yup";
+
 import {
   getDeliveryAddress,
   getProfileInfo,
 } from "../../redux/actions/profileActions";
-import { getLoggedInUser } from "../../redux";
-import { useSelector } from "react-redux";
+import { getLoggedInUser, loginUser } from "../../redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
   const userDetail = useSelector((state) => state.auth.user);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = getLoggedInUser();
   const [state, setState] = useState({
     deliveryAddress: null,
@@ -208,6 +210,16 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
 
   const hasCartItems = cartData?.cart_items?.length > 0;
 
+  const initialValues = {
+    firstName: userDetail?.first_name || "",
+    lastName: userDetail?.last_name || "",
+    companyName: userDetail?.company_name || "",
+    streetAndNumber: userDetail?.delivery_address?.street_and_number || "",
+    city: userDetail?.delivery_address?.city || "",
+    zipCode: userDetail?.delivery_address?.zip_code || "",
+    country: userDetail?.delivery_address?.country || "",
+  };
+
   return (
     <>
       <section className="w-full flex flex-col items-center justify-center">
@@ -322,16 +334,7 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
                   </div>
 
                   <Formik
-                    initialValues={{
-                      firstName: state?.first_name ?? "",
-                      lastName: state?.last_name ?? "",
-                      companyName: state?.company_name ?? "",
-                      streetAndNumber:
-                        state?.delivery_address?.street_and_number ?? "",
-                      city: state?.delivery_address?.city ?? "",
-                      zipCode: state?.delivery_address?.zip_code ?? "",
-                      country: state?.delivery_address?.country ?? "",
-                    }}
+                    initialValues={initialValues}
                     enableReinitialize={true}
                     validationSchema={validationSchema}
                     onSubmit={async (values, { setSubmitting, resetForm }) => {
@@ -350,9 +353,11 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
                           `/accounts/update-personal-details/${state.id}/`,
                           payload
                         );
+                        const userDetail = await getProfileInfo();
+                        dispatch(loginUser(userDetail));
                         setSubmitting(false);
                         resetForm(false);
-                        toast.success("Successfully updated");
+                        toast.success("Delivery address successfully updated");
                       } catch (error) {
                         toast.error("Something went wrong");
                         setSubmitting(false);

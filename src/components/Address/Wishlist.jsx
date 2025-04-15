@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import crossImg from "../../assets/myAccount/Shape.svg";
+// import crossImg from "../../assets/myAccount/Shape.svg";
+import crossImg from "../../assets/addToCart/cross.svg";
+
 import { addToCart, getWishList } from "../../redux/actions/orderActions";
 import DeleteModal from "../Modals/DeleteModal";
 import { deleteWishList } from "../../redux/actions/productActions";
