@@ -27,7 +27,6 @@ export const AdminPrivacyPolicy = () => {
             description_nl: data.description_nl,
           });
         }
-        toast.success("Privacy Policy fetched successfully!");
       } catch (error) {
         toast.error("Failed to fetch privacy policy");
         console.error("Error fetching privacy policy:", error);

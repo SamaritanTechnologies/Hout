@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import HeaderSection from "../Home/HeaderSection";
 import FooterSection from "../Home/FooterSection";
-import whatsappIcon from "../../assets/whatsapp-icon.svg";
 import AdminSideNav from "../AdminLayout/AdminSideNav";
 import AdminMainNav from "../AdminLayout/AdminMainNav";
-import { Outlet, useLocation } from "react-router-dom";
-const phoneNumber = "31633966002";
-const message = encodeURIComponent("Hello Hout!!!");
-const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+import { WhatsappWidget } from "./WhatsappWidget";
+
 const Layout = () => {
   const authPaths = [
     "/sign-in",
@@ -16,6 +14,7 @@ const Layout = () => {
     "/reset-password",
     "/oauth-callback",
   ];
+
   const adminPaths = [
     "/dashboard",
     "/vat-value",
@@ -72,16 +71,8 @@ const Layout = () => {
           <Outlet />
         </div>
       )}
-      <div className="  fixed z-50 right-5 bottom-5">
-        <a
-          href={whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="  "
-        >
-          <img src={whatsappIcon} alt="WhatsApp" className="h-16 w-16 " />
-        </a>
-      </div>
+
+      <WhatsappWidget />
     </>
   );
 };

@@ -1,17 +1,29 @@
 import React from "react";
 
-const Switch = ({ optional, checked, onChange }) => {
+const Switch = ({ id = "switch", name, label, checked, onChange }) => {
+  const handleOnChange = (e) => {
+    const value = e.target.checked;
+    onChange &&
+      onChange({
+        target: {
+          name,
+          value,
+        },
+      });
+  };
+
   return (
     <div className="flex gap-2 items-center">
       <input
         type="checkbox"
-        id="switch"
+        id={id}
+        name={name}
         checked={checked}
-        onChange={onChange}
+        onChange={handleOnChange}
         className="hidden"
       />
       <label
-        htmlFor="switch"
+        htmlFor={id}
         className={`relative w-10 h-6 rounded-full cursor-pointer transition-colors duration-200 ${
           checked ? "bg-blue-600" : "bg-gray-300"
         }`}
@@ -23,8 +35,12 @@ const Switch = ({ optional, checked, onChange }) => {
         ></span>
       </label>
 
-      {optional ? null : (
-        <span className="block text-12 font-footer1 text-[#1A1A1A]">Remember me</span>
+      {label ? (
+        <span className="block text-12 font-footer1 text-[#1A1A1A]">
+          {label}
+        </span>
+      ) : (
+        ""
       )}
     </div>
   );

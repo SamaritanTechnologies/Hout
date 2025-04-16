@@ -26,7 +26,6 @@ export const AdminAboutUs = () => {
             description_nl: data.description_nl,
           });
           setDataLoaded(true);
-          toast.success("About Us fetched successfully!");
         }
       } catch (error) {
         toast.error("Failed to fetch About Us");

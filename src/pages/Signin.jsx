@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   axiosApi,
@@ -29,6 +29,7 @@ export const Signin = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    RememberMe: false,
   });
 
   const handleFormData = (event) => {
@@ -60,7 +61,12 @@ export const Signin = () => {
       const { access_token, refresh_token, user } = response.data;
 
       setAccessToken(access_token);
-      setRefreshToken(refresh_token);
+      if (formData.RememberMe) {
+        setRefreshToken(refresh_token);
+      } else {
+        setRefreshToken("");
+      }
+
       dispatch(loginUser(user));
 
       setTimeout(() => {
@@ -110,10 +116,7 @@ export const Signin = () => {
                     </h6>
                   </div>
                 </div>
-                <h6
-                  className="flex-1 xl:text-20 lg:text-18 md:text-16
- font-normal leading-[24px]  mt-[10px] text-primary"
-                >
+                <h6 className="flex-1 xl:text-20 lg:text-18 md:text-16 font-normal leading-[24px]  mt-[10px] text-primary">
                   Lorem Ipsum is simply dummy text of the printing and
                   typesetting industry.{" "}
                 </h6>
@@ -201,7 +204,12 @@ export const Signin = () => {
                   </div>
 
                   <div className="recPasswrd xl:mb-[30px] mb-[15px] flex w-full justify-between">
-                    <Switch />
+                    <Switch
+                      label="Remember me"
+                      name="RememberMe"
+                      checked={formData.RememberMe}
+                      onChange={handleFormData}
+                    />
                     <a
                       onClick={() => navigate("/forget-password")}
                       className="text-14 font-footer1 text-[#D93F21] cursor-pointer"

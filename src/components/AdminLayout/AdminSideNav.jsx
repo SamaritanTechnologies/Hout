@@ -49,12 +49,15 @@ const AdminSidenav = () => {
           <img
             src={houtLogo}
             alt=""
-            onClick={() => navigate("/")}
+            onClick={() => {
+              handleClick(navs[0]);
+              navigate("/dashboard");
+            }}
             className="w-[160px] lg:w-[135px]  h-[70px] mx-auto object-cover	"
           />
         </a>
         <div className="flex flex-col items-start sideBarMain xl:px-[24px] lg:px-[20px] px-[16px] overflow-y-auto">
-          {navs.map((item) => {
+          {navs?.map((item) => {
             return (
               <a
                 key={item.link}

@@ -82,6 +82,7 @@ function Routes() {
           {/* <Route path="/order-list" element={<OrderList />} /> */}
           {/* <Route path="/user-profile" element={<UserProfile />} /> */}
         </Route>
+
         <Route element={<ProtectedRoute />}>
           <Route path="/sign-in" element={<Signin />} />
           <Route path="/sign-up" element={<Signup />} />
