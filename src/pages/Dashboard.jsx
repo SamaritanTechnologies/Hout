@@ -194,10 +194,29 @@ export const Dashboard = () => {
               </thead>
 
               {state?.orderList?.length > 0 ? (
-                state?.orderList?.map((item, index) => {
-                  return (
-                    <tbody key={index}>
-                      <tr className="border-b-[0.4px] border-gray">
+                <tbody>
+                  {state.orderList.map((item, index) => {
+                    const productInfo = Array.isArray(
+                      item?.sold_product_information
+                    )
+                      ? item.sold_product_information
+                      : Object.values(item?.sold_product_information || {});
+
+                    const productNames = productInfo
+                      .map((p) => p?.name)
+                      .filter(Boolean)
+                      .join(", ");
+                    const productQuantities = productInfo
+                      .map((p) => p?.quantity)
+                      .filter(Boolean)
+                      .join(", ");
+                    const totalAmount = parseFloat(item?.total) || 0;
+                    const formattedDate = moment(item?.dates)?.format(
+                      "MMMM DD, YYYY"
+                    );
+
+                    return (
+                      <tr key={index} className="border-b-[0.4px] border-gray">
                         <td className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-semibold text-gray3">
                           <div className="flex xl:gap-3 gap-1 items-center">
                             <div className="flex-shrink-0 w-10 h-10">
@@ -209,40 +228,32 @@ export const Dashboard = () => {
                             </div>
                             <div className="ml-3">
                               <p className="text-gray-900 whitespace-no-wrap">
-                                {item?.name}
+                                {productNames}
                               </p>
                             </div>
                           </div>
                         </td>
                         <td className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-semibold text-gray3">
-                          <div className="ml-3">
-                            <p className="text-gray-900 whitespace-no-wrap">
-                              {item?.delivery_address}
-                            </p>
-                          </div>
+                          <p className="text-gray-900 whitespace-no-wrap ml-3">
+                            {item?.delivery_address}
+                          </p>
                         </td>
                         <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
                           <p className="text-gray-900 whitespace-no-wrap xl:text-15 text-12">
-                            {moment(item?.dates)?.format("MMMM DD, YYYY")}
+                            {formattedDate}
                           </p>
                         </td>
                         <td className="xl:px-[20px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            {item?.quantity}
+                            {productQuantities}
                           </p>
                         </td>
                         <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
-                          <div className="flex gap-3 items-center">
-                            <td className="text-[14px] text-[#141718] w-[20%] md:w-[auto] sm:w-[auto] text-left">
-                              {(() => {
-                                const amount = parseFloat(item?.total);
-                                return isNaN(amount)
-                                  ? "€0.00"
-                                  : `€${amount.toFixed(2)}`;
-                              })()}
-                            </td>
-                          </div>
+                          <p className="text-[14px] text-[#141718] w-[20%] md:w-[auto] sm:w-[auto]">
+                            €{totalAmount.toFixed(2)}
+                          </p>
                         </td>
+
                         <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
                           <p
                             className={`rounded-full ${
@@ -257,9 +268,9 @@ export const Dashboard = () => {
                           </p>
                         </td>
                       </tr>
-                    </tbody>
-                  );
-                })
+                    );
+                  })}
+                </tbody>
               ) : (
                 <tbody>
                   <tr>

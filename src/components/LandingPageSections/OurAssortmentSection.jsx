@@ -9,7 +9,7 @@ const OurAssortmentSection = () => {
     const fetchOurValues = async () => {
       try {
         const data = await getOurAssortment();
-        setAssortments(data || []);
+        setAssortments(Array.isArray(data) ? data : []);
       } catch (error) {
         toast.error("An error occurred while fetching data: " + error.message);
       }

@@ -7,9 +7,11 @@ import { toast } from "react-toastify"; // Assuming you are using react-toastify
 import { getCart } from "../../redux/actions/orderActions";
 import { setCartItems } from "../../redux/slices/cartSlice";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const ProductVaritants = ({ variants }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const handleaddToCart = async (variantId) => {
@@ -25,13 +27,11 @@ const ProductVaritants = ({ variants }) => {
 
         setLoading(true);
         await axiosWithCredentials.post(`/add-to-cart/`, payload);
-        toast.success("Product added to cart!");
-
-        // Clear input value after successful add
         input.value = 0;
-
         const res = await getCart();
         dispatch(setCartItems(res.cart_items));
+        toast.success("Product added to cart!");
+        navigate("/cart");
       } else {
         toast.warning("Please enter a valid quantity");
       }

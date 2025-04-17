@@ -9,7 +9,7 @@ const OurValuesSection = () => {
     const fetchOurValues = async () => {
       try {
         const data = await getOurValues();
-        setValues(data);
+        setValues(Array.isArray(data) ? data : []);
       } catch (error) {
         toast.error("An error occurred while fetching data: " + error.message);
       }

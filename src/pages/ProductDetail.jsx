@@ -131,7 +131,15 @@ export const ProductDetail = () => {
               <div className="flex items-center gap-x-4 pt-5 border-b-2 border-[#D9D9D9] pb-[26px]">
                 <div className="text-14">SHARE THIS PAGE:</div>
                 <div>
-                  <img src={whatspp} alt="WhatsApp" />
+                  <a
+                    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                      productDetail?.name_en + " - " + window.location.href
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img src={whatspp} alt="WhatsApp" />
+                  </a>
                 </div>
                 <div>
                   <img src={facebook} alt="Facebook" />
