@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { getStats } from "../redux/actions/dashboardActions";
 import StatsCard from "../components/Dashboard/StatsCard";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 const months = [
   { value: 1, name: "JANUARY" },
@@ -31,6 +32,7 @@ export const Dashboard = () => {
     orderList: [],
     stats: null,
     selectedMonth: null,
+    searchQuery: "", // Add search query state
   });
 
   const fetchOrderslist = async (month) => {
@@ -81,8 +83,38 @@ export const Dashboard = () => {
   const inventoryStats = state?.stats?.find(
     (stat) => stat.key === "total_inventory"
   );
+
   const skuStats = state?.stats?.find((stat) => stat.key === "total_sku");
   const salesStats = state?.stats?.find((stat) => stat.key === "total_sales");
+
+  const handleSearchChange = (e) => {
+    setState((prev) => ({
+      ...prev,
+      searchQuery: e.target.value,
+    }));
+  };
+
+  const filterOrders = (orders, query) => {
+    if (!query) return orders;
+
+    return orders.filter((order) => {
+      const productInfo = Array.isArray(order?.sold_product_information)
+        ? order.sold_product_information
+        : Object.values(order?.sold_product_information || {});
+
+      return productInfo.some((product) =>
+        product?.name?.toLowerCase().includes(query.toLowerCase())
+      );
+    });
+  };
+
+  const sortOrdersByDate = (orders) => {
+    return [...orders].sort((a, b) => {
+      const dateA = new Date(a.dates);
+      const dateB = new Date(b.dates);
+      return dateB - dateA;
+    });
+  };
 
   return (
     <div>
@@ -112,7 +144,20 @@ export const Dashboard = () => {
             {/* dropdown  */}
             <div>
               <div className="relative inline-block text-left">
-                <div>
+                <div className="flex items-center gap-4">
+                  <div className="relative flex items-center w-full min-w-[250px] max-w-[388px] h-10 rounded-full focus-within:shadow-lg bg-white overflow-hidden border-gray	border-[0.5px]">
+                    <div className="grid place-items-center h-full w-12 text-gray-300 bg-[#fefbeb]  min-w-[50px]">
+                      <MagnifyingGlassIcon className="h-6 w-6 text-[#00000080]" />
+                    </div>
+                    <input
+                      className="peer h-full w-full outline-none text-sm text-gray-700 pr-2 bg-[#fefbeb]"
+                      type="text"
+                      id="search"
+                      placeholder="Search by product name"
+                      value={state.searchQuery}
+                      onChange={handleSearchChange}
+                    />
+                  </div>
                   <DropDown
                     firstOptionText="October"
                     width="100%"
@@ -123,45 +168,6 @@ export const Dashboard = () => {
                     onChange={handleChange}
                   />
                 </div>
-
-                {/* <div
-                  className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                  role="menu"
-                  aria-orientation="vertical"
-                  aria-labelledby="menu-button"
-                  tabindex="-1"
-                >
-                  <div className="py-1" role="none">
-                    <a
-                      href="#"
-                      className="text-gray-700 block px-4 py-2 text-sm"
-                      role="menuitem"
-                      tabindex="-1"
-                      id="menu-item-0"
-                    >
-                      Account settings
-                    </a>
-                    <a
-                      href="#"
-                      className="text-gray-700 block px-4 py-2 text-sm"
-                      role="menuitem"
-                      tabindex="-1"
-                      id="menu-item-1"
-                    >
-                      Support
-                    </a>
-                    <a
-                      href="#"
-                      className="text-gray-700 block px-4 py-2 text-sm"
-                      role="menuitem"
-                      tabindex="-1"
-                      id="menu-item-2"
-                    >
-                      License
-                    </a>
-                   
-                  </div>
-                </div> */}
               </div>
             </div>
             {/* dropdown end  */}
@@ -193,9 +199,11 @@ export const Dashboard = () => {
                 </tr>
               </thead>
 
-              {state?.orderList?.length > 0 ? (
+              {filterOrders(state.orderList, state.searchQuery).length > 0 ? (
                 <tbody>
-                  {state.orderList.map((item, index) => {
+                  {sortOrdersByDate(
+                    filterOrders(state.orderList, state.searchQuery)
+                  ).map((item, index) => {
                     const productInfo = Array.isArray(
                       item?.sold_product_information
                     )
@@ -285,9 +293,7 @@ export const Dashboard = () => {
               )}
             </table>
           </div>
-          {/* order details table end */}
         </div>
-        {/* order detail card table row end */}
 
         <div className="w-full xl:mt-[106px] lg:mt-[80px] mt-[50px] flex justify-end">
           <button

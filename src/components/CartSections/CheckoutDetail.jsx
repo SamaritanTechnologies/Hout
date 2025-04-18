@@ -41,7 +41,7 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required("First Name is required"),
     lastName: Yup.string().required("Last Name is required"),
-    companyName: Yup.string().required("Company name is required"),
+    companyName: Yup.string(),
     streetAndNumber: Yup.string().required("Street & Number is required"),
     city: Yup.string().required("City is required"),
     zipCode: Yup.string().required("Zip Code is required"),

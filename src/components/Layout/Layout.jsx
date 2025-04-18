@@ -18,6 +18,7 @@ const Layout = () => {
   const adminPaths = [
     "/dashboard",
     "/vat-value",
+    "/add-coupon",
     "/products",
     "/new-product",
     "/product-options",

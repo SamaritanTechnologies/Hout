@@ -9,6 +9,7 @@ const AdminSidenav = () => {
 
   const [navs, setNavs] = useState([
     { name: "Dashboard", link: "/dashboard", active: true },
+    { name: "Add Coupon ", link: "/add-coupon ", active: false },
     { name: "Add VAT", link: "/vat-value", active: false },
     { name: "Products", link: "/products", active: false },
     { name: "Product Options", link: "/product-options", active: false },
@@ -17,7 +18,11 @@ const AdminSidenav = () => {
     { name: "Our Values", link: "/our-values", active: false },
     { name: "Our Assortment", link: "/our-assortment", active: false },
     { name: "Why Hout Totaal", link: "/why-hout-totaal", active: false },
-    { name: "Terms and Conditions", link: "/terms-and-conditions", active: false },
+    {
+      name: "Terms and Conditions",
+      link: "/terms-and-conditions",
+      active: false,
+    },
     { name: "Privacy Policy", link: "/admin-privacy-policy", active: false },
     { name: "About Us", link: "/admin-about-us", active: false },
     { name: "FAQ", link: "/admin-FAQ", active: false },

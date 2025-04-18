@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import editImg from "../assets/DashboardImages/edit.svg";
 import dltImg from "../assets/DashboardImages/delete.svg";
-import { FunnelIcon } from "@heroicons/react/24/outline";
+import { FunnelIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import Button from "../components/Common/Button";
 import DropdownFilter from "../components/Dashboard/DropdownFilter";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +25,7 @@ const initialState = {
 
 export const Products = () => {
   const { productCategories } = useSelector((state) => state.admin);
-
+  const [searchQuery, setSearchQuery] = useState("");
   const [state, setState] = useState(initialState);
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -108,6 +108,35 @@ export const Products = () => {
       </div>
     );
   };
+  const filteredProducts =
+    state.results?.filter((product) =>
+      product.name_en?.toLowerCase().includes(searchQuery.toLowerCase())
+    ) || [];
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const highlightMatch = (text, query) => {
+    if (!query || !text) return text;
+
+    const lowerText = text.toLowerCase();
+    const lowerQuery = query.toLowerCase();
+    const index = lowerText.indexOf(lowerQuery);
+
+    if (index === -1) return text;
+
+    const beforeMatch = text.substring(0, index);
+    const match = text.substring(index, index + query.length);
+    const afterMatch = text.substring(index + query.length);
+
+    return (
+      <>
+        {beforeMatch}
+        <span className="bg-yellow-200">{match}</span>
+        {afterMatch}
+      </>
+    );
+  };
 
   return (
     <>
@@ -119,14 +148,30 @@ export const Products = () => {
 
       <div className="flex justify-between items-center mb-3">
         <h1 className="text-2xl xl:text-[32px] font-bold">Products</h1>
-        <Button
-          onClick={() => {
-            navigate("/new-product");
-          }}
-          btnText=" Add New Product"
-          textColor="#000000"
-          breakpoint="w-full max-w-[282px]"
-        />
+
+        <div className="flex items-center gap-4">
+          <div className="relative flex items-center w-full min-w-[250px] max-w-[388px] h-10 rounded-full focus-within:shadow-lg bg-white overflow-hidden border-gray	border-[0.5px]">
+            <div className="grid place-items-center h-full w-12 text-gray-300 bg-[#fefbeb]  min-w-[50px]">
+              <MagnifyingGlassIcon className="h-6 w-6 text-[#00000080]" />
+            </div>
+            <input
+              className="peer h-full w-full outline-none text-sm text-gray-700 pr-2 bg-[#fefbeb]"
+              type="text"
+              id="search"
+              placeholder="Search by product name"
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
+          </div>
+          <Button
+            onClick={() => {
+              navigate("/new-product");
+            }}
+            btnText=" Add New Product"
+            textColor="#000000"
+            breakpoint="w-full max-w-[282px]"
+          />
+        </div>
       </div>
       <div className="max-w-screen mx-auto overflow-x-auto">
         <table className="table-auto productsTable w-full min-w-[1154px] min-h-52">
@@ -223,8 +268,8 @@ export const Products = () => {
           </thead>
 
           <tbody>
-            {state?.results?.length > 0 ? (
-              state.results?.map((rowData, index) => (
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map((rowData, index) => (
                 <tr
                   key={index}
                   className={`border-b-[0.4px] w-full border-gray ${
@@ -252,7 +297,7 @@ export const Products = () => {
                     </div>
                   </td>
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">
-                    {rowData?.name_en}
+                    {highlightMatch(rowData?.name_en, searchQuery)}
                   </td>
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3 w-[12%]">
                     <p className="text-gray-900 overflow-hidden whitespace-normal line-clamp-3 min-w-[120px]">
