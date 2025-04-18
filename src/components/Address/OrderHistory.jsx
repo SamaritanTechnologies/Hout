@@ -18,6 +18,14 @@ const OrderHistory = () => {
     }
   };
 
+  const sortOrdersByDate = (orders) => {
+    return [...orders].sort((a, b) => {
+      const dateA = new Date(a.dates);
+      const dateB = new Date(b.dates);
+      return dateB - dateA;
+    });
+  };
+
   useEffect(() => {
     fetchOrderslist();
   }, []);
@@ -48,7 +56,6 @@ const OrderHistory = () => {
       toast.error("Something went wrong");
       console.error("Error fetching invoice data:", error);
     } finally {
-      // Reset loading state only for this specific ID
       setLoadingItems((prev) => ({ ...prev, [id]: false }));
     }
   };
@@ -83,7 +90,7 @@ const OrderHistory = () => {
               </thead>
               <tbody>
                 {orderList?.length > 0 ? (
-                  orderList.map((item) => (
+                  sortOrdersByDate(orderList).map((item) => (
                     <tr
                       key={item.id}
                       className="border-solid border-b-[1px] border-[#E8ECEF] flex w-[100%] xs:w-[541px] justify-between py-[22px]"

@@ -48,6 +48,7 @@ import {
   ProtectedRoute,
 } from "./providers/PrivateRoutes";
 import { OAuthCallback } from "./pages/OAuthCallback ";
+import AddCoupon from "./pages/AddCoupon";
 
 function Routes() {
   return (
@@ -56,9 +57,9 @@ function Routes() {
         <Route element={<PrivateRoute />}>
           <Route path="/myaccount" element={<MyAccount />} />
         </Route>
-
         <Route element={<AdminRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/add-coupon" element={<AddCoupon />} />
           <Route path="/vat-value" element={<VatValue />} />
           <Route path="/products" element={<Products />} />
           <Route path="/product-options" element={<ProductOptions />} />

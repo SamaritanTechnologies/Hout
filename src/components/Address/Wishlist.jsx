@@ -147,7 +147,14 @@ const Wishlist = () => {
                                 />
                               </div>
                               <div className="flex flex-col  gap-[8px]">
-                                <h1 className="text-[14px]">{item.name_en}</h1>
+                                <h1
+                                  onClick={() =>
+                                    navigate(`/product-detail/${item.id}`)
+                                  }
+                                  className="text-[14px] cursor-pointer"
+                                >
+                                  {item.name_en}
+                                </h1>
                               </div>
                             </div>
                           </td>

@@ -8,7 +8,9 @@ export const getOrderDetails = async (month, payment, day) => {
     //     payment ?? null
     //   }&day=${day ?? null}`
     // );
-    const response = await axiosWithCredentials.get("/order");
+    const response = await axiosWithCredentials.get(
+      `/order/?month=${month ?? null}`
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching order details:", error);

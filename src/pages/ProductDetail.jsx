@@ -15,8 +15,17 @@ import { toast } from "react-toastify";
 import PageLoader from "../components/Common/PageLoader";
 import ProductsList from "../components/ShopComponents/ProductsList";
 import ProductsSection from "../components/LandingPageSections/ProductsSection";
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  LinkedinShareButton,
+  WhatsappShareButton,
+  PinterestShareButton,
+  EmailShareButton,
+} from "react-share";
 
 export const ProductDetail = () => {
+  const shareUrl = window.location.href;
   const { product_id } = useParams();
   const [productDetail, setProductDetail] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -131,22 +140,32 @@ export const ProductDetail = () => {
               <div className="flex items-center gap-x-4 pt-5 border-b-2 border-[#D9D9D9] pb-[26px]">
                 <div className="text-14">SHARE THIS PAGE:</div>
                 <div>
-                  <img src={whatspp} alt="WhatsApp" />
+                  <WhatsappShareButton
+                    url={shareUrl}
+                    quote={productDetail?.name_en}
+                  >
+                    <img src={whatspp} alt="WhatsApp" />
+                  </WhatsappShareButton>
                 </div>
                 <div>
-                  <img src={facebook} alt="Facebook" />
+                  <FacebookShareButton url={shareUrl}>
+                    <img src={facebook} alt="Facebook" />
+                  </FacebookShareButton>
                 </div>
                 <div>
-                  <img src={twitter} alt="Twitter" />
+                  <TwitterShareButton url={shareUrl}>
+                    <img src={twitter} alt="Twitter" />
+                  </TwitterShareButton>
                 </div>
                 <div>
-                  <img src={linkdln} alt="LinkedIn" />
+                  <LinkedinShareButton url={shareUrl}>
+                    <img src={linkdln} alt="LinkedIn" />
+                  </LinkedinShareButton>
                 </div>
                 <div>
-                  <img src={pintrest} alt="Pinterest" />
-                </div>
-                <div>
-                  <img src={email} alt="Email" />
+                  <PinterestShareButton url={shareUrl}>
+                    <img src={pintrest} alt="Pinterest" />
+                  </PinterestShareButton>
                 </div>
               </div>
             </div>
@@ -173,19 +192,32 @@ export const ProductDetail = () => {
             <div className="flex items-center gap-x-4 pt-5 border-b-2 border-[#D9D9D9] pb-[26px]">
               <div className="text-14">SHARE THIS PAGE:</div>
               <div>
-                <img src={whatspp} alt="WhatsApp" />
+                <WhatsappShareButton
+                  url={shareUrl}
+                  quote={productDetail?.name_en}
+                >
+                  <img src={whatspp} alt="WhatsApp" />
+                </WhatsappShareButton>
               </div>
               <div>
-                <img src={facebook} alt="Facebook" />
+                <FacebookShareButton url={shareUrl}>
+                  <img src={facebook} alt="Facebook" />
+                </FacebookShareButton>
               </div>
               <div>
-                <img src={twitter} alt="Twitter" />
+                <TwitterShareButton url={shareUrl}>
+                  <img src={twitter} alt="Twitter" />
+                </TwitterShareButton>
               </div>
               <div>
-                <img src={linkdln} alt="LinkedIn" />
+                <LinkedinShareButton url={shareUrl}>
+                  <img src={linkdln} alt="LinkedIn" />
+                </LinkedinShareButton>
               </div>
               <div>
-                <img src={pintrest} alt="Pinterest" />
+                <PinterestShareButton url={shareUrl}>
+                  <img src={pintrest} alt="Pinterest" />
+                </PinterestShareButton>
               </div>
             </div>
 
