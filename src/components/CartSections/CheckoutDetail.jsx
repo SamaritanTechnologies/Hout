@@ -310,7 +310,7 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
                         className="form-checkbox rounded-full mr-4 h-4 w-4 accent-yellow-400"
                         checked={terms}
                         onChange={() => setTerms(!terms)}
-                      />{" "}
+                      />
                       I Agree to the General Terms and Conditions and waive the
                       Right of Withdrawal because this is a customized product.
                     </div>

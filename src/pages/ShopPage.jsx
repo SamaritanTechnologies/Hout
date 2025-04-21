@@ -160,14 +160,16 @@ export const ShopPage = () => {
             pageSize={pageSize}
             setTotalItems={setTotalItems}
           />
-          <Pagination
-            pageCount={Math.ceil(totalItems / pageSize)}
-            onPageChange={handlePageChange}
-            forcePage={currentPage}
-          />
+
+          {totalItems > pageSize && (
+            <Pagination
+              pageCount={Math.ceil(totalItems / pageSize)}
+              onPageChange={handlePageChange}
+              forcePage={currentPage}
+            />
+          )}
         </div>
       </section>
-
       <QualitySection />
     </>
   );
