@@ -20,6 +20,7 @@ const Layout = () => {
     "/vat-value",
     "/add-coupon",
     "/products",
+    "/orders",
     "/new-product",
     "/product-options",
     "/homepage-image",
