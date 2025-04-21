@@ -33,11 +33,12 @@ export const Dashboard = () => {
     stats: null,
     selectedMonth: null,
     searchQuery: "", // Add search query state
+    selectedDate: "", // new state
   });
 
-  const fetchOrderslist = async (month) => {
+  const fetchOrderslist = async (month, date) => {
     try {
-      const res = await getOrderDetails(month);
+      const res = await getOrderDetails(month, date);
       setState((prev) => ({
         ...prev,
         orderList: res,
@@ -73,8 +74,8 @@ export const Dashboard = () => {
   };
 
   useEffect(() => {
-    fetchOrderslist(state?.selectedMonth);
-  }, [state?.selectedMonth]);
+    fetchOrderslist(state?.selectedMonth, state?.selectedDate);
+  }, [state?.selectedMonth, state?.selectedDate]);
 
   useEffect(() => {
     fetchDashboardStats();
@@ -114,6 +115,13 @@ export const Dashboard = () => {
       const dateB = new Date(b.dates);
       return dateB - dateA;
     });
+  };
+
+  const handleDateChange = (e) => {
+    setState((prev) => ({
+      ...prev,
+      selectedDate: e.target.value,
+    }));
   };
 
   return (
@@ -178,13 +186,21 @@ export const Dashboard = () => {
               <thead>
                 <tr className="bg-[#F1F4F9]">
                   <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold  rounded-l-2xl text-nowrap">
-                    Product Name
+                    Order Name
                   </th>
                   <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	text-nowrap">
                     Location
                   </th>
                   <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold text-nowrap">
-                    Date - Time
+                    <div className="flex flex-col justify-center items-center">
+                      <span>Date - Time</span>
+                      <input
+                        type="date"
+                        value={state.selectedDate}
+                        onChange={handleDateChange}
+                        className="border-[0.5px] border-gray text-sm text-gray-700 rounded-full px-3 py-2 bg-[#fefbeb]"
+                      />
+                    </div>
                   </th>
                   <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	text-nowrap">
                     Piece

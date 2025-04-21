@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import { axiosWithCredentials } from "../../providers";
 
-export const getOrderDetails = async (month, payment, day) => {
+export const getOrderDetails = async (month, day) => {
   try {
     // const response = await axiosWithCredentials.get(
     //   `/order-filter/?month=${month ?? null}&payment_method=${
@@ -9,7 +9,7 @@ export const getOrderDetails = async (month, payment, day) => {
     //   }&day=${day ?? null}`
     // );
     const response = await axiosWithCredentials.get(
-      `/order/?month=${month ?? null}`
+      `/order/?month=${month ?? null}&day=${day ?? null}`
     );
     return response.data;
   } catch (error) {

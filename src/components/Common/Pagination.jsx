@@ -12,7 +12,8 @@ const Pagination = ({ pageCount, onPageChange, forcePage }) => {
         </span>
       }
       onPageChange={onPageChange}
-      pageRangeDisplayed={5}
+      pageRangeDisplayed={2}
+      marginPagesDisplayed={1}
       pageCount={pageCount}
       previousLabel={
         <span className="w-10 h-10 flex items-center justify-center bg-gray rounded-md">
@@ -23,7 +24,7 @@ const Pagination = ({ pageCount, onPageChange, forcePage }) => {
       containerClassName="flex items-center justify-center gap-3"
       pageClassName="block hover:bg-[#FBC700] hover:text-white w-10 h-10 flex items-center justify-center rounded-md"
       activeClassName="bg-[#FBC700] text-white"
-      forcePage={forcePage} // Force the current page to stay in sync
+      forcePage={forcePage}
     />
   );
 };
