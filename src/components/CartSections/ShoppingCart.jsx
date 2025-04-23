@@ -1,8 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import cross from "../../assets/addToCart/cross.svg";
-import image1 from "../../assets/addToCart/image1.svg";
-import image2 from "../../assets/addToCart/image2.svg";
-import image3 from "../../assets/addToCart/image3.svg";
 import coupon from "../../assets/addToCart/coupon.svg";
 import plus from "../../assets/addToCart/plus.svg";
 import minus from "../../assets/addToCart/minus.svg";
@@ -14,19 +11,25 @@ import { getLoggedInUser } from "../../redux";
 import { useDispatch } from "react-redux";
 import { setCartItems } from "../../redux/slices/cartSlice";
 import { useNavigate } from "react-router-dom";
+import { setCartSummaryData } from "../../redux/slices/totalSummarySlice";
 
 const ShoppingCart = ({
   cartData,
   fetchCart,
-  taxData = 0,
+  taxData = 0.0,
   delivery = 0,
   handleDivClick,
 }) => {
+  const [couponCode, setCouponCode] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [couponData, setCouponData] = useState(null);
+  const [error, setError] = useState(null);
   const user = getLoggedInUser();
   const [cartItem, setCartItem] = useState(cartData?.cart_items || []);
   const [updatedItem, setUpdatedItem] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   useEffect(() => {
     setCartItem(cartData?.cart_items || []);
   }, [cartData]);
@@ -41,7 +44,6 @@ const ShoppingCart = ({
         product_price: price,
       };
       await axiosWithCredentials.put(`/change-quantity/${id}/`, payload);
-
       fetchCart();
       const res = await getCart();
       dispatch(setCartItems(res.cart_items));
@@ -122,12 +124,95 @@ const ShoppingCart = ({
     0
   );
 
-  const calculateTotal = (totalPrice, delivery, taxData) => {
-    const total =
-      Number(totalPrice || 0) + Number(delivery || 0) + Number(taxData || 0);
-    return total;
+  const calculateTotal = (
+    totalPrice,
+    delivery,
+    taxPercentage,
+    coupon = null
+  ) => {
+    const subtotal = Number(totalPrice || 0) + Number(delivery || 0);
+    let discountAmount = 0;
+    let isMinimumOrderMet = true;
+
+    if (coupon && subtotal >= Number(coupon.minimum_order_amount)) {
+      if (coupon.discount_type === "percentage") {
+        discountAmount = subtotal * (Number(coupon.discount_value) / 100);
+      } else if (coupon.discount_type === "fixed") {
+        discountAmount = Number(coupon.discount_value);
+      }
+    } else if (coupon) {
+      isMinimumOrderMet = false;
+    }
+
+    const amountAfterDiscount = subtotal - discountAmount;
+    const taxRate = Number(taxPercentage || 0);
+
+    if (taxRate > 0) {
+      const taxAmount = amountAfterDiscount * (taxRate / 100);
+      return {
+        total: amountAfterDiscount + taxAmount,
+        discount: discountAmount,
+        subtotal: subtotal,
+        isMinimumOrderMet,
+      };
+    }
+
+    return {
+      total: amountAfterDiscount,
+      discount: discountAmount,
+      subtotal: subtotal,
+      isMinimumOrderMet,
+    };
   };
-  const total = calculateTotal(totalPrice, delivery, taxData);
+
+  const { total, discount, subtotal, isMinimumOrderMet } = calculateTotal(
+    totalPrice,
+    delivery,
+    taxData,
+    couponData
+  );
+
+  useEffect(() => {
+    dispatch(
+      setCartSummaryData({
+        subtotal: Number(totalPrice || 0).toFixed(2),
+        deliveryFee: Number(delivery || 0).toFixed(2),
+        tax: Number(taxData || 0).toFixed(2),
+        youSaved: discount.toFixed(2),
+        total: total?.toFixed(2),
+      })
+    );
+  }, [totalPrice, delivery, taxData, discount, total, dispatch]);
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) {
+      setError("Please enter a coupon code");
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await axiosWithCredentials.get(
+        `coupons/by-code/?code=${encodeURIComponent(couponCode)}`
+      );
+      setCouponData(response?.data);
+      toast.success("Coupon applied successfully!");
+    } catch (err) {
+      setCouponData(null);
+      setError(err.response?.data?.message || "Invalid coupon code");
+      toast.error(err.response?.data?.message || "Invalid coupon code");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setCouponData(null);
+    setCouponCode("");
+    setError(null);
+  };
 
   return (
     <>
@@ -261,15 +346,55 @@ const ShoppingCart = ({
                     Add your code for an instant cart discount
                   </p>
                 </div>
-                <div className="flex border border-[#6C727580] justify-between items-center rounded-[10px] flex-1 xl:w-[442px] w-[100%] pl-3 mt-3">
-                  <div className="flex gap-x-2 xl:py-[14px] lg:py-[12px] py-[8px] items-center">
-                    <img src={coupon} />
-                    <span className="pt-[4px] text-[#6C7275]">Coupon Code</span>
+                {couponData ? (
+                  <div className="flex items-center justify-between bg-green-50 p-3 rounded-md mt-3">
+                    <div className="flex items-center">
+                      <span className="text-green-700 font-medium">
+                        {couponData.code} applied ({couponData.discount_value}
+                        {couponData.discount_type === "percentage"
+                          ? "%"
+                          : "€"}{" "}
+                        off)
+                      </span>
+                    </div>
+                    <button
+                      onClick={handleRemoveCoupon}
+                      className="cursor-pointer p-4 bg-[#FBC700] rounded-md rounded-l-none hover:bg-[#e6b800] transition-colors"
+                    >
+                      Remove
+                    </button>
                   </div>
-                  <div className="cursor-pointer p-4  rounded-md rounded-l-none">
-                    Apply
+                ) : (
+                  <div className="flex border border-[#6C727580] justify-between items-center rounded-[10px] flex-1 xl:w-[442px] w-[100%] pl-3 mt-3">
+                    <div className="flex gap-x-2 xl:py-[14px] lg:py-[12px] py-[8px] items-center">
+                      <img src={coupon} alt="Coupon icon" />
+                      <input
+                        type="text"
+                        className="outline-none border-none bg-transparent w-full text-[#6C7275] placeholder-[#6C7275]"
+                        placeholder="Enter coupon code"
+                        value={couponCode}
+                        onChange={(e) => setCouponCode(e.target.value)}
+                      />
+                    </div>
+                    <button
+                      className="cursor-pointer p-4 bg-[#FBC700] rounded-md rounded-l-none hover:bg-[#e6b800] transition-colors"
+                      onClick={handleApplyCoupon}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "Applying..." : "Apply"}
+                    </button>
                   </div>
-                </div>
+                )}
+                {error && !couponData && (
+                  <div className="text-rose-500 mt-2">{error}</div>
+                )}
+                {couponData && !isMinimumOrderMet && (
+                  <div className="text-amber-600 mt-2">
+                    Add €
+                    {(couponData.minimum_order_amount - subtotal).toFixed(2)}
+                    more to your cart to apply this coupon
+                  </div>
+                )}
               </section>
             </section>
 
@@ -282,6 +407,7 @@ const ShoppingCart = ({
                   </div>
                   <div>€{Number(totalPrice || 0).toFixed(2)}</div>
                 </section>
+
                 <section className="flex justify-between pt-[25px]">
                   <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
                     Delivery Fee
@@ -292,8 +418,16 @@ const ShoppingCart = ({
                   <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
                     Tax
                   </div>
-                  <div>€{Number(taxData || 0).toFixed(2)}</div>
+                  <div>{Number(taxData || 0).toFixed(2)} %</div>
                 </section>
+                {couponData && isMinimumOrderMet && discount > 0 && (
+                  <section className="flex justify-between pt-[25px]">
+                    <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
+                      You Saved
+                    </div>
+                    <div className="text-green-600">€{discount.toFixed(2)}</div>
+                  </section>
+                )}
                 <section className="flex justify-between pt-[25px] pb-5">
                   <div className="xl:text-16 lg:text-15 md:text-14 text-[13px] font-medium">
                     Total
