@@ -36,7 +36,7 @@ export const ProductDetail = () => {
       try {
         const data = await getProductsById(product_id);
         setProductDetail(data);
-        console.log("Data:", data);
+        console.log("data", data);
       } catch (error) {
         console.error("Error fetching product details:", error);
         toast.error("Failed to fetch product details. Please try again.");
@@ -135,7 +135,13 @@ export const ProductDetail = () => {
 
             <div className="xl:hidden lg:hidden md:hidden mt-20">
               <h1 className="text-20 font-bold">{productDetail?.name_en}</h1>
-              <div className="pt-6 text-44">€ {productDetail?.price}</div>
+              <div className="pt-6 text-44">
+                €
+                {(productDetail?.price && productDetail.price > 0
+                  ? productDetail.price
+                  : 0
+                ).toFixed(2)}
+              </div>
 
               <div className="flex items-center gap-x-4 pt-5 border-b-2 border-[#D9D9D9] pb-[26px]">
                 <div className="text-14">SHARE THIS PAGE:</div>
@@ -186,7 +192,7 @@ export const ProductDetail = () => {
               {productDetail?.name_en}
             </h1>
             <div className="text-xl text-[#111727]">
-              € {productDetail?.lengths[0]?.discounted_price_in_vat}
+              € {productDetail?.lengths[0]?.full_price_in_vat}
             </div>
 
             <div className="flex items-center gap-x-4 pt-5 border-b-2 border-[#D9D9D9] pb-[26px]">
@@ -278,13 +284,13 @@ export const ProductDetail = () => {
                 <div className="flex items-center border-b border-[#E6E6E6] min-h-10 mt-20">
                   <div className="text-16 font-bold flex-1">Width</div>
                   <div className="text-[#333333] flex-1 xl:text-16 lg:text-15 text-14">
-                    {productDetail?.width}
+                    {productDetail?.width} mm
                   </div>
                 </div>
                 <div className="flex items-center border-b border-[#E6E6E6] min-h-10">
                   <div className="text-16 font-bold flex-1">Thickness</div>
                   <div className="text-[#333333] flex-1 xl:text-16 lg:text-15 text-14">
-                    {productDetail?.thickness}
+                    {productDetail?.thickness} mm
                   </div>
                 </div>
               </div>

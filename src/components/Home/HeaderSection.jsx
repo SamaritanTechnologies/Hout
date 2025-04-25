@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import cart from "../../assets/HeaderAndFooter/cart.svg";
 import heart from "../../assets/HeaderAndFooter/heart.svg";
 import persons from "../../assets/HeaderAndFooter/persons.svg";
@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCart } from "../../redux/actions/orderActions";
 import { setCartItems } from "../../redux/slices/cartSlice";
 
+import countryflag1 from "../../assets/DashboardImages/Uk-flag.svg";
+import countryflag2 from "../../assets/DashboardImages/USA-flag.svg";
 const HeaderSection = () => {
   const navigate = useNavigate();
   const authState = useSelector((state) => state.auth);
@@ -18,6 +20,17 @@ const HeaderSection = () => {
   const [isActive, setIsActive] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState({
+    code: "nl",
+    name: "Dutch",
+    flag: countryflag1,
+  });
+  const dropdownRef = useRef(null);
+  const languages = [
+    { code: "uk", name: "English", flag: countryflag1 },
+    { code: "de", name: "German", flag: countryflag2 },
+  ];
   const cartItems = useSelector((state) => state.cart?.data);
   const totalQuantity = cartItems?.length || 0;
 
@@ -55,6 +68,26 @@ const HeaderSection = () => {
   }, [dispatch, isAuthenticated]);
 
   let role = "user";
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleLanguageSelect = (language) => {
+    setSelectedLanguage(language);
+    setIsOpen(false);
+  };
+
+  const availableLanguages = languages.filter(
+    (lang) => lang.code !== selectedLanguage.code
+  );
 
   return (
     <header
@@ -102,7 +135,7 @@ const HeaderSection = () => {
               }, 100);
             }}
           >
-            Product Menu
+            Products
           </span>
           <span
             className=" cursor-pointer ml-4"
@@ -178,7 +211,7 @@ const HeaderSection = () => {
               navigate("/shop-page");
             }}
           >
-            Shop
+            Webshop
           </div>
 
           {isAuthenticated ? (
@@ -224,6 +257,42 @@ const HeaderSection = () => {
               >
                 {totalQuantity}
               </span>
+            )}
+          </div>
+          <div className="relative inline-block" ref={dropdownRef}>
+            <button
+              className="flex items-center justify-center "
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="Change language"
+              aria-expanded={isOpen}
+            >
+              <img
+                src={selectedLanguage.flag}
+                alt={selectedLanguage.name}
+                className="w-6 h-4 object-cover"
+              />
+            </button>
+
+            {isOpen && (
+              <div className="absolute top-full right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 py-1 w-28">
+                {availableLanguages.map((language) => (
+                  <button
+                    key={language.code}
+                    className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 transition-colors"
+                    onClick={() => handleLanguageSelect(language)}
+                    aria-label={`Select ${language.name}`}
+                  >
+                    <img
+                      src={language.flag}
+                      alt={language.name}
+                      className="w-6 h-4 object-cover mr-2"
+                    />
+                    <span className="text-sm text-gray-700">
+                      {language.name}
+                    </span>
+                  </button>
+                ))}
+              </div>
             )}
           </div>
         </section>

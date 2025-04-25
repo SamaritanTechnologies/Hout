@@ -101,8 +101,9 @@ const AddCoupon = () => {
                         {coupon.code}
                       </td>
                       <td className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-semibold text-gray3">
+                        {coupon.discount_type != "percentage" && "€"}
                         {Number(coupon.discount_value).toFixed(1)}
-                        {coupon.discount_type === "percentage" ? "%" : "$"}
+                        {coupon.discount_type === "percentage" && "%"}
                       </td>
                       <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3 capitalize">
                         {coupon.discount_type}
@@ -119,7 +120,7 @@ const AddCoupon = () => {
                       </td>
                       <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
                         {coupon.maximum_discount_amount
-                          ? `$${Number(coupon.maximum_discount_amount).toFixed(
+                          ? `€${Number(coupon.maximum_discount_amount).toFixed(
                               1
                             )}`
                           : "-"}

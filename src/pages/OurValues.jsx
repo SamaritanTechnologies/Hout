@@ -184,109 +184,113 @@ export const OurValues = () => {
         onSubmit={handleSave}
       >
         {({ setFieldValue, isValid, touched }) => (
-          <Form className="flex flex-col gap-[40px] max-w-[848px] mx-auto">
-              <div className="grid grid-cols-2 gap-4">
-                {values.title_en.map((_, index) => (
-                  <div
-                    key={index}
-                    className="flex gap-[12px] flex-wrap flex-col p-2 rounded bg-white"
+          <Form className="flex flex-col gap-[40px] min-w-[600px] max-w-[848px] mx-auto">
+            <div className="grid grid-cols-2 gap-4">
+              {values.title_en.map((_, index) => (
+                <div
+                  key={index}
+                  className="flex gap-[12px] flex-wrap flex-col p-2 rounded bg-white"
+                >
+                  <label
+                    htmlFor={`value-${index}`}
+                    className="text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
                   >
-                    <label
-                      htmlFor={`value-${index}`}
-                      className="text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
-                    >
-                      Value {index + 1}
-                    </label>
-                    <div className="flex flex-col items-center">
-                      {selectedImages[index] ? (
-                        <div className="relative">
-                          <img
-                            src={selectedImages[index].preview}
-                            alt="Uploaded"
-                            className="w-[140px] h-[140px] object-cover rounded-md border"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => handleRemove(index, setFieldValue)}
-                            className="absolute top-2 right-2 text-black"
-                          >
-                            <XCircleIcon className="h-6 w-6 text-[#FBC700]" />
-                          </button>
-                        </div>
-                      ) : (
-                        <Dropzone
-                          width="140px"
-                          height="140px"
-                          onDrop={(acceptedFiles) =>
-                            handleDrop(acceptedFiles, index, setFieldValue)
-                          }
+                    Value {index + 1}
+                  </label>
+                  <div className="flex flex-col items-center">
+                    {selectedImages[index] ? (
+                      <div className="relative">
+                        <img
+                          src={selectedImages[index].preview}
+                          alt="Uploaded"
+                          className="w-[140px] h-[140px] object-cover rounded-md border"
                         />
-                      )}
+                        <button
+                          type="button"
+                          onClick={() => handleRemove(index, setFieldValue)}
+                          className="absolute top-2 right-2 text-black"
+                        >
+                          <XCircleIcon className="h-6 w-6 text-[#FBC700]" />
+                        </button>
+                      </div>
+                    ) : (
+                      <Dropzone
+                        width="140px"
+                        height="140px"
+                        onDrop={(acceptedFiles) =>
+                          handleDrop(acceptedFiles, index, setFieldValue)
+                        }
+                      />
+                    )}
+                    <ErrorMessage
+                      name={`images[${index}]`}
+                      component="div"
+                      className="text-red text-sm mt-1"
+                    />
+                  </div>
+                  <div
+                  // className="grid grid-cols-2 gap-4"
+                  >
+                    <div className="hidden">
+                      <Field
+                        type="text"
+                        name={`title_nl[${index}]`}
+                        placeholder="Naam"
+                        component={FormikField}
+                      />
                       <ErrorMessage
-                        name={`images[${index}]`}
+                        name={`title_nl[${index}]`}
                         component="div"
                         className="text-red text-sm mt-1"
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Field
-                          type="text"
-                          name={`title_nl[${index}]`}
-                          placeholder="Naam"
-                          component={FormikField}
-                        />
-                        <ErrorMessage
-                          name={`title_nl[${index}]`}
-                          component="div"
-                          className="text-red text-sm mt-1"
-                        />
-                      </div>
-                      <div>
-                        <Field
-                          type="text"
-                          name={`title_en[${index}]`}
-                          placeholder="Name"
-                          component={FormikField}
-                        />
-                        <ErrorMessage
-                          name={`title_en[${index}]`}
-                          component="div"
-                          className="text-red text-sm mt-1"
-                        />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Field
-                          as="textarea"
-                          name={`description_nl[${index}]`}
-                          placeholder="Description (nl)"
-                          component={Textarea}
-                        />
-                        <ErrorMessage
-                          name={`description_nl[${index}]`}
-                          component="div"
-                          className="text-red text-sm mt-1"
-                        />
-                      </div>
-                      <div>
-                        <Field
-                          as="textarea"
-                          name={`description_en[${index}]`}
-                          placeholder="Description (en)"
-                          component={Textarea}
-                        />
-                        <ErrorMessage
-                          name={`description_en[${index}]`}
-                          component="div"
-                          className="text-red text-sm mt-1"
-                        />
-                      </div>
+                    <div>
+                      <Field
+                        type="text"
+                        name={`title_en[${index}]`}
+                        placeholder="Name"
+                        component={FormikField}
+                      />
+                      <ErrorMessage
+                        name={`title_en[${index}]`}
+                        component="div"
+                        className="text-red text-sm mt-1"
+                      />
                     </div>
                   </div>
-                ))}
-              </div>
+                  <div
+                  // className="grid grid-cols-2 gap-4"
+                  >
+                    <div className="hidden">
+                      <Field
+                        as="textarea"
+                        name={`description_nl[${index}]`}
+                        placeholder="Description (nl)"
+                        component={Textarea}
+                      />
+                      <ErrorMessage
+                        name={`description_nl[${index}]`}
+                        component="div"
+                        className="text-red text-sm mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Field
+                        as="textarea"
+                        name={`description_en[${index}]`}
+                        placeholder="Description (en)"
+                        component={Textarea}
+                      />
+                      <ErrorMessage
+                        name={`description_en[${index}]`}
+                        component="div"
+                        className="text-red text-sm mt-1"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
             <Button
               loading={loading}
               type="submit"

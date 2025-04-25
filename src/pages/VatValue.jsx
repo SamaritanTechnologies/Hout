@@ -65,11 +65,11 @@ export const VatValue = () => {
         onClick={handleSubmit}
         disabled={loading}
       />
-      {vat && (
+      {/* {vat && (
         <p className="mt-4 text-center text-gray-700">
           Current VAT: <span className="font-bold">{vat}%</span>
         </p>
-      )}
+      )} */}
     </div>
   );
 };

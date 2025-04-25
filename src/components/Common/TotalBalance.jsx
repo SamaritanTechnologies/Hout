@@ -14,7 +14,7 @@ const TotalBalance = () =>
             <section className="">
               <section className="flex justify-between">
                 <div className="text-[#111727] xl:text-16 lg:text-15 text-14">
-                  Subtotal
+                  Subtotal excl VAT
                 </div>
                 <div className="text-[#111727]">€{cartSummary.subtotal}</div>
               </section>

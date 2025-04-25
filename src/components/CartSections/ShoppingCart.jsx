@@ -256,6 +256,10 @@ const ShoppingCart = ({
                               </a>
                               <div>
                                 <img
+                                  onClick={
+                                    () => console.log("id", item.id)
+                                    // navigate(`/product-detail/${item.id}`)
+                                  }
                                   src={item?.product_length?.product.image}
                                   className="xl:w-[80px] xl:h-[96px] lg:w-[70px] lg:h-[80px] min-w-[60px] min-h-[60px] xs:w-[60px] xs:h-[60px]"
                                   alt={item.name}
@@ -403,7 +407,7 @@ const ShoppingCart = ({
               <section>
                 <section className="flex justify-between">
                   <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
-                    Subtotal
+                    Subtotal excl VAT
                   </div>
                   <div>€{Number(totalPrice || 0).toFixed(2)}</div>
                 </section>
@@ -433,7 +437,7 @@ const ShoppingCart = ({
                     Total
                   </div>
                   <div className="text-customYellow font-medium xl:text-18 lg:text-16 text-14">
-                    USD €{total?.toFixed(2)}
+                    €{total?.toFixed(2)}
                   </div>
                 </section>
               </section>

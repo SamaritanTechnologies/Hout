@@ -179,7 +179,7 @@ const EditCoupon = ({ coupon, setIsEditModalOpen, fetchCoupons }) => {
             <InputField
               label="Discount Value"
               placeholder={`Enter Discount Value (${
-                formData.discount_type === "percentage" ? "%" : "$"
+                formData.discount_type === "percentage" ? "%" : "€"
               })`}
               type="number"
               name="discount_value"
@@ -229,7 +229,7 @@ const EditCoupon = ({ coupon, setIsEditModalOpen, fetchCoupons }) => {
 
           <div>
             <InputField
-              label="Minimum Order Amount ($)"
+              label="Minimum Order Amount (€)"
               type="number"
               name="minimum_order_amount"
               value={formData.minimum_order_amount}
@@ -248,7 +248,7 @@ const EditCoupon = ({ coupon, setIsEditModalOpen, fetchCoupons }) => {
 
           <div>
             <InputField
-              label="Maximum Discount Amount ($)"
+              label="Maximum Discount Amount (€)"
               type="number"
               name="maximum_discount_amount"
               value={formData.maximum_discount_amount}
