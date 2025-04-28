@@ -34,6 +34,7 @@ import {
   AdminFAQ,
   AdminAboutUs,
   VatValue,
+  Orders,
 } from "./pages";
 
 import { TermsConditions } from "./pages/TermsConditions";
@@ -48,6 +49,7 @@ import {
   ProtectedRoute,
 } from "./providers/PrivateRoutes";
 import { OAuthCallback } from "./pages/OAuthCallback ";
+import AddCoupon from "./pages/AddCoupon";
 
 function Routes() {
   return (
@@ -56,11 +58,12 @@ function Routes() {
         <Route element={<PrivateRoute />}>
           <Route path="/myaccount" element={<MyAccount />} />
         </Route>
-
         <Route element={<AdminRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/add-coupon" element={<AddCoupon />} />
           <Route path="/vat-value" element={<VatValue />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/orders" element={<Orders />} />
           <Route path="/product-options" element={<ProductOptions />} />
           <Route path="/homepage-image" element={<HomePageImage />} />
           <Route path="/homepage-products" element={<HomePageProducts />} />

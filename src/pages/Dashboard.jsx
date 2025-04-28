@@ -9,6 +9,9 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { getStats } from "../redux/actions/dashboardActions";
 import StatsCard from "../components/Dashboard/StatsCard";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { ORDER_PAGE_SIZE } from "../utils/const";
+import Pagination from "../components/Common/Pagination";
 
 const months = [
   { value: 1, name: "JANUARY" },
@@ -27,23 +30,38 @@ const months = [
 
 export const Dashboard = () => {
   const navigate = useNavigate();
+  const pageSize = ORDER_PAGE_SIZE;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
   const [state, setState] = useState({
     orderList: [],
     stats: null,
     selectedMonth: null,
+    searchQuery: "",
+    selectedDate: "",
   });
 
-  const fetchOrderslist = async (month) => {
+  const fetchOrderslist = async (month, date, page, size) => {
     try {
-      const res = await getOrderDetails(month);
+      const res = await getOrderDetails(month, date, page, size);
       setState((prev) => ({
         ...prev,
-        orderList: res,
+        orderList: res.results || [],
       }));
+      setTotalPage(Number(res.total_pages) || 0);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
   };
+
+  useEffect(() => {
+    fetchOrderslist(
+      state.selectedMonth,
+      state.selectedDate,
+      currentPage,
+      pageSize
+    );
+  }, [state.selectedMonth, state.selectedDate, currentPage, pageSize]);
 
   const fetchDashboardStats = async () => {
     try {
@@ -70,9 +88,9 @@ export const Dashboard = () => {
     }));
   };
 
-  useEffect(() => {
-    fetchOrderslist(state?.selectedMonth);
-  }, [state?.selectedMonth]);
+  // useEffect(() => {
+  //   fetchOrderslist(state?.selectedMonth, state?.selectedDate);
+  // }, [state?.selectedMonth, state?.selectedDate]);
 
   useEffect(() => {
     fetchDashboardStats();
@@ -81,8 +99,49 @@ export const Dashboard = () => {
   const inventoryStats = state?.stats?.find(
     (stat) => stat.key === "total_inventory"
   );
+
   const skuStats = state?.stats?.find((stat) => stat.key === "total_sku");
   const salesStats = state?.stats?.find((stat) => stat.key === "total_sales");
+
+  const handleSearchChange = (e) => {
+    setState((prev) => ({
+      ...prev,
+      searchQuery: e.target.value,
+    }));
+  };
+
+  const filterOrders = (orders, query) => {
+    if (!query) return orders;
+
+    return orders.filter((order) => {
+      const productInfo = Array.isArray(order?.sold_product_information)
+        ? order.sold_product_information
+        : Object.values(order?.sold_product_information || {});
+
+      return productInfo.some((product) =>
+        product?.name?.toLowerCase().includes(query.toLowerCase())
+      );
+    });
+  };
+
+  const sortOrdersByDate = (orders) => {
+    return [...orders].sort((a, b) => {
+      const dateA = new Date(a.dates);
+      const dateB = new Date(b.dates);
+      return dateB - dateA;
+    });
+  };
+
+  const handleDateChange = (e) => {
+    setState((prev) => ({
+      ...prev,
+      selectedDate: e.target.value,
+    }));
+  };
+
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected + 1);
+  };
 
   return (
     <div>
@@ -112,7 +171,20 @@ export const Dashboard = () => {
             {/* dropdown  */}
             <div>
               <div className="relative inline-block text-left">
-                <div>
+                <div className="flex items-center gap-4">
+                  <div className="relative flex items-center w-full min-w-[250px] max-w-[388px] h-10 rounded-full focus-within:shadow-lg bg-white overflow-hidden border-gray	border-[0.5px]">
+                    <div className="grid place-items-center h-full w-12 text-gray-300 bg-[#fefbeb]  min-w-[50px]">
+                      <MagnifyingGlassIcon className="h-6 w-6 text-[#00000080]" />
+                    </div>
+                    <input
+                      className="peer h-full w-full outline-none text-sm text-gray-700 pr-2 bg-[#fefbeb]"
+                      type="text"
+                      id="search"
+                      placeholder="Search by product name"
+                      value={state.searchQuery}
+                      onChange={handleSearchChange}
+                    />
+                  </div>
                   <DropDown
                     firstOptionText="October"
                     width="100%"
@@ -123,45 +195,6 @@ export const Dashboard = () => {
                     onChange={handleChange}
                   />
                 </div>
-
-                {/* <div
-                  className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                  role="menu"
-                  aria-orientation="vertical"
-                  aria-labelledby="menu-button"
-                  tabindex="-1"
-                >
-                  <div className="py-1" role="none">
-                    <a
-                      href="#"
-                      className="text-gray-700 block px-4 py-2 text-sm"
-                      role="menuitem"
-                      tabindex="-1"
-                      id="menu-item-0"
-                    >
-                      Account settings
-                    </a>
-                    <a
-                      href="#"
-                      className="text-gray-700 block px-4 py-2 text-sm"
-                      role="menuitem"
-                      tabindex="-1"
-                      id="menu-item-1"
-                    >
-                      Support
-                    </a>
-                    <a
-                      href="#"
-                      className="text-gray-700 block px-4 py-2 text-sm"
-                      role="menuitem"
-                      tabindex="-1"
-                      id="menu-item-2"
-                    >
-                      License
-                    </a>
-                   
-                  </div>
-                </div> */}
               </div>
             </div>
             {/* dropdown end  */}
@@ -172,13 +205,21 @@ export const Dashboard = () => {
               <thead>
                 <tr className="bg-[#F1F4F9]">
                   <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold  rounded-l-2xl text-nowrap">
-                    Product Name
+                    Order Name
                   </th>
                   <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	text-nowrap">
                     Location
                   </th>
                   <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold text-nowrap">
-                    Date - Time
+                    <div className="flex flex-col justify-center items-center">
+                      <span>Date - Time</span>
+                      <input
+                        type="date"
+                        value={state.selectedDate}
+                        onChange={handleDateChange}
+                        className="border-[0.5px] border-gray text-sm text-gray-700 rounded-full px-3 py-2 bg-[#fefbeb]"
+                      />
+                    </div>
                   </th>
                   <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	text-nowrap">
                     Piece
@@ -193,11 +234,32 @@ export const Dashboard = () => {
                 </tr>
               </thead>
 
-              {state?.orderList?.length > 0 ? (
-                state?.orderList?.map((item, index) => {
-                  return (
-                    <tbody key={index}>
-                      <tr className="border-b-[0.4px] border-gray">
+              {filterOrders(state.orderList, state.searchQuery).length > 0 ? (
+                <tbody>
+                  {sortOrdersByDate(
+                    filterOrders(state.orderList, state.searchQuery)
+                  ).map((item, index) => {
+                    const productInfo = Array.isArray(
+                      item?.sold_product_information
+                    )
+                      ? item.sold_product_information
+                      : Object.values(item?.sold_product_information || {});
+
+                    const productNames = productInfo
+                      .map((p) => p?.name)
+                      .filter(Boolean)
+                      .join(", ");
+                    const productQuantities = productInfo
+                      .map((p) => p?.quantity)
+                      .filter(Boolean)
+                      .join(", ");
+                    const totalAmount = parseFloat(item?.total) || 0;
+                    const formattedDate = moment(item?.dates)?.format(
+                      "MMMM DD, YYYY"
+                    );
+
+                    return (
+                      <tr key={index} className="border-b-[0.4px] border-gray">
                         <td className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-semibold text-gray3">
                           <div className="flex xl:gap-3 gap-1 items-center">
                             <div className="flex-shrink-0 w-10 h-10">
@@ -209,40 +271,32 @@ export const Dashboard = () => {
                             </div>
                             <div className="ml-3">
                               <p className="text-gray-900 whitespace-no-wrap">
-                                {item?.name}
+                                {productNames}
                               </p>
                             </div>
                           </div>
                         </td>
                         <td className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-semibold text-gray3">
-                          <div className="ml-3">
-                            <p className="text-gray-900 whitespace-no-wrap">
-                              {item?.delivery_address}
-                            </p>
-                          </div>
+                          <p className="text-gray-900 whitespace-no-wrap ml-3">
+                            {item?.delivery_address}
+                          </p>
                         </td>
                         <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
                           <p className="text-gray-900 whitespace-no-wrap xl:text-15 text-12">
-                            {moment(item?.dates)?.format("MMMM DD, YYYY")}
+                            {formattedDate}
                           </p>
                         </td>
                         <td className="xl:px-[20px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            {item?.quantity}
+                            {productQuantities}
                           </p>
                         </td>
                         <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
-                          <div className="flex gap-3 items-center">
-                            <td className="text-[14px] text-[#141718] w-[20%] md:w-[auto] sm:w-[auto] text-left">
-                              {(() => {
-                                const amount = parseFloat(item?.total);
-                                return isNaN(amount)
-                                  ? "€0.00"
-                                  : `€${amount.toFixed(2)}`;
-                              })()}
-                            </td>
-                          </div>
+                          <p className="text-[14px] text-[#141718] w-[20%] md:w-[auto] sm:w-[auto]">
+                            €{totalAmount.toFixed(2)}
+                          </p>
                         </td>
+
                         <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
                           <p
                             className={`rounded-full ${
@@ -257,9 +311,9 @@ export const Dashboard = () => {
                           </p>
                         </td>
                       </tr>
-                    </tbody>
-                  );
-                })
+                    );
+                  })}
+                </tbody>
               ) : (
                 <tbody>
                   <tr>
@@ -274,9 +328,14 @@ export const Dashboard = () => {
               )}
             </table>
           </div>
-          {/* order details table end */}
         </div>
-        {/* order detail card table row end */}
+        {totalPage > 1 && (
+          <Pagination
+            pageCount={totalPage}
+            onPageChange={handlePageChange}
+            forcePage={currentPage - 1}
+          />
+        )}
 
         <div className="w-full xl:mt-[106px] lg:mt-[80px] mt-[50px] flex justify-end">
           <button

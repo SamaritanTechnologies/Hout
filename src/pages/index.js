@@ -5,6 +5,7 @@ export { VatValue } from "./VatValue";
 export { Inbox } from "./Inbox";
 export { OrderList } from "./OrderList";
 export { Products } from "./Products";
+export { Orders } from "./Orders";
 export { Signup } from "./Signup";
 export { Signin } from "./Signin";
 export { ShopPage } from "./ShopPage";

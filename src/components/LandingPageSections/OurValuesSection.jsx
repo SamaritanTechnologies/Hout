@@ -9,7 +9,7 @@ const OurValuesSection = () => {
     const fetchOurValues = async () => {
       try {
         const data = await getOurValues();
-        setValues(data);
+        setValues(Array.isArray(data) ? data : []);
       } catch (error) {
         toast.error("An error occurred while fetching data: " + error.message);
       }
@@ -19,7 +19,10 @@ const OurValuesSection = () => {
   }, []);
 
   return (
-    <section className="flex flex-col gap-10 lg:gap-12 xl:gap-20 bg-[#E9E6D6] py-10 lg:py-20 xl:py-28 px-4">
+    <section
+      id="our-values"
+      className="flex flex-col gap-10 lg:gap-12 xl:gap-20 bg-[#E9E6D6] py-10 lg:py-20 xl:py-28 px-4"
+    >
       <h2 className="text-2xl lg:text-4xl xl:text-5xl font-bold text-center text-[#111727]">
         Our Values
       </h2>

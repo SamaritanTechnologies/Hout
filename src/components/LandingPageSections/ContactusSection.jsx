@@ -49,7 +49,9 @@ export const ContactusSection = () => {
     try {
       const response = await submitContactForm(formData);
       if (response?.status === 201 || response?.status === 200) {
-        toast.success("Your message has been sent! We will get back to you as soon as possible.");
+        toast.success(
+          "Your message has been sent! We will get back to you as soon as possible."
+        );
         resetForm();
       }
     } catch (error) {
@@ -64,12 +66,17 @@ export const ContactusSection = () => {
   };
 
   return (
-    <section className="flex flex-col gap-24 bg-black pt-12 pb-28 xl:pt-20 xxl:py-28 px-4">
+    <section
+      id="contact-us"
+      className="flex flex-col gap-24 bg-black pt-12 pb-28 xl:pt-20 xxl:py-28 px-4"
+    >
       <div className="flex flex-col gap-7 text-center">
-        <h2 className="text-2xl lg:text-4xl xl:text-5xl font-bold text-white">Contact Us</h2>
+        <h2 className="text-2xl lg:text-4xl xl:text-5xl font-bold text-white">
+          Contact Us
+        </h2>
         <p className="text-base xl:text-lg text-[#fff]">
-          We invite you to contact us with any questions or concerns. Our dedicated team is ready to
-          guide and support you.
+          We invite you to contact us with any questions or concerns. Our
+          dedicated team is ready to guide and support you.
         </p>
       </div>
       <form
@@ -84,7 +91,9 @@ export const ContactusSection = () => {
             required={true}
             color="#fff"
             placeholder="First Name*"
-            onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, first_name: e.target.value })
+            }
             aria-label="First Name"
           />
           <ContactInputField
@@ -92,7 +101,9 @@ export const ContactusSection = () => {
             color="#fff"
             type="text"
             placeholder="Last Name"
-            onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, last_name: e.target.value })
+            }
             aria-label="Last Name"
           />
           <ContactInputField
@@ -101,7 +112,9 @@ export const ContactusSection = () => {
             type="email"
             required={true}
             placeholder="E-mail Address*"
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
             aria-label="Email Address"
           />
         </div>
@@ -111,7 +124,9 @@ export const ContactusSection = () => {
             color="#fff"
             type="text"
             placeholder="Company"
-            onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, company: e.target.value })
+            }
             aria-label="Company"
           />
           <ContactInputField
@@ -119,7 +134,9 @@ export const ContactusSection = () => {
             color="#fff"
             type="tel"
             placeholder="Phone Number"
-            onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, phone_number: e.target.value })
+            }
             aria-label="Phone Number"
           />
         </div>
@@ -129,7 +146,9 @@ export const ContactusSection = () => {
           type="text"
           required={true}
           placeholder="Message*"
-          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, message: e.target.value })
+          }
           aria-label="Message"
         />
         <div className="flex justify-end">

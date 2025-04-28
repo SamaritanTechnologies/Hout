@@ -1,32 +1,49 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import invoiceImg from "../../assets/myAccount/invoiceimg.svg";
 import { getInvoice } from "../../redux/actions/orderActions";
 import moment from "moment";
 import { axiosWithCredentials } from "../../providers";
 import { toast } from "react-toastify";
+import Pagination from "../../components/Common/Pagination";
+import { ORDER_PAGE_SIZE } from "../../utils/const";
 
 const OrderHistory = () => {
   const [orderList, setOrderList] = useState([]);
   const [loadingItems, setLoadingItems] = useState({});
+  const [currentPage, setCurrentPage] = useState();
+  const [totalPage, setTotalPage] = useState(0);
+  const [loading, setLoading] = useState(false);
 
-  const fetchOrderslist = async () => {
+  const fetchOrdersList = useCallback(async () => {
+    setLoading(true);
     try {
-      const res = await axiosWithCredentials.get("/order/");
-      setOrderList(res.data);
+      const res = await axiosWithCredentials.get("/order/", {
+        params: { page: currentPage, pageSize: ORDER_PAGE_SIZE },
+      });
+
+      setOrderList(res?.data?.results || []);
+      setTotalPage(res?.data?.total_pages || 0);
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      toast.error("Failed to fetch orders.");
+      console.error("Error fetching orders:", error);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [currentPage]);
 
   useEffect(() => {
-    fetchOrderslist();
-  }, []);
+    fetchOrdersList();
+  }, [fetchOrdersList]);
 
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected + 1); // Convert to one-based
+  };
   const downloadInvoice = async (id) => {
     if (!id) {
       toast.error("There is no invoice related to this order");
       return;
     }
+
     setLoadingItems((prev) => ({ ...prev, [id]: true }));
 
     try {
@@ -35,6 +52,7 @@ const OrderHistory = () => {
         toast.error("No invoice data found for this order");
         return;
       }
+
       const blob = new Blob([res.data], { type: "application/pdf" });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -45,60 +63,53 @@ const OrderHistory = () => {
       a.remove();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      toast.error("Something went wrong");
-      console.error("Error fetching invoice data:", error);
+      toast.error("Something went wrong while downloading the invoice.");
+      console.error("Invoice download error:", error);
     } finally {
-      // Reset loading state only for this specific ID
       setLoadingItems((prev) => ({ ...prev, [id]: false }));
     }
   };
 
+  const sortOrdersByDate = (orders) => {
+    return [...orders].sort((a, b) => new Date(b?.dates) - new Date(a?.dates));
+  };
+
+  const paginatedData = sortOrdersByDate(orderList);
+
   return (
-    <section className="px-8 xs:px-8 sm:px-10 md:px-10 lg:px-12 my-20 xs:my-8 sm:my-10 md:my-13 lg:my-14">
-      <div className="flex xs:flex-col xs:items-center sm:flex-col sm:items-center mb-32 justify-center">
-        <div className="w-[100%]">
-          <h1 className="text-20 font-semibold mb-[18px] sm:mt-12 sm:text-center xs:mt-10 xs:text-center">
-            Orders History
-          </h1>
-          <div className="xs:overflow-auto">
-            <table className="w-[100%]">
+    <>
+      <section className="px-8 xs:px-8 sm:px-10 md:px-10 lg:px-12 my-20 xs:my-8 sm:my-10 md:my-13 lg:my-14">
+        <div className="flex flex-col items-center mb-32">
+          <div className="w-full overflow-auto">
+            <h1 className="text-20 font-semibold mb-[18px] text-center">
+              Orders History
+            </h1>
+            <table className="w-full min-w-[600px]">
               <thead>
-                <tr className="border-solid border-b-[1px] border-[#E8ECEF] flex w-[100%] xs:w-[541px] justify-between py-[22px]">
-                  <th className="text-[14px] text-[#6C7275] w-[20%] md:w-[auto] sm:w-[auto] text-left">
-                    Number ID
-                  </th>
-                  <th className="text-[14px] text-[#6C7275] w-[20%] md:w-[auto] sm:w-[auto] text-left">
-                    Dates
-                  </th>
-                  <th className="text-[14px] text-[#6C7275] w-[20%] md:w-[auto] sm:w-[auto] text-left">
-                    Status
-                  </th>
-                  <th className="text-[14px] text-[#6C7275] w-[20%] md:w-[auto] sm:w-[auto] text-left">
-                    Price
-                  </th>
-                  <th className="text-[14px] text-[#6C7275] w-[20%] md:w-[auto] sm:w-[auto] text-left">
-                    Invoice
-                  </th>
+                <tr className="border-b border-[#E8ECEF] text-left">
+                  <th className="text-sm text-[#6C7275] py-3">Number ID</th>
+                  <th className="text-sm text-[#6C7275] py-3">Date</th>
+                  <th className="text-sm text-[#6C7275] py-3">Status</th>
+                  <th className="text-sm text-[#6C7275] py-3">Price</th>
+                  <th className="text-sm text-[#6C7275] py-3">Invoice</th>
                 </tr>
               </thead>
               <tbody>
-                {orderList?.length > 0 ? (
-                  orderList.map((item) => (
+                {paginatedData?.length > 0 ? (
+                  paginatedData.map((item) => (
                     <tr
                       key={item.id}
-                      className="border-solid border-b-[1px] border-[#E8ECEF] flex w-[100%] xs:w-[541px] justify-between py-[22px]"
+                      className="border-b border-[#E8ECEF] text-left"
                     >
-                      <td className="text-[14px] text-[#141718] w-[20%] md:w-[auto] sm:w-[auto] text-left">
-                        {item?.id}
+                      <td className="py-3">{item?.id || "-"}</td>
+                      <td className="py-3">
+                        {item?.dates
+                          ? moment(item?.dates).format("MMMM DD, YYYY")
+                          : "N/A"}
                       </td>
-                      <td className="text-[14px] text-[#141718] w-[20%] md:w-[auto] sm:w-[auto] text-left">
-                        {moment(item?.dates).format("MMMM DD, YYYY")}
-                      </td>
-                      <td
-                        className={`text-[14px] text-[#141718] w-[20%] md:w-[auto] sm:w-[auto] text-left px-2 py-1 rounded `}
-                      >
+                      <td className="py-3">
                         <span
-                          className={`p-2 rounded-full ${
+                          className={`p-2 rounded-full text-sm ${
                             {
                               pending: "bg-[#FCBE2D] text-white",
                               delivered: "bg-green1 text-white",
@@ -106,10 +117,10 @@ const OrderHistory = () => {
                             "bg-gray-200 text-gray-800"
                           }`}
                         >
-                          {item?.status}
+                          {item?.status || "Unknown"}
                         </span>
                       </td>
-                      <td className="text-[14px] text-[#141718] w-[20%] md:w-[auto] sm:w-[auto] text-left">
+                      <td className="py-3">
                         {(() => {
                           const amount = parseFloat(item?.total);
                           return isNaN(amount)
@@ -117,13 +128,13 @@ const OrderHistory = () => {
                             : `€${amount.toFixed(2)}`;
                         })()}
                       </td>
-                      <td className="text-[14px] text-[#141718] w-[20%] md:w-[auto] sm:w-[auto] text-left">
+                      <td className="py-3">
                         <button
                           onClick={() => downloadInvoice(item?.invoice_id)}
                           disabled={loadingItems[item?.invoice_id]}
                         >
                           {loadingItems[item?.invoice_id] ? (
-                            <p className="text-green1">Downloading...</p>
+                            <span className="text-green1">Downloading...</span>
                           ) : (
                             <img src={invoiceImg} alt="Invoice" />
                           )}
@@ -133,11 +144,8 @@ const OrderHistory = () => {
                   ))
                 ) : (
                   <tr>
-                    <td
-                      colSpan="5"
-                      className="text-[14px] text-[#141718] text-center py-[22px]"
-                    >
-                      No order history
+                    <td colSpan="5" className="text-center text-[#141718] py-5">
+                      No order history found.
                     </td>
                   </tr>
                 )}
@@ -145,8 +153,16 @@ const OrderHistory = () => {
             </table>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {totalPage > 1 && (
+        <Pagination
+          pageCount={totalPage}
+          onPageChange={handlePageChange}
+          forcePage={currentPage - 1}
+        />
+      )}
+    </>
   );
 };
 

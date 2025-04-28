@@ -59,7 +59,7 @@ const ProductsList = ({ filters, currentPage, pageSize, setTotalItems }) => {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-7 w-full pt-24 max-w-[915px] mx-auto px-4">
-        {products.map((product) => {
+        {products?.map((product) => {
           const minimumPrice = getMinimumPriceObject(product.lengths);
           return (
             <ProductCard

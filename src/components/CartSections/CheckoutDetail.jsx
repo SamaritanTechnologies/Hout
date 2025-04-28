@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
-import InputField from "../../components/Common/InputField";
+// import InputField from "../../components/Common/InputField";
+// import image1 from "../../assets/addToCart/image1.svg";
+// import minus from "../../assets/addToCart/minus.svg";
+// import plus from "../../assets/addToCart/plus.svg";
+// import RadioButtons from "../Common/RadioButtons";
+// import { debounce } from "lodash";
 import Button from "../../components/Common/Button";
 import { paymentMethods } from "../../utils/helper";
 import PaymentCard from "../Common/PaymentCard";
-import image1 from "../../assets/addToCart/image1.svg";
-import minus from "../../assets/addToCart/minus.svg";
-import plus from "../../assets/addToCart/plus.svg";
 import TotalBalance from "../Common/TotalBalance";
-import RadioButtons from "../Common/RadioButtons";
-import { debounce } from "lodash";
 import { toast } from "react-toastify";
 import { axiosWithCredentials } from "../../providers";
 import { Field, Form, Formik } from "formik";
@@ -16,14 +16,15 @@ import FormikField from "../Common/FormikField";
 import * as Yup from "yup";
 
 import {
-  getDeliveryAddress,
+  // getDeliveryAddress,
   getProfileInfo,
 } from "../../redux/actions/profileActions";
 import { getLoggedInUser, loginUser } from "../../redux";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
+const CheckoutDetail = ({ cartData, fetchCart }) => {
+  const cartSummary = useSelector((state) => state.summary);
   const userDetail = useSelector((state) => state.auth.user);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required("First Name is required"),
     lastName: Yup.string().required("Last Name is required"),
-    companyName: Yup.string().required("Company name is required"),
+    companyName: Yup.string(),
     streetAndNumber: Yup.string().required("Street & Number is required"),
     city: Yup.string().required("City is required"),
     zipCode: Yup.string().required("Zip Code is required"),
@@ -63,97 +64,102 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
     }
   };
 
-  useEffect(() => {
-    setCartItems(cartData?.cart_items || []);
-  }, [cartData]);
+  // useEffect(() => {
+  //   setCartItems(cartData?.cart_items || []);
+  // }, [cartData]);
 
-  const updateQuantity = async ({ id, productId, price, newQuantity }) => {
-    try {
-      const payload = {
-        cart: user?.card_id,
-        user: user?.id,
-        product: productId,
-        quantity: newQuantity,
-        product_price: price,
-      };
-      await axiosWithCredentials.put(`/change-quantity/${id}/`, payload);
+  // const updateQuantity = async ({ id, productId, price, newQuantity }) => {
+  //   try {
+  //     const payload = {
+  //       cart: user?.card_id,
+  //       user: user?.id,
+  //       product: productId,
+  //       quantity: newQuantity,
+  //       product_price: price,
+  //     };
+  //     await axiosWithCredentials.put(`/change-quantity/${id}/`, payload);
 
-      fetchCart();
-    } catch (error) {
-      let errorMessage = "Something went wrong!";
-      if (error.response?.data?.product?.length) {
-        errorMessage = error.response.data.product[0];
-      } else if (error?.response?.data?.message) {
-        errorMessage = error?.response?.data?.message;
-      }
-      fetchCart();
-      toast.error(errorMessage);
-    }
-  };
+  //     fetchCart();
+  //   } catch (error) {
+  //     let errorMessage = "Something went wrong!";
+  //     if (error.response?.data?.product?.length) {
+  //       errorMessage = error.response.data.product[0];
+  //     } else if (error?.response?.data?.message) {
+  //       errorMessage = error?.response?.data?.message;
+  //     }
+  //     fetchCart();
+  //     toast.error(errorMessage);
+  //   }
+  // };
 
-  const debouncedUpdateQuantity = useCallback(
-    debounce((item) => updateQuantity(item), 500),
-    []
-  );
+  // const debouncedUpdateQuantity = useCallback(
+  //   debounce((item) => updateQuantity(item), 500),
+  //   []
+  // );
 
   useEffect(() => {
     fetchUser();
   }, []);
 
-  useEffect(() => {
-    if (updatedItem) {
-      debouncedUpdateQuantity(updatedItem);
-    }
-  }, [updatedItem]);
+  // useEffect(() => {
+  //   if (updatedItem) {
+  //     debouncedUpdateQuantity(updatedItem);
+  //   }
+  // }, [updatedItem]);
 
-  const handleIncrement = (id) => {
-    const item = cartItems?.find((item) => item.id === id);
-    if (item) {
-      const newQuantity = item.quantity + 1;
-      setCartItems((prevItems) =>
-        prevItems.map((item) =>
-          item.id === id ? { ...item, quantity: newQuantity } : item
-        )
-      );
-      setUpdatedItem({
-        id,
-        productId: item.product?.id,
-        price: item.product_price,
-        newQuantity,
-      });
-    }
-  };
+  // const handleIncrement = (id) => {
+  //   const item = cartItems?.find((item) => item.id === id);
+  //   if (item) {
+  //     const newQuantity = item.quantity + 1;
+  //     setCartItems((prevItems) =>
+  //       prevItems.map((item) =>
+  //         item.id === id ? { ...item, quantity: newQuantity } : item
+  //       )
+  //     );
+  //     setUpdatedItem({
+  //       id,
+  //       productId: item.product?.id,
+  //       price: item.product_price,
+  //       newQuantity,
+  //     });
+  //   }
+  // };
 
-  const handleDecrement = (id) => {
-    const item = cartItems?.find((item) => item.id === id);
-    if (item && item.quantity > 1) {
-      const newQuantity = item.quantity - 1;
-      setCartItems((prevItems) =>
-        prevItems.map((item) =>
-          item.id === id ? { ...item, quantity: newQuantity } : item
-        )
-      );
-      setUpdatedItem({
-        id,
-        productId: item.product?.id,
-        price: item.product_price,
-        newQuantity,
-      });
-    }
-  };
+  // const handleDecrement = (id) => {
+  //   const item = cartItems?.find((item) => item.id === id);
+  //   if (item && item.quantity > 1) {
+  //     const newQuantity = item.quantity - 1;
+  //     setCartItems((prevItems) =>
+  //       prevItems.map((item) =>
+  //         item.id === id ? { ...item, quantity: newQuantity } : item
+  //       )
+  //     );
+  //     setUpdatedItem({
+  //       id,
+  //       productId: item.product?.id,
+  //       price: item.product_price,
+  //       newQuantity,
+  //     });
+  //   }
+  // };
 
-  const totalPrice = cartItems?.reduce(
-    (sum, item) => sum + parseFloat(item.product_price),
-    0
-  );
+  // const totalPrice = cartItems?.reduce(
+  //   (sum, item) => sum + parseFloat(item.product_price),
+  //   0
+  // );
 
-  const calculateTotal = (totalPrice, delivery, taxData) => {
-    const total =
-      Number(totalPrice || 0) + Number(delivery || 0) + Number(taxData || 0);
-    return total;
-  };
+  // const calculateTotal = (totalPrice, delivery, taxPercentage) => {
+  //   const subtotal = Number(totalPrice || 0) + Number(delivery || 0);
+  //   const taxRate = Number(taxPercentage || 0);
+  //   if (taxRate > 0) {
+  //     const taxAmount = subtotal * (taxRate / 100);
+  //     return subtotal + taxAmount;
+  //   }
+  //   return subtotal;
+  // };
 
-  const total = calculateTotal(totalPrice, delivery, taxData);
+  // const total = calculateTotal(totalPrice, delivery, taxData);
+
   const handlePaymentMethodChange = (method) => {
     setSelectedPaymentMethod(method);
   };
@@ -182,11 +188,14 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
     try {
       setLoading(true);
       const payload = {
-        gross_total: totalPrice,
-        total: total,
+        gross_total: cartSummary?.subtotal,
+        total: cartSummary?.total,
         delivery_method: selectedPaymentMethod.name,
         delivery_price:
-          delivery !== null && delivery !== undefined ? delivery : 0,
+          cartSummary?.deliveryFee !== null &&
+          cartSummary?.deliveryFee !== undefined
+            ? cartSummary?.deliveryFee
+            : 0,
       };
       const response = await axiosWithCredentials.post(
         `/confirm-order/`,
@@ -194,8 +203,6 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
       );
 
       if (response?.data?.checkout_url) {
-        // window.location.href = response.data.checkout_url;
-
         window.open(response.data.checkout_url, "_blank");
       } else {
         toast.error("Payment initialization failed");
@@ -273,7 +280,7 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
                       </section>
 
                       <section className="flex justify-between items-center xl:pl-[80px] lg:pl-[80px] md:pl-[80px] sm:pl-[80px] xs:pl-[60px] pl-[50px]">
-                        <div className="flex justify-between border items-center px-[10px] py-[6px] rounded-md xl:min-w-[118px] lg:w-[170px] md:w-[170px] sm:w-[170px] xs:w-[170px]">
+                        {/* <div className="flex justify-between border items-center px-[10px] py-[6px] rounded-md xl:min-w-[118px] lg:w-[170px] md:w-[170px] sm:w-[170px] xs:w-[170px]">
                           <div className="cursor-pointer">
                             <span onClick={() => handleDecrement(item.id)}>
                               <img src={minus} alt="decrement" />
@@ -285,8 +292,11 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
                               <img src={plus} alt="increment" />
                             </span>
                           </div>
+                        </div> */}
+                        <div className="flex justify-between border items-center px-[10px] py-[6px] rounded-md xl:min-w-[118px] lg:w-[170px] md:w-[170px] sm:w-[170px] xs:w-[170px]">
+                          <span>Quantity:</span> <h6>{item.quantity}</h6>
                         </div>
-                        <div className="xl:text-22 lg:text-20 md:text-18 text-16 font-bold">
+                        <div className="w-full text-right  xl:text-22 lg:text-20 md:text-18 text-16 font-bold">
                           €{item?.product_price}
                         </div>
                       </section>
@@ -295,12 +305,12 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
 
                   <div>
                     <TotalBalance
-                      subtotal={totalPrice}
-                      deliveryFee={delivery}
-                      tax={taxData}
-                      // subtotal={totalPrice}
-                      total={total}
-                      cartItems={cartItems}
+                    // subtotal={totalPrice}
+                    // deliveryFee={delivery}
+                    // tax={taxData}
+                    // subtotal={totalPrice}
+                    // total={total}
+                    // cartItems={cartItems}
                     />
                   </div>
                   <section>
@@ -310,7 +320,7 @@ const CheckoutDetail = ({ cartData, fetchCart, taxData, delivery }) => {
                         className="form-checkbox rounded-full mr-4 h-4 w-4 accent-yellow-400"
                         checked={terms}
                         onChange={() => setTerms(!terms)}
-                      />{" "}
+                      />
                       I Agree to the General Terms and Conditions and waive the
                       Right of Withdrawal because this is a customized product.
                     </div>

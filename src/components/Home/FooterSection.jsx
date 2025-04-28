@@ -38,7 +38,7 @@ const FooterSection = ({ isShow }) => {
   const handleNewsLetter = async (e) => {
     e.preventDefault();
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
-      toast.error("Please enter a valid email."); // Use toaster for error
+      toast.error("Please enter a valid email.");
       return;
     }
     setLoading(true);
@@ -47,8 +47,17 @@ const FooterSection = ({ isShow }) => {
       toast.success("Thank you for subscribing!");
       setEmail("");
     } catch (error) {
-      const errorMessage = error.message || "An unexpected error occurred.";
-      toast.error("Error: " + errorMessage);
+      if (
+        (error.response &&
+          error.response.data &&
+          error.response.data.error === "Contact already exist") ||
+        (error.message && error.message.includes("Contact already exist"))
+      ) {
+        toast.error("You're already subscribed!");
+      } else {
+        const errorMessage = error.message || "An unexpected error occurred.";
+        toast.error("Error: " + errorMessage);
+      }
     } finally {
       setLoading(false);
     }
@@ -243,18 +252,16 @@ const FooterSection = ({ isShow }) => {
                 The Netherlands{" "}
               </div>
               <div className="flex items-center text-[#111727] text-sm gap-x-5 vietnam ">
-                {" "}
-                <img src={whatsp} /> +316 339 66 002
+                <img src={whatsp} /> +31 63 396 60 02
               </div>
               <div className="flex items-center text-[#111727] text-sm gap-x-5 vietnam ">
-                {" "}
                 <img src={phone} /> +31 71 203 40 90
               </div>
               <a
                 href="mailto:info@makeyourplank.nl"
                 className="flex items-center text-[#111727] text-sm gap-x-5 vietnam cursor-pointer"
               >
-                <img src={emailFooter} alt="Email Icon" /> info@makeyourplank.nl
+                <img src={emailFooter} alt="Email Icon" /> info@houttotaal.nl
               </a>
               <div className="flex items-center text-[#111727] text-sm gap-x-6">
                 <div
