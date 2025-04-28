@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCart } from "../../redux/actions/orderActions";
 import { setCartItems } from "../../redux/slices/cartSlice";
 
-import countryflag1 from "../../assets/DashboardImages/Uk-flag.svg";
+import countryflag1 from "../../assets/DashboardImages/flag-netherlands.svg";
 import countryflag2 from "../../assets/DashboardImages/USA-flag.svg";
 const HeaderSection = () => {
   const navigate = useNavigate();
@@ -28,8 +28,8 @@ const HeaderSection = () => {
   });
   const dropdownRef = useRef(null);
   const languages = [
-    { code: "uk", name: "English", flag: countryflag1 },
-    { code: "de", name: "German", flag: countryflag2 },
+    { code: "uk", name: "English", flag: countryflag2 },
+    { code: "nl", name: "Dutch", flag: countryflag1 },
   ];
   const cartItems = useSelector((state) => state.cart?.data);
   const totalQuantity = cartItems?.length || 0;

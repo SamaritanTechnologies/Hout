@@ -14,14 +14,21 @@ export const getHomepageImage = async () => {
   return response.data;
 };
 
+export const getPrivacyPolicyImage = async () => {
+  const response = await axiosWithCredentials.get(`/images`);
+  return response.data;
+};
+
 export const addHomepageImage = async (payload) => {
   const response = await axiosWithCredentials.post(`/images/`, payload);
   return response.data;
 };
 
-
 export const addHomepageProducts = async (payload) => {
-  const response = await axiosWithCredentials.post(`/featured-products/`, payload);
+  const response = await axiosWithCredentials.post(
+    `/featured-products/`,
+    payload
+  );
   return response.data;
 };
 
