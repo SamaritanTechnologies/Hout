@@ -47,7 +47,7 @@ export const VatValue = () => {
   return (
     <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md m-auto h-full">
       <h2 className="text-2xl font-bold text-center text-gray-700 mb-4">
-        Add VAT Value
+        VAT Value
       </h2>
       <InputField
         type="number"
