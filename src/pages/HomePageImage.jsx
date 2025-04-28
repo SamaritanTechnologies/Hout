@@ -8,7 +8,6 @@ import {
 } from "../redux/actions/dashboardActions";
 import { toast } from "react-toastify";
 import { XCircleIcon } from "@heroicons/react/24/outline";
-import InputField from "../components/Common/InputField";
 
 const validTypes = ["image/jpeg", "image/png", "image/webp"];
 
@@ -69,7 +68,6 @@ export const HomePageImage = () => {
     }));
   };
 
-  // Handle Save Image
   const handleSave = async () => {
     if (!image?.file) {
       toast.error("Please select an image to upload.");
@@ -209,7 +207,6 @@ export const HomePageImage = () => {
             />
           </div>
         </div>
-        {/* Save Button */}
         <Button
           loading={isLoading}
           type="button"

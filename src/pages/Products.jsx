@@ -258,9 +258,9 @@ export const Products = () => {
               <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
                 Stock
               </th>
-              {/* <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
-                    <img src={ActiveTableHead} alt="ActiveTableHead" />
-                  </th> */}
+              <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
+                <img src={ActiveTableHead} alt="ActiveTableHead" />
+              </th>
               <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12 rounded-tr-lg">
                 Action
               </th>
@@ -382,14 +382,23 @@ export const Products = () => {
                       </p>
                     </div>
                   </td>
-                  {/* <td>
-                        <div className="border border-[#D0D5DD] rounded-md flex items-center justify-center px-1.5 py-0.5 gap-1">
-                          <div className="w-1.5 h-1.5 rounded-full bg-[#17B26A] shrink-0"></div>
-                          <p className="block shrink-0 text-xs leading-[19px] font-medium text-[#344054]">
-                            Active
-                          </p>
-                        </div>
-                      </td> */}
+                  <td>
+                    {rowData?.is_active_on_goedgeplaatst ? (
+                      <div className="border border-[#D0D5DD] rounded-md flex items-center justify-center px-1.5 py-0.5 gap-1">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#17B26A] shrink-0"></div>
+                        <p className="block shrink-0 text-xs leading-[19px] font-medium text-[#344054]">
+                          Active
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="border border-[#D0D5DD] rounded-md flex items-center justify-center px-1.5 py-0.5 gap-1">
+                        <div className="w-1.5 h-1.5 rounded-full bg-red shrink-0"></div>
+                        <p className="block shrink-0 text-xs leading-[19px] font-medium text-[#344054]">
+                          Inactive
+                        </p>
+                      </div>
+                    )}
+                  </td>
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left xl:text-14 lg-text-[13px] text-12 font-semibold text-gray3 min-w-[100px]">
                     <div className="flex xl:gap-3 gap-2 items-center justify-center">
                       <div
