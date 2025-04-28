@@ -18,7 +18,10 @@ const OurAssortmentSection = () => {
   }, []);
 
   return (
-    <section className="flex flex-col gap-10 lg:gap-14 xl:gap-20 bg-[#131516] py-12 xl:py-20 xxl:py-28 px-4">
+    <section
+      id="assortments-section"
+      className="flex flex-col gap-10 lg:gap-14 xl:gap-20 bg-[#131516] py-12 xl:py-20 xxl:py-28 px-4"
+    >
       <div className="flex flex-col items-center gap-4">
         <h2 className="text-2xl lg:text-4xl xl:text-5xl font-bold text-center text-white">
           Our assortment

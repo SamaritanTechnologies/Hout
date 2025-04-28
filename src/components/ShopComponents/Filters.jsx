@@ -12,19 +12,19 @@ import {
 import ReactSlider from "react-slider";
 import { PRODUCT_MAX_PRICE, PRODUCT_MIN_PRICE } from "../../utils/const";
 
-const Filters = ({ categories, onFilterChange }) => {
+const Filters = ({ categories, onFilterChange, initialFilters }) => {
   const [expanded, setExpanded] = useState([]);
-  const [selectedFilters, setSelectedFilters] = useState({});
-  const [price, setPrice] = useState([PRODUCT_MIN_PRICE, PRODUCT_MAX_PRICE]);
+  const [selectedFilters, setSelectedFilters] = useState(
+    initialFilters.selectedFilters
+  );
+  const [price, setPrice] = useState(initialFilters.price);
 
-  // Handle accordion expansion
-  const handleAccordionChange = (panel) => (event, isExpanded) => {
-    setExpanded((prev) =>
-      isExpanded ? [...prev, panel] : prev.filter((p) => p !== panel)
-    );
-  };
+  // Reset internal state when initialFilters change
+  useEffect(() => {
+    setSelectedFilters(initialFilters.selectedFilters);
+    setPrice(initialFilters.price);
+  }, [initialFilters]);
 
-  // Handle checkbox changes for categories
   const handleCheckboxChange = (category) => (choiceId) => {
     setSelectedFilters((prevFilters) => {
       const updatedFilters = { ...prevFilters };
@@ -41,6 +41,10 @@ const Filters = ({ categories, onFilterChange }) => {
         updatedFilters[category.name].choices = updatedFilters[
           category.name
         ].choices.filter((id) => id !== choiceId);
+
+        if (updatedFilters[category.name].choices.length === 0) {
+          delete updatedFilters[category.name];
+        }
       } else {
         updatedFilters[category.name].choices.push(choiceId);
       }
@@ -49,15 +53,26 @@ const Filters = ({ categories, onFilterChange }) => {
     });
   };
 
-  // Handle price range changes
+  const handleAccordionChange = (panel) => (event, isExpanded) => {
+    setExpanded((prev) =>
+      isExpanded ? [...prev, panel] : prev.filter((p) => p !== panel)
+    );
+  };
+
   const handlePriceChange = (values) => {
     setPrice(values);
   };
 
-  // Notify parent component when filters change
+  useEffect(() => {
+    if (initialFilters) {
+      setSelectedFilters(initialFilters.selectedFilters || {});
+      setPrice(initialFilters.price || [PRODUCT_MIN_PRICE, PRODUCT_MAX_PRICE]);
+    }
+  }, []);
+  // Notify parent of changes
   useEffect(() => {
     onFilterChange({ selectedFilters, price });
-  }, [selectedFilters, price]);
+  }, [selectedFilters, price, onFilterChange]);
 
   return (
     <>
@@ -72,28 +87,33 @@ const Filters = ({ categories, onFilterChange }) => {
           </AccordionSummary>
           <AccordionDetails>
             <FormGroup>
-              {category?.choices?.map((choice) => (
-                <FormControlLabel
-                  key={choice.id}
-                  control={
-                    <Checkbox
-                      checked={
-                        selectedFilters[category.name]?.choices.includes(
-                          choice.id
-                        ) || false
-                      }
-                      onChange={() => handleCheckboxChange(category)(choice.id)}
-                    />
-                  }
-                  label={choice.name_en}
-                />
-              ))}
+              {category?.choices
+                ?.slice()
+                .sort((a, b) => a.name_en.localeCompare(b.name_en))
+                .map((choice) => (
+                  <FormControlLabel
+                    key={choice.id}
+                    control={
+                      <Checkbox
+                        checked={
+                          selectedFilters[category.name]?.choices.includes(
+                            choice.id
+                          ) || false
+                        }
+                        onChange={() =>
+                          handleCheckboxChange(category)(choice.id)
+                        }
+                      />
+                    }
+                    label={choice.name_en}
+                  />
+                ))}
             </FormGroup>
           </AccordionDetails>
         </Accordion>
       ))}
 
-      <div className="w-full max-w-md p-4 ">
+      {/* <div className="w-full max-w-md p-4">
         <h4 className="text-base xl:text-[22px] font-semibold text-[#2A353D] font-main mb-2.5">
           Price
         </h4>
@@ -112,9 +132,8 @@ const Filters = ({ categories, onFilterChange }) => {
                 className="h-4 w-4 bg-[#FBC700] rounded-full cursor-pointer focus:outline-none top-[1px]"
               ></div>
             )}
-            min={0}
-            max={1000}
-            defaultValue={price}
+            min={PRODUCT_MIN_PRICE}
+            max={PRODUCT_MAX_PRICE}
             value={price}
             onChange={handlePriceChange}
             ariaLabel={["Lower thumb", "Upper thumb"]}
@@ -123,7 +142,7 @@ const Filters = ({ categories, onFilterChange }) => {
             minDistance={10}
           />
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

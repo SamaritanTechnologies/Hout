@@ -127,7 +127,7 @@ const ShoppingCart = ({
   const calculateTotal = (
     totalPrice,
     delivery,
-    taxPercentage,
+    // taxPercentage,
     coupon = null
   ) => {
     const subtotal = Number(totalPrice || 0) + Number(delivery || 0);
@@ -145,17 +145,17 @@ const ShoppingCart = ({
     }
 
     const amountAfterDiscount = subtotal - discountAmount;
-    const taxRate = Number(taxPercentage || 0);
+    // const taxRate = Number(taxPercentage || 0);
 
-    if (taxRate > 0) {
-      const taxAmount = amountAfterDiscount * (taxRate / 100);
-      return {
-        total: amountAfterDiscount + taxAmount,
-        discount: discountAmount,
-        subtotal: subtotal,
-        isMinimumOrderMet,
-      };
-    }
+    // if (taxRate > 0) {
+    //   const taxAmount = amountAfterDiscount * (taxRate / 100);
+    //   return {
+    //     total: amountAfterDiscount + taxAmount,
+    //     discount: discountAmount,
+    //     subtotal: subtotal,
+    //     isMinimumOrderMet,
+    //   };
+    // }
 
     return {
       total: amountAfterDiscount,
@@ -168,7 +168,7 @@ const ShoppingCart = ({
   const { total, discount, subtotal, isMinimumOrderMet } = calculateTotal(
     totalPrice,
     delivery,
-    taxData,
+    // taxData,
     couponData
   );
 

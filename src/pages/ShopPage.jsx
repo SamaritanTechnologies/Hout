@@ -1,4 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import rightArrow from "../assets/shopPage/rightArrow.svg";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import filter from "../assets/shopPage/filter.svg";
@@ -16,6 +22,7 @@ import {
 } from "../utils/const";
 
 export const ShopPage = () => {
+  const [filterKey, setFilterKey] = useState(0);
   const { productCategories } = useSelector((state) => state.admin);
 
   const categories = [
@@ -34,6 +41,7 @@ export const ShopPage = () => {
     price: [PRODUCT_MIN_PRICE, PRODUCT_MAX_PRICE],
     includeVAT: false,
   });
+  const debounceTimer = useRef(null);
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = PRODUCT_PAGE_SIZE;
   const [totalItems, setTotalItems] = useState(0);
@@ -51,14 +59,31 @@ export const ShopPage = () => {
   }, [productCategories]);
 
   const categoryArray = Object.values(categoryData);
-
   const [filterDrawer, setFilterDrawer] = useState(false);
   const filterToggler = () => setFilterDrawer((prev) => !prev);
 
-  const handleFilterChange = (newFilters) => {
-    setFilters(newFilters);
-    setCurrentPage(0);
-  };
+  const handleFilterChange = useCallback((newFilters) => {
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    debounceTimer.current = setTimeout(() => {
+      setFilters((prev) => ({
+        ...prev,
+        selectedFilters: newFilters.selectedFilters,
+        price: newFilters.price,
+      }));
+      setCurrentPage(0);
+    }, 300); // Wait 300ms after user stops moving
+  }, []);
+
+  const initialFiltersMemo = useMemo(
+    () => ({
+      selectedFilters: filters.selectedFilters,
+      price: filters.price,
+    }),
+    [filters.selectedFilters, filters.price]
+  );
 
   const handleVATToggle = () => {
     setIncludeVAT((prev) => !prev);
@@ -67,6 +92,18 @@ export const ShopPage = () => {
 
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected);
+  };
+
+  const handleResetFilters = () => {
+    const resetFilters = {
+      selectedFilters: {},
+      price: [PRODUCT_MIN_PRICE, PRODUCT_MAX_PRICE],
+      includeVAT: false,
+    };
+    setFilters(resetFilters);
+    setIncludeVAT(false);
+    setCurrentPage(0);
+    setFilterKey((prev) => prev + 1);
   };
 
   return (
@@ -107,6 +144,12 @@ export const ShopPage = () => {
               Filter
             </h4>
           </div>
+          <button
+            onClick={handleResetFilters}
+            className="p-2 rounded-lg text-white bg-[#FBD232]"
+          >
+            Reset Filter
+          </button>
           <div className="pops md:text-14 sm:text-14 xs:text-12">
             Showing {currentPage * pageSize + 1}-
             {Math.min((currentPage + 1) * pageSize, totalItems)} of {totalItems}{" "}
@@ -119,6 +162,12 @@ export const ShopPage = () => {
             <div className="pops md:text-14 sm:text-14 xs:text-12">
               Show Prices
             </div>
+            {filters.includeVAT == false && (
+              <div className="pops md:text-14 sm:text-14 xs:text-12">
+                Excl. VAT
+              </div>
+            )}
+
             <div className="pops md:text-14 sm:text-14 xs:text-12">
               Incl. VAT
             </div>
@@ -128,9 +177,6 @@ export const ShopPage = () => {
                 checked={includeVAT}
                 onChange={handleVATToggle}
               />
-            </div>
-            <div className="pops md:text-14 sm:text-14 xs:text-12">
-              Excl. VAT
             </div>
           </div>
         </div>
@@ -149,8 +195,10 @@ export const ShopPage = () => {
             <XMarkIcon className="h-6 w-6 text-gray-500" />
           </div>
           <Filters
+            key={filterKey}
             categories={categoryArray}
             onFilterChange={handleFilterChange}
+            initialFilters={initialFiltersMemo}
           />
         </div>
         <div className="flex flex-col w-full gap-10">
