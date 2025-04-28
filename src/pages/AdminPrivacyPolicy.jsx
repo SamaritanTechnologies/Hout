@@ -12,6 +12,7 @@ import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
 import { toast } from "react-toastify";
 import Dropzone from "../components/Common/Dropzone";
 import { XCircleIcon } from "@heroicons/react/24/outline";
+const validTypes = ["image/jpeg", "image/png", "image/webp"];
 export const AdminPrivacyPolicy = () => {
   const [policy, setPolicy] = useState({
     description_en: "",
