@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import houtLogo from "../../assets/new-logo.png";
 
@@ -8,9 +7,9 @@ const AdminSidenav = () => {
   const location = useLocation();
 
   const [navs, setNavs] = useState([
-    { name: "Dashboard", link: "/dashboard", active: true },
-    { name: "Add Coupon ", link: "/add-coupon ", active: false },
-    { name: "Add VAT", link: "/vat-value", active: false },
+    { name: "Dashboard", link: "/dashboard", active: false },
+    { name: "Coupon", link: "/add-coupon", active: false },
+    { name: "VAT", link: "/vat-value", active: false },
     { name: "Products", link: "/products", active: false },
     { name: "Orders", link: "/orders", active: false },
     { name: "Product Options", link: "/product-options", active: false },
@@ -27,80 +26,88 @@ const AdminSidenav = () => {
     { name: "Privacy Policy", link: "/admin-privacy-policy", active: false },
     { name: "About Us", link: "/admin-about-us", active: false },
     { name: "FAQ", link: "/admin-FAQ", active: false },
-    // { name: "Order Lists", link: "/order-list/", active: false },
   ]);
 
-  useEffect(() => {
-    setNavs((prevNavs) =>
-      prevNavs.map((subItem) => ({
-        ...subItem,
-        active: location.pathname.includes(subItem.link.split("/")[1]),
-      }))
-    );
-  }, []);
+  // useEffect(() => {
+  //   setNavs((prevNavs) =>
+  //     prevNavs.map((item) => {
+  //       // Special case for dashboard
+  //       if (item.link === "/dashboard") {
+  //         return {
+  //           ...item,
+  //           active:
+  //             location.pathname === "/" ||
+  //             location.pathname.startsWith("/dashboard"),
+  //         };
+  //       }
 
-  const handleClick = (item) => {
+  //       const firstPathSegment = item.link.split("/")[1];
+  //       const currentFirstSegment = location.pathname.split("/")[1];
+
+  //       return {
+  //         ...item,
+  //         active:
+  //           location.pathname.startsWith(item.link) ||
+  //           (item.link !== "/" && currentFirstSegment === firstPathSegment),
+  //       };
+  //     })
+  //   );
+  // }, [location.pathname]);
+
+  useEffect(() => {
+    let bestMatchIndex = -1;
+    let bestMatchLength = -1;
+
+    navs.forEach((item, index) => {
+      if (
+        location.pathname === item.link ||
+        location.pathname.startsWith(item.link + "/")
+      ) {
+        if (item.link.length > bestMatchLength) {
+          bestMatchIndex = index;
+          bestMatchLength = item.link.length;
+        }
+      }
+    });
+
     setNavs((prevNavs) =>
-      prevNavs.map((subItem) => ({
-        ...subItem,
-        active: subItem.name === item.name,
+      prevNavs.map((item, index) => ({
+        ...item,
+        active: index === bestMatchIndex,
       }))
     );
+  }, [location.pathname]);
+  const handleNavigation = (item) => {
+    navigate(item.link);
   };
 
   return (
     <section className="">
-      <div className="xl:w-[240px] lg:w-[220px] w-[200px] min-h-screen">
-        <a href="#" className="mb-[22px] block px-[24px] pt-[10px]">
+      <div className="xl:w-[240px] lg:w-[220px] w-[200px] min-h-screen bg-white shadow-md">
+        <div className="mb-[22px] block px-[24px] pt-[10px]">
           <img
             src={houtLogo}
-            alt=""
-            onClick={() => {
-              handleClick(navs[0]);
-              navigate("/dashboard");
-            }}
-            className="w-[160px] lg:w-[135px]  h-[70px] mx-auto object-cover	"
+            alt="Hout Totaal Logo"
+            onClick={() => navigate("/dashboard")}
+            className="w-[160px] lg:w-[135px] h-[70px] mx-auto object-cover cursor-pointer"
           />
-        </a>
-        <div className="flex flex-col items-start sideBarMain xl:px-[24px] lg:px-[20px] px-[16px] overflow-y-auto">
-          {navs?.map((item) => {
-            return (
-              <a
-                key={item.link}
-                className={`h-[43px] text-14 font-medium cursor-pointer px-4 shrink-0 ${
-                  item.active || item.link === location.pathname
-                    ? "sideActive"
-                    : ""
-                }`}
-                onClick={() => {
-                  handleClick(item);
-                  navigate(item.link);
-                }}
-              >
-                {item.name}
-              </a>
-            );
-          })}
-
-          {/* <a
-            className="h-[43px] text-14 font-medium"
-            onClick={handleProductsClick}
-          >
-            Products
-          </a>
-          <a
-            className="h-[43px] text-14 font-medium"
-            onClick={handleInboxClick}
-          >
-            Inbox
-          </a>
-          <a
-            className="h-[43px] text-14 font-medium"
-            onClick={handleOrderListClick}
-          >
-            Order Lists
-          </a> */}
         </div>
+        <nav className="flex flex-col items-start xl:px-[24px] lg:px-[20px] px-[16px] overflow-y-auto h-[calc(100vh-110px)]">
+          {navs.map((item) => (
+            <button
+              key={item.link}
+              className={`w-full text-left h-[43px] text-14 font-medium cursor-pointer px-4 shrink-0
+                transition-colors ${
+                  item.active
+                    ? "bg-[#FACE25] text-white font-semibold border-r-4 border-[#FACE25]"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              onClick={() => handleNavigation(item)}
+            >
+              {item.name}
+            </button>
+          ))}
+        </nav>
       </div>
     </section>
   );

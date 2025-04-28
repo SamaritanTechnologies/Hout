@@ -34,7 +34,7 @@ import {
   AdminFAQ,
   AdminAboutUs,
   VatValue,
-  Orders
+  Orders,
 } from "./pages";
 
 import { TermsConditions } from "./pages/TermsConditions";
@@ -63,7 +63,7 @@ function Routes() {
           <Route path="/add-coupon" element={<AddCoupon />} />
           <Route path="/vat-value" element={<VatValue />} />
           <Route path="/products" element={<Products />} />
-          <Route path="/orders" element={<Orders/>} />
+          <Route path="/orders" element={<Orders />} />
           <Route path="/product-options" element={<ProductOptions />} />
           <Route path="/homepage-image" element={<HomePageImage />} />
           <Route path="/homepage-products" element={<HomePageProducts />} />

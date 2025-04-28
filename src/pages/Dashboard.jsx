@@ -10,6 +10,8 @@ import moment from "moment";
 import { getStats } from "../redux/actions/dashboardActions";
 import StatsCard from "../components/Dashboard/StatsCard";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { ORDER_PAGE_SIZE } from "../utils/const";
+import Pagination from "../components/Common/Pagination";
 
 const months = [
   { value: 1, name: "JANUARY" },
@@ -28,25 +30,38 @@ const months = [
 
 export const Dashboard = () => {
   const navigate = useNavigate();
+  const pageSize = ORDER_PAGE_SIZE;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
   const [state, setState] = useState({
     orderList: [],
     stats: null,
     selectedMonth: null,
-    searchQuery: "", // Add search query state
-    selectedDate: "", // new state
+    searchQuery: "",
+    selectedDate: "",
   });
 
-  const fetchOrderslist = async (month, date) => {
+  const fetchOrderslist = async (month, date, page, size) => {
     try {
-      const res = await getOrderDetails(month, date);
+      const res = await getOrderDetails(month, date, page, size);
       setState((prev) => ({
         ...prev,
-        orderList: res,
+        orderList: res.results || [],
       }));
+      setTotalPage(Number(res.total_pages) || 0);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
   };
+
+  useEffect(() => {
+    fetchOrderslist(
+      state.selectedMonth,
+      state.selectedDate,
+      currentPage,
+      pageSize
+    );
+  }, [state.selectedMonth, state.selectedDate, currentPage, pageSize]);
 
   const fetchDashboardStats = async () => {
     try {
@@ -73,9 +88,9 @@ export const Dashboard = () => {
     }));
   };
 
-  useEffect(() => {
-    fetchOrderslist(state?.selectedMonth, state?.selectedDate);
-  }, [state?.selectedMonth, state?.selectedDate]);
+  // useEffect(() => {
+  //   fetchOrderslist(state?.selectedMonth, state?.selectedDate);
+  // }, [state?.selectedMonth, state?.selectedDate]);
 
   useEffect(() => {
     fetchDashboardStats();
@@ -122,6 +137,10 @@ export const Dashboard = () => {
       ...prev,
       selectedDate: e.target.value,
     }));
+  };
+
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected + 1);
   };
 
   return (
@@ -310,6 +329,13 @@ export const Dashboard = () => {
             </table>
           </div>
         </div>
+        {totalPage > 1 && (
+          <Pagination
+            pageCount={totalPage}
+            onPageChange={handlePageChange}
+            forcePage={currentPage - 1}
+          />
+        )}
 
         <div className="w-full xl:mt-[106px] lg:mt-[80px] mt-[50px] flex justify-end">
           <button

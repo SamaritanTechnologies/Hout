@@ -42,6 +42,19 @@ export const Signin = () => {
     });
   };
 
+  useEffect(() => {
+    const savedCredentials = localStorage.getItem("savedCredentials");
+    if (savedCredentials) {
+      const { email, password } = JSON.parse(savedCredentials);
+      setFormData((prev) => ({
+        ...prev,
+        email,
+        password,
+        RememberMe: true,
+      }));
+    }
+  }, []);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!formData.email.trim() || !formData.password.trim()) {
@@ -63,8 +76,18 @@ export const Signin = () => {
       setAccessToken(access_token);
       if (formData.RememberMe) {
         setRefreshToken(refresh_token);
+        // Save credentials to local storage
+        localStorage.setItem(
+          "savedCredentials",
+          JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+          })
+        );
       } else {
         setRefreshToken("");
+        // Remove saved credentials if "Remember Me" is not checked
+        localStorage.removeItem("savedCredentials");
       }
 
       dispatch(loginUser(user));

@@ -3,7 +3,7 @@ import Button from "../Common/Button";
 import cartIcon from "../../assets/customWoodPage/cart-icon.svg";
 import InputField from "../Common/InputField";
 import { axiosWithCredentials } from "../../providers";
-import { toast } from "react-toastify"; // Assuming you are using react-toastify for toasts
+import { toast } from "react-toastify";
 import { getCart } from "../../redux/actions/orderActions";
 import { setCartItems } from "../../redux/slices/cartSlice";
 import { useDispatch } from "react-redux";
@@ -31,7 +31,7 @@ const ProductVaritants = ({ variants }) => {
         const res = await getCart();
         dispatch(setCartItems(res.cart_items));
         toast.success("Product added to cart!");
-        navigate("/cart");
+        // navigate("/cart");
       } else {
         toast.warning("Please enter a valid quantity");
       }
@@ -102,7 +102,10 @@ const ProductVaritants = ({ variants }) => {
                       </span>
                     </div>
                     <div className="text-14 text-[#111727] font-medium">
-                      ${variant.discounted_price_in_vat}
+                      €
+                      {variant.full_price_in_vat > 0
+                        ? variant.full_price_in_vat
+                        : 0.0}
                     </div>
                   </div>
                 </td>

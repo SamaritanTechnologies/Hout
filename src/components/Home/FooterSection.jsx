@@ -38,7 +38,7 @@ const FooterSection = ({ isShow }) => {
   const handleNewsLetter = async (e) => {
     e.preventDefault();
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
-      toast.error("Please enter a valid email."); // Use toaster for error
+      toast.error("Please enter a valid email.");
       return;
     }
     setLoading(true);
@@ -47,8 +47,17 @@ const FooterSection = ({ isShow }) => {
       toast.success("Thank you for subscribing!");
       setEmail("");
     } catch (error) {
-      const errorMessage = error.message || "An unexpected error occurred.";
-      toast.error("Error: " + errorMessage);
+      if (
+        (error.response &&
+          error.response.data &&
+          error.response.data.error === "Contact already exist") ||
+        (error.message && error.message.includes("Contact already exist"))
+      ) {
+        toast.error("You're already subscribed!");
+      } else {
+        const errorMessage = error.message || "An unexpected error occurred.";
+        toast.error("Error: " + errorMessage);
+      }
     } finally {
       setLoading(false);
     }
