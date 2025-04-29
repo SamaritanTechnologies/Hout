@@ -10,7 +10,8 @@ import { useState } from "react";
 import { setCartItems } from "../../redux/slices/cartSlice";
 import { getCart } from "../../redux/actions/orderActions";
 
-const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
+const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
+  console.log("product", product);
   const authState = useSelector((state) => state.auth);
   const isAuthenticated = authState.isLoggedIn;
   const navigate = useNavigate();
@@ -120,7 +121,10 @@ const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
         </p>
         <div className="flex gap-4">
           <span className="text-xl font-semibold text-[#111727]">
-            € {minimumPrice.discounted_price_ex_vat}
+            €
+            {includeVAT
+              ? product?.lengths[0]?.discounted_price_in_vat
+              : minimumPrice.discounted_price_ex_vat}
           </span>
           {minimumPrice.discount > 0 && (
             <span className="text-[#B0B0B0] line-through self-center">

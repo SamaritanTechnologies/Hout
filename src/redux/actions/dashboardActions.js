@@ -15,7 +15,15 @@ export const getHomepageImage = async () => {
 };
 
 export const getPrivacyPolicyImage = async () => {
-  const response = await axiosWithCredentials.get(`/images`);
+  const response = await axiosWithCredentials.get(`/images/privacypolicy`);
+  return response.data;
+};
+export const getTermAndConditionsImage = async () => {
+  const response = await axiosWithCredentials.get(`/images/termAndconditions`);
+  return response.data;
+};
+export const getAboutImage = async () => {
+  const response = await axiosWithCredentials.get(`/images/about`);
   return response.data;
 };
 

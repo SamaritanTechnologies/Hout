@@ -351,7 +351,7 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
                       const payload = {
                         first_name: values.firstName,
                         last_name: values.lastName,
-                        companyt_name: values.companyName,
+                        company_name: values.companyName,
                         street_and_number: values.streetAndNumber,
                         zip_code: values.zipCode,
                         city: values.city,

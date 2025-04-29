@@ -23,8 +23,10 @@ import {
   PinterestShareButton,
   EmailShareButton,
 } from "react-share";
+import Switch from "../components/Common/Switch";
 
 export const ProductDetail = () => {
+  const [vat, setVat] = useState(false);
   const shareUrl = window.location.href;
   const { product_id } = useParams();
   const [productDetail, setProductDetail] = useState(null);
@@ -77,6 +79,21 @@ export const ProductDetail = () => {
           <td>{productDetail?.name_en}</td>
         </tr>
       </section>
+      <div className=" flex justify-center  gap-5 pt-5">
+        <div className="pops md:text-14 sm:text-14 xs:text-12">Show Prices</div>
+        {vat == false && (
+          <div className="pops md:text-14 sm:text-14 xs:text-12">Excl. VAT</div>
+        )}
+
+        <div className="pops md:text-14 sm:text-14 xs:text-12">Incl. VAT</div>
+        <div className="recPasswrd">
+          <Switch
+            optional
+            checked={vat ? "checked" : ""}
+            onChange={() => setVat(!vat)}
+          />
+        </div>
+      </div>
 
       {loading ? (
         <PageLoader />
@@ -192,7 +209,7 @@ export const ProductDetail = () => {
               {productDetail?.name_en}
             </h1>
             <div className="text-xl text-[#111727]">
-              € {productDetail?.lengths[0]?.full_price_in_vat}
+              € {productDetail?.lengths[0]?.discount}
             </div>
 
             <div className="flex items-center gap-x-4 pt-5 border-b-2 border-[#D9D9D9] pb-[26px]">
@@ -302,6 +319,7 @@ export const ProductDetail = () => {
       <ProductVaritants
         variants={productDetail?.lengths}
         product={product_id}
+        vat={vat}
       />
 
       {/* <RelatedProduct relatedProducts={productDetail?.related_products} /> */}

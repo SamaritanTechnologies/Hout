@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import ArrowBack from "../assets/DashboardImages/arrowback.svg";
 import Dropzone from "../components/Common/Dropzone";
 import Button from "../components/Common/Button";
+import nlflag from "../assets/DashboardImages/flag-netherlands.svg";
+import usaflag from "../assets/DashboardImages/USA-flag.svg";
 import {
   addHomepageImage,
   getHomepageImage,
@@ -16,45 +17,52 @@ export const HomePageImage = () => {
   const [existingImage, setExistingImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    heading: "",
-    text: "",
-    buttonText: "",
+    title: "homepage",
+    heading_en: "",
+    heading_nl: "",
+    text_en: "",
+    text_nl: "",
+    button_text_en: "",
+    button_text_nl: "",
   });
 
   const fetchExistingImage = async () => {
     try {
       const response = await getHomepageImage();
-      if (response?.length > 0 && response[0].image) {
-        setExistingImage(response[0].image);
-      }
-      if (response[0].heading) {
-        setFormData((prev) => ({
-          ...prev,
-          heading: response[0].heading || "",
-          text: response[0].text || "",
-          buttonText: response[0].buttonText || "",
-        }));
+      if (response?.length > 0) {
+        const data = response[0];
+        if (data.image) {
+          setExistingImage(data.image);
+        }
+        setFormData({
+          title: data.title || "homepage",
+          heading_en: data.heading_en || "",
+          heading_nl: data.heading_nl || "",
+          text_en: data.text_en || "",
+          text_nl: data.text_nl || "",
+          button_text_en: data.button_text_en || "",
+          button_text_nl: data.button_text_nl || "",
+        });
       }
     } catch (error) {
       console.error("Error fetching existing image:", error);
     }
   };
+
   useEffect(() => {
     fetchExistingImage();
   }, []);
 
-  // Handle image selection
   const handleDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
     if (file && validTypes.includes(file.type)) {
       setImage({ file, preview: URL.createObjectURL(file) });
-      setExistingImage(null); // Clear existing image when a new one is selected
+      setExistingImage(null);
     } else {
       toast.error("Invalid file type. Only JPEG, PNG, and WebP are allowed.");
     }
   };
 
-  // Remove selected image
   const handleRemoveImage = () => {
     setImage(null);
     setExistingImage(null);
@@ -69,7 +77,7 @@ export const HomePageImage = () => {
   };
 
   const handleSave = async () => {
-    if (!image?.file) {
+    if (!image?.file && !existingImage) {
       toast.error("Please select an image to upload.");
       return;
     }
@@ -77,20 +85,24 @@ export const HomePageImage = () => {
     setIsLoading(true);
     try {
       const payload = new FormData();
-      payload.append("title", "homepage");
-      payload.append("image", image.file);
-      payload.append("heading", formData.heading);
-      payload.append("text", formData.text);
-      payload.append("button_text", formData.buttonText);
+      Object.entries(formData).forEach(([key, value]) => {
+        payload.append(key, value);
+      });
+
+      if (image?.file) {
+        payload.append("image", image.file);
+      }
 
       const response = await addHomepageImage(payload);
-      toast.success("Image uploaded successfully!");
+      toast.success("Homepage content saved successfully!");
 
-      setExistingImage(response?.data?.imageUrl || null);
+      if (response?.data?.imageUrl) {
+        setExistingImage(response.data.imageUrl);
+      }
       setImage(null);
     } catch (error) {
-      toast.error("Failed to upload image.");
-      console.error("Error uploading image:", error);
+      toast.error("Failed to save homepage content.");
+      console.error("Error saving homepage content:", error);
     } finally {
       setIsLoading(false);
     }
@@ -106,12 +118,12 @@ export const HomePageImage = () => {
           <h2 className="text-[#111727] font-medium">
             Upload Homepage Wallpaper
           </h2>
-          <p className="text-[#6C7275 text-sm">
-            You can Upload Multiple Images of product in different dimensions,
-            and rotate. By saving the image will be rezised to optimized
-            dimensions.
+          <p className="text-[#6C7275] text-sm">
+            You can upload an image for the homepage wallpaper. By saving, the
+            image will be resized to optimized dimensions.
           </p>
         </div>
+
         <div className="flex gap-[14px] flex-wrap">
           {image?.preview ? (
             <div className="relative w-[215px] h-[215px] rounded-lg overflow-hidden">
@@ -148,65 +160,164 @@ export const HomePageImage = () => {
           )}
         </div>
 
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="heading"
-              className="text-sm font-medium text-gray-700"
-            >
-              Heading
-            </label>
-            {/* <InputField /> */}
-            <input
-              className="pl-3 block w-full appearance-none font-footer1
-               placeholder-[#5A5A5A] outline-none border border-[#D9D9D9] 
-               focus:outline-none 
-              sm:text-sm  rounded-md xl:py-3 xl:ps-3 py-2"
-              id="heading"
-              type="text"
-              value={formData.heading}
-              onChange={handleInputChange}
-              required
-            />
+        <div className="flex gap-4">
+          {/* Dutch Section */}
+          <div className="flex flex-col gap-4 min-w-80">
+            <div className="relative flex flex-col gap-2">
+              <label
+                htmlFor="heading_nl"
+                className="text-sm font-medium text-gray-700"
+              >
+                Koptekst (Dutch)
+              </label>
+              <input
+                className="pl-3 block w-full appearance-none font-footer1
+               placeholder-[#5A5A5A] outline-none border border-[#D9D9D9]
+               focus:outline-none
+              sm:text-sm rounded-md xl:py-3 xl:ps-3 py-2"
+                id="heading_nl"
+                type="text"
+                value={formData.heading_nl}
+                onChange={handleInputChange}
+                placeholder="Koptekst"
+              />
+              <img
+                className="absolute right-2 bottom-4 w-5 h-5"
+                src={nlflag}
+                alt="Dutch flag"
+              />
+            </div>
+
+            <div className="relative flex flex-col gap-2">
+              <label
+                htmlFor="text_nl"
+                className="text-sm font-medium text-gray-700"
+              >
+                Tekst (Dutch)
+              </label>
+              <textarea
+                className="pl-3 block w-full appearance-none font-footer1
+               placeholder-[#5A5A5A] outline-none border border-[#D9D9D9]
+               focus:outline-none
+              sm:text-sm rounded-md xl:py-3 xl:ps-3 py-2"
+                id="text_nl"
+                value={formData.text_nl}
+                onChange={handleInputChange}
+                placeholder="Tekst"
+                rows={6}
+              />
+              <img
+                className="absolute right-2 top-10 w-5 h-5"
+                src={nlflag}
+                alt="Dutch flag"
+              />
+            </div>
+
+            <div className="relative flex flex-col gap-2">
+              <label
+                htmlFor="button_text_nl"
+                className="text-sm font-medium text-gray-700"
+              >
+                Knoptekst (Dutch)
+              </label>
+              <input
+                className="pl-3 block w-full appearance-none font-footer1
+               placeholder-[#5A5A5A] outline-none border border-[#D9D9D9]
+               focus:outline-none
+              sm:text-sm rounded-md xl:py-3 xl:ps-3 py-2"
+                id="button_text_nl"
+                type="text"
+                value={formData.button_text_nl}
+                onChange={handleInputChange}
+                placeholder="Knoptekst"
+              />
+              <img
+                className="absolute right-2 bottom-4 w-5 h-5"
+                src={nlflag}
+                alt="Dutch flag"
+              />
+            </div>
           </div>
 
-          <div className="flex flex-col gap-2">
-            <label htmlFor="text" className="text-sm font-medium text-gray-700">
-              Text
-            </label>
-            <textarea
-              className="pl-3 block w-full appearance-none font-footer1
-               placeholder-[#5A5A5A] outline-none border border-[#D9D9D9] 
-               focus:outline-none 
-              sm:text-sm  rounded-md xl:py-3 xl:ps-3 py-2"
-              id="text"
-              value={formData.text}
-              onChange={handleInputChange}
-              required
-              rows={6}
-            />
-          </div>
+          {/* English Section */}
+          <div className="flex flex-col gap-4 min-w-80">
+            <div className="relative flex flex-col gap-2">
+              <label
+                htmlFor="heading_en"
+                className="text-sm font-medium text-gray-700"
+              >
+                Heading (English)
+              </label>
+              <input
+                className="pl-3 block w-full appearance-none font-footer1
+               placeholder-[#5A5A5A] outline-none border border-[#D9D9D9]
+               focus:outline-none
+              sm:text-sm rounded-md xl:py-3 xl:ps-3 py-2"
+                id="heading_en"
+                type="text"
+                value={formData.heading_en}
+                onChange={handleInputChange}
+                placeholder="Heading"
+              />
+              <img
+                className="absolute right-2 bottom-4 w-5 h-5"
+                src={usaflag}
+                alt="USA flag"
+              />
+            </div>
 
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="buttonText"
-              className="text-sm font-medium text-gray-700"
-            >
-              Button Text
-            </label>
-            <input
-              className="pl-3 block w-full appearance-none font-footer1
-               placeholder-[#5A5A5A] outline-none border border-[#D9D9D9] 
-               focus:outline-none 
-              sm:text-sm  rounded-md xl:py-3 xl:ps-3 py-2"
-              id="buttonText"
-              type="text"
-              value={formData.buttonText}
-              onChange={handleInputChange}
-              required
-            />
+            <div className="relative flex flex-col gap-2">
+              <label
+                htmlFor="text_en"
+                className="text-sm font-medium text-gray-700"
+              >
+                Text (English)
+              </label>
+              <textarea
+                className="pl-3 block w-full appearance-none font-footer1
+               placeholder-[#5A5A5A] outline-none border border-[#D9D9D9]
+               focus:outline-none
+              sm:text-sm rounded-md xl:py-3 xl:ps-3 py-2"
+                id="text_en"
+                value={formData.text_en}
+                onChange={handleInputChange}
+                placeholder="Text"
+                rows={6}
+              />
+              <img
+                className="absolute right-2 top-10 w-5 h-5"
+                src={usaflag}
+                alt="USA flag"
+              />
+            </div>
+
+            <div className="relative flex flex-col gap-2">
+              <label
+                htmlFor="button_text_en"
+                className="text-sm font-medium text-gray-700"
+              >
+                Button Text (English)
+              </label>
+              <input
+                className="pl-3 block w-full appearance-none font-footer1
+               placeholder-[#5A5A5A] outline-none border border-[#D9D9D9]
+               focus:outline-none
+              sm:text-sm rounded-md xl:py-3 xl:ps-3 py-2"
+                id="button_text_en"
+                type="text"
+                value={formData.button_text_en}
+                onChange={handleInputChange}
+                placeholder="Button Text"
+              />
+              <img
+                className="absolute right-2 bottom-4 w-5 h-5"
+                src={usaflag}
+                alt="USA flag"
+              />
+            </div>
           </div>
         </div>
+
         <Button
           loading={isLoading}
           type="button"

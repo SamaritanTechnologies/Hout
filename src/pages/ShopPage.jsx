@@ -207,6 +207,7 @@ export const ShopPage = () => {
             currentPage={currentPage}
             pageSize={pageSize}
             setTotalItems={setTotalItems}
+            includeVAT={includeVAT}
           />
 
           {totalItems > pageSize && (

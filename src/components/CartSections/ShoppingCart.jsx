@@ -256,17 +256,25 @@ const ShoppingCart = ({
                               </a>
                               <div>
                                 <img
-                                  onClick={
-                                    () => console.log("id", item.id)
-                                    // navigate(`/product-detail/${item.id}`)
+                                  onClick={() =>
+                                    navigate(
+                                      `/product-detail/${item?.product_length?.product.id}`
+                                    )
                                   }
                                   src={item?.product_length?.product.image}
-                                  className="xl:w-[80px] xl:h-[96px] lg:w-[70px] lg:h-[80px] min-w-[60px] min-h-[60px] xs:w-[60px] xs:h-[60px]"
+                                  className="cursor-pointer xl:w-[80px] xl:h-[96px] lg:w-[70px] lg:h-[80px] min-w-[60px] min-h-[60px] xs:w-[60px] xs:h-[60px]"
                                   alt={item.name}
                                 />
                               </div>
                               <div className="flex flex-col xl:min-w-[220px]">
-                                <div className="xl:text-18 lg:text-16 text-14">
+                                <div
+                                  className="cursor-pointer xl:text-18 lg:text-16 text-14"
+                                  onClick={() =>
+                                    navigate(
+                                      `/product-detail/${item?.product_length?.product.id}`
+                                    )
+                                  }
+                                >
                                   {item?.product_length?.product.name_en}
                                 </div>
                                 <div className="flex gap-[15px] items-center">

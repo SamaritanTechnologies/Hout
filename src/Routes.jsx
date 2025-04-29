@@ -50,6 +50,7 @@ import {
 } from "./providers/PrivateRoutes";
 import { OAuthCallback } from "./pages/OAuthCallback ";
 import AddCoupon from "./pages/AddCoupon";
+import DeliveryValue from "./pages/DeliveryValue";
 
 function Routes() {
   return (
@@ -62,6 +63,7 @@ function Routes() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/add-coupon" element={<AddCoupon />} />
           <Route path="/vat-value" element={<VatValue />} />
+          <Route path="/delivery" element={<DeliveryValue />} />
           <Route path="/products" element={<Products />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/product-options" element={<ProductOptions />} />
