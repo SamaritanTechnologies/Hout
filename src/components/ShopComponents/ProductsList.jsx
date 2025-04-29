@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import { getProducts } from "../../redux/actions/userActions";
 import ProductCard from "../Common/ProductCard";
 
-const ProductsList = ({ filters, currentPage, pageSize, setTotalItems }) => {
+const ProductsList = ({
+  filters,
+  currentPage,
+  pageSize,
+  setTotalItems,
+  includeVAT,
+}) => {
   const [products, setProducts] = useState([]);
 
   const fetchProduct = async () => {
@@ -48,7 +54,6 @@ const ProductsList = ({ filters, currentPage, pageSize, setTotalItems }) => {
 
   const getMinimumPriceObject = (lengths) => {
     if (!lengths || lengths.length === 0) return "N/A";
-
     return lengths.reduce((minObj, currentObj) => {
       const currentPrice = parseFloat(currentObj.full_price_ex_vat);
       const minPrice = parseFloat(minObj.full_price_ex_vat);
@@ -67,6 +72,7 @@ const ProductsList = ({ filters, currentPage, pageSize, setTotalItems }) => {
               product={product}
               minimumPrice={minimumPrice}
               fetchProduct={fetchProduct}
+              includeVAT={includeVAT}
             />
           );
         })}

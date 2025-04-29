@@ -32,6 +32,7 @@ const Layout = () => {
     "/admin-privacy-policy",
     "/admin-about-us",
     "/admin-FAQ",
+    "/delivery",
     // "/inbox",
     "/order-list",
     "/product",

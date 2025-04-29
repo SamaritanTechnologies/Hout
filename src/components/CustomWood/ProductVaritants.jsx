@@ -9,7 +9,7 @@ import { setCartItems } from "../../redux/slices/cartSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const ProductVaritants = ({ variants }) => {
+const ProductVaritants = ({ variants, vat }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -102,10 +102,10 @@ const ProductVaritants = ({ variants }) => {
                       </span>
                     </div>
                     <div className="text-14 text-[#111727] font-medium">
-                      €
-                      {variant.full_price_in_vat > 0
-                        ? variant.full_price_in_vat
-                        : 0.0}
+                      {/* discounted_price_in_vat */}€
+                      {vat
+                        ? variant.discounted_price_in_vat
+                        : variant.discounted_price_ex_vat}
                     </div>
                   </div>
                 </td>

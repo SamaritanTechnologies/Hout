@@ -45,12 +45,12 @@ const HoutHandelSection = () => {
             paddingX="72px"
             fontbold
             onClick={() => {
-              navigate("/");
-              setTimeout(() => {
-                document.getElementById("assortments-section")?.scrollIntoView({
-                  behavior: "smooth",
-                });
-              }, 100);
+              navigate("/shop-page");
+              // setTimeout(() => {
+              //   document.getElementById("assortments-section")?.scrollIntoView({
+              //     behavior: "smooth",
+              //   });
+              // }, 100);
             }}
           />
         </div>
