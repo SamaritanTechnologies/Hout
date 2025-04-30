@@ -95,6 +95,7 @@ export const HomePageImage = () => {
 
       const response = await addHomepageImage(payload);
       toast.success("Homepage content saved successfully!");
+      fetchExistingImage();
 
       if (response?.data?.imageUrl) {
         setExistingImage(response.data.imageUrl);

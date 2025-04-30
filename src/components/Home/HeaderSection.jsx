@@ -13,12 +13,14 @@ import { setCartItems } from "../../redux/slices/cartSlice";
 
 import countryflag1 from "../../assets/DashboardImages/flag-netherlands.svg";
 import countryflag2 from "../../assets/DashboardImages/USA-flag.svg";
+import { axiosWithCredentials } from "../../providers";
 const HeaderSection = () => {
   const navigate = useNavigate();
   const authState = useSelector((state) => state.auth);
   const isAuthenticated = authState.isLoggedIn;
   const [isActive, setIsActive] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [localCart, setLocalCart] = useState([]);
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState({
@@ -33,6 +35,7 @@ const HeaderSection = () => {
   ];
   const cartItems = useSelector((state) => state.cart?.data);
   const totalQuantity = cartItems?.length || 0;
+  const cartQuantity = localCart?.length || 0;
 
   const toggleMenu = () => {
     setIsActive(!isActive);
@@ -61,10 +64,44 @@ const HeaderSection = () => {
     }
   };
 
+  const loadLocalCart = () => {
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    setLocalCart(storedCart);
+  };
+
+  const handleAddtoCartItems = async (payload) => {
+    console.log("payload", payload);
+    const res = await axiosWithCredentials.post(`/add-to-cart/`, payload);
+
+    if (res) {
+      localStorage.removeItem("cart");
+    }
+    fetchCart();
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadLocalCart();
+      const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+      const formattedCart = storedCart.map((item) => ({
+        product_length: item?.lengths[0]?.id,
+        quantity: item.quantity,
+      }));
+      handleAddtoCartItems(formattedCart);
+    }
+  }, []);
+
   useEffect(() => {
     if (isAuthenticated) {
       fetchCart();
+    } else {
+      loadLocalCart();
+      window.addEventListener("localCartUpdated", loadLocalCart);
     }
+
+    return () => {
+      window.removeEventListener("localCartUpdated", loadLocalCart);
+    };
   }, [dispatch, isAuthenticated]);
 
   let role = "user";
@@ -249,15 +286,25 @@ const HeaderSection = () => {
             }}
           >
             <img src={cart} className="cursor-pointer h-[20px] " />
-            {totalQuantity > 0 && (
-              <span
-                className="absolute text-white text-[12px] w-5 h-5 
+            {isAuthenticated
+              ? totalQuantity > 0 && (
+                  <span
+                    className="absolute text-white text-[12px] w-5 h-5 
             bg-[#FFDD00] rounded-full flex items-center justify-center 
             -top-4 -right-2 font-medium"
-              >
-                {totalQuantity}
-              </span>
-            )}
+                  >
+                    {totalQuantity}
+                  </span>
+                )
+              : cartQuantity > 0 && (
+                  <span
+                    className="absolute text-white text-[12px] w-5 h-5 
+            bg-[#FFDD00] rounded-full flex items-center justify-center 
+            -top-4 -right-2 font-medium"
+                  >
+                    {cartQuantity}
+                  </span>
+                )}
           </div>
           <div className="relative inline-block" ref={dropdownRef}>
             <button

@@ -137,12 +137,12 @@ const OrderComplete = ({
                 </div>
 
                 <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-                  No Orders Found
+                  Transaction Failed
                 </h2>
 
                 <p className="text-gray-600 mb-8">
-                  It looks like you haven't completed any orders yet. If you're
-                  facing any issues, please reach out to our{" "}
+                  Something went wrong. Please try again. If the problem
+                  persists, contact our{" "}
                   <Link href="#" className="text-[#E9B800] hover:underline">
                     Support Team
                   </Link>

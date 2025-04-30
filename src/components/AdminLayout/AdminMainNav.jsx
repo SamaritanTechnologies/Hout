@@ -11,8 +11,11 @@ import {
 import HeadLessDropDown from "../Common/HeadLessDropDown";
 import NotificationModal from "./NotificationModal";
 import { axiosWithCredentials } from "../../providers";
+import { useSelector } from "react-redux";
 
 const AdminMainNav = () => {
+  const authState = useSelector((state) => state.auth);
+  const isAuthenticated = authState.isLoggedIn;
   const [isScrolled, setIsScrolled] = useState(false);
   const handleScroll = () => {
     if (window.scrollY > 0) {
@@ -63,12 +66,17 @@ const AdminMainNav = () => {
   }, []);
 
   useEffect(() => {
-    fetchNotifications();
+    let intervalId;
 
-    const intervalId = setInterval(fetchNotifications, 5000);
-    return () => clearInterval(intervalId);
-  }, [fetchNotifications]);
+    if (isAuthenticated) {
+      fetchNotifications();
+      intervalId = setInterval(fetchNotifications, 5000);
+    }
 
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [isAuthenticated, fetchNotifications]);
   const unreadCount = orders.filter((order) => order.is_read === false).length;
 
   return (

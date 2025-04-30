@@ -11,7 +11,6 @@ import { setCartItems } from "../../redux/slices/cartSlice";
 import { getCart } from "../../redux/actions/orderActions";
 
 const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
-  console.log("product", product);
   const authState = useSelector((state) => state.auth);
   const isAuthenticated = authState.isLoggedIn;
   const navigate = useNavigate();
@@ -89,6 +88,28 @@ const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
     }
   };
 
+  const handleAddToLocal = async (product) => {
+    console.log("Product", product);
+    const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const productIndex = existingCart.findIndex(
+      (item) => item.id === product.id
+    );
+
+    if (productIndex !== -1) {
+      existingCart[productIndex].quantity =
+        (existingCart[productIndex].quantity || 1) + 1;
+    } else {
+      product.quantity = 1;
+      existingCart.push(product);
+    }
+
+    localStorage.setItem("cart", JSON.stringify(existingCart));
+    // Dispatch custom event
+    window.dispatchEvent(new Event("localCartUpdated"));
+
+    toast.success("Product added to cart!");
+  };
   return (
     <div className="relative bg-[#F4F5F7] h-auto">
       {minimumPrice?.discount > 0 && (
@@ -135,7 +156,9 @@ const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
         <div className="flex gap-x-4 items-center justify-between">
           <div
             onClick={() => {
-              !isAuthenticated ? navigate("/cart") : handleAddToCart(product);
+              !isAuthenticated
+                ? handleAddToLocal(product)
+                : handleAddToCart(product);
             }}
             className="border-2 cursor-pointer border-[#898989] px-2 flex items-center justify-center py-3  gap-x-3  add-cart-btn md:text-[12px] lg:text-[12px]"
           >
