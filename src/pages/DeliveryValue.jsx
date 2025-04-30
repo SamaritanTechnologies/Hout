@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import InputField from "../components/Common/InputField";
 import Button from "../components/Common/Button";
 import { toast } from "react-toastify";
+import {
+  AddDeliveryFee,
+  getDeliveryFee,
+} from "../redux/actions/productActions";
 
 const DeliveryValue = () => {
   const [delivery, setDelivery] = useState("");
@@ -10,11 +14,9 @@ const DeliveryValue = () => {
   useEffect(() => {
     const fetchDelivery = async () => {
       try {
-        // const data = await getDeliveryFee();
-        const mockData = { fee: 5.0 };
-        if (mockData?.fee) {
-          setDelivery(mockData.fee.toString());
-        }
+        const data = await getDeliveryFee();
+
+        setDelivery(data?.delivery_fee);
       } catch (error) {
         toast.error("Failed to fetch delivery fee.");
       }
@@ -27,16 +29,16 @@ const DeliveryValue = () => {
   };
 
   const handleSubmit = async () => {
-    const fee = parseFloat(delivery);
-    if (isNaN(fee) || fee < 0) {
+    const delivery_fee = parseFloat(delivery);
+    if (isNaN(delivery_fee) || delivery_fee < 0) {
       toast.error("Please enter a valid delivery fee.");
       return;
     }
 
     setLoading(true);
     try {
-      const payload = { fee };
-      // await updateDeliveryFee(payload);
+      const payload = { delivery_fee };
+      await AddDeliveryFee(payload);
       toast.success("Delivery fee saved successfully!");
     } catch (error) {
       toast.error("Failed to save delivery fee. Please try again.");

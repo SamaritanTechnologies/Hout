@@ -15,6 +15,7 @@ export const AddToCart = () => {
   const isAuthenticated = authState.isLoggedIn;
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const orderCompleteData = {
     hasResponse: searchParams.has("response"),
@@ -104,6 +105,10 @@ export const AddToCart = () => {
 
     // If trying to go to third tab without response, block it
     if (tab === "thirdTab" && !orderCompleteData.hasResponse) return;
+    if (tab === "secondTab" && !isAuthenticated) {
+      setShowLoginModal(true);
+      return;
+    }
 
     setSelectedTab(tab);
     setSelectedDiv((prev) => {
@@ -163,21 +168,21 @@ export const AddToCart = () => {
     }
   }, [isAuthenticated]);
 
-  if (!isAuthenticated) {
-    return (
-      <div className="flex justify-center items-center h-60 w-full">
-        <div className="flex gap-1 items-center">
-          <span> Please sign-in to view the items in your cart.</span>
-          <button
-            className="bg-[#FBC700] text-[#161922] p-2 rounded-md"
-            onClick={() => navigate("/sign-in")}
-          >
-            Sign-in
-          </button>
-        </div>
-      </div>
-    );
-  }
+  // if (!isAuthenticated) {
+  //   return (
+  //     <div className="flex justify-center items-center h-60 w-full">
+  //       <div className="flex gap-1 items-center">
+  //         <span> Please sign-in to view the items in your cart.</span>
+  //         <button
+  //           className="bg-[#FBC700] text-[#161922] p-2 rounded-md"
+  //           onClick={() => navigate("/sign-in")}
+  //         >
+  //           Sign-in
+  //         </button>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
@@ -295,6 +300,31 @@ export const AddToCart = () => {
           />
         )}
       </section>
+      {showLoginModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-md shadow-md text-center w-[300px]">
+            <h2 className="text-lg font-semibold mb-4">Login Required</h2>
+            <p className="mb-4">You need to sign in to proceed to checkout.</p>
+            <div className="flex justify-center gap-4">
+              <button
+                className="bg-gray-300 text-black py-2 px-4 rounded"
+                onClick={() => setShowLoginModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-[#FBC700] text-[#161922] py-2 px-4 rounded"
+                onClick={() => {
+                  setShowLoginModal(false);
+                  navigate("/sign-in");
+                }}
+              >
+                Sign In
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

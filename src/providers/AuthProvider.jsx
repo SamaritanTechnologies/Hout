@@ -127,7 +127,7 @@ export function AuthProvider({ children }) {
     }
 
     const accessToken = getAccessToken();
-    console.log("accessToken:", accessToken);
+
     if (
       !accessToken ||
       typeof accessToken !== "string" ||

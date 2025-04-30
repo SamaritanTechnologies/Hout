@@ -292,7 +292,9 @@ const FooterSection = ({ isShow }) => {
                 Chamber of Commerce
               </h3>
               <div className="text-sm text-[#111727]">61392421</div>
-              <div className="text-sm text-[#111727] font-semibold">Bank</div>
+              <div className="mb-1 text-[#111727] font-semibold text-base lg:text-xl xl:text-[22px]">
+                Bank
+              </div>
               <div className="text-sm text-[#111727]">
                 NL65 BUNQ 2064 2611 33
               </div>
@@ -314,7 +316,7 @@ const FooterSection = ({ isShow }) => {
         </div>
         <div className="copyright-sect xs:flex-col-reverse flex justify-center items-center sm:gap-[30px] xs:gap-[30px] gap-[100px] py-[30px] px-[30px]">
           <div className="text-[14px] vietnam text-[#111727s]">
-            Copyright © 2024 Hout Totaal
+            Copyright © {new Date().getFullYear()} Hout Totaal
           </div>
           <img src={footerLogo} className="w-[160px] h-[60px] " />
         </div>

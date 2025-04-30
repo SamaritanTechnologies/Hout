@@ -74,22 +74,40 @@ export const UpdateProduct = () => {
         setProduct(res);
         setLengths(res.lengths || [{ ...productItem }]);
 
-        // Initialize images with existing images
         const newImages = res.images?.map((image) => ({
-          id: image.id, // Include the ID for existing images
-          file: image.image, // Use the image URL
-          preview: image.image, // Use the image URL for preview
+          id: image.id,
+          file: image.image,
+          preview: image.image,
         }));
 
         setImages(newImages || []);
 
-        // Initialize related products
         const relatedProductsArray = res.related_products || [];
         const formattedRelatedProducts = {
-          product1: relatedProductsArray[0] ? { value: relatedProductsArray[0]?.id, label: relatedProductsArray[0]?.name_en } : null,
-          product2: relatedProductsArray[1] ? { value: relatedProductsArray[1]?.id, label: relatedProductsArray[1]?.name_en } : null,
-          product3: relatedProductsArray[2] ? { value: relatedProductsArray[2]?.id, label: relatedProductsArray[2]?.name_en } : null,
-          product4: relatedProductsArray[3] ? { value: relatedProductsArray[3]?.id, label: relatedProductsArray[3]?.name_en } : null,
+          product1: relatedProductsArray[0]
+            ? {
+                value: relatedProductsArray[0]?.id,
+                label: relatedProductsArray[0]?.name_en,
+              }
+            : null,
+          product2: relatedProductsArray[1]
+            ? {
+                value: relatedProductsArray[1]?.id,
+                label: relatedProductsArray[1]?.name_en,
+              }
+            : null,
+          product3: relatedProductsArray[2]
+            ? {
+                value: relatedProductsArray[2]?.id,
+                label: relatedProductsArray[2]?.name_en,
+              }
+            : null,
+          product4: relatedProductsArray[3]
+            ? {
+                value: relatedProductsArray[3]?.id,
+                label: relatedProductsArray[3]?.name_en,
+              }
+            : null,
         };
 
         setRelatedProducts(formattedRelatedProducts);
@@ -122,17 +140,16 @@ export const UpdateProduct = () => {
 
     categories?.forEach((category) => {
       const categoryName = category.name;
-      const productCategoryIds = product[categoryName] || [];
+      const productCategoryIds = Array.isArray(product[categoryName])
+        ? product[categoryName]
+        : [];
 
-      // Filter choices in the category by matching IDs in the product data
       const matchingChoices = category?.choices?.filter((choice) =>
-        productCategoryIds?.includes(choice.id)
+        productCategoryIds.includes(choice.id)
       );
 
       result[categoryName] = matchingChoices;
     });
-
-    return result;
   };
 
   const handleAddRow = () => {

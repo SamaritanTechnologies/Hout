@@ -8,7 +8,7 @@ import { deleteCartItem, getCart } from "../../redux/actions/orderActions";
 import { toast } from "react-toastify";
 import { axiosWithCredentials } from "../../providers";
 import { getLoggedInUser } from "../../redux";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCartItems } from "../../redux/slices/cartSlice";
 import { useNavigate } from "react-router-dom";
 import { setCartSummaryData } from "../../redux/slices/totalSummarySlice";
@@ -20,6 +20,9 @@ const ShoppingCart = ({
   delivery = 0,
   handleDivClick,
 }) => {
+  const authState = useSelector((state) => state.auth);
+  const isAuthenticated = authState.isLoggedIn;
+  const [localCart, setLocalCart] = useState([]);
   const [couponCode, setCouponCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [couponData, setCouponData] = useState(null);
@@ -33,6 +36,21 @@ const ShoppingCart = ({
   useEffect(() => {
     setCartItem(cartData?.cart_items || []);
   }, [cartData]);
+
+  const loadLocalCart = () => {
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    setLocalCart(storedCart);
+  };
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      loadLocalCart();
+      window.addEventListener("localCartUpdated", loadLocalCart);
+      return () => {
+        window.removeEventListener("localCartUpdated", loadLocalCart);
+      };
+    }
+  }, [dispatch, isAuthenticated]);
 
   const updateQuantity = async ({ id, productId, price, newQuantity }) => {
     try {
@@ -214,10 +232,329 @@ const ShoppingCart = ({
     setError(null);
   };
 
+  const handleLocalIncrement = (id) => {
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const updatedCart = storedCart.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          quantity: (item.quantity || 0) + 1,
+        };
+      }
+      return item;
+    });
+
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    window.dispatchEvent(new Event("localCartUpdated"));
+  };
+
+  const handleLocalDecrement = (id) => {
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const updatedCart = storedCart.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          quantity: (item.quantity || 0) - 1,
+        };
+      }
+      return item;
+    });
+
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    window.dispatchEvent(new Event("localCartUpdated"));
+  };
+
+  const handleLocalRemove = (id) => {
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const updatedCart = storedCart.filter((item) => item.id !== id);
+
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    window.dispatchEvent(new Event("localCartUpdated"));
+  };
+
+  const cartTotal = localCart?.reduce((acc, item) => {
+    const price = Number(item?.lengths?.[0]?.discounted_price_ex_vat || 0);
+    const quantity = Number(item?.quantity || 0);
+    return acc + price * quantity;
+  }, 0);
+
   return (
     <>
       <section className="w-full flex xl:gap-[40px] lg:gap-[30px] md:gap-[20px] gap-[10px] justify-between xl:px-[135px] lg:px-[80px] px-[20px]  xl:pb-[100px] lg:pb-[70px] md:pb-[80px] pb-[70px] md:flex-col sm:flex-col xs:flex-col">
-        {cartItem?.length > 0 ? (
+        {isAuthenticated ? (
+          cartItem?.length > 0 ? (
+            <>
+              <section className="flex-1">
+                <div className="overflow-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b-[1px] border-[#979797]">
+                        <th className="text-left xl:text-18 lg:text-16 text-14 xl:pb-[24px] lg:pb-[18px] pb-[10px]">
+                          Product
+                        </th>
+                        <th className="text-left xl:text-18 lg:text-16 text-14 px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
+                          Quantity
+                        </th>
+                        <th className="text-left xl:text-18 lg:text-16 text-14 px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
+                          Price
+                        </th>
+                        <th className="text-left xl:text-18 lg:text-16 text-14 px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
+                          Subtotal
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {cartItem?.map((item) => {
+                        return (
+                          <tr key={item.id}>
+                            <td className="xl:pb-[24px] lg:pb-[18px] pb-[10px]">
+                              <section className="flex items-center gap-x-2 pt-5 xs:min-w-[300px]">
+                                <a
+                                  href="#"
+                                  className="shrink-0"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    handleRemove(item?.id);
+                                  }}
+                                >
+                                  <img src={cross} alt="remove" />
+                                </a>
+                                <div>
+                                  <img
+                                    onClick={() =>
+                                      navigate(
+                                        `/product-detail/${item?.product_length?.product.id}`
+                                      )
+                                    }
+                                    src={item?.product_length?.product.image}
+                                    className="cursor-pointer xl:w-[80px] xl:h-[96px] lg:w-[70px] lg:h-[80px] min-w-[60px] min-h-[60px] xs:w-[60px] xs:h-[60px]"
+                                    alt={item.name}
+                                  />
+                                </div>
+                                <div className="flex flex-col xl:min-w-[220px]">
+                                  <div
+                                    className="cursor-pointer xl:text-18 lg:text-16 text-14"
+                                    onClick={() =>
+                                      navigate(
+                                        `/product-detail/${item?.product_length?.product.id}`
+                                      )
+                                    }
+                                  >
+                                    {item?.product_length?.product.name_en}
+                                  </div>
+                                  <div className="flex gap-[15px] items-center">
+                                    <div>
+                                      <div className="text-12 text-[#24242480] font-medium">
+                                        THICKNESS
+                                      </div>
+                                      <div className="xl:text-14 text-[13px]">
+                                        {
+                                          item?.product_length?.product
+                                            .thickness
+                                        }{" "}
+                                        cm
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="text-12 text-[#24242480] font-medium">
+                                        WIDTH
+                                      </div>
+                                      <div className="xl:text-14 text-[13px]">
+                                        {item?.product_length?.product.width} cm
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="text-12 text-[#24242480] font-medium">
+                                        LENGTH
+                                      </div>
+                                      <div className="xl:text-14 text-[13px]">
+                                        {item?.product_length?.product.length}{" "}
+                                        cm
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </section>
+                            </td>
+                            <td className="px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
+                              <div className="flex justify-between border items-center px-[10px] py-[6px] rounded-md xs:min-w-[80px]">
+                                <div>
+                                  <a
+                                    href="#"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      handleDecrement(item?.id);
+                                    }}
+                                  >
+                                    <img src={minus} alt="decrement" />
+                                  </a>
+                                </div>
+                                <h6>{item?.quantity}</h6>
+                                <div>
+                                  <a
+                                    href="#"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      handleIncrement(item?.id);
+                                    }}
+                                  >
+                                    <img src={plus} alt="increment" />
+                                  </a>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
+                              €{item?.product_length?.discounted_price_ex_vat}
+                            </td>
+                            <td className="px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
+                              €{item?.product_price}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+
+                <section className="pt-[30px]">
+                  <div>
+                    <h6 className="xl:text-16 lg:text-14 text-[13px]">
+                      Have a coupon?
+                    </h6>
+                  </div>
+                  <div className="pt-2">
+                    <p className="xl:text-16 lg:text-14 text-[13px] text-[#6C7275]">
+                      Add your code for an instant cart discount
+                    </p>
+                  </div>
+                  {couponData ? (
+                    <div className="flex items-center justify-between bg-green-50 p-3 rounded-md mt-3">
+                      <div className="flex items-center">
+                        <span className="text-green-700 font-medium">
+                          {couponData.code} applied ({couponData.discount_value}
+                          {couponData.discount_type === "percentage"
+                            ? "%"
+                            : "€"}{" "}
+                          off)
+                        </span>
+                      </div>
+                      <button
+                        onClick={handleRemoveCoupon}
+                        className="cursor-pointer p-4 bg-[#FBC700] rounded-md rounded-l-none hover:bg-[#e6b800] transition-colors"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex border border-[#6C727580] justify-between items-center rounded-[10px] flex-1 xl:w-[442px] w-[100%] pl-3 mt-3">
+                      <div className="flex gap-x-2 xl:py-[14px] lg:py-[12px] py-[8px] items-center">
+                        <img src={coupon} alt="Coupon icon" />
+                        <input
+                          type="text"
+                          className="outline-none border-none bg-transparent w-full text-[#6C7275] placeholder-[#6C7275]"
+                          placeholder="Enter coupon code"
+                          value={couponCode}
+                          onChange={(e) => setCouponCode(e.target.value)}
+                        />
+                      </div>
+                      <button
+                        className="cursor-pointer p-4 bg-[#FBC700] rounded-md rounded-l-none hover:bg-[#e6b800] transition-colors"
+                        onClick={handleApplyCoupon}
+                        disabled={isLoading}
+                      >
+                        {isLoading ? "Applying..." : "Apply"}
+                      </button>
+                    </div>
+                  )}
+                  {error && !couponData && (
+                    <div className="text-rose-500 mt-2">{error}</div>
+                  )}
+                  {couponData && !isMinimumOrderMet && (
+                    <div className="text-amber-600 mt-2">
+                      Add €
+                      {(couponData.minimum_order_amount - subtotal).toFixed(2)}
+                      more to your cart to apply this coupon
+                    </div>
+                  )}
+                </section>
+              </section>
+
+              {/* Right side of grid  */}
+              <section className="xl:w-[38.2%] lg:w-[38.2%] bg-[#F8F8F8] xl:px-[32px] lg:px-[25px] md:px-[20px] px-[12px] xl:pt-[44px] lg:pt-[30px] pt-[15px] rounded-lg">
+                <section>
+                  <section className="flex justify-between">
+                    <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
+                      Subtotal excl VAT
+                    </div>
+                    <div>€{Number(totalPrice || 0).toFixed(2)}</div>
+                  </section>
+
+                  <section className="flex justify-between pt-[25px]">
+                    <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
+                      Delivery Fee
+                    </div>
+                    <div>€{Number(delivery || 0).toFixed(2)}</div>
+                  </section>
+                  <section className="flex justify-between pt-[25px] border-b border-[#D9D9D9] pb-3">
+                    <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
+                      Tax
+                    </div>
+                    <div>{Number(taxData || 0).toFixed(2)} %</div>
+                  </section>
+                  {couponData && isMinimumOrderMet && discount > 0 && (
+                    <section className="flex justify-between pt-[25px]">
+                      <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
+                        You Saved
+                      </div>
+                      <div className="text-green-600">
+                        €{discount.toFixed(2)}
+                      </div>
+                    </section>
+                  )}
+                  <section className="flex justify-between pt-[25px] pb-5">
+                    <div className="xl:text-16 lg:text-15 md:text-14 text-[13px] font-medium">
+                      Total
+                    </div>
+                    <div className="text-customYellow font-medium xl:text-18 lg:text-16 text-14">
+                      €{total?.toFixed(2)}
+                    </div>
+                  </section>
+                </section>
+
+                <div className="xl:py-[30px] py-[15px] flex justify-center">
+                  <button
+                    onClick={() => handleDivClick("secondTab")}
+                    className="xl:w-[93.5%] lg:w-[93.5%] w-[100%] bg-[#FBC700] text-white py-2 rounded-lg"
+                  >
+                    Checkout
+                  </button>
+                </div>
+              </section>
+            </>
+          ) : (
+            <section className="w-full flex flex-col items-center justify-center py-20">
+              <div className="text-center">
+                <h3 className="xl:text-24 lg:text-22 text-20 font-medium mb-4">
+                  Your cart is empty
+                </h3>
+                <p className="text-[#6C7275] xl:text-16 lg:text-14 text-13 mb-6">
+                  Looks like you haven't added any items to your cart yet
+                </p>
+                <button
+                  className="bg-[#FBC700] text-white py-2 px-6 rounded-lg"
+                  onClick={() => {
+                    navigate("/shop-page");
+                  }}
+                >
+                  Continue Shopping
+                </button>
+              </div>
+            </section>
+          )
+        ) : localCart?.length > 0 ? (
           <>
             <section className="flex-1">
               <div className="overflow-auto">
@@ -239,7 +576,7 @@ const ShoppingCart = ({
                     </tr>
                   </thead>
                   <tbody>
-                    {cartItem?.map((item) => {
+                    {localCart?.map((item) => {
                       return (
                         <tr key={item.id}>
                           <td className="xl:pb-[24px] lg:pb-[18px] pb-[10px]">
@@ -249,7 +586,7 @@ const ShoppingCart = ({
                                 className="shrink-0"
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  handleRemove(item?.id);
+                                  handleLocalRemove(item?.id);
                                 }}
                               >
                                 <img src={cross} alt="remove" />
@@ -258,10 +595,10 @@ const ShoppingCart = ({
                                 <img
                                   onClick={() =>
                                     navigate(
-                                      `/product-detail/${item?.product_length?.product.id}`
+                                      `/product-detail/${item?.product.id}`
                                     )
                                   }
-                                  src={item?.product_length?.product.image}
+                                  src={item?.images[0]?.image}
                                   className="cursor-pointer xl:w-[80px] xl:h-[96px] lg:w-[70px] lg:h-[80px] min-w-[60px] min-h-[60px] xs:w-[60px] xs:h-[60px]"
                                   alt={item.name}
                                 />
@@ -271,11 +608,11 @@ const ShoppingCart = ({
                                   className="cursor-pointer xl:text-18 lg:text-16 text-14"
                                   onClick={() =>
                                     navigate(
-                                      `/product-detail/${item?.product_length?.product.id}`
+                                      `/product-detail/${item?.product.id}`
                                     )
                                   }
                                 >
-                                  {item?.product_length?.product.name_en}
+                                  {item?.name_en}
                                 </div>
                                 <div className="flex gap-[15px] items-center">
                                   <div>
@@ -283,8 +620,7 @@ const ShoppingCart = ({
                                       THICKNESS
                                     </div>
                                     <div className="xl:text-14 text-[13px]">
-                                      {item?.product_length?.product.thickness}{" "}
-                                      mm
+                                      {item?.thickness} cm
                                     </div>
                                   </div>
                                   <div>
@@ -292,7 +628,7 @@ const ShoppingCart = ({
                                       WIDTH
                                     </div>
                                     <div className="xl:text-14 text-[13px]">
-                                      {item?.product_length?.product.width} mm
+                                      {item?.width} cm
                                     </div>
                                   </div>
                                   <div>
@@ -300,7 +636,7 @@ const ShoppingCart = ({
                                       LENGTH
                                     </div>
                                     <div className="xl:text-14 text-[13px]">
-                                      {item?.product_length?.product.length} mm
+                                      {item?.product_length?.product.length} cm
                                     </div>
                                   </div>
                                 </div>
@@ -314,7 +650,7 @@ const ShoppingCart = ({
                                   href="#"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    handleDecrement(item?.id);
+                                    handleLocalDecrement(item?.id);
                                   }}
                                 >
                                   <img src={minus} alt="decrement" />
@@ -326,7 +662,7 @@ const ShoppingCart = ({
                                   href="#"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    handleIncrement(item?.id);
+                                    handleLocalIncrement(item?.id);
                                   }}
                                 >
                                   <img src={plus} alt="increment" />
@@ -335,10 +671,16 @@ const ShoppingCart = ({
                             </div>
                           </td>
                           <td className="px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
-                            €{item?.product_length?.discounted_price_ex_vat}
+                            €{item?.lengths[0]?.discounted_price_ex_vat}
                           </td>
                           <td className="px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
-                            €{item?.product_price}
+                            €
+                            {(
+                              (item?.quantity || 1) *
+                              parseFloat(
+                                item?.lengths?.[0]?.discounted_price_ex_vat || 0
+                              )
+                            ).toFixed(2)}
                           </td>
                         </tr>
                       );
@@ -417,7 +759,7 @@ const ShoppingCart = ({
                   <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
                     Subtotal excl VAT
                   </div>
-                  <div>€{Number(totalPrice || 0).toFixed(2)}</div>
+                  <div>€{Number(cartTotal || 0).toFixed(2)}</div>
                 </section>
 
                 <section className="flex justify-between pt-[25px]">
@@ -445,7 +787,7 @@ const ShoppingCart = ({
                     Total
                   </div>
                   <div className="text-customYellow font-medium xl:text-18 lg:text-16 text-14">
-                    €{total?.toFixed(2)}
+                    €{cartTotal?.toFixed(2)}
                   </div>
                 </section>
               </section>
