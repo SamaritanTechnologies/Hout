@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import ContactInputField from "../Common/ContactInputField";
 import { toast } from "react-toastify";
 import { submitContactForm } from "../../redux/actions/userActions";
+import { useTranslation } from "react-i18next";
 
 export const ContactusSection = () => {
+  const { i18n } = useTranslation();
+  const currentLang = i18n.language;
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     first_name: "",

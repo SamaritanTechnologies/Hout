@@ -88,7 +88,6 @@ const HeaderSection = () => {
   const handleAddtoCartItems = async (payload) => {
     console.log("payload", payload);
     const res = await axiosWithCredentials.post(`/add-to-cart/`, payload);
-
     if (res) {
       localStorage.removeItem("cart");
     }

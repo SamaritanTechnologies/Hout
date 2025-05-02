@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import Button from "../Common/Button";
 import { useNavigate } from "react-router-dom";
 import { getHomepageImage } from "../../redux/actions/userActions";
-
+import { useTranslation } from "react-i18next";
 const HoutHandelSection = () => {
   const navigate = useNavigate("/shop-page");
   const [homepageImage, setHomepageImage] = useState(null);
   const [data, setData] = useState([]);
+  const { i18n } = useTranslation();
+  const currentLang = i18n.language;
 
   useEffect(() => {
     const fetchExistingImage = async () => {
@@ -32,15 +34,16 @@ const HoutHandelSection = () => {
     >
       <section className="flex-col text-center    ">
         <div className="text-[#fff] text-30 md:text-40 lg:text-50 xl:text-60">
-          {data?.heading_nl || "HoutHandel"}
+          {currentLang === "en" ? data?.heading_en : data?.heading_nl}
         </div>
         <div className="text-[#fff]  text-16 md:text-20 lg:text-28 xl:text-28  ">
-          {data?.text_nl ||
-            "Eiken - Thermisch gemodificeerd Fraké - Hardhout - Terrasplanken - Steigerhout - Suar"}
+          {currentLang === "en" ? data?.text_en : data?.text_nl}
         </div>
         <div className="flex justify-center pt-[50px] view-assortment-btn">
           <Button
-            btnText={data?.button_text_nl || "Bekijk assortiment"}
+            btnText={
+              currentLang === "en" ? data?.button_text_en : data?.button_text_nl
+            }
             paddingY="25px"
             paddingX="72px"
             fontbold
