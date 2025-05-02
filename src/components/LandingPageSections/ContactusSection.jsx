@@ -5,7 +5,7 @@ import { submitContactForm } from "../../redux/actions/userActions";
 import { useTranslation } from "react-i18next";
 
 export const ContactusSection = () => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -75,11 +75,10 @@ export const ContactusSection = () => {
     >
       <div className="flex flex-col gap-7 text-center">
         <h2 className="text-2xl lg:text-4xl xl:text-5xl font-bold text-white">
-          Contact Us
+          {t("c_contact_us_heading")}
         </h2>
         <p className="text-base xl:text-lg text-[#fff]">
-          We invite you to contact us with any questions or concerns. Our
-          dedicated team is ready to guide and support you.
+          {t("c_contact_us_subheading")}
         </p>
       </div>
       <form
@@ -93,7 +92,7 @@ export const ContactusSection = () => {
             type="text"
             required={true}
             color="#fff"
-            placeholder="First Name*"
+            placeholder={t("c_first_name_placeholder")}
             onChange={(e) =>
               setFormData({ ...formData, first_name: e.target.value })
             }
@@ -103,7 +102,7 @@ export const ContactusSection = () => {
             value={formData.last_name}
             color="#fff"
             type="text"
-            placeholder="Last Name"
+            placeholder={t("c_last_name_placeholder")}
             onChange={(e) =>
               setFormData({ ...formData, last_name: e.target.value })
             }
@@ -114,7 +113,7 @@ export const ContactusSection = () => {
             color="#fff"
             type="email"
             required={true}
-            placeholder="E-mail Address*"
+            placeholder={t("c_email_placeholder")}
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
             }
@@ -126,7 +125,7 @@ export const ContactusSection = () => {
             value={formData.company}
             color="#fff"
             type="text"
-            placeholder="Company"
+            placeholder={t("c_company_placeholder")}
             onChange={(e) =>
               setFormData({ ...formData, company: e.target.value })
             }
@@ -136,7 +135,7 @@ export const ContactusSection = () => {
             value={formData.phone_number}
             color="#fff"
             type="tel"
-            placeholder="Phone Number"
+            placeholder={t("c_phone_number_placeholder")}
             onChange={(e) =>
               setFormData({ ...formData, phone_number: e.target.value })
             }
@@ -148,7 +147,7 @@ export const ContactusSection = () => {
           color="#fff"
           type="text"
           required={true}
-          placeholder="Message*"
+          placeholder={t("c_message_placeholder")}
           onChange={(e) =>
             setFormData({ ...formData, message: e.target.value })
           }
@@ -162,7 +161,7 @@ export const ContactusSection = () => {
               loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
-            {loading ? "Sending..." : "Send"}
+            {loading ? t("c_sending_button") : t("c_send_button")}
           </button>
         </div>
       </form>

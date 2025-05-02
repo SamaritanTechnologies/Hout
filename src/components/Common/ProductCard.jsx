@@ -9,8 +9,11 @@ import { deleteWishList } from "../../redux/actions/productActions";
 import { useState } from "react";
 import { setCartItems } from "../../redux/slices/cartSlice";
 import { getCart } from "../../redux/actions/orderActions";
+import { useTranslation } from "react-i18next";
 
 const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language;
   const authState = useSelector((state) => state.auth);
   const isAuthenticated = authState.isLoggedIn;
   const navigate = useNavigate();
@@ -135,10 +138,12 @@ const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
           onClick={() => navigate(`/product-detail/${product.id}`)}
           className="hover:underline cursor-pointer font-semibold text-[#111727] text-2xl overflow-hidden whitespace-nowrap text-ellipsis"
         >
-          {product.name_en}
+          {currentLang === "en" ? product.name_en : product.name_nl}
         </h3>
         <p className="font-medium text-[#898989] overflow-hidden whitespace-nowrap text-ellipsis">
-          {product.description_en}
+          {currentLang === "en"
+            ? product.description_en
+            : product.description_nl}
         </p>
         <div className="flex gap-4">
           <span className="text-xl font-semibold text-[#111727]">

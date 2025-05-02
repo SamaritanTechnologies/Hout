@@ -11,8 +11,12 @@ import {
 } from "@mui/material";
 import ReactSlider from "react-slider";
 import { PRODUCT_MAX_PRICE, PRODUCT_MIN_PRICE } from "../../utils/const";
+import { useTranslation } from "react-i18next";
+import { current } from "@reduxjs/toolkit";
 
 const Filters = ({ categories, onFilterChange, initialFilters }) => {
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language;
   const [expanded, setExpanded] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState(
     initialFilters.selectedFilters
@@ -89,7 +93,11 @@ const Filters = ({ categories, onFilterChange, initialFilters }) => {
             <FormGroup>
               {category?.choices
                 ?.slice()
-                .sort((a, b) => a.name_en.localeCompare(b.name_en))
+                .sort((a, b) =>
+                  (currentLang === "en" ? a.name_en : a.name_nl).localeCompare(
+                    currentLang === "en" ? b.name_en : b.name_nl
+                  )
+                )
                 .map((choice) => (
                   <FormControlLabel
                     key={choice.id}
@@ -105,7 +113,9 @@ const Filters = ({ categories, onFilterChange, initialFilters }) => {
                         }
                       />
                     }
-                    label={choice.name_en}
+                    label={
+                      currentLang === "en" ? choice.name_en : choice.name_nl
+                    }
                   />
                 ))}
             </FormGroup>

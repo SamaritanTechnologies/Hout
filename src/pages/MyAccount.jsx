@@ -13,8 +13,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { getLoggedInUser, logoutUser } from "../redux";
 import { BASE_URL } from "../providers/AxiosInstance";
 import { setCartItems } from "../redux/slices/cartSlice";
+import { useTranslation } from "react-i18next";
 
 export const MyAccount = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const { state } = location;
@@ -38,14 +40,18 @@ export const MyAccount = () => {
   );
 
   const data = [
-    { id: 1, name: "Account", component: <Account userData={userData} /> },
+    {
+      id: 1,
+      name: t("m_account_tab"),
+      component: <Account userData={userData} />,
+    },
     {
       id: 2,
-      name: "Address",
+      name: t("m_address_tab"),
       component: <AddressCard setSelectedComponent={setSelectedComponent} />,
     },
-    { id: 3, name: "Orders", component: <OrderHistory /> },
-    { id: 4, name: "Wishlist", component: <Wishlist /> },
+    { id: 3, name: t("m_orders_tab"), component: <OrderHistory /> },
+    { id: 4, name: t("m_wishlist_tab"), component: <Wishlist /> },
     { id: 5, name: "LogOut", component: null },
   ];
 
@@ -93,7 +99,7 @@ export const MyAccount = () => {
     <>
       <section className="max-w-[1120px] mx-auto my-8 lg:my-16 xl:my-20 px-4">
         <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center text-[#000000] font-semibold mb-8 md:mb-12 lg:mb-16 xl:mb-20">
-          My Account
+          {t("m_myaccount")}
         </h1>
         <div className="flex flex-col lg:flex-row xl:flex-row items-start mb-32 justify-center">
           <div className="px-4 py-10 bg-[#F3F5F7] w-full max-w-[500px] lg:max-w-[262px] xl:max-w-[262px] flex flex-col gap-10 items-center rounded-lg">

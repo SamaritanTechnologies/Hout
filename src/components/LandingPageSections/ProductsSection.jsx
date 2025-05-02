@@ -3,8 +3,10 @@ import Button from "../Common/Button";
 import { useNavigate } from "react-router-dom";
 import { getFeaturedProducts } from "../../redux/actions/userActions";
 import ProductCard from "../Common/ProductCard";
+import { useTranslation } from "react-i18next";
 
 const ProductsSection = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [featureProducts, setFeatureProducts] = useState([]);
 
@@ -34,7 +36,7 @@ const ProductsSection = () => {
         id="products-section"
       >
         <h2 className="text-2xl lg:text-4xl xl:text-5xl font-bold text-center text-[#111727]">
-          Products
+          {t("p_products_heading")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {featureProducts?.map((product) => {

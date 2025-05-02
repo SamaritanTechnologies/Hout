@@ -9,8 +9,10 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { getCart } from "../redux/actions/orderActions";
 import { axiosWithCredentials } from "../providers";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 export const AddToCart = () => {
+  const { t } = useTranslation();
   const authState = useSelector((state) => state.auth);
   const isAuthenticated = authState.isLoggedIn;
   const navigate = useNavigate();
@@ -76,7 +78,7 @@ export const AddToCart = () => {
       id: 1,
       image: check,
       name: "firstTab",
-      label: "Shopping cart",
+      label: t("c_tab_shopping_cart"),
       bgColor: "primary",
       textColor: "white",
     },
@@ -84,7 +86,7 @@ export const AddToCart = () => {
       id: 2,
       image: check,
       name: "secondTab",
-      label: "Checkout details",
+      label: t("c_tab_checkout_details"),
       bgColor: "primary",
       textColor: "secondary",
     },
@@ -92,7 +94,7 @@ export const AddToCart = () => {
       id: 3,
       image: check,
       name: "thirdTab",
-      label: "Order complete",
+      label: t("c_tab_order_complete"),
       bgColor: "primary",
       textColor: "secondary",
     },
@@ -228,7 +230,7 @@ export const AddToCart = () => {
       </section>
       <section className="xl:pt-[20px] lg:pt-[20px] md:pt-[20px] pt-[15px] flex justify-center">
         <div className="font-medium xl:text-54 lg:text-50 md:text-46 sm:text-44 text-40">
-          Cart
+          {t("c_cart_heading")}
         </div>
       </section>
 
@@ -303,14 +305,16 @@ export const AddToCart = () => {
       {showLoginModal && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-md shadow-md text-center w-[300px]">
-            <h2 className="text-lg font-semibold mb-4">Login Required</h2>
-            <p className="mb-4">You need to sign in to proceed to checkout.</p>
+            <h2 className="text-lg font-semibold mb-4">
+              {t("c_login_required_heading")}
+            </h2>
+            <p className="mb-4">{t("c_login_required_message")}</p>
             <div className="flex justify-center gap-4">
               <button
                 className="bg-gray-300 text-black py-2 px-4 rounded"
                 onClick={() => setShowLoginModal(false)}
               >
-                Cancel
+                {t("c_login_required_cancel_button")}
               </button>
               <button
                 className="bg-[#FBC700] text-[#161922] py-2 px-4 rounded"
@@ -319,7 +323,7 @@ export const AddToCart = () => {
                   navigate("/sign-in");
                 }}
               >
-                Sign In
+                {t("c_login_required_signin_button")}
               </button>
             </div>
           </div>

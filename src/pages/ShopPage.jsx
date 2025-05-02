@@ -20,19 +20,21 @@ import {
   PRODUCT_MIN_PRICE,
   PRODUCT_PAGE_SIZE,
 } from "../utils/const";
+import { useTranslation } from "react-i18next";
 
 export const ShopPage = () => {
+  const { t } = useTranslation();
   const [filterKey, setFilterKey] = useState(0);
   const { productCategories } = useSelector((state) => state.admin);
 
   const categories = [
-    "Group",
-    "Type",
-    "Material",
-    "Profile",
-    "Durability",
-    "Quality",
-    "Application",
+    t("s_group"),
+    t("s_type"),
+    t("s_material"),
+    t("s_profile"),
+    t("s_durability"),
+    t("s_quality"),
+    t("s_application"),
   ];
   const [categoryData, setCategoryData] = useState({});
   const [includeVAT, setIncludeVAT] = useState(false);
@@ -47,7 +49,16 @@ export const ShopPage = () => {
   const [totalItems, setTotalItems] = useState(0);
 
   useEffect(() => {
-    const initialData = categories.reduce((acc, category) => {
+    const translatedCategories = [
+      t("s_group"),
+      t("s_type"),
+      t("s_material"),
+      t("s_profile"),
+      t("s_durability"),
+      t("s_quality"),
+      t("s_application"),
+    ];
+    const initialData = translatedCategories.reduce((acc, category) => {
       const foundCategory = productCategories?.find(
         (c) => c.name?.toLowerCase() === category.toLowerCase()
       );
@@ -148,28 +159,29 @@ export const ShopPage = () => {
             onClick={handleResetFilters}
             className="p-2 rounded-lg text-white bg-[#FBD232]"
           >
-            Reset Filter
+            {t("s_reset_filter_button")}
           </button>
           <div className="pops md:text-14 sm:text-14 xs:text-12">
-            Showing {currentPage * pageSize + 1}-
-            {Math.min((currentPage + 1) * pageSize, totalItems)} of {totalItems}{" "}
-            results
+            {t("s_showing_results_text", {
+              start: currentPage * pageSize + 1,
+              end: Math.min((currentPage + 1) * pageSize, totalItems),
+              total: totalItems,
+            })}
           </div>
         </div>
 
         <div className="sm:pt-4 xs:pt-4">
           <div className="flex gap-x-6 md:gap-x-5 items-center font-footer1">
             <div className="pops md:text-14 sm:text-14 xs:text-12">
-              Show Prices
+              {t("s_show_prices")}
             </div>
-            {filters.includeVAT == false && (
-              <div className="pops md:text-14 sm:text-14 xs:text-12">
-                Excl. VAT
-              </div>
-            )}
 
             <div className="pops md:text-14 sm:text-14 xs:text-12">
-              Incl. VAT
+              {t("s_excl_vat")}
+            </div>
+
+            <div className="pops md:text-14 sm:text-14 xs:text-12">
+              {t("s_incl_vat")}
             </div>
             <div className="recPasswrd">
               <Switch
