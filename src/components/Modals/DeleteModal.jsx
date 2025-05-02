@@ -4,14 +4,16 @@ import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 // import warningImg from "../../assets/warning.svg";
 import Button from "../Common/Button";
+import { useTranslation } from "react-i18next";
 
 const WarningModal = ({
   isOpen,
   closeModal,
   handleDelete,
-  actionText = "Delete",
-  description = "Are you sure you want to delete?",
+  actionText = t("d_action_text"),
+  description = t("d_description_text"),
 }) => {
+  const { t } = useTranslation();
   const cancelButtonRef = useRef(null);
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -48,7 +50,7 @@ const WarningModal = ({
                     />
                   </div>
 
-                  <h1 className="text-3xl mx-auto">Warning!</h1>
+                  <h1 className="text-3xl mx-auto">{t("d_warning")}</h1>
                   <p className="text-md mx-auto my-4">{description}</p>
                 </div>
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
@@ -70,7 +72,7 @@ const WarningModal = ({
                     }}
                     ref={cancelButtonRef}
                   >
-                    Cancel
+                    {t("d_action_cancel")}
                   </button>
                 </div>
               </Dialog.Panel>

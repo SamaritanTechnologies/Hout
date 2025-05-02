@@ -13,8 +13,20 @@ import { setCartItems } from "../../redux/slices/cartSlice";
 
 import countryflag1 from "../../assets/DashboardImages/flag-netherlands.svg";
 import countryflag2 from "../../assets/DashboardImages/USA-flag.svg";
-import { axiosWithCredentials } from "../../providers";
+import {
+  axiosWithCredentials,
+  getDefaultLanguage,
+  setDefaultLanguage,
+} from "../../providers";
+import { useTranslation } from "react-i18next";
+
+const languages = [
+  { code: "en", name: "English", flag: countryflag2 },
+  { code: "nl", name: "Dutch", flag: countryflag1 },
+];
+
 const HeaderSection = () => {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const authState = useSelector((state) => state.auth);
   const isAuthenticated = authState.isLoggedIn;
@@ -23,16 +35,20 @@ const HeaderSection = () => {
   const [localCart, setLocalCart] = useState([]);
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState({
-    code: "nl",
-    name: "Dutch",
-    flag: countryflag1,
-  });
+
   const dropdownRef = useRef(null);
-  const languages = [
-    { code: "uk", name: "English", flag: countryflag2 },
-    { code: "nl", name: "Dutch", flag: countryflag1 },
-  ];
+  const defaultCode = getDefaultLanguage();
+  const [selectedLanguage, setSelectedLanguage] = useState(
+    languages?.find((lang) => lang.code === defaultCode) || languages[0]
+  );
+
+  useEffect(() => {
+    console.log("=-= selectedLanguage", selectedLanguage);
+  }, [selectedLanguage]);
+  useEffect(() => {
+    console.log("=-= defaultCode", defaultCode);
+  }, [defaultCode]);
+
   const cartItems = useSelector((state) => state.cart?.data);
   const totalQuantity = cartItems?.length || 0;
   const cartQuantity = localCart?.length || 0;
@@ -72,7 +88,6 @@ const HeaderSection = () => {
   const handleAddtoCartItems = async (payload) => {
     console.log("payload", payload);
     const res = await axiosWithCredentials.post(`/add-to-cart/`, payload);
-
     if (res) {
       localStorage.removeItem("cart");
     }
@@ -120,6 +135,14 @@ const HeaderSection = () => {
   const handleLanguageSelect = (language) => {
     setSelectedLanguage(language);
     setIsOpen(false);
+
+    // change localization language
+    changeLanguage(language);
+  };
+
+  const changeLanguage = (language) => {
+    i18n.changeLanguage(language.code);
+    setDefaultLanguage(language.code);
   };
 
   const availableLanguages = languages.filter(
@@ -156,7 +179,7 @@ const HeaderSection = () => {
                 setIsActive(false);
               }}
             >
-              Dashboard
+              {t("dashboard")}
             </span>
           )}
 
@@ -172,7 +195,7 @@ const HeaderSection = () => {
               }, 100);
             }}
           >
-            Products
+            {t("products")}
           </span>
           <span
             className=" cursor-pointer ml-4"
@@ -186,7 +209,7 @@ const HeaderSection = () => {
               }, 100);
             }}
           >
-            Why Hout Totaal
+            {t("why_hout_total")}
           </span>
           <span
             className=" cursor-pointer ml-4"
@@ -200,7 +223,7 @@ const HeaderSection = () => {
               }, 100);
             }}
           >
-            Contact
+            {t("contact")}
           </span>
           <div
             className="cursor-pointer ml-4  xs:block sm:block md:block hidden"
@@ -209,7 +232,7 @@ const HeaderSection = () => {
               navigate("/shop-page");
             }}
           >
-            Shop
+            {t("shop")}
           </div>
         </div>
         <div className="header-logo flex flex-1 items-center justify-center w-full mt-2 lg:w-auto xl:w-auto pl-6 pr-6 md:pr-0">
@@ -235,7 +258,7 @@ const HeaderSection = () => {
                   navigate("/sign-in");
                 }}
               >
-                Login
+                {t("login")}
               </button>
             </div>
           )}
@@ -248,7 +271,7 @@ const HeaderSection = () => {
               navigate("/shop-page");
             }}
           >
-            Webshop
+            {t("webshop")}
           </div>
 
           {isAuthenticated ? (
@@ -322,7 +345,7 @@ const HeaderSection = () => {
 
             {isOpen && (
               <div className="absolute top-full right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 py-1 w-28">
-                {availableLanguages.map((language) => (
+                {availableLanguages?.map((language) => (
                   <button
                     key={language.code}
                     className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 transition-colors"

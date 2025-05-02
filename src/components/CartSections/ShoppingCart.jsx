@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCartItems } from "../../redux/slices/cartSlice";
 import { useNavigate } from "react-router-dom";
 import { setCartSummaryData } from "../../redux/slices/totalSummarySlice";
+import { useTranslation } from "react-i18next";
 
 const ShoppingCart = ({
   cartData,
@@ -20,6 +21,8 @@ const ShoppingCart = ({
   delivery = 0,
   handleDivClick,
 }) => {
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language;
   const authState = useSelector((state) => state.auth);
   const isAuthenticated = authState.isLoggedIn;
   const [localCart, setLocalCart] = useState([]);
@@ -293,16 +296,16 @@ const ShoppingCart = ({
                     <thead>
                       <tr className="border-b-[1px] border-[#979797]">
                         <th className="text-left xl:text-18 lg:text-16 text-14 xl:pb-[24px] lg:pb-[18px] pb-[10px]">
-                          Product
+                          {t("s_table_header_product")}
                         </th>
                         <th className="text-left xl:text-18 lg:text-16 text-14 px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
-                          Quantity
+                          {t("s_table_header_quantity")}
                         </th>
                         <th className="text-left xl:text-18 lg:text-16 text-14 px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
-                          Price
+                          {t("s_table_header_price")}
                         </th>
                         <th className="text-left xl:text-18 lg:text-16 text-14 px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
-                          Subtotal
+                          {t("s_table_header_subtotal")}
                         </th>
                       </tr>
                     </thead>
@@ -343,24 +346,26 @@ const ShoppingCart = ({
                                       )
                                     }
                                   >
-                                    {item?.product_length?.product.name_en}
+                                    {currentLang === "en"
+                                      ? item?.product_length?.product.name_en
+                                      : item?.product_length?.product.name_nl}
                                   </div>
                                   <div className="flex gap-[15px] items-center">
                                     <div>
                                       <div className="text-12 text-[#24242480] font-medium">
-                                        THICKNESS
+                                        {t("s_thickness_label")}
                                       </div>
                                       <div className="xl:text-14 text-[13px]">
                                         {
                                           item?.product_length?.product
                                             .thickness
-                                        }{" "}
+                                        }
                                         cm
                                       </div>
                                     </div>
                                     <div>
                                       <div className="text-12 text-[#24242480] font-medium">
-                                        WIDTH
+                                        {t("s_width_label")}
                                       </div>
                                       <div className="xl:text-14 text-[13px]">
                                         {item?.product_length?.product.width} cm
@@ -368,7 +373,7 @@ const ShoppingCart = ({
                                     </div>
                                     <div>
                                       <div className="text-12 text-[#24242480] font-medium">
-                                        LENGTH
+                                        {t("s_length_label")}
                                       </div>
                                       <div className="xl:text-14 text-[13px]">
                                         {item?.product_length?.product.length}{" "}
@@ -422,30 +427,38 @@ const ShoppingCart = ({
                 <section className="pt-[30px]">
                   <div>
                     <h6 className="xl:text-16 lg:text-14 text-[13px]">
-                      Have a coupon?
+                      {t("s_have_coupon_text")}
                     </h6>
                   </div>
                   <div className="pt-2">
                     <p className="xl:text-16 lg:text-14 text-[13px] text-[#6C7275]">
-                      Add your code for an instant cart discount
+                      {t("s_add_code_text")}
                     </p>
                   </div>
                   {couponData ? (
                     <div className="flex items-center justify-between bg-green-50 p-3 rounded-md mt-3">
                       <div className="flex items-center">
                         <span className="text-green-700 font-medium">
-                          {couponData.code} applied ({couponData.discount_value}
+                          {/* {couponData.code} applied ({couponData.discount_value}
                           {couponData.discount_type === "percentage"
                             ? "%"
                             : "€"}{" "}
-                          off)
+                          off) */}
+                          {t("s_coupon_applied_text", {
+                            code: couponData.code,
+                            discount_value: couponData.discount_value,
+                            discount_type:
+                              couponData.discount_type === "percentage"
+                                ? "%"
+                                : "€",
+                          })}
                         </span>
                       </div>
                       <button
                         onClick={handleRemoveCoupon}
                         className="cursor-pointer p-4 bg-[#FBC700] rounded-md rounded-l-none hover:bg-[#e6b800] transition-colors"
                       >
-                        Remove
+                        {t("s_remove_button")}
                       </button>
                     </div>
                   ) : (
@@ -455,7 +468,7 @@ const ShoppingCart = ({
                         <input
                           type="text"
                           className="outline-none border-none bg-transparent w-full text-[#6C7275] placeholder-[#6C7275]"
-                          placeholder="Enter coupon code"
+                          placeholder={t("s_enter_coupon_placeholder")}
                           value={couponCode}
                           onChange={(e) => setCouponCode(e.target.value)}
                         />
@@ -465,7 +478,9 @@ const ShoppingCart = ({
                         onClick={handleApplyCoupon}
                         disabled={isLoading}
                       >
-                        {isLoading ? "Applying..." : "Apply"}
+                        {isLoading
+                          ? t("s_applying_button")
+                          : t("s_apply_button")}
                       </button>
                     </div>
                   )}
@@ -474,9 +489,11 @@ const ShoppingCart = ({
                   )}
                   {couponData && !isMinimumOrderMet && (
                     <div className="text-amber-600 mt-2">
-                      Add €
-                      {(couponData.minimum_order_amount - subtotal).toFixed(2)}
-                      more to your cart to apply this coupon
+                      {t("s_add_more_for_coupon", {
+                        amount: (
+                          couponData.minimum_order_amount - subtotal
+                        ).toFixed(2),
+                      })}
                     </div>
                   )}
                 </section>
@@ -487,27 +504,27 @@ const ShoppingCart = ({
                 <section>
                   <section className="flex justify-between">
                     <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
-                      Subtotal excl VAT
+                      {t("s_subtotal_excl_vat")}
                     </div>
                     <div>€{Number(totalPrice || 0).toFixed(2)}</div>
                   </section>
 
                   <section className="flex justify-between pt-[25px]">
                     <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
-                      Delivery Fee
+                      {t("s_delivery_fee")}
                     </div>
                     <div>€{Number(delivery || 0).toFixed(2)}</div>
                   </section>
                   <section className="flex justify-between pt-[25px] border-b border-[#D9D9D9] pb-3">
                     <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
-                      Tax
+                      {t("s_tax")}
                     </div>
                     <div>{Number(taxData || 0).toFixed(2)} %</div>
                   </section>
                   {couponData && isMinimumOrderMet && discount > 0 && (
                     <section className="flex justify-between pt-[25px]">
                       <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
-                        You Saved
+                        {t("s_you_saved")}
                       </div>
                       <div className="text-green-600">
                         €{discount.toFixed(2)}
@@ -516,7 +533,7 @@ const ShoppingCart = ({
                   )}
                   <section className="flex justify-between pt-[25px] pb-5">
                     <div className="xl:text-16 lg:text-15 md:text-14 text-[13px] font-medium">
-                      Total
+                      {t("s_total")}
                     </div>
                     <div className="text-customYellow font-medium xl:text-18 lg:text-16 text-14">
                       €{total?.toFixed(2)}
@@ -538,10 +555,10 @@ const ShoppingCart = ({
             <section className="w-full flex flex-col items-center justify-center py-20">
               <div className="text-center">
                 <h3 className="xl:text-24 lg:text-22 text-20 font-medium mb-4">
-                  Your cart is empty
+                  {t("s_cart_empty_heading")}
                 </h3>
                 <p className="text-[#6C7275] xl:text-16 lg:text-14 text-13 mb-6">
-                  Looks like you haven't added any items to your cart yet
+                  {t("s_cart_empty_subtext")}
                 </p>
                 <button
                   className="bg-[#FBC700] text-white py-2 px-6 rounded-lg"
@@ -549,7 +566,7 @@ const ShoppingCart = ({
                     navigate("/shop-page");
                   }}
                 >
-                  Continue Shopping
+                  {t("s_continue_shopping_button")}
                 </button>
               </div>
             </section>
@@ -562,16 +579,16 @@ const ShoppingCart = ({
                   <thead>
                     <tr className="border-b-[1px] border-[#979797]">
                       <th className="text-left xl:text-18 lg:text-16 text-14 xl:pb-[24px] lg:pb-[18px] pb-[10px]">
-                        Product
+                        {t("s_table_header_product")}
                       </th>
                       <th className="text-left xl:text-18 lg:text-16 text-14 px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
-                        Quantity
+                        {t("s_table_header_quantity")}
                       </th>
                       <th className="text-left xl:text-18 lg:text-16 text-14 px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
-                        Price
+                        {t("s_table_header_price")}
                       </th>
                       <th className="text-left xl:text-18 lg:text-16 text-14 px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
-                        Subtotal
+                        {t("s_table_header_subtotal")}
                       </th>
                     </tr>
                   </thead>
@@ -612,12 +629,14 @@ const ShoppingCart = ({
                                     )
                                   }
                                 >
-                                  {item?.name_en}
+                                  {currentLang == "en"
+                                    ? item?.name_en
+                                    : item?.name_nl}
                                 </div>
                                 <div className="flex gap-[15px] items-center">
                                   <div>
                                     <div className="text-12 text-[#24242480] font-medium">
-                                      THICKNESS
+                                      {t("s_thickness_label")}
                                     </div>
                                     <div className="xl:text-14 text-[13px]">
                                       {item?.thickness} cm
@@ -625,7 +644,7 @@ const ShoppingCart = ({
                                   </div>
                                   <div>
                                     <div className="text-12 text-[#24242480] font-medium">
-                                      WIDTH
+                                      {t("s_width_label")}
                                     </div>
                                     <div className="xl:text-14 text-[13px]">
                                       {item?.width} cm
@@ -633,7 +652,7 @@ const ShoppingCart = ({
                                   </div>
                                   <div>
                                     <div className="text-12 text-[#24242480] font-medium">
-                                      LENGTH
+                                      {t("s_length_label")}
                                     </div>
                                     <div className="xl:text-14 text-[13px]">
                                       {item?.product_length?.product.length} cm
@@ -689,7 +708,7 @@ const ShoppingCart = ({
                 </table>
               </div>
 
-              <section className="pt-[30px]">
+              {/* <section className="pt-[30px]">
                 <div>
                   <h6 className="xl:text-16 lg:text-14 text-[13px]">
                     Have a coupon?
@@ -749,7 +768,7 @@ const ShoppingCart = ({
                     more to your cart to apply this coupon
                   </div>
                 )}
-              </section>
+              </section> */}
             </section>
 
             {/* Right side of grid  */}
@@ -757,34 +776,34 @@ const ShoppingCart = ({
               <section>
                 <section className="flex justify-between">
                   <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
-                    Subtotal excl VAT
+                    {t("s_subtotal_excl_vat")}
                   </div>
                   <div>€{Number(cartTotal || 0).toFixed(2)}</div>
                 </section>
 
                 <section className="flex justify-between pt-[25px]">
                   <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
-                    Delivery Fee
+                    {t("s_delivery_fee")}
                   </div>
                   <div>€{Number(delivery || 0).toFixed(2)}</div>
                 </section>
                 <section className="flex justify-between pt-[25px] border-b border-[#D9D9D9] pb-3">
                   <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
-                    Tax
+                    {t("s_tax")}
                   </div>
                   <div>{Number(taxData || 0).toFixed(2)} %</div>
                 </section>
                 {couponData && isMinimumOrderMet && discount > 0 && (
                   <section className="flex justify-between pt-[25px]">
                     <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
-                      You Saved
+                      {t("s_you_saved")}
                     </div>
                     <div className="text-green-600">€{discount.toFixed(2)}</div>
                   </section>
                 )}
                 <section className="flex justify-between pt-[25px] pb-5">
                   <div className="xl:text-16 lg:text-15 md:text-14 text-[13px] font-medium">
-                    Total
+                    {t("s_total")}
                   </div>
                   <div className="text-customYellow font-medium xl:text-18 lg:text-16 text-14">
                     €{cartTotal?.toFixed(2)}
@@ -806,10 +825,10 @@ const ShoppingCart = ({
           <section className="w-full flex flex-col items-center justify-center py-20">
             <div className="text-center">
               <h3 className="xl:text-24 lg:text-22 text-20 font-medium mb-4">
-                Your cart is empty
+                {t("s_cart_empty_heading")}
               </h3>
               <p className="text-[#6C7275] xl:text-16 lg:text-14 text-13 mb-6">
-                Looks like you haven't added any items to your cart yet
+                {t("s_cart_empty_subtext")}
               </p>
               <button
                 className="bg-[#FBC700] text-white py-2 px-6 rounded-lg"
@@ -817,7 +836,7 @@ const ShoppingCart = ({
                   navigate("/shop-page");
                 }}
               >
-                Continue Shopping
+                {t("s_continue_shopping_button")}
               </button>
             </div>
           </section>

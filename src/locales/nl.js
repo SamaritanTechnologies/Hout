@@ -1,0 +1,205 @@
+export const nlTranslations = {
+  // Auth Pages
+  login: "Login",
+  login_title: "Inloggen",
+  email_address: "E-mail adres",
+  password: "Wachtwoord",
+  not_valid_email: "Geen geldig e-mail",
+  email_required: "E-mail is verplicht",
+  password_required: "Wachtwoord is verplicht",
+  not_valid_password: "Wachtwoord moet minimaal 8 cijfers lang zijn",
+  remember_me: "Onthoud mij",
+  is_forgot_password: "Wachtwoord vergeten?",
+
+  // User Navbar
+  dashboard: "Dashboard",
+  products: "Producten",
+  why_hout_total: "Waarom Hout Totaal",
+  contact: "Contact",
+  shop: "Winkel",
+  webshop: "Webwinkel",
+
+  // ProductsSection
+  p_products_heading: "Producten",
+
+  // OurValuesSection
+  o_our_values_heading: "Onze waarden",
+
+  // OurAssortmentSection
+  o_our_assortment_heading: "Ons assortiment",
+  o_our_assortment_subheading:
+    "Ontdek de wereld van hout via ons uitgebreide assortiment.",
+
+  // TestimonialSection
+  t_share_setup_text: "Deel je setup met",
+  t_share_setup_heading: "#HOUT",
+
+  // Contact Us Page
+  c_contact_us_heading: "Neem contact met ons op",
+  c_contact_us_subheading:
+    "We nodigen u uit om contact met ons op te nemen met eventuele vragen of opmerkingen. Ons toegewijde team staat klaar om u te begeleiden en te ondersteunen.",
+  c_first_name_placeholder: "Voornaam*",
+  c_last_name_placeholder: "Achternaam",
+  c_email_placeholder: "E-mailadres*",
+  c_company_placeholder: "Bedrijf",
+  c_phone_number_placeholder: "Telefoonnummer",
+  c_message_placeholder: "Bericht*",
+  c_send_button: "Verzenden",
+  c_sending_button: "Bezig met verzenden...",
+
+  // Wishlist Sections
+  w_wishlist_heading: "Je verlanglijst",
+  w_wishlist_table_product: "Product",
+  w_wishlist_table_description: "Beschrijving",
+  w_wishlist_table_price: "Prijs",
+  w_wishlist_table_action: "Actie",
+
+  // Delete Modal
+  d_warning: "Waarschuwing!",
+  d_action_text: "Verwijderen",
+  d_action_cancel: "Annuleren",
+  d_description_text:
+    "Weet je zeker dat je dit product uit de verlanglijst wilt verwijderen?",
+
+  // Cart Sections
+  c_cart_heading: "Winkelwagen",
+  c_tab_shopping_cart: "Winkelwagen",
+  c_tab_checkout_details: "Afrekeningsgegevens",
+  c_tab_order_complete: "Bestelling voltooid",
+  c_login_required_heading: "Inloggen vereist",
+  c_login_required_message: "U moet inloggen om door te gaan naar afrekenen.",
+  c_login_required_cancel_button: "Annuleren",
+  c_login_required_signin_button: "Inloggen",
+
+  // Shopping Cart Sections
+  s_table_header_product: "Product",
+  s_table_header_quantity: "Aantal",
+  s_table_header_price: "Prijs",
+  s_table_header_subtotal: "Subtotaal",
+  s_thickness_label: "DIKTE",
+  s_width_label: "BREDTE",
+  s_length_label: "LENGTE",
+  s_have_coupon_text: "Heb je een coupon?",
+  s_add_code_text:
+    "Voeg je code toe voor een directe kortingen op de winkelwagen",
+  s_coupon_applied_text:
+    "{{code}} toegepast ({{discount_value}}{{discount_type}} korting)",
+  s_remove_button: "Verwijderen",
+  s_add_more_for_coupon:
+    "Voeg €{{amount}} meer toe aan je winkelwagen om deze coupon toe te passen",
+  s_enter_coupon_placeholder: "Voer couponcode in",
+  s_apply_button: "Toepassen",
+  s_applying_button: "Bezig met toepassen...",
+  s_cart_empty_heading: "Je winkelwagen is leeg",
+  s_cart_empty_subtext:
+    "Het lijkt erop dat je nog geen artikelen aan je winkelwagen hebt toegevoegd",
+  s_continue_shopping_button: "Doorgaan met winkelen",
+  s_subtotal_excl_vat: "Subtotaal excl. btw",
+  s_delivery_fee: "Bezorgkosten",
+  s_tax: "Belasting",
+  s_you_saved: "Je hebt bespaard",
+  s_total: "Totaal",
+
+  // Myaccount Sections
+  m_myaccount: "Mijn Account",
+  m_account_tab: "Account",
+  m_address_tab: "Adres",
+  m_orders_tab: "Bestellingen",
+  m_wishlist_tab: "Verlanglijst",
+  m_logout_tab: "Uitloggen",
+
+  // Account Sections
+  a_account_details: "Accountgegevens",
+  a_first_name_placeholder: "Voer naam in",
+  a_last_name_placeholder: "Achternaam",
+  a_company_name_placeholder: "Bedrijfsnaam",
+  a_email_placeholder: "E-mail",
+  a_phone_number_placeholder: "Telefoonnummer",
+  a_first_name_label: "Voornaam*",
+  a_last_name_label: "Achternaam*",
+  a_company_name_label: "Bedrijfsnaam",
+  a_email_label: "E-mail*",
+  a_phone_number_label: "Telefoonnummer*",
+  a_save_changes_btn_text: "Wijzigingen opslaan",
+  a_password_section_title: "Wachtwoord",
+  a_old_password_label: "Oud wachtwoord",
+  a_old_password_placeholder: "Oud wachtwoord",
+  a_new_password_label: "Nieuw wachtwoord",
+  a_new_password_placeholder: "Nieuw wachtwoord",
+  a_repeat_new_password_label: "Herhaal nieuw wachtwoord",
+  a_repeat_new_password_placeholder: "Herhaal nieuw wachtwoord",
+  a_save_changes_btn_text: "Wijzigingen opslaan",
+
+  // Address Section
+  aa_address_title: "Adres",
+  aa_billing_address_title: "Factuuradres",
+  aa_shipping_address_title: "Verzendadres",
+  aa_edit_button_text: "Bewerken",
+  aa_edit_address_title: "Bewerk {{addressType}} adres",
+  aa_street_and_number_label: "Straat en nummer",
+  aa_street_and_number_placeholder: "Voer straat en nummer in",
+  aa_zip_code_label: "Postcode",
+  aa_zip_code_placeholder: "Voer postcode in",
+  aa_city_label: "Stad",
+  aa_city_placeholder: "Voer stad in",
+  aa_country_label: "Land",
+  aa_country_placeholder: "Voer land in",
+  aa_cancel_button_text: "Annuleren",
+  aa_update_address_button_text: "Adres bijwerken",
+
+  // Shop Page
+  s_reset_filter_button: "Reset filter",
+  s_showing_results_text: "Toont {{start}}-{{end}} van {{total}} resultaten",
+  s_show_prices: "Toon prijzen",
+  s_excl_vat: "Excl. BTW",
+  s_incl_vat: "Incl. BTW",
+  s_group: "Groep",
+  s_type: "Type",
+  s_material: "Materiaal",
+  s_profile: "Profiel",
+  s_durability: "Duurzaamheid",
+  s_quality: "Kwaliteit",
+  s_application: "Toepassing",
+
+  // Order History Section
+  o_orders_history_title: "Bestelgeschiedenis",
+  o_number_id: "Nummer ID",
+  o_date: "Datum",
+  o_status: "Status",
+  o_price: "Prijs",
+  o_invoice: "Factuur",
+  o_no_order_history: "Geen bestelgeschiedenis gevonden.",
+
+  // Footer Sections
+  // Newsletter Section
+
+  f_newsletter: "Nieuwsbrief",
+  f_enter_email_placeholder: "Voer e-mailadres in",
+  f_subscribe: "Abonneren",
+  f_subscribe_description:
+    "Abonneer op onze nieuwsbrief en blijf altijd op de hoogte.",
+  f_home: "Home",
+  f_about_us: "Over ons",
+  f_products: "Producten",
+  f_our_values: "Onze waarden",
+  f_our_assortment: "Ons assortiment",
+  f_why_hout_total: "Waarom Hout Totaal",
+  f_contact_us: "Contacteer ons",
+  f_terms_conditions: "Voorwaarden",
+  f_privacy_policy: "Privacybeleid",
+  f_customer_support_faq: "Klantenservice / FAQ",
+  f_opening_hours: "Openingstijden",
+  f_contact_us_header: "Contacteer ons",
+  f_address_line1: "Lageweg 35K",
+  f_address_line2: "2222AG Katwijk aan Zee",
+  f_address_line3: "Nederland",
+  f_whatsapp: "+31 63 396 60 02",
+  f_phone: "+31 71 203 40 90",
+  f_email: "info@houttotaal.nl",
+  f_chamber_of_commerce: "Kamer van Koophandel",
+  f_chamber_number: "61392421",
+  f_bank: "Bank",
+  f_bank_account: "NL65 BUNQ 2064 2611 33",
+  f_pay: "Betalen",
+  f_copyright: "Copyright © {{year}} Hout Totaal",
+};

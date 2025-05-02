@@ -6,8 +6,10 @@ import { axiosWithCredentials } from "../../providers";
 import { toast } from "react-toastify";
 import Pagination from "../../components/Common/Pagination";
 import { ORDER_PAGE_SIZE } from "../../utils/const";
+import { useTranslation } from "react-i18next";
 
 const OrderHistory = () => {
+  const { t } = useTranslation();
   const [orderList, setOrderList] = useState([]);
   const [loadingItems, setLoadingItems] = useState({});
   const [currentPage, setCurrentPage] = useState();
@@ -82,16 +84,24 @@ const OrderHistory = () => {
         <div className="flex flex-col items-center mb-32">
           <div className="w-full overflow-auto">
             <h1 className="text-20 font-semibold mb-[18px] text-center">
-              Orders History
+              {t("o_orders_history_title")}
             </h1>
             <table className="w-full min-w-[600px]">
               <thead>
                 <tr className="border-b border-[#E8ECEF] text-left">
-                  <th className="text-sm text-[#6C7275] py-3">Number ID</th>
-                  <th className="text-sm text-[#6C7275] py-3">Date</th>
-                  <th className="text-sm text-[#6C7275] py-3">Status</th>
-                  <th className="text-sm text-[#6C7275] py-3">Price</th>
-                  <th className="text-sm text-[#6C7275] py-3">Invoice</th>
+                  <th className="text-sm text-[#6C7275] py-3">
+                    {t("o_number_id")}
+                  </th>
+                  <th className="text-sm text-[#6C7275] py-3">{t("o_date")}</th>
+                  <th className="text-sm text-[#6C7275] py-3">
+                    {t("o_status")}
+                  </th>
+                  <th className="text-sm text-[#6C7275] py-3">
+                    {t("o_price")}
+                  </th>
+                  <th className="text-sm text-[#6C7275] py-3">
+                    {t("o_invoice")}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -145,7 +155,7 @@ const OrderHistory = () => {
                 ) : (
                   <tr>
                     <td colSpan="5" className="text-center text-[#141718] py-5">
-                      No order history found.
+                      {t("o_no_order_history")}
                     </td>
                   </tr>
                 )}
