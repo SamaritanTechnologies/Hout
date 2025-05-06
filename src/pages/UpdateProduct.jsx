@@ -28,7 +28,10 @@ const styleMultiSelect = {
     background: "#F8F8F8",
     borderRadius: "4px",
   },
-  searchBox: {},
+  searchBox: {
+    position: "relative",
+    paddingRight: "30px",
+  },
   option: {
     background: "white",
     color: "black",

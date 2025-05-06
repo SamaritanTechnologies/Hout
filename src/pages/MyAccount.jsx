@@ -52,7 +52,7 @@ export const MyAccount = () => {
     },
     { id: 3, name: t("m_orders_tab"), component: <OrderHistory /> },
     { id: 4, name: t("m_wishlist_tab"), component: <Wishlist /> },
-    { id: 5, name: "LogOut", component: null },
+    { id: 5, name: "Log Out", component: null },
   ];
 
   const handleLogout = () => {
@@ -144,7 +144,7 @@ export const MyAccount = () => {
                       isSelected ? "border-b border-[#111727]" : ""
                     }`}
                     onClick={() => {
-                      if (item.name === "LogOut") {
+                      if (item.name === "Log Out") {
                         handleLogout();
                       } else {
                         setSelectedComponent(item.component);

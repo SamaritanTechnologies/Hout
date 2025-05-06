@@ -10,20 +10,20 @@ const QualitySection = () => {
     { image: cup, head: "High Quality", subHead: "crafted from top materials" },
     {
       image: guarantee,
-      head: "High Quality",
-      subHead: "crafted from top materials",
+      head: "Warranty Protection",
+      subHead: "Over 2 years",
     },
 
     {
       image: shipping,
-      head: "High Quality",
-      subHead: "crafted from top materials",
+      head: "Free Shipping",
+      subHead: "Order over 150 $",
     },
 
     {
       image: supports,
-      head: "High Quality",
-      subHead: "crafted from top materials",
+      head: "24 / 7 Support",
+      subHead: "Dedicated support",
     },
   ];
   return (

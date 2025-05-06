@@ -243,8 +243,8 @@ export const UserProfile = () => {
                       <Field
                         component={FormikField}
                         name="oldPassword"
-                        label="Old password"
-                        placeholder="Old password"
+                        label="Old Password"
+                        placeholder="Old Password"
                         type="password"
                       />
                     </div>
@@ -254,8 +254,8 @@ export const UserProfile = () => {
                       <Field
                         component={FormikField}
                         name="newPassword"
-                        label="New password"
-                        placeholder="New password"
+                        label="New Password"
+                        placeholder="New Password"
                         type="password"
                       />
                     </div>
@@ -263,8 +263,8 @@ export const UserProfile = () => {
                       <Field
                         component={FormikField}
                         name="repeatNewPassword"
-                        label="Repeat new password"
-                        placeholder="Repeat new password"
+                        label="Repeat New Password"
+                        placeholder="Repeat New Password"
                         type="password"
                       />
                     </div>

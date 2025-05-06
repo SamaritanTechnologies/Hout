@@ -341,7 +341,7 @@ export const Products = () => {
                   </td>
 
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">
-                    <div className="flex flex-col gap-1 items-center">
+                    <div className="flex flex-col gap-1">
                       {rowData?.material && rowData.material.length > 0
                         ? rowData.material.map((item, index) => (
                             <p
@@ -356,7 +356,7 @@ export const Products = () => {
                   </td>
 
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">
-                    <div className="flex flex-col gap-1 items-center justify-center">
+                    <div className="flex flex-col gap-1">
                       {rowData?.profile && rowData.profile.length > 0
                         ? rowData.profile.map((item, index) => (
                             <p
