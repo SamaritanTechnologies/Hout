@@ -39,7 +39,7 @@ export const enTranslations = {
   c_contact_us_subheading:
     "We invite you to contact us with any questions or concerns. Our dedicated team is ready to guide and support you.",
   c_first_name_placeholder: "First Name*",
-  c_last_name_placeholder: "Last Name",
+  c_last_name_placeholder: "Last Name*",
   c_email_placeholder: "E-mail Address*",
   c_company_placeholder: "Company",
   c_phone_number_placeholder: "Phone Number",
@@ -124,8 +124,8 @@ export const enTranslations = {
   a_old_password_placeholder: "Old Password",
   a_new_password_label: "New Password",
   a_new_password_placeholder: "New Password",
-  a_repeat_new_password_label: "Repeat new password",
-  a_repeat_new_password_placeholder: "Repeat new password",
+  a_repeat_new_password_label: "Repeat New Password",
+  a_repeat_new_password_placeholder: "Repeat New Password",
   a_save_changes_btn_text: "Save changes",
 
   // Address Section
