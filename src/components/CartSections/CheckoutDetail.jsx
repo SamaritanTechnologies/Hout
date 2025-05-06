@@ -22,8 +22,11 @@ import {
 import { getLoggedInUser, loginUser } from "../../redux";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const CheckoutDetail = ({ cartData, fetchCart }) => {
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language;
   const cartSummary = useSelector((state) => state.summary);
   const userDetail = useSelector((state) => state.auth.user);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
@@ -236,51 +239,57 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
               <section className="grid grid-cols-12 gap-4 xs:gap-6 lg:gap-[45px] gap-x-12 ">
                 <section className="col-span-12 xl:col-span-4">
                   <div className="text-22 font-medium border-b border-[#D9D9D9] pb-2">
-                    View Order
+                    {t("sk_view_order_text")}
                   </div>
 
-                  {cartItems?.map((item) => (
-                    <div key={item.id}>
-                      <section className="flex pt-5 items-center">
-                        <div>
-                          <img
-                            src={item?.product_length?.product.image}
-                            className="xl:w-[80px] xl:h-[96px] lg:w-[70px] lg:h-[80px] min-w-[60px] min-h-[60px] xs:w-[60px] xs:h-[60px]"
-                          />
-                        </div>
-                        <div>
-                          <div className="px-2 text-18">{item.name}</div>
-                          <section className="flex gap-x-4 px-2 pt-1">
-                            <div>
-                              <div className="text-12 font-medium text-[#BABABA]">
-                                Thickness
-                              </div>
+                  {cartItems?.map((item) => {
+                    console.log("items Data:", item);
+                    return (
+                      <div key={item.id}>
+                        <section className="flex pt-5 items-center">
+                          <div>
+                            <img
+                              src={item?.product_length?.product.image}
+                              className="xl:w-[80px] xl:h-[96px] lg:w-[70px] lg:h-[80px] min-w-[60px] min-h-[60px] xs:w-[60px] xs:h-[60px]"
+                            />
+                          </div>
+                          <div>
+                            <div className="px-2 text-18">
+                              {currentLang === "en"
+                                ? item?.product_length?.product.name_en
+                                : item?.product_length?.product.name_nl}
+                            </div>
+                            <section className="flex gap-x-4 px-2 pt-1">
                               <div>
-                                {item?.product_length?.product?.thickness} mm
+                                <div className="text-12 font-medium text-[#BABABA]">
+                                  {t("sk_thickness_label")}
+                                </div>
+                                <div>
+                                  {item?.product_length?.product?.thickness} cm
+                                </div>
                               </div>
-                            </div>
 
-                            <div>
-                              <div className="text-12 font-medium text-[#BABABA]">
-                                Width
-                              </div>
                               <div>
-                                {item?.product_length?.product?.width} mm
+                                <div className="text-12 font-medium text-[#BABABA]">
+                                  {t("sk_width_label")}
+                                </div>
+                                <div>
+                                  {item?.product_length?.product?.width} cm
+                                </div>
                               </div>
-                            </div>
 
-                            <div>
-                              <div className="text-12 font-medium text-[#BABABA]">
-                                Length
+                              <div>
+                                <div className="text-12 font-medium text-[#BABABA]">
+                                  {t("sk_length_label")}
+                                </div>
+                                <div>{item?.product_length?.length} cm</div>
                               </div>
-                              <div>{item?.product_length?.length} mm</div>
-                            </div>
-                          </section>
-                        </div>
-                      </section>
+                            </section>
+                          </div>
+                        </section>
 
-                      <section className="flex justify-between items-center xl:pl-[80px] lg:pl-[80px] md:pl-[80px] sm:pl-[80px] xs:pl-[60px] pl-[50px]">
-                        {/* <div className="flex justify-between border items-center px-[10px] py-[6px] rounded-md xl:min-w-[118px] lg:w-[170px] md:w-[170px] sm:w-[170px] xs:w-[170px]">
+                        <section className="flex justify-between items-center xl:pl-[80px] lg:pl-[80px] md:pl-[80px] sm:pl-[80px] xs:pl-[60px] pl-[50px]">
+                          {/* <div className="flex justify-between border items-center px-[10px] py-[6px] rounded-md xl:min-w-[118px] lg:w-[170px] md:w-[170px] sm:w-[170px] xs:w-[170px]">
                           <div className="cursor-pointer">
                             <span onClick={() => handleDecrement(item.id)}>
                               <img src={minus} alt="decrement" />
@@ -293,15 +302,16 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
                             </span>
                           </div>
                         </div> */}
-                        <div className="flex justify-between border items-center px-[10px] py-[6px] rounded-md xl:min-w-[118px] lg:w-[170px] md:w-[170px] sm:w-[170px] xs:w-[170px]">
-                          <span>Quantity:</span> <h6>{item.quantity}</h6>
-                        </div>
-                        <div className="w-full text-right  xl:text-22 lg:text-20 md:text-18 text-16 font-bold">
-                          €{item?.product_price}
-                        </div>
-                      </section>
-                    </div>
-                  ))}
+                          <div className="flex justify-between border items-center px-[10px] py-[6px] rounded-md xl:min-w-[118px] lg:w-[170px] md:w-[170px] sm:w-[170px] xs:w-[170px]">
+                            <span>Quantity:</span> <h6>{item.quantity}</h6>
+                          </div>
+                          <div className="w-full text-right  xl:text-22 lg:text-20 md:text-18 text-16 font-bold">
+                            €{item?.product_price}
+                          </div>
+                        </section>
+                      </div>
+                    );
+                  })}
 
                   <div>
                     <TotalBalance
@@ -321,15 +331,18 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
                         checked={terms}
                         onChange={() => setTerms(!terms)}
                       />
-                      I Agree to the General Terms and Conditions and waive the
-                      Right of Withdrawal because this is a customized product.
+                      {t("sk_terms_agreement_text")}
                     </div>
                   </section>
 
                   <div className="xl:py-[30px] lg:py-[25px] md:py-[20px] py-[10px]">
                     <Button
                       disabled={loading}
-                      btnText={loading ? "Confirming.." : "Confirm Order"}
+                      btnText={
+                        loading
+                          ? t("sk_confirming_text")
+                          : t("sk_confirm_order_button")
+                      }
                       widthfull
                       onClick={confirmOrder}
                     />
@@ -381,32 +394,32 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
                             <Field
                               component={FormikField}
                               name="firstName"
-                              label="First Name"
-                              placeholder="First Name"
+                              label={t("sk_first_name_label")}
+                              placeholder={t("sk_first_name_placeholder")}
                             />
                           </div>
                           <div className="mb-4">
                             <Field
                               component={FormikField}
                               name="companyName"
-                              label="Company Name (Optional)"
-                              placeholder="Company Name (Optional)"
+                              label={t("sk_company_name_label")}
+                              placeholder={t("sk_company_name_placeholder")}
                             />
                           </div>
                           <div className="mb-4">
                             <Field
                               component={FormikField}
                               name="streetAndNumber"
-                              label="Street & Number"
-                              placeholder="Street & Number"
+                              label={t("sk_street_number_label")}
+                              placeholder={t("sk_street_number_placeholder")}
                             />
                           </div>
                           <div>
                             <Field
                               component={FormikField}
                               name="city"
-                              label="City"
-                              placeholder="City"
+                              label={t("sk_city_label")}
+                              placeholder={t("sk_city_placeholder")}
                             />
                           </div>
                         </div>
@@ -416,38 +429,42 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
                             <Field
                               component={FormikField}
                               name="lastName"
-                              label="Last Name"
-                              placeholder="Last Name"
+                              label={t("sk_last_name_label")}
+                              placeholder={t("sk_last_name_placeholder")}
                             />
                           </div>
                           <div className="w-full md:h-20 md:w-0 col-span-6 mb-2 lg:hidden md:hidden sm:hidden xs:hidden"></div>
                           <div className="mb-4 invisible lg:hidden md:hidden sm:hidden xs:hidden">
-                            <Field
+                            {/* <Field
                               component={FormikField}
                               name="zipCode"
-                              label="Zip Code"
-                              placeholder="Zip Code"
-                            />
+                              label={t("sk_zip_code_label")}
+                              placeholder={t("sk_zip_code_placeholder")}
+                            /> */}
                           </div>
                           <div className="mb-4">
                             <Field
                               component={FormikField}
                               name="zipCode"
-                              label="Zip Code"
-                              placeholder="Zip Code"
+                              label={t("sk_zip_code_label")}
+                              placeholder={t("sk_zip_code_placeholder")}
                             />
                           </div>
                           <div className="mb-4">
                             <Field
                               component={FormikField}
                               name="country"
-                              label="Country"
-                              placeholder="Country"
+                              label={t("sk_country_label")}
+                              placeholder={t("sk_country_placeholder")}
                             />
                           </div>
                           <div className="mt-4 float-end max-w-[159px] w-full">
                             <Button
-                              btnText={isSubmitting ? "Saving.." : "Save"}
+                              btnText={
+                                isSubmitting
+                                  ? t("sk_saving_button")
+                                  : t("sk_save_button")
+                              }
                               disabled={isSubmitting}
                               type="submit"
                               widthfull
@@ -460,7 +477,7 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
 
                   <div className="mt-8 pb-[100px] my-4">
                     <h2 className="text-2xl font-bold my-2 border-b border-[#D9D9D9] pb-3">
-                      Payment Method
+                      {t("sk_payment_method_title")}
                     </h2>
 
                     {paymentMethods.map((item) => (

@@ -180,15 +180,15 @@ export const ShopPage = () => {
               {t("s_excl_vat")}
             </div>
 
-            <div className="pops md:text-14 sm:text-14 xs:text-12">
-              {t("s_incl_vat")}
-            </div>
             <div className="recPasswrd">
               <Switch
                 optional
                 checked={includeVAT}
                 onChange={handleVATToggle}
               />
+            </div>
+            <div className="pops md:text-14 sm:text-14 xs:text-12">
+              {t("s_incl_vat")}
             </div>
           </div>
         </div>

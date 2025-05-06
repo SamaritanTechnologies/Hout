@@ -19,6 +19,18 @@ export const enTranslations = {
   shop: "Shop",
   webshop: "Webshop",
 
+  // signin  Page
+  s_welcome_back: "Welcome Back",
+  s_login_into_your_account: "Login into your account",
+  s_or_continue_with: "or continue with",
+  s_placeholder_email: "Email",
+  s_placeholder_password: "Password",
+  s_recover_password: "Recover Password",
+  s_button_loading: "Loading...",
+  s_button_login: "Log In",
+  s_dont_have_account: "Don't have an account?",
+  s_sign_up: "Sign up!",
+
   // ProductsSection
   p_products_heading: "Products",
 
@@ -167,6 +179,59 @@ export const enTranslations = {
   s_durability: "Durability",
   s_quality: "Quality",
   s_application: "Application",
+
+  // checkout Detail Section
+  sk_view_order_text: "View Order",
+  sk_thickness_label: "Thickness",
+  sk_width_label: "Width",
+  sk_length_label: "Length",
+  sk_payment_method_title: "Payment Method",
+  sk_first_name_label: "First Name",
+  sk_first_name_placeholder: "First Name",
+  sk_company_name_label: "Company Name (Optional)",
+  sk_company_name_placeholder: "Company Name (Optional)",
+  sk_street_number_label: "Street & Number",
+  sk_street_number_placeholder: "Street & Number",
+  sk_city_label: "City",
+  sk_city_placeholder: "City",
+  sk_last_name_label: "Last Name",
+  sk_last_name_placeholder: "Last Name",
+  sk_zip_code_label: "Zip Code",
+  sk_zip_code_placeholder: "Zip Code",
+  sk_country_label: "Country",
+  sk_country_placeholder: "Country",
+  sk_save_button: "Save",
+  sk_saving_button: "Saving..",
+  sk_terms_agreement_text:
+    "I Agree to the General Terms and Conditions and waive the Right of Withdrawal because this is a customized product",
+  sk_confirm_order_button: "Confirm Order",
+  sk_confirming_text: "Confirming..",
+
+  // Product Detail Section
+  p_showPrices: "Show Prices",
+  p_exclVAT: "Excl. VAT",
+  p_inclVAT: "Incl. VAT",
+  p_description: "Description",
+  p_shareThisPage: "SHARE THIS PAGE:",
+  p_productSpecifications: "Product specifications",
+  p_group: "Group",
+  p_material: "Material",
+  p_profile: "Profile",
+  p_durabilityClass: "Durability Class",
+  p_quality: "Quality",
+  p_application: "Application",
+  p_thickness: "Thickness",
+  p_width: "Width",
+  p_variant: "Variant",
+  p_articleNumber: "Article number",
+  p_price: "Price",
+  p_stock: "Stock",
+  p_number: "Number",
+  p_winkelwagen: "Winkelwagen",
+  p_IncBTW: "Price Inc BTW",
+  p_contactUs: "If you are interested, please contact us",
+  p_inventoryQuantity: "Inventory quantity",
+  p_outOfStock: "Out of stock",
 
   // Footer Sections
   // Newsletter Section

@@ -27,7 +27,7 @@ const FooterSection = ({ isShow }) => {
   useEffect(() => {
     const fetchOpeningHours = async () => {
       try {
-        const data = await getOpeningHours();
+        const data = await getOpeningHours(i18n.language);
         setOpeningHour(data);
       } catch (error) {
         console.error("Error fetching opening hours:", error);
@@ -36,7 +36,7 @@ const FooterSection = ({ isShow }) => {
     };
 
     fetchOpeningHours();
-  }, []);
+  }, [i18n.language]);
 
   const handleNewsLetter = async (e) => {
     e.preventDefault();

@@ -19,6 +19,18 @@ export const nlTranslations = {
   shop: "Winkel",
   webshop: "Webwinkel",
 
+  // signin  Page
+  s_welcome_back: "Welcome Back",
+  s_login_into_your_account: "Login into your account",
+  s_or_continue_with: "or continue with",
+  s_placeholder_email: "Email",
+  s_placeholder_password: "Password",
+  s_recover_password: "Recover Password",
+  s_button_loading: "Loading...",
+  s_button_login: "Log In",
+  s_dont_have_account: "Don't have an account?",
+  s_sign_up: "Sign up!",
+
   // ProductsSection
   p_products_heading: "Producten",
 
@@ -169,6 +181,60 @@ export const nlTranslations = {
   o_price: "Prijs",
   o_invoice: "Factuur",
   o_no_order_history: "Geen bestelgeschiedenis gevonden.",
+
+  // checkout Detail Section
+  sk_view_order_text: "Bekijk Bestelling",
+  sk_thickness_label: "Dikte",
+  sk_width_label: "Breedte",
+  sk_length_label: "Lengte",
+  sk_payment_method_title: "Betaalmethode",
+  sk_first_name_label: "Voornaam",
+  sk_first_name_placeholder: "Voornaam",
+  sk_company_name_label: "Bedrijfsnaam (optioneel)",
+  sk_company_name_placeholder: "Bedrijfsnaam (optioneel)",
+  sk_street_number_label: "Straat & Nummer",
+  sk_street_number_placeholder: "Straat & Nummer",
+  sk_city_label: "Stad",
+  sk_city_placeholder: "Stad",
+  sk_last_name_label: "Achternaam",
+  sk_last_name_placeholder: "Achternaam",
+  sk_zip_code_label: "Postcode",
+  sk_zip_code_placeholder: "Postcode",
+  sk_country_label: "Land",
+  sk_country_placeholder: "Land",
+  sk_save_button: "Opslaan",
+  sk_saving_button: "Bezig met opslaan..",
+  sk_terms_agreement_text:
+    "Ik ga akkoord met de algemene voorwaarden en doe afstand van het herroepingsrecht omdat dit een op maat gemaakt product is",
+  sk_confirm_order_button: "Bevestig Bestelling",
+  sk_confirming_text: "Bevestigen..",
+
+  // Product Detail Section
+
+  p_showPrices: "Toon prijzen",
+  p_exclVAT: "Excl. BTW",
+  p_inclVAT: "Incl. BTW",
+  p_description: "Beschrijving",
+  p_shareThisPage: "DEEL DEZE PAGINA:",
+  p_productSpecifications: "Product specificaties",
+  p_group: "Groep",
+  p_material: "Materiaal",
+  p_profile: "Profiel",
+  p_durabilityClass: "Duurzaamheidsklasse",
+  p_quality: "Kwaliteit",
+  p_application: "Toepassing",
+  p_thickness: "Dikte",
+  p_width: "Breedte",
+  p_variant: "Variant",
+  p_articleNumber: "Artikelnummer",
+  p_price: "Prijs",
+  p_stock: "Voorraad",
+  p_number: "Aantal",
+  p_winkelwagen: "Winkelwagen",
+  p_IncBTW: "Prijs incl. BTW",
+  p_contactUs: "Als u geïnteresseerd bent, neem dan contact met ons op",
+  p_inventoryQuantity: "Voorraadhoeveelheid",
+  p_outOfStock: "Niet op voorraad",
 
   // Footer Sections
   // Newsletter Section
