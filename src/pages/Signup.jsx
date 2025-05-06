@@ -85,13 +85,13 @@ export const Signup = () => {
             className="w-[100%] min-h-[142px] h-full object-cover"
           />
           <div>
-            <div className=" yellowBar absolute xl:top-[35%] lg:top-[30%] md:top-[10%] sm:top-[20%] xs:top-[20%] left-[50%] translate-x-[-50%]  bg-[#FBC700] w-[291px]  rounded-xl flex items-center xl:py-[10px] py-[6px] xl:px-[20px] px-[12px] gap-2 mb-[22.34px]">
+            <div className=" yellowBar absolute xl:top-[35%] lg:top-[30%] md:top-[10%] sm:top-[20%] xs:top-[20%] left-[50%] translate-x-[-50%]  bg-[#FBC700] w-[291px] rounded-[48px] flex items-center p-3 gap-6 mb-[22.34px]">
               <div className="w-[40px] h-[38px] rounded-[50%] grid place-items-center bg-[#00000066]">
                 <img src={blackRin} alt="" />
               </div>
               <h6
                 className="flex-1 xl:text-20 lg:text-18 md:text-16
- font-medium text-center"
+ font-medium"
               >
                 Lorem Ipsum is{" "}
               </h6>

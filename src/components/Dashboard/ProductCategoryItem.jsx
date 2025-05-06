@@ -1,6 +1,6 @@
 import React from "react";
 import addCircle from "../../assets/DashboardImages/add-sqaure-icon.svg";
-import deleteIcon from "../../assets/DashboardImages/delete-icon.svg";
+import deleteIcon from "../../assets/DashboardImages/delete.svg";
 import countryflag from "../../assets/DashboardImages/UK-Flag.svg";
 import countryflag2 from "../../assets/DashboardImages/USA-flag.svg";
 

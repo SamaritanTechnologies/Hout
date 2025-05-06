@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ArrowBack from "../assets/DashboardImages/arrowback.svg";
+import ArrowDown from "../assets/DashboardImages/down-arrow.svg";
 import PlusCircle from "../assets/DashboardImages/plusCricle.svg";
 // import CrossCircle from "../assets/DashboardImages/cancelCircle.svg";
 import dltImg from "../assets/DashboardImages/delete.svg";
@@ -30,7 +31,10 @@ const styleMultiSelect = {
     background: "#F8F8F8",
     borderRadius: "4px",
   },
-  searchBox: {},
+  searchBox: {
+    position: "relative",
+    paddingRight: "30px",
+  },
   option: {
     background: "white",
     color: "black",

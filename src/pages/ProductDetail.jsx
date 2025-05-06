@@ -344,6 +344,7 @@ export const ProductDetail = () => {
                 </div>
                 <div className="flex items-center border-b border-[#E6E6E6] min-h-10 mt-20">
                   <div className="text-16 font-bold flex-1">{t("p_width")}</div>
+
                   <div className="text-[#333333] flex-1 xl:text-16 lg:text-15 text-14">
                     {productDetail?.width} cm
                   </div>

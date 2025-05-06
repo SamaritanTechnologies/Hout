@@ -22,6 +22,10 @@ export const ContactusSection = () => {
       toast.error("First Name is required.");
       return false;
     }
+    if (!formData.last_name?.trim()) {
+      toast.error("Last Name is required.");
+      return false;
+    }
     if (!formData.email?.trim() || !/\S+@\S+\.\S+/.test(formData.email)) {
       toast.error("Please enter a valid email address.");
       return false;
@@ -102,6 +106,7 @@ export const ContactusSection = () => {
             value={formData.last_name}
             color="#fff"
             type="text"
+            required={true}
             placeholder={t("c_last_name_placeholder")}
             onChange={(e) =>
               setFormData({ ...formData, last_name: e.target.value })
