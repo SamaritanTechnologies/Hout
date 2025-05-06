@@ -24,8 +24,11 @@ import {
   EmailShareButton,
 } from "react-share";
 import Switch from "../components/Common/Switch";
+import { useTranslation } from "react-i18next";
 
 export const ProductDetail = () => {
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language;
   const [vat, setVat] = useState(false);
   const shareUrl = window.location.href;
   const { product_id } = useParams();
@@ -53,47 +56,52 @@ export const ProductDetail = () => {
   return (
     <>
       <section className="px-[30px] md:px-[80px] lg:px-[100px] bg-[#F4F5F7]">
-        <tr className="xs:gap-x-3 gap-x-6 flex  items-center  py-[40px]">
-          <td
-            className="text-[#9F9F9F] xs:text-14 sm:text-15 text-16 cursor-pointer"
-            onClick={() => navigate("/")}
-          >
-            Home
-          </td>
-          <td>
-            <img src={rightArrow} alt="Right Arrow" />
-          </td>
-          <td
-            className="text-[#9F9F9F] xs:text-14 sm:text-15 text-16 cursor-pointer"
-            onClick={() => navigate("/shop-page")}
-          >
-            {" "}
-            Shop
-          </td>
-          <td>
-            <img src={rightArrow} alt="Right Arrow" />
-          </td>
-          <td className="h-[px] font-bold text-[#9F9F9F] xs:text-14 sm:text-15 text-16">
-            |{" "}
-          </td>
-          <td>{productDetail?.name_en}</td>
-        </tr>
-      </section>
-      <div className=" flex justify-center  gap-5 pt-5">
-        <div className="pops md:text-14 sm:text-14 xs:text-12">Show Prices</div>
-        {vat == false && (
-          <div className="pops md:text-14 sm:text-14 xs:text-12">Excl. VAT</div>
-        )}
-
-        <div className="pops md:text-14 sm:text-14 xs:text-12">Incl. VAT</div>
-        <div className="recPasswrd">
-          <Switch
-            optional
-            checked={vat ? "checked" : ""}
-            onChange={() => setVat(!vat)}
-          />
+        <div className="flex justify-between items-center">
+          <tr className="xs:gap-x-3 gap-x-6 flex  items-center  py-[40px]">
+            <td
+              className="text-[#9F9F9F] xs:text-14 sm:text-15 text-16 cursor-pointer"
+              onClick={() => navigate("/")}
+            >
+              Home
+            </td>
+            <td>
+              <img src={rightArrow} alt="Right Arrow" />
+            </td>
+            <td
+              className="text-[#9F9F9F] xs:text-14 sm:text-15 text-16 cursor-pointer"
+              onClick={() => navigate("/shop-page")}
+            >
+              {" "}
+              Shop
+            </td>
+            <td>
+              <img src={rightArrow} alt="Right Arrow" />
+            </td>
+            <td className="h-[px] font-bold text-[#9F9F9F] xs:text-14 sm:text-15 text-16">
+              |{" "}
+            </td>
+            <td>{productDetail?.name_en}</td>
+          </tr>
+          <div className=" flex justify-center  gap-5 pt-5">
+            <div className="pops md:text-14 sm:text-14 xs:text-12">
+              {t("p_showPrices")}
+            </div>
+            <div className="pops md:text-14 sm:text-14 xs:text-12">
+              {t("p_exclVAT")}
+            </div>
+            <div className="recPasswrd">
+              <Switch
+                optional
+                checked={vat ? "checked" : ""}
+                onChange={() => setVat(!vat)}
+              />
+            </div>
+            <div className="pops md:text-14 sm:text-14 xs:text-12">
+              {t("p_inclVAT")}
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
       {loading ? (
         <PageLoader />
@@ -161,7 +169,7 @@ export const ProductDetail = () => {
               </div>
 
               <div className="flex items-center gap-x-4 pt-5 border-b-2 border-[#D9D9D9] pb-[26px]">
-                <div className="text-14">SHARE THIS PAGE:</div>
+                <div className="text-14">{t("p_shareThisPage")}</div>
                 <div>
                   <WhatsappShareButton
                     url={shareUrl}
@@ -195,10 +203,12 @@ export const ProductDetail = () => {
 
             <section className="xl:pt-[60px] lg:pt-[50px] md:pt-[40px] pt-[30px]">
               <span className="xl:text-24 lg:text-22 md:text-20 sm:text-18 text-[17px] font-bold border-b-3 border-customYellow">
-                Description
+                {t("p_description")}
               </span>
               <div className="pt-5 text-18 text-start xs:text-15 sm:text-15">
-                {productDetail?.description_en}
+                {currentLang == "en"
+                  ? productDetail?.description_en
+                  : productDetail?.description_nl}
               </div>
             </section>
           </section>
@@ -206,14 +216,16 @@ export const ProductDetail = () => {
           {/* Right side Content */}
           <section>
             <h1 className="xl:text-38 lg:text-36 md:text-32 text-28 font-bold">
-              {productDetail?.name_en}
+              {currentLang == "en"
+                ? productDetail?.name_en
+                : productDetail?.name_nl}
             </h1>
             <div className="text-xl text-[#111727]">
               € {productDetail?.lengths[0]?.discount}
             </div>
 
             <div className="flex items-center gap-x-4 pt-5 border-b-2 border-[#D9D9D9] pb-[26px]">
-              <div className="text-14">SHARE THIS PAGE:</div>
+              <div className="text-14">{t("p_shareThisPage")}</div>
               <div>
                 <WhatsappShareButton
                   url={shareUrl}
@@ -246,68 +258,103 @@ export const ProductDetail = () => {
 
             {/* Product specifications section */}
             <section className="flex flex-col gap-6 bg-[#F8F8F8] px-6 py-4 xl:mt-[35px] lg:mt-[30px] md:mt-[25px] mt-[20px] ml-2">
-              <div className="text-lg font-bold">Product specifications</div>
+              <div className="text-lg font-bold">
+                {t("p_productSpecifications")}
+              </div>
               <div className="flex flex-col">
                 <div className="flex items-center border-b border-[#E6E6E6] min-h-10">
-                  <div className="text-16 font-bold flex-1">Group</div>
+                  <div className="text-16 font-bold flex-1">{t("p_group")}</div>
                   <div className="text-[#333333] flex-1 xl:text-16 lg:text-15 text-14">
-                    {productDetail?.group.map((g) => g.name_en).join(", ")}
+                    {productDetail?.group
+                      .map((g) =>
+                        currentLang === "en" ? g.name_en : g.name_nl
+                      )
+                      .join(", ")}
                   </div>
                 </div>
                 <div className="flex items-center border-b border-[#E6E6E6] min-h-10">
                   <div className="text-16 font-bold flex-1">Type</div>
                   <div className="text-[#333333] flex-1 xl:text-16 lg:text-15 text-14">
                     {productDetail?.product_type
-                      .map((t) => t.name_en)
+                      .map((t) =>
+                        currentLang === "en" ? t.name_en : t.name_nl
+                      )
                       .join(", ")}
-                  </div>
-                </div>
-                <div className="flex items-center border-b border-[#E6E6E6] min-h-10">
-                  <div className="text-16 font-bold flex-1">Material</div>
-                  <div className="text-[#333333] flex-1 xl:text-16 lg:text-15 text-14">
-                    {productDetail?.material.map((m) => m.name_en).join(", ")}
-                  </div>
-                </div>
-                <div className="flex items-center border-b border-[#E6E6E6] min-h-10">
-                  <div className="text-16 font-bold flex-1">Profile</div>
-                  <div className="text-[#333333] flex-1 xl:text-16 lg:text-15 text-14">
-                    {productDetail?.profile.map((p) => p.name_en).join(", ")}
                   </div>
                 </div>
                 <div className="flex items-center border-b border-[#E6E6E6] min-h-10">
                   <div className="text-16 font-bold flex-1">
-                    Durability Class
+                    {t("p_material")}
+                  </div>
+                  <div className="text-[#333333] flex-1 xl:text-16 lg:text-15 text-14">
+                    {productDetail?.material
+                      .map((m) =>
+                        currentLang === "en" ? m.name_en : m.name_nl
+                      )
+                      .join(", ")}
+                  </div>
+                </div>
+                <div className="flex items-center border-b border-[#E6E6E6] min-h-10">
+                  <div className="text-16 font-bold flex-1">
+                    {t("p_profile")}
+                  </div>
+                  <div className="text-[#333333] flex-1 xl:text-16 lg:text-15 text-14">
+                    {productDetail?.profile
+                      .map((p) =>
+                        currentLang === "en" ? p.name_en : p.name_nl
+                      )
+                      .join(", ")}
+                  </div>
+                </div>
+                <div className="flex items-center border-b border-[#E6E6E6] min-h-10">
+                  <div className="text-16 font-bold flex-1">
+                    {t("p_durabilityClass")}
                   </div>
                   <div className="text-[#333333] flex-1 xl:text-16 lg:text-15 text-14">
                     {productDetail?.durability_class
-                      .map((d) => d.name_en)
+                      .map((d) =>
+                        currentLang === "en" ? d.name_en : d.name_nl
+                      )
                       .join(", ")}
                   </div>
                 </div>
                 <div className="flex items-center border-b border-[#E6E6E6] min-h-10">
-                  <div className="text-16 font-bold flex-1">Quality</div>
+                  <div className="text-16 font-bold flex-1">
+                    {t("p_quality")}
+                  </div>
                   <div className="text-[#333333] flex-1 xl:text-16 lg:text-15 text-14">
-                    {productDetail?.quality.map((q) => q.name_en).join(", ")}
+                    {productDetail?.quality
+                      .map((q) =>
+                        currentLang === "en" ? q.name_en : q.name_nl
+                      )
+                      .join(", ")}
                   </div>
                 </div>
                 <div className="flex items-center border-b border-[#E6E6E6] min-h-10">
-                  <div className="text-16 font-bold flex-1">Application</div>
+                  <div className="text-16 font-bold flex-1">
+                    {t("p_application")}
+                  </div>
                   <div className="text-[#333333] flex-1 xl:text-16 lg:text-15 text-14">
                     {productDetail?.application
-                      .map((a) => a.name_en)
+                      .map((a) =>
+                        currentLang === "en" ? a.name_en : a.name_nl
+                      )
                       .join(", ")}
                   </div>
                 </div>
-                <div className="flex items-center border-b border-[#E6E6E6] min-h-10">
-                  <div className="text-16 font-bold flex-1">Width</div>
+                <div className="flex items-center border-b border-[#E6E6E6] min-h-10 mt-20">
+                  <div className="text-16 font-bold flex-1">{t("p_width")}</div>
+
                   <div className="text-[#333333] flex-1 xl:text-16 lg:text-15 text-14">
-                    {productDetail?.width} mm
+                    {productDetail?.width} cm
                   </div>
                 </div>
                 <div className="flex items-center border-b border-[#E6E6E6] min-h-10">
-                  <div className="text-16 font-bold flex-1">Thickness</div>
+                  <div className="text-16 font-bold flex-1">
+                    {t("p_thickness")}
+                  </div>
                   <div className="text-[#333333] flex-1 xl:text-16 lg:text-15 text-14">
-                    {productDetail?.thickness} mm
+                    {productDetail?.thickness} cm
                   </div>
                 </div>
               </div>

@@ -10,11 +10,13 @@ const WarningModal = ({
   isOpen,
   closeModal,
   handleDelete,
-  actionText = t("d_action_text"),
-  description = t("d_description_text"),
+  actionText,
+  description,
 }) => {
   const { t } = useTranslation();
   const cancelButtonRef = useRef(null);
+  const resolvedActionText = actionText || t("d_action_text");
+  const resolvedDescription = description || t("d_description_text");
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-[9999]" onClose={closeModal}>
@@ -51,7 +53,7 @@ const WarningModal = ({
                   </div>
 
                   <h1 className="text-3xl mx-auto">{t("d_warning")}</h1>
-                  <p className="text-md mx-auto my-4">{description}</p>
+                  <p className="text-md mx-auto my-4">{resolvedDescription}</p>
                 </div>
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                   <button
@@ -62,7 +64,7 @@ const WarningModal = ({
                       closeModal();
                     }}
                   >
-                    {actionText}
+                    {resolvedActionText}
                   </button>
                   <button
                     type="button"

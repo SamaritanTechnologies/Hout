@@ -8,8 +8,10 @@ import { getCart } from "../../redux/actions/orderActions";
 import { setCartItems } from "../../redux/slices/cartSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const ProductVaritants = ({ variants, vat }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -60,15 +62,23 @@ const ProductVaritants = ({ variants, vat }) => {
         <table className="w-full">
           <thead>
             <tr className="bg-[#F8F8F8]">
-              <th className="font-bold text-15 p-[10px] text-start">Variant</th>
               <th className="font-bold text-15 p-[10px] text-start">
-                Article number
+                {t("p_variant")}
               </th>
-              <th className="font-bold text-15 p-[10px] text-start">Price</th>
-              <th className="font-bold text-15 p-[10px] text-start">Stock</th>
-              <th className="font-bold text-15 p-[10px] text-start">Number</th>
               <th className="font-bold text-15 p-[10px] text-start">
-                Winkelwagen
+                {t("p_articleNumber")}
+              </th>
+              <th className="font-bold text-15 p-[10px] text-start">
+                {t("p_price")}
+              </th>
+              <th className="font-bold text-15 p-[10px] text-start">
+                {t("p_stock")}
+              </th>
+              <th className="font-bold text-15 p-[10px] text-start">
+                {t("p_number")}
+              </th>
+              <th className="font-bold text-15 p-[10px] text-start">
+                {t("p_winkelwagen")}
               </th>
             </tr>
           </thead>
@@ -78,7 +88,7 @@ const ProductVaritants = ({ variants, vat }) => {
                 <td className="p-[10px]">
                   <div className="flex flex-col gap-[2px]">
                     <div className="font-bold text-14 text-[#111727]">
-                      Variant
+                      {t("p_variant")}
                     </div>
                     <div className="text-14 text-[#111727]">
                       {variant.length}cm
@@ -88,7 +98,7 @@ const ProductVaritants = ({ variants, vat }) => {
                 <td className="p-[10px]">
                   <div className="flex flex-col gap-[2px]">
                     <div className="font-bold text-14 text-[#111727]">
-                      Article number
+                      {t("p_articleNumber")}
                     </div>
                     <div className="text-14 text-[#111727]">{variant.id}</div>
                   </div>
@@ -96,9 +106,9 @@ const ProductVaritants = ({ variants, vat }) => {
                 <td className="p-[10px]">
                   <div className="flex flex-col gap-[3px]">
                     <div className="font-bold text-14 text-[#111727]">
-                      Price
+                      {t("p_price")}
                       <span className="text-[#888888] text-[11px] font-normal">
-                        Inc BTW
+                        {t("p_IncBTW")}
                       </span>
                     </div>
                     <div className="text-14 text-[#111727] font-medium">
@@ -113,12 +123,12 @@ const ProductVaritants = ({ variants, vat }) => {
                   <div className="text-14 text-[#111727]">
                     {variant.stock === 0 ? (
                       <span className="text-14 text-[#111727]">
-                        If you are interested, please contact us
+                        {t("p_contactUs")}
                       </span>
                     ) : (
                       <div className="flex flex-col gap-3">
                         <span className="text-sm font-semibold text-[#888888]">
-                          Inventory quantity
+                          {t("p_inventoryQuantity")}
                         </span>
                         <span className="text-sm">{variant.stock}</span>
                       </div>
@@ -171,7 +181,9 @@ const ProductVaritants = ({ variants, vat }) => {
                 </td>
                 <td className="p-[10px]">
                   {variant.stock === 0 ? (
-                    <span className="text-14 text-[#111727]">Out of stock</span>
+                    <span className="text-14 text-[#111727]">
+                      {t("p_outOfStock")}
+                    </span>
                   ) : (
                     <button
                       className="cart-button flex items-center justify-center"
