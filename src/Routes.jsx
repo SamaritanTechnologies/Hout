@@ -36,13 +36,12 @@ import {
   VatValue,
   Orders,
 } from "./pages";
-
+import AdminWehshop from "./pages/AdminWehshop";
 import { TermsConditions } from "./pages/TermsConditions";
 import { PrivacyPolicy } from "./pages/PrivacyPolicy";
 import { ForgetPassword } from "./pages/ForgetPassword";
 import { Faq } from "./pages/Faq";
 import { ResetPassword } from "./pages/ResetPassword";
-
 import {
   AdminRoute,
   PrivateRoute,
@@ -51,6 +50,10 @@ import {
 import { OAuthCallback } from "./pages/OAuthCallback ";
 import AddCoupon from "./pages/AddCoupon";
 import DeliveryValue from "./pages/DeliveryValue";
+import AdminSignIn from "./pages/AdminSignIn";
+import AdminSignUp from "./pages/AdminSignUp";
+import AdminForgot from "./pages/AdminForgot";
+import AdminReset from "./pages/AdminReset";
 
 function Routes() {
   return (
@@ -84,6 +87,11 @@ function Routes() {
           <Route path="/admin-FAQ" element={<AdminFAQ />} />
           <Route path="/product/:id" element={<UpdateProduct />} />
           <Route path="/new-product" element={<AddNewProduct />} />
+          <Route path="/admin-webshop" element={<AdminWehshop />} />
+          <Route path="/admin-signin" element={<AdminSignIn />} />
+          <Route path="/admin-signup" element={<AdminSignUp />} />
+          <Route path="/admin-forgot" element={<AdminForgot />} />
+          <Route path="/admin-reset" element={<AdminReset />} />
           {/* <Route path="/order-list" element={<OrderList />} /> */}
           {/* <Route path="/user-profile" element={<UserProfile />} /> */}
         </Route>

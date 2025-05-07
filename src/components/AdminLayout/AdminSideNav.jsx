@@ -27,6 +27,11 @@ const AdminSidenav = () => {
     { name: "Privacy Policy", link: "/admin-privacy-policy", active: false },
     { name: "About Us", link: "/admin-about-us", active: false },
     { name: "FAQ", link: "/admin-FAQ", active: false },
+    { name: "Webshop", link: "/admin-webshop", active: false },
+    { name: "SignIn  Image", link: "/admin-signin", active: false },
+    { name: "Signup Image", link: "/admin-signup", active: false },
+    { name: "Forgot Image", link: "/admin-forgot", active: false },
+    { name: "Reset Image", link: "/admin-reset", active: false },
   ]);
 
   // useEffect(() => {

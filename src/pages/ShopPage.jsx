@@ -21,9 +21,12 @@ import {
   PRODUCT_PAGE_SIZE,
 } from "../utils/const";
 import { useTranslation } from "react-i18next";
+import { getWebshopImage } from "../redux/actions/dashboardActions";
 
 export const ShopPage = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language;
+  const [wallpaper, setWallpaper] = useState("");
   const [filterKey, setFilterKey] = useState(0);
   const { productCategories } = useSelector((state) => state.admin);
 
@@ -47,6 +50,22 @@ export const ShopPage = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = PRODUCT_PAGE_SIZE;
   const [totalItems, setTotalItems] = useState(0);
+
+  const fetchExistingImage = async () => {
+    try {
+      const res = await getWebshopImage();
+      if (res) {
+        setWallpaper(res);
+        console.log("shop res", res);
+      }
+    } catch (error) {
+      console.error("Error fetching existing image:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchExistingImage();
+  }, []);
 
   useEffect(() => {
     const translatedCategories = [
@@ -119,10 +138,24 @@ export const ShopPage = () => {
 
   return (
     <>
-      <nav aria-label="breadcrumb" className="shop">
-        <div className="about flex justify-center items-center">
+      <nav aria-label="breadcrumb" className="">
+        <div
+          className=" flex justify-center items-center"
+          style={{
+            backgroundImage: `url(${wallpaper?.image})`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "bottom",
+            minHeight: "500px",
+            width: "100%",
+          }}
+        >
           <div className="w-[320px] m-auto text-center bg-transparentGray text-white py-[35px] rounded-lg">
-            <h1 className="text-white text-48 font-medium">Shop</h1>
+            <h1 className="text-white text-48 font-medium">
+              {currentLang == "en"
+                ? wallpaper?.heading_en
+                : wallpaper?.heading_nl}
+            </h1>
             <ol className="flex items-center justify-center gap-x-3 pt-5 font-medium text-white">
               <li>
                 <Link to="/" className="cursor-pointer">

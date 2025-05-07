@@ -19,17 +19,44 @@ export const nlTranslations = {
   shop: "Winkel",
   webshop: "Webwinkel",
 
-  // signin  Page
-  s_welcome_back: "Welcome Back",
-  s_login_into_your_account: "Login into your account",
-  s_or_continue_with: "or continue with",
-  s_placeholder_email: "Email",
-  s_placeholder_password: "Password",
-  s_recover_password: "Recover Password",
-  s_button_loading: "Loading...",
-  s_button_login: "Log In",
-  s_dont_have_account: "Don't have an account?",
-  s_sign_up: "Sign up!",
+  // signin Page
+  s_welcome_back: "Welkom terug",
+  s_login_into_your_account: "Log in op je account",
+  s_or_continue_with: "of ga verder met",
+  s_placeholder_email: "E-mail",
+  s_placeholder_password: "Wachtwoord",
+  s_recover_password: "Wachtwoord herstellen",
+  s_button_loading: "Laden...",
+  s_button_login: "Inloggen",
+  s_dont_have_account: "Heb je geen account?",
+  s_sign_up: "Meld je aan!",
+  s_remember_me: "Onthoud mij",
+
+  // signup Page
+  su_get_started_with_houttotaal: "Begin met houttotaal.nl",
+  su_getting_started_is_easy: "Beginnen is eenvoudig",
+  su_or_continue_with: "of ga verder met",
+  su_placeholder_first_name: "Voornaam",
+  su_placeholder_last_name: "Achternaam",
+  su_placeholder_company_name: "Bedrijfsnaam",
+  su_placeholder_enter_email: "Voer e-mail in",
+  su_placeholder_phone_number: "Telefoonnummer",
+  su_placeholder_password: "Wachtwoord",
+  su_placeholder_confirm_password: "Bevestig wachtwoord",
+  su_button_loading: "Laden...",
+  su_button_create_account: "Account aanmaken",
+  su_have_account: "Heb je al een account?",
+  su_sign_in: "Inloggen!",
+
+  // Forgot Password page
+  f_forget_password: "Wachtwoord vergeten",
+  f_enter_email_to_receive_reset_link:
+    "Voer je e-mailadres in om een link voor het opnieuw instellen van je wachtwoord te ontvangen.",
+  f_placeholder_enter_email: "Voer e-mail in",
+  f_button_submitting: "Verzenden...",
+  f_button_submit: "Verzenden",
+  f_dont_have_account: "Heb je geen account?",
+  f_sign_up: "Meld je aan!",
 
   // ProductsSection
   p_products_heading: "Producten",
