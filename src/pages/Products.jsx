@@ -370,17 +370,15 @@ export const Products = () => {
                     </div>
                   </td>
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">
-                    <div className="flex xl:gap-3 gap-2 items-center justify-center">
-                      <p className="bg-[#FBC7001A] text-[#FBC700] py-1 px-3 rounded-full min-w-[70px]  text-gray-900 whitespace-no-wrap flex gap-2 items-center">
-                        {rowData?.lengths && rowData.lengths.length > 0
-                          ? rowData.lengths.reduce(
-                              (total, item) => total + item.stock,
-                              0
-                            )
-                          : 0}{" "}
-                        Left
-                      </p>
-                    </div>
+                    <p className="bg-[#FBC7001A] text-[#FBC700] py-1 px-3 rounded-full min-w-[70px]  text-gray-900 flex gap-2 items-center text-nowrap">
+                      {rowData?.lengths && rowData.lengths.length > 0
+                        ? rowData.lengths.reduce(
+                            (total, item) => total + item.stock,
+                            0
+                          )
+                        : 0}{" "}
+                      Left
+                    </p>
                   </td>
                   <td>
                     {rowData?.is_active_on_goedgeplaatst ? (
