@@ -30,6 +30,35 @@ export const enTranslations = {
   s_button_login: "Log In",
   s_dont_have_account: "Don't have an account?",
   s_sign_up: "Sign up!",
+  s_remember_me: "Remember me",
+
+  // signup  Page
+  su_get_started_with_houttotaal: "Get Started With houttotaal.nl",
+  su_getting_started_is_easy: "Getting started is easy",
+  su_or_continue_with: "or continue with",
+  su_placeholder_first_name: "First Name",
+  su_placeholder_last_name: "Last Name",
+  su_placeholder_company_name: "Company Name",
+  su_placeholder_enter_email: "Enter Email",
+  su_placeholder_phone_number: "Phone Number",
+  su_placeholder_password: "Password",
+  su_placeholder_confirm_password: "Confirm password",
+  su_button_loading: "Loading...",
+  su_button_create_account: "Create Account",
+  su_have_account: "Have an account?",
+  su_sign_in: "Sign in!",
+
+  // Forgot Password page
+  f_forget_password: "Forget Password",
+  f_enter_email_to_receive_reset_link:
+    "Enter your email to receive a password reset link.",
+  f_placeholder_enter_email: "Enter Email",
+  f_button_submitting: "Submitting...",
+  f_button_submit: "Submit",
+  f_dont_have_account: "Don't have an account?",
+  f_sign_up: "Sign up!",
+
+  // Reset Password page
 
   // ProductsSection
   p_products_heading: "Products",

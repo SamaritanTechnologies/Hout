@@ -21,11 +21,14 @@ import Switch from "../components/Common/Switch";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../redux";
 import { useTranslation } from "react-i18next";
+import { getSigninImage } from "../redux/actions/dashboardActions";
 
 export const Signin = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language;
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [data, setData] = useState("");
   const [btnLoading, setBtnLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -42,6 +45,20 @@ export const Signin = () => {
       [name]: value,
     });
   };
+
+  const fetchImage = async () => {
+    try {
+      const response = await getSigninImage();
+      setData(response);
+      console.log("signindata", response);
+    } catch (error) {
+      console.error("Error fetching existing image:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchImage();
+  }, []);
 
   useEffect(() => {
     const savedCredentials = localStorage.getItem("savedCredentials");
@@ -111,14 +128,14 @@ export const Signin = () => {
 
   return (
     <>
-      <div>
+      <div className="pb-20">
         <div className="signUpMain flex flex-row-reverse md:flex-col sm:flex-col xs:flex-col min-h-screen">
           <div className="signUpLeft xl:w-[50%] lg:w-[50%] w-full relative">
             <img
-              src={signInRight}
+              src={data?.image}
               alt="signupleftImg"
               onClick={() => navigate("/")}
-              className="cursor-pointer w-[100%] xl:min-h-[100vh] lg:min-h-[100vh] md:h-[70vh] md:min-h-[70vh] sm:h-[70vh] sm:min-h-[70vh] xs:h-[70vh] xs:min-h-[70vh]"
+              className="cursor-pointer  w-[100%] xl:min-h-[100vh] lg:min-h-[100vh] md:h-[70vh] md:min-h-[70vh] sm:h-[70vh] sm:min-h-[70vh] xs:h-[70vh] xs:min-h-[70vh]"
               style={{ objectFit: "cover" }}
             />
             <div>
@@ -136,13 +153,14 @@ export const Signin = () => {
                       className="xl:text-20 lg:text-18 md:text-16
 "
                     >
-                      Lorem Ipsum is simply
+                      {currentLang == "en"
+                        ? data?.heading_en
+                        : data?.heading_nl}
                     </h6>
                   </div>
                 </div>
                 <h6 className="flex-1 xl:text-20 lg:text-18 md:text-16 font-normal leading-[24px]  mt-[10px] text-primary">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry.{" "}
+                  {currentLang == "en" ? data?.text_en : data?.text_nl}
                 </h6>
               </div>
             </div>
@@ -229,7 +247,7 @@ export const Signin = () => {
 
                   <div className="recPasswrd xl:mb-[30px] mb-[15px] flex w-full justify-between">
                     <Switch
-                      label="Remember me"
+                      label={t("s_remember_me")}
                       name="RememberMe"
                       checked={formData.RememberMe}
                       onChange={handleFormData}

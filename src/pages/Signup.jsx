@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosApi } from "../providers";
 import { toast } from "react-toastify";
@@ -14,8 +14,12 @@ import whiteRin from "../assets/authImages/whiteRin.svg";
 import microscope from "../assets/authImages/microscope.svg";
 import slBlurBg from "../assets/authImages/slBlurBg.png";
 import InputField from "../components/Common/InputField";
+import { useTranslation } from "react-i18next";
+import { getSignupImage } from "../redux/actions/dashboardActions";
 
 export const Signup = () => {
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language;
   const navigate = useNavigate();
   const [btnLoading, setBtnLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -24,7 +28,28 @@ export const Signup = () => {
     companyName: "",
     email: "",
     phone: "",
+    password: "",
+    confirm_password: "",
   });
+  const [errors, setErrors] = useState({
+    password: "",
+    confirm_password: "",
+  });
+  const [data, setData] = useState();
+
+  const fetchImage = async () => {
+    try {
+      const response = await getSignupImage();
+      setData(response);
+      console.log("signindata", response);
+    } catch (error) {
+      console.error("Error fetching existing image:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchImage();
+  }, []);
 
   const handleFormData = (event) => {
     let name = event.target.name;
@@ -34,15 +59,66 @@ export const Signup = () => {
       ...formData,
       [name]: value,
     });
+
+    if (name === "password") {
+      validatePassword(value, formData.confirm_password);
+    } else if (name === "confirm_password") {
+      validatePassword(formData.password, value);
+    }
   };
 
+  // const validateForm = () => {
+  //   if (Object.values(formData).some((field) => field.trim() === "")) {
+  //     toast.error("Please fill in all fields");
+  //     return false;
+  //   }
+
+  //   return true;
+  // };
+
   const validateForm = () => {
+    let isValid = true;
+    const newErrors = { ...errors };
     if (Object.values(formData).some((field) => field.trim() === "")) {
       toast.error("Please fill in all fields");
-      return false;
+      isValid = false;
     }
 
-    return true;
+    validatePassword(formData.password, formData.confirm_password);
+
+    if (errors.password || errors.confirm_password) {
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
+  const validatePassword = (password, confirmPassword) => {
+    const newErrors = { ...errors };
+
+    if (password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    } else if (!/[A-Z]/.test(password)) {
+      newErrors.password =
+        "Password must contain at least one uppercase letter";
+    } else if (!/[a-z]/.test(password)) {
+      newErrors.password =
+        "Password must contain at least one lowercase letter";
+    } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      newErrors.password =
+        "Password must contain at least one special character";
+    } else {
+      newErrors.password = "";
+    }
+
+    // Confirm password validation
+    if (password !== confirmPassword && confirmPassword) {
+      newErrors.confirm_password = "Passwords do not match";
+    } else {
+      newErrors.confirm_password = "";
+    }
+
+    setErrors(newErrors);
   };
 
   const createUser = async (e) => {
@@ -56,6 +132,8 @@ export const Signup = () => {
       email: formData.email,
       company_name: formData.companyName,
       phone: formData.phone,
+      password: formData.password,
+      confirm_password: formData.confirm_password,
     };
 
     try {
@@ -76,11 +154,11 @@ export const Signup = () => {
   };
 
   return (
-    <div>
+    <div className="pb-20">
       <div className="signUpMain flex min-h-screen flex-row md:flex-col sm:flex-col xs:flex-col">
         <div className="signUpLeft w-[50%] md:w-full sm:w-full xs:w-full relative">
           <img
-            src={signUpLeft}
+            src={data?.image}
             alt="signupleftImg"
             className="w-[100%] min-h-[142px] h-full object-cover"
           />
@@ -93,7 +171,7 @@ export const Signup = () => {
                 className="flex-1 xl:text-20 lg:text-18 md:text-16
  font-medium"
               >
-                Lorem Ipsum is{" "}
+                {currentLang == "en" ? data?.heading_en : data?.heading_nl}
               </h6>
             </div>
             <div
@@ -107,10 +185,10 @@ export const Signup = () => {
                 className="flex-1 xl:text-20 lg:text-18 md:text-16
  font-normal leading-[24px]  mt-[10px] text-primary"
               >
-                Lorem Ipsum is simply dummy text of the printing{" "}
+                {currentLang == "en" ? data?.text_en : data?.text_nl}
               </h6>
             </div>
-            <div className=" grayBar absolute xl:top-[50%] lg:top-[65%] md:top-[70%]  sm:top-[70%] xs:top-[70%] xl:right-[-10%] lg:right-[1%] md:right-[50%] sm:right-[50%] xs:right-[50%] translate-x-[20%] md:translate-x-[50%] sm:translate-x-[50%] xs:translate-x-[50%]  bg-[#5A5A5A] min-w-[200px] md:min-w-[291px] sm:min-w-[291px] xs:min-w-[291px]  rounded-full flex items-center xl:py-[10px] py-[5px] xl:px-[20px] px-[10px] gap-2 mb-[22.34px]">
+            {/* <div className=" grayBar absolute xl:top-[50%] lg:top-[65%] md:top-[70%]  sm:top-[70%] xs:top-[70%] xl:right-[-10%] lg:right-[1%] md:right-[50%] sm:right-[50%] xs:right-[50%] translate-x-[20%] md:translate-x-[50%] sm:translate-x-[50%] xs:translate-x-[50%]  bg-[#5A5A5A] min-w-[200px] md:min-w-[291px] sm:min-w-[291px] xs:min-w-[291px]  rounded-full flex items-center xl:py-[10px] py-[5px] xl:px-[20px] px-[10px] gap-2 mb-[22.34px]">
               <div className="w-[40px] h-[38px] rounded-[50%] bg-[#9c9c9c] grid place-items-center text-white">
                 <img src={whiteRin} alt="" />
               </div>
@@ -118,9 +196,9 @@ export const Signup = () => {
                 className="flex-1 xl:text-18 lg:text-16 text-14
  font-normal text-center text-primary	"
               >
-                Lorem Ipsum is{" "}
+                Lorem Ipsum is
               </h6>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="xl:min-w-[650px] min-w-[auto] signUpRight xl:w-[50%] lg:w-[55%] w-[100%] sm:w-[100%] xs:w-[100%] xl:py-[25px] py-[18px] xl:px-[51px] lg:px-[30px] px-[20px]">
@@ -135,10 +213,10 @@ export const Signup = () => {
           <div className="signUpFormSec max-w-[400px] mx-auto">
             <div className="text-center xl:mb-[42px] lg:mb-[30px] mb-[20px]">
               <h4 className="xl:text-24 lg:text-20 text-18 font-semibold">
-                Get Started With houttotaal.nl
+                {t("su_get_started_with_houttotaal")}
               </h4>
               <span className="xl:text-15  text-[#7E7E7E] text-14 text-gray-500 block font-normal	">
-                Getting started is easy
+                {t("su_getting_started_is_easy")}
               </span>
             </div>
             <form className="w-full" onSubmit={createUser}>
@@ -175,7 +253,7 @@ export const Signup = () => {
                   <img src={grayLine} alt="" />
                 </div>
                 <h5 className="w-[32%] text-13 xs:text-12 text-center font-normal">
-                  or continue with{" "}
+                  {t("su_or_continue_with")}
                 </h5>
                 <div className="w-[32%]">
                   <img src={grayLine} alt="" />
@@ -185,7 +263,7 @@ export const Signup = () => {
                 <div className="mb-[23px]">
                   <InputField
                     required
-                    placeholder="First Name"
+                    placeholder={t("su_placeholder_first_name")}
                     name="firstName"
                     value={formData.firstName}
                     onChange={handleFormData}
@@ -194,7 +272,7 @@ export const Signup = () => {
                 <div className="mb-[23px]">
                   <InputField
                     required
-                    placeholder="Last Name"
+                    placeholder={t("su_placeholder_last_name")}
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleFormData}
@@ -203,7 +281,7 @@ export const Signup = () => {
                 <div className="mb-[23px]">
                   <InputField
                     required
-                    placeholder="Company Name"
+                    placeholder={t("su_placeholder_company_name")}
                     name="companyName"
                     value={formData.companyName}
                     onChange={handleFormData}
@@ -212,7 +290,7 @@ export const Signup = () => {
                 <div className="mb-[23px]">
                   <InputField
                     required
-                    placeholder="Enter Email"
+                    placeholder={t("su_placeholder_enter_email")}
                     type="email"
                     name="email"
                     value={formData.email}
@@ -222,11 +300,39 @@ export const Signup = () => {
                 <div className="mb-[23px]">
                   <InputField
                     required
-                    placeholder="Phone Number"
+                    placeholder={t("su_placeholder_phone_number")}
                     name="phone"
                     value={formData.phone}
                     onChange={handleFormData}
                   />
+                </div>{" "}
+                <div className="mb-[23px]">
+                  <InputField
+                    required
+                    placeholder={t("su_placeholder_password")}
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleFormData}
+                  />
+                  {errors.password && (
+                    <p className="text-red text-xs mt-1">{errors.password}</p>
+                  )}
+                </div>
+                <div className="mb-[23px]">
+                  <InputField
+                    required
+                    type="password"
+                    placeholder={t("su_placeholder_confirm_password")}
+                    name="confirm_password"
+                    value={formData.confirm_password}
+                    onChange={handleFormData}
+                  />
+                  {errors.confirm_password && (
+                    <p className="text-red text-xs mt-1">
+                      {errors.confirm_password}
+                    </p>
+                  )}
                 </div>
                 <div className="w-full ">
                   <button
@@ -235,15 +341,17 @@ export const Signup = () => {
                     disabled={btnLoading}
                     className="bg-[#FBC700] block text-black text-center xl:py-[16px] lg:py-[16px] py-[12px] px-[25px] w-full font-semibold mb-[23px] xl:text-[18px] text-[16px]"
                   >
-                    {btnLoading ? "Loading..." : "Create Account"}
+                    {btnLoading
+                      ? t("su_button_loading")
+                      : t("su_button_create_account")}
                   </button>
                   <span className="flex justify-end text-14">
-                    Have an account?{" "}
+                    {t("su_have_account")}
                     <a
                       onClick={() => navigate("/sign-in")}
                       className="text-customYellow  cursor-pointer  ml-1 font-semibold"
                     >
-                      Sign in!
+                      {t("su_sign_in")}
                     </a>
                   </span>
                 </div>
