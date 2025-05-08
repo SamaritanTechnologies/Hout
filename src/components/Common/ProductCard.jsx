@@ -113,6 +113,7 @@ const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
 
     toast.success("Product added to cart!");
   };
+
   return (
     <div className="relative bg-[#F4F5F7] h-auto">
       {minimumPrice?.discount > 0 && (
@@ -160,21 +161,22 @@ const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
         </div>
         <div className="flex gap-x-4 items-center justify-between">
           <div
-            onClick={() => {
-              !isAuthenticated
-                ? handleAddToLocal(product)
-                : handleAddToCart(product);
-            }}
+            // onClick={() => {
+            //   !isAuthenticated
+            //     ? handleAddToLocal(product)
+            //     : handleAddToCart(product);
+            // }}
+            onClick={() => navigate(`/product-detail/${product.id}`)}
             className="border-2 cursor-pointer border-[#898989] px-2 flex items-center justify-center py-3  gap-x-3  add-cart-btn md:text-[12px] lg:text-[12px]"
           >
-            {cartLoading === product.id ? (
+            {/* {cartLoading === product.id ? (
               "Adding..."
             ) : (
               <>
-                <img src={addToCartt} />
-                Add to Cart
-              </>
-            )}
+                <img src={addToCartt} /> */}
+            View Product
+            {/* </>
+            )} */}
           </div>
           <div className="cursor-pointer">
             {!isAuthenticated ? (

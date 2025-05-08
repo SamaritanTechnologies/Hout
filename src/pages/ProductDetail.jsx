@@ -41,6 +41,7 @@ export const ProductDetail = () => {
       try {
         const data = await getProductsById(product_id);
         setProductDetail(data);
+        console.log("detail page", data);
         console.log("data", data);
       } catch (error) {
         console.error("Error fetching product details:", error);
@@ -71,7 +72,6 @@ export const ProductDetail = () => {
               className="text-[#9F9F9F] xs:text-14 sm:text-15 text-16 cursor-pointer"
               onClick={() => navigate("/shop-page")}
             >
-              {" "}
               Shop
             </td>
             <td>
@@ -365,6 +365,7 @@ export const ProductDetail = () => {
 
       <ProductVaritants
         variants={productDetail?.lengths}
+        image={productDetail?.images}
         product={product_id}
         vat={vat}
       />

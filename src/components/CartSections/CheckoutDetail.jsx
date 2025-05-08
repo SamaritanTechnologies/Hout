@@ -378,6 +378,7 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
                         );
                         const userDetail = await getProfileInfo();
                         dispatch(loginUser(userDetail));
+                        fetchUser();
                         setSubmitting(false);
                         resetForm(false);
                         toast.success("Delivery address successfully updated");

@@ -279,7 +279,7 @@ const ShoppingCart = ({
   };
 
   const cartTotal = localCart?.reduce((acc, item) => {
-    const price = Number(item?.lengths?.[0]?.discounted_price_ex_vat || 0);
+    const price = Number(item?.discounted_price_ex_vat || 0);
     const quantity = Number(item?.quantity || 0);
     return acc + price * quantity;
   }, 0);
@@ -615,7 +615,7 @@ const ShoppingCart = ({
                                       `/product-detail/${item?.product.id}`
                                     )
                                   }
-                                  src={item?.images[0]?.image}
+                                  src={item?.product.image}
                                   className="cursor-pointer xl:w-[80px] xl:h-[96px] lg:w-[70px] lg:h-[80px] min-w-[60px] min-h-[60px] xs:w-[60px] xs:h-[60px]"
                                   alt={item.name}
                                 />
@@ -630,8 +630,8 @@ const ShoppingCart = ({
                                   }
                                 >
                                   {currentLang == "en"
-                                    ? item?.name_en
-                                    : item?.name_nl}
+                                    ? item?.product.name_en
+                                    : item?.product.name_nl}
                                 </div>
                                 <div className="flex gap-[15px] items-center">
                                   <div>
@@ -639,7 +639,7 @@ const ShoppingCart = ({
                                       {t("s_thickness_label")}
                                     </div>
                                     <div className="xl:text-14 text-[13px]">
-                                      {item?.thickness} cm
+                                      {item?.product.thickness} cm
                                     </div>
                                   </div>
                                   <div>
@@ -647,7 +647,7 @@ const ShoppingCart = ({
                                       {t("s_width_label")}
                                     </div>
                                     <div className="xl:text-14 text-[13px]">
-                                      {item?.width} cm
+                                      {item?.product.width} cm
                                     </div>
                                   </div>
                                   <div>
@@ -655,7 +655,7 @@ const ShoppingCart = ({
                                       {t("s_length_label")}
                                     </div>
                                     <div className="xl:text-14 text-[13px]">
-                                      {item?.product_length?.product.length} cm
+                                      {item?.length} cm
                                     </div>
                                   </div>
                                 </div>
@@ -690,15 +690,13 @@ const ShoppingCart = ({
                             </div>
                           </td>
                           <td className="px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
-                            €{item?.lengths[0]?.discounted_price_ex_vat}
+                            €{item?.discounted_price_ex_vat}
                           </td>
                           <td className="px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
                             €
                             {(
                               (item?.quantity || 1) *
-                              parseFloat(
-                                item?.lengths?.[0]?.discounted_price_ex_vat || 0
-                              )
+                              parseFloat(item?.discounted_price_ex_vat || 0)
                             ).toFixed(2)}
                           </td>
                         </tr>

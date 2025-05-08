@@ -99,7 +99,7 @@ const HeaderSection = () => {
       loadLocalCart();
       const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
       const formattedCart = storedCart.map((item) => ({
-        product_length: item?.lengths[0]?.id,
+        product_length: item?.id,
         quantity: item.quantity,
       }));
       handleAddtoCartItems(formattedCart);

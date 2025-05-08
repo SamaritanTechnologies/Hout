@@ -6,12 +6,14 @@ import { axiosWithCredentials } from "../../providers";
 import { toast } from "react-toastify";
 import { getCart } from "../../redux/actions/orderActions";
 import { setCartItems } from "../../redux/slices/cartSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 const ProductVaritants = ({ variants, vat }) => {
   const { t } = useTranslation();
+  const authState = useSelector((state) => state.auth);
+  const isAuthenticated = authState.isLoggedIn;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -53,6 +55,42 @@ const ProductVaritants = ({ variants, vat }) => {
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAddToLocal = (product, variantId) => {
+    console.log("Product", product);
+    const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    // Get the quantity value from the input field
+    const input = document.getElementById(`quantity-${variantId}`);
+    const quantity = parseInt(input?.value, 10);
+
+    if (quantity > 0) {
+      const productIndex = existingCart.findIndex(
+        (item) => item.id === product.id
+      );
+
+      if (productIndex !== -1) {
+        // Update the quantity
+        existingCart[productIndex].quantity += quantity;
+      } else {
+        // Set the quantity and add to cart
+        product.quantity = quantity;
+        existingCart.push(product);
+      }
+
+      localStorage.setItem("cart", JSON.stringify(existingCart));
+
+      // Reset input value
+      input.value = 0;
+
+      // Dispatch custom event
+      window.dispatchEvent(new Event("localCartUpdated"));
+
+      toast.success("Product added to cart!");
+    } else {
+      toast.warning("Please enter a valid quantity");
     }
   };
 
@@ -187,7 +225,12 @@ const ProductVaritants = ({ variants, vat }) => {
                   ) : (
                     <button
                       className="cart-button flex items-center justify-center"
-                      onClick={() => handleaddToCart(variant.id)}
+                      onClick={() => {
+                        !isAuthenticated
+                          ? handleAddToLocal(variant, variant.id)
+                          : handleaddToCart(variant.id);
+                      }}
+                      // onClick={() => handleaddToCart(variant.id)}
                       disabled={loading}
                     >
                       <img src={cartIcon} alt="Cart" />
