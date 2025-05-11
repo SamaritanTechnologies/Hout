@@ -376,8 +376,7 @@ const ShoppingCart = ({
                                         {t("s_length_label")}
                                       </div>
                                       <div className="xl:text-14 text-[13px]">
-                                        {item?.product_length?.product.length}{" "}
-                                        cm
+                                        {item?.product_length?.length} cm
                                       </div>
                                     </div>
                                   </div>

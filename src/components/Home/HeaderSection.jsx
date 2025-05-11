@@ -86,7 +86,6 @@ const HeaderSection = () => {
   };
 
   const handleAddtoCartItems = async (payload) => {
-    console.log("payload", payload);
     const res = await axiosWithCredentials.post(`/add-to-cart/`, payload);
     if (res) {
       localStorage.removeItem("cart");
@@ -94,17 +93,17 @@ const HeaderSection = () => {
     fetchCart();
   };
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      loadLocalCart();
-      const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-      const formattedCart = storedCart.map((item) => ({
-        product_length: item?.id,
-        quantity: item.quantity,
-      }));
-      handleAddtoCartItems(formattedCart);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     loadLocalCart();
+  //     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+  //     const formattedCart = storedCart.map((item) => ({
+  //       product_length: item?.id,
+  //       quantity: item.quantity,
+  //     }));
+  //     handleAddtoCartItems(formattedCart);
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (isAuthenticated) {

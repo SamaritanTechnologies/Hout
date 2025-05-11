@@ -5,6 +5,7 @@ import {
   setAccessToken,
   BASE_URL,
   setRefreshToken,
+  axiosWithCredentials,
 } from "../providers";
 import { toast } from "react-toastify";
 
@@ -22,6 +23,7 @@ import { useDispatch } from "react-redux";
 import { loginUser } from "../redux";
 import { useTranslation } from "react-i18next";
 import { getSigninImage } from "../redux/actions/dashboardActions";
+import { getCart } from "../redux/actions/orderActions";
 
 export const Signin = () => {
   const { t, i18n } = useTranslation();
@@ -53,6 +55,26 @@ export const Signin = () => {
       console.log("signindata", response);
     } catch (error) {
       console.error("Error fetching existing image:", error);
+    }
+  };
+
+  const handleAddtoCartItems = async () => {
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    const formattedCart = storedCart.map((item) => ({
+      product_length: item?.id,
+      quantity: item.quantity,
+    }));
+    const res = await axiosWithCredentials.post(`/add-to-cart/`, formattedCart);
+    if (res) {
+      localStorage.removeItem("cart");
+    }
+  };
+  const fetchCart = async () => {
+    try {
+      const res = await getCart();
+      dispatch(setCartItems(res.cart_items));
+    } catch (error) {
+      console.error("Failed to fetch cart:", error);
     }
   };
 
@@ -89,6 +111,9 @@ export const Signin = () => {
 
     try {
       const response = await axiosApi.post("/accounts/login/", data);
+      if (response) {
+        handleAddtoCartItems();
+      }
       const { access_token, refresh_token, user } = response.data;
 
       setAccessToken(access_token);
