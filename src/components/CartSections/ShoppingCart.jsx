@@ -35,6 +35,7 @@ const ShoppingCart = ({
   const [updatedItem, setUpdatedItem] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [selectedMethod, setSelectedMethod] = useState("delivery");
 
   useEffect(() => {
     setCartItem(cartData?.cart_items || []);
@@ -151,7 +152,19 @@ const ShoppingCart = ({
     // taxPercentage,
     coupon = null
   ) => {
-    const subtotal = Number(totalPrice || 0) + Number(delivery || 0);
+    // console.log("delivery fee", delivery);
+    let deliveryCharge = 0;
+    const numericTotalPrice = Number(totalPrice || 0);
+
+    if (numericTotalPrice < 750) {
+      deliveryCharge = Number(delivery?.upto_750 || 0);
+    } else if (numericTotalPrice >= 750 && numericTotalPrice <= 1500) {
+      deliveryCharge = Number(delivery?.from_750_to_1500 || 0);
+    } else {
+      deliveryCharge = Number(delivery?.above_1500 || 0);
+    }
+
+    const subtotal = numericTotalPrice + deliveryCharge;
     let discountAmount = 0;
     let isMinimumOrderMet = true;
 
@@ -183,27 +196,38 @@ const ShoppingCart = ({
       discount: discountAmount,
       subtotal: subtotal,
       isMinimumOrderMet,
+      deliveryCharge,
     };
   };
 
-  const { total, discount, subtotal, isMinimumOrderMet } = calculateTotal(
-    totalPrice,
-    delivery,
-    // taxData,
-    couponData
-  );
+  const { total, discount, deliveryCharge, subtotal, isMinimumOrderMet } =
+    calculateTotal(
+      totalPrice,
+      delivery,
+      // taxData,
+      couponData
+    );
 
   useEffect(() => {
     dispatch(
       setCartSummaryData({
         subtotal: Number(totalPrice || 0).toFixed(2),
-        deliveryFee: Number(delivery || 0).toFixed(2),
+        deliveryFee: deliveryCharge,
         tax: Number(taxData || 0).toFixed(2),
         youSaved: discount.toFixed(2),
         total: total?.toFixed(2),
+        order_status: selectedMethod,
       })
     );
-  }, [totalPrice, delivery, taxData, discount, total, dispatch]);
+  }, [
+    selectedMethod,
+    totalPrice,
+    deliveryCharge,
+    taxData,
+    discount,
+    total,
+    dispatch,
+  ]);
 
   const handleApplyCoupon = async () => {
     if (!couponCode.trim()) {
@@ -283,6 +307,11 @@ const ShoppingCart = ({
     const quantity = Number(item?.quantity || 0);
     return acc + price * quantity;
   }, 0);
+
+  const handleMethod = (e) => {
+    const { value, checked } = e.target;
+    setSelectedMethod(checked ? value : "");
+  };
 
   return (
     <>
@@ -422,6 +451,35 @@ const ShoppingCart = ({
                     </tbody>
                   </table>
                 </div>
+                <section>
+                  <div>
+                    <h2 className="text-2xl font-semibold mb-2">
+                      Select a delivery method
+                    </h2>
+                    <div className="flex gap-7">
+                      <label className="block">
+                        <input
+                          className="h-4 w-4 cursor-pointer"
+                          type="checkbox"
+                          value="delivery"
+                          checked={selectedMethod === "delivery"}
+                          onChange={handleMethod}
+                        />
+                        <span className="ml-2 text">Delivery</span>
+                      </label>
+                      <label className="block">
+                        <input
+                          className="h-4 w-4 cursor-pointer"
+                          type="checkbox"
+                          value="pickUp"
+                          checked={selectedMethod === "pickUp"}
+                          onChange={handleMethod}
+                        />
+                        <span className="ml-2">Pick Up</span>
+                      </label>
+                    </div>
+                  </div>
+                </section>
 
                 <section className="pt-[30px]">
                   <div>
@@ -434,6 +492,7 @@ const ShoppingCart = ({
                       {t("s_add_code_text")}
                     </p>
                   </div>
+
                   {couponData ? (
                     <div className="flex items-center justify-between bg-green-50 p-3 rounded-md mt-3">
                       <div className="flex items-center">
@@ -512,7 +571,10 @@ const ShoppingCart = ({
                     <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
                       {t("s_delivery_fee")}
                     </div>
-                    <div>€{Number(delivery || 0).toFixed(2)}</div>
+                    <div>
+                      €{deliveryCharge}
+                      {/* {Number(delivery || 0).toFixed(2)} */}
+                    </div>
                   </section>
                   <section className="flex justify-between pt-[25px] border-b border-[#D9D9D9] pb-3">
                     <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">

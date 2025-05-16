@@ -53,6 +53,7 @@ export const ProductDetail = () => {
 
     fetchProductDetail();
   }, [product_id]);
+  console.log("product detail", productDetail);
 
   return (
     <>
@@ -162,10 +163,9 @@ export const ProductDetail = () => {
               <h1 className="text-20 font-bold">{productDetail?.name_en}</h1>
               <div className="pt-6 text-44">
                 €
-                {(productDetail?.price && productDetail.price > 0
-                  ? productDetail.price
-                  : 0
-                ).toFixed(2)}
+                {vat
+                  ? productDetail?.lengths[0].discounted_price_in_vat
+                  : productDetail?.lengths[0].discounted_price_ex_vat}
               </div>
 
               <div className="flex items-center gap-x-4 pt-5 border-b-2 border-[#D9D9D9] pb-[26px]">
@@ -221,7 +221,10 @@ export const ProductDetail = () => {
                 : productDetail?.name_nl}
             </h1>
             <div className="text-xl text-[#111727]">
-              € {productDetail?.lengths[0]?.discount}
+              €
+              {vat
+                ? productDetail?.lengths[0].discounted_price_in_vat
+                : productDetail?.lengths[0].discounted_price_ex_vat}
             </div>
 
             <div className="flex items-center gap-x-4 pt-5 border-b-2 border-[#D9D9D9] pb-[26px]">

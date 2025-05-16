@@ -174,16 +174,11 @@ const Wishlist = () => {
                           <td className="w-[30%] flex justify-center items-center">
                             <button
                               className="px-[24px] py-[6px] bg-[#FBC700] rounded-[8px]"
-                              onClick={() => {
-                                handleAddToCart(item);
-                                disabled = { cartLoading };
-                              }}
+                              onClick={() =>
+                                navigate(`/product-detail/${item?.id}`)
+                              }
                             >
-                              <span className="text-[#fff]">
-                                {loadingStates[item.id]
-                                  ? "Adding..."
-                                  : "Add to cart"}
-                              </span>
+                              <span className="text-[#fff]">View Product</span>
                             </button>
                           </td>
                         </tr>

@@ -32,7 +32,7 @@ const OrderComplete = ({
               Thank you! &#127881;
             </div>
             <div className="xl:text-40 lg:text-36 md:text-32 text-24 font-medium text-center pt-4">
-              Your order has been received
+              Your order has been confirmed!
             </div>
             <div className="xl:pt-[40px] lg:pt-[30px] pt-[10px] flex justify-center">
               <img src={smallVideo} alt="Order complete" />

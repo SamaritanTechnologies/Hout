@@ -193,6 +193,7 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
       const payload = {
         gross_total: cartSummary?.subtotal,
         total: cartSummary?.total,
+        order_status: cartSummary?.order_status,
         delivery_method: selectedPaymentMethod.name,
         delivery_price:
           cartSummary?.deliveryFee !== null &&

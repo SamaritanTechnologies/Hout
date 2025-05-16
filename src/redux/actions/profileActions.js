@@ -20,7 +20,7 @@ export const updatePass = async (values, id, { setSubmitting }) => {
       }
     );
 
-    toast.success("Successfuly Updated");
+    toast.success("Passwod Successfuly Updated");
     setSubmitting(false);
   } catch (error) {
     console.log(error, "error");
