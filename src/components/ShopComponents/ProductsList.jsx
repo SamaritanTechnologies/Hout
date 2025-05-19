@@ -8,6 +8,7 @@ const ProductsList = ({
   pageSize,
   setTotalItems,
   includeVAT,
+  searchQuery,
 }) => {
   const [products, setProducts] = useState([]);
 
@@ -39,7 +40,9 @@ const ProductsList = ({
       // Add pagination parameters
       queryParams.append("page", currentPage + 1); // API uses 1-based indexing
       queryParams.append("page_size", pageSize);
-
+      if (searchQuery && searchQuery.trim() !== "") {
+        queryParams.append("search", searchQuery.trim());
+      }
       const data = await getProducts(queryParams.toString());
 
       setProducts(data.results);
@@ -50,7 +53,7 @@ const ProductsList = ({
   };
   useEffect(() => {
     fetchProduct();
-  }, [filters, currentPage, pageSize, setTotalItems]);
+  }, [filters, currentPage, pageSize, setTotalItems, searchQuery]);
 
   const getMinimumPriceObject = (lengths) => {
     if (!lengths || lengths.length === 0) return "N/A";
@@ -63,7 +66,7 @@ const ProductsList = ({
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-7 w-full pt-24 max-w-[915px] mx-auto px-4">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-7 w-full pt-24 max-w-[915px] mx-auto px-4">
         {products?.map((product) => {
           const minimumPrice = getMinimumPriceObject(product.lengths);
           return (
@@ -76,6 +79,28 @@ const ProductsList = ({
             />
           );
         })}
+      </div> */}
+      <div className="w-full pt-24 max-w-[915px] mx-auto px-4">
+        {products?.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-7">
+            {products.map((product) => {
+              const minimumPrice = getMinimumPriceObject(product.lengths);
+              return (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  minimumPrice={minimumPrice}
+                  fetchProduct={fetchProduct}
+                  includeVAT={includeVAT}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <div className="text-center py-20 text-gray-500 text-lg font-medium">
+            🚫 No products found.
+          </div>
+        )}
       </div>
     </>
   );

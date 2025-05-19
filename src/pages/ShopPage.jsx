@@ -15,6 +15,7 @@ import Switch from "../components/Common/Switch";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Pagination from "../components/Common/Pagination";
+import { useSearchParams } from "react-router-dom";
 import {
   PRODUCT_MAX_PRICE,
   PRODUCT_MIN_PRICE,
@@ -25,6 +26,9 @@ import { getWebshopImage } from "../redux/actions/dashboardActions";
 
 export const ShopPage = () => {
   const { t, i18n } = useTranslation();
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search");
+  console.log("search:", searchQuery);
   const currentLang = i18n.language;
   const [wallpaper, setWallpaper] = useState("");
   const [filterKey, setFilterKey] = useState(0);
@@ -248,6 +252,7 @@ export const ShopPage = () => {
         </div>
         <div className="flex flex-col w-full gap-10">
           <ProductsList
+            searchQuery={searchQuery}
             filters={filters}
             currentPage={currentPage}
             pageSize={pageSize}
