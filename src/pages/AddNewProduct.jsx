@@ -25,6 +25,7 @@ import Select from "react-select";
 import countryflag from "../assets/DashboardImages/UK-Flag.svg";
 import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
 import { XCircleIcon } from "@heroicons/react/24/outline";
+import { FlashOnTwoTone } from "@mui/icons-material";
 
 const styleMultiSelect = {
   chips: {
@@ -183,6 +184,7 @@ export const AddNewProduct = () => {
           width: "",
           thickness: "",
           weight_per_m3: "",
+          place_on_goedgeplaatst: false,
         }}
         validationSchema={Yup.object({
           name_nl: Yup.string().required("Name is required"),
@@ -553,7 +555,11 @@ export const AddNewProduct = () => {
               </div>
               <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
               <div className="flex gap-5 items-center mb-[24px]">
-                <img src={checkSquareIcon} alt="check square" />
+                <Field
+                  type="checkbox"
+                  name="is_featured"
+                  className="h-8 w-8  cursor-pointer"
+                />
                 <p className="font-semibold text-lg text-[#111727]">
                   Place Product on GoedGeplaatst via API
                 </p>

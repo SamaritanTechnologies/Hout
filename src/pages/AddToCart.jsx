@@ -154,7 +154,7 @@ export const AddToCart = () => {
       const response = await axiosWithCredentials.get(`/get-tax-delivery/`);
       setState((prev) => ({
         ...prev,
-        tax: response.data?.vat,
+        tax: response.data?.vat_rate,
         deliveryFee: response?.data?.delivery_fee,
       }));
       return response.data;

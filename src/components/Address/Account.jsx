@@ -171,6 +171,7 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
                     placeholder={t("a_email_placeholder")}
                     label={t("a_email_label")}
                     component={FormikField}
+                    disabled
                   />
                 </div>
                 <div className="w-full md:w-1/2">

@@ -205,10 +205,16 @@ export const Dashboard = () => {
               <thead>
                 <tr className="bg-[#F1F4F9]">
                   <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold  rounded-l-2xl text-nowrap">
-                    Order Name
+                    Order ID
                   </th>
                   <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	text-nowrap">
-                    Location
+                    Order Data
+                  </th>
+                  <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	text-nowrap">
+                    Customer Name
+                  </th>
+                  <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	text-nowrap">
+                    Address
                   </th>
                   <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold text-nowrap">
                     <div className="flex flex-col">
@@ -221,11 +227,11 @@ export const Dashboard = () => {
                       />
                     </div>
                   </th>
-                  <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	text-nowrap">
+                  {/* <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	text-nowrap">
                     Piece
-                  </th>
+                  </th> */}
                   <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	text-nowrap">
-                    Amount
+                    Order Price
                   </th>
 
                   <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-center xl:text-15 text-14font-bold rounded-r-2xl text-nowrap">
@@ -260,6 +266,11 @@ export const Dashboard = () => {
 
                     return (
                       <tr key={index} className="border-b-[0.4px] border-gray">
+                        <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
+                          <p className="text-gray-900 whitespace-no-wrap xl:text-15 text-12">
+                            {item.id}
+                          </p>
+                        </td>
                         <td className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-semibold text-gray3">
                           <div className="flex xl:gap-3 gap-1 items-center">
                             <div className="flex-shrink-0 w-10 h-10">
@@ -277,7 +288,16 @@ export const Dashboard = () => {
                           </div>
                         </td>
                         <td className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-semibold text-gray3">
+
+                          <p className="text-gray-900 whitespace-no-wrap ml-3">
+                            {item?.user.first_name}
+                          </p>
+                        </td>
+                        <td className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-semibold text-gray3">
+                          <p className="text-gray-900 whitespace-no-wrap ml-3">
+
                           <p className="text-gray-900 whitespace-no-wrap">
+
                             {item?.delivery_address}
                           </p>
                         </td>
@@ -286,11 +306,11 @@ export const Dashboard = () => {
                             {formattedDate}
                           </p>
                         </td>
-                        <td className="xl:px-[20px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
+                        {/* <td className="xl:px-[20px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
                           <p className="text-gray-900 whitespace-no-wrap">
                             {productQuantities}
                           </p>
-                        </td>
+                        </td> */}
                         <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
                           <p className="text-[14px] text-[#141718] w-[20%] md:w-[auto] sm:w-[auto]">
                             €{totalAmount.toFixed(2)}

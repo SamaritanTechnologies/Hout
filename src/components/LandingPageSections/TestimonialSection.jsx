@@ -17,7 +17,7 @@ const TestimonialSection = () => {
           </h2>
         </div>
         <img src={frameImage} className="w-full" />
-        {/* <Rating /> */}
+        <Rating />
       </section>
     </>
   );
