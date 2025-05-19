@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import smallVideo from "../../assets/addToCart/smallVideo.svg";
 import Button from "../Common/Button";
 import moment from "moment";
 import { Link, useNavigate } from "react-router-dom";
+import { getDeliveryFee } from "../../redux/actions/productActions";
 
 const OrderComplete = ({
   response,
@@ -13,6 +14,7 @@ const OrderComplete = ({
   handleClick,
 }) => {
   const navigate = useNavigate();
+  const [data, setData] = useState();
   const formattedOrderDate = moment(
     orderDate,
     "YYYY-MM-DDTHH:mm:ss ZZ"
@@ -23,6 +25,21 @@ const OrderComplete = ({
   console.log("response", response);
   console.log("paymentMethod", paymentMethod);
   console.log("orderAmount", orderAmount);
+
+  useEffect(() => {
+    const fetchEstimateDay = async () => {
+      try {
+        const response = await getDeliveryFee();
+        if (response) {
+          setData(response);
+        }
+      } catch (error) {
+        toast.error("Failed to fetch estimate days.");
+      }
+    };
+    fetchEstimateDay();
+  }, []);
+
   return (
     <>
       <section className="rounded-md xl:mx-[351px] lg:mx-[280px] md:mx-[210px] mx-[160px] shadow-2xl xl:mb-[130px] lg:mb-[100px] mb-[100px]">
@@ -68,7 +85,9 @@ const OrderComplete = ({
               <div className="text-[#6C7275] text-14 font-semibold">
                 Estimated Delivery Time:
               </div>
-              <div className="text-14 font-semibold text-left">5 days</div>
+              <div className="text-14 font-semibold text-left">
+                {data ? time_estimate : " 5 days"}
+              </div>
             </div>
 
             <div className="pt-[20px] flex justify-center pb-[80px]">
