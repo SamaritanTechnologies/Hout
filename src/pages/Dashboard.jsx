@@ -217,7 +217,7 @@ export const Dashboard = () => {
                     Address
                   </th>
                   <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold text-nowrap">
-                    <div className="flex flex-col justify-center items-center">
+                    <div className="flex flex-col">
                       <span>Date - Time</span>
                       <input
                         type="date"
@@ -288,12 +288,16 @@ export const Dashboard = () => {
                           </div>
                         </td>
                         <td className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-semibold text-gray3">
+
                           <p className="text-gray-900 whitespace-no-wrap ml-3">
                             {item?.user.first_name}
                           </p>
                         </td>
                         <td className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-semibold text-gray3">
                           <p className="text-gray-900 whitespace-no-wrap ml-3">
+
+                          <p className="text-gray-900 whitespace-no-wrap">
+
                             {item?.delivery_address}
                           </p>
                         </td>
