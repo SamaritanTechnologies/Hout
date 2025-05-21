@@ -244,7 +244,9 @@ export const AddToCart = () => {
                   ? "pointer-events-none opacity-50"
                   : ""
               }`}
-              onClick={() => handleDivClick(tab.name)}
+              onClick={() =>
+                handleDivClick(tab.name === "secondTab" ? "firstTab" : tab.name)
+              }
             >
               <div
                 className={`${
