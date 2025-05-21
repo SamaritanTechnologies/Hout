@@ -184,7 +184,7 @@ export const AddNewProduct = () => {
           width: "",
           thickness: "",
           weight_per_m3: "",
-          place_on_goedgeplaatst: false,
+          place_on_goedgeplaatst: true,
         }}
         validationSchema={Yup.object({
           name_nl: Yup.string().required("Name is required"),
@@ -557,8 +557,15 @@ export const AddNewProduct = () => {
               <div className="flex gap-5 items-center mb-[24px]">
                 <Field
                   type="checkbox"
-                  name="is_featured"
+                  name="place_on_goedgeplaatst"
                   className="h-8 w-8  cursor-pointer"
+                  checked={values.place_on_goedgeplaatst}
+                  onChange={() =>
+                    setFieldValue(
+                      "place_on_goedgeplaatst",
+                      !values.place_on_goedgeplaatst
+                    )
+                  }
                 />
                 <p className="font-semibold text-lg text-[#111727]">
                   Place Product on GoedGeplaatst via API

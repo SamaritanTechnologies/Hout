@@ -32,6 +32,7 @@ const AdminSidenav = () => {
     { name: "Signup Image", link: "/admin-signup", active: false },
     { name: "Forgot Image", link: "/admin-forgot", active: false },
     { name: "Reset Image", link: "/admin-reset", active: false },
+    { name: "Payment Option", link: "/admin-payment", active: false },
   ]);
 
   // useEffect(() => {

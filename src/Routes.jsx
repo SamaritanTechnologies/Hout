@@ -54,6 +54,7 @@ import AdminSignIn from "./pages/AdminSignIn";
 import AdminSignUp from "./pages/AdminSignUp";
 import AdminForgot from "./pages/AdminForgot";
 import AdminReset from "./pages/AdminReset";
+import PaymentOptions from "./pages/PaymentOptions";
 
 function Routes() {
   return (
@@ -92,6 +93,7 @@ function Routes() {
           <Route path="/admin-signup" element={<AdminSignUp />} />
           <Route path="/admin-forgot" element={<AdminForgot />} />
           <Route path="/admin-reset" element={<AdminReset />} />
+          <Route path="/admin-payment" element={<PaymentOptions />} />
           {/* <Route path="/order-list" element={<OrderList />} /> */}
           {/* <Route path="/user-profile" element={<UserProfile />} /> */}
         </Route>

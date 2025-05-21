@@ -169,7 +169,7 @@ const Wishlist = () => {
                               : item?.description_nl}
                           </td>
                           <td className="w-[20%] text-left">
-                            $ {item.lengths[0].discounted_price_ex_vat}
+                            €{item.lengths[0].discounted_price_ex_vat}
                           </td>
                           <td className="w-[30%] flex justify-center items-center">
                             <button

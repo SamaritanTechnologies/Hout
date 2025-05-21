@@ -25,7 +25,10 @@ const ShoppingCart = ({
   const currentLang = i18n.language;
   const authState = useSelector((state) => state.auth);
   const isAuthenticated = authState.isLoggedIn;
+  const userId = authState?.user?.id;
   const [localCart, setLocalCart] = useState([]);
+  const [paymentOption, setPaymentOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState("");
   const [couponCode, setCouponCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [couponData, setCouponData] = useState(null);
@@ -94,6 +97,20 @@ const ShoppingCart = ({
     }
   }, [updatedItem]);
 
+  useEffect(() => {
+    const fetchPaymentOptions = async () => {
+      try {
+        const res = await axiosWithCredentials.get(
+          `/accounts/payment-options/${userId}/`
+        );
+        setPaymentOption(res.data);
+      } catch (error) {
+        console.error("Error fetching payment options:", error);
+      }
+    };
+
+    fetchPaymentOptions();
+  }, []);
   const handleIncrement = (id) => {
     const item = cartItem?.find((item) => item.id === id);
     if (item) {
@@ -156,12 +173,16 @@ const ShoppingCart = ({
     let deliveryCharge = 0;
     const numericTotalPrice = Number(totalPrice || 0);
 
-    if (numericTotalPrice < 750) {
-      deliveryCharge = Number(delivery?.upto_750 || 0);
-    } else if (numericTotalPrice >= 750 && numericTotalPrice <= 1500) {
-      deliveryCharge = Number(delivery?.from_750_to_1500 || 0);
+    if (selectedMethod !== "pickup") {
+      if (numericTotalPrice < 750) {
+        deliveryCharge = Number(delivery?.upto_750 || 0);
+      } else if (numericTotalPrice >= 750 && numericTotalPrice <= 1500) {
+        deliveryCharge = Number(delivery?.from_750_to_1500 || 0);
+      } else {
+        deliveryCharge = Number(delivery?.above_1500 || 0);
+      }
     } else {
-      deliveryCharge = Number(delivery?.above_1500 || 0);
+      deliveryCharge = 0;
     }
 
     const subtotal = numericTotalPrice + deliveryCharge;
@@ -217,10 +238,12 @@ const ShoppingCart = ({
         youSaved: discount.toFixed(2),
         total: total?.toFixed(2),
         order_status: selectedMethod,
+        payment_option: selectedOption,
       })
     );
   }, [
     selectedMethod,
+    selectedOption,
     totalPrice,
     deliveryCharge,
     taxData,
@@ -311,6 +334,26 @@ const ShoppingCart = ({
   const handleMethod = (e) => {
     const { value, checked } = e.target;
     setSelectedMethod(checked ? value : "");
+  };
+
+  const handleOption = (e) => {
+    const { value } = e.target;
+    setSelectedOption(value);
+  };
+
+  const handleCheckout = () => {
+    if (!paymentOption?.cash_payment || !paymentOption?.credit_card) {
+      toast.warn(
+        "Payment method requires admin approval. Please contact the administrator."
+      );
+      return;
+    }
+
+    if (!selectedOption) {
+      toast.warn("Please select a payment option");
+      return;
+    }
+    handleDivClick("secondTab");
   };
 
   return (
@@ -451,6 +494,7 @@ const ShoppingCart = ({
                     </tbody>
                   </table>
                 </div>
+
                 <section>
                   <div>
                     <h2 className="text-2xl font-semibold mb-2">
@@ -471,8 +515,8 @@ const ShoppingCart = ({
                         <input
                           className="h-4 w-4 cursor-pointer"
                           type="checkbox"
-                          value="pickUp"
-                          checked={selectedMethod === "pickUp"}
+                          value="pickup"
+                          checked={selectedMethod === "pickup"}
                           onChange={handleMethod}
                         />
                         <span className="ml-2">Pick Up</span>
@@ -480,6 +524,43 @@ const ShoppingCart = ({
                     </div>
                   </div>
                 </section>
+
+                {(paymentOption?.cash_payment ||
+                  paymentOption?.credit_card) && (
+                  <section>
+                    <div className="py-8">
+                      <h2 className="text-2xl font-semibold mb-2">
+                        Select a Payment options
+                      </h2>
+                      <div className="flex gap-7">
+                        {paymentOption?.credit_card && (
+                          <label className="block">
+                            <input
+                              className="h-4 w-4 cursor-pointer"
+                              type="checkbox"
+                              value="credit"
+                              checked={selectedOption === "credit"}
+                              onChange={handleOption}
+                            />
+                            <span className="ml-2">Credit</span>
+                          </label>
+                        )}
+                        {paymentOption?.cash_payment && (
+                          <label className="block">
+                            <input
+                              className="h-4 w-4 cursor-pointer"
+                              type="checkbox"
+                              value="cash"
+                              checked={selectedOption === "cash"}
+                              onChange={handleOption}
+                            />
+                            <span className="ml-2">Cash</span>
+                          </label>
+                        )}
+                      </div>
+                    </div>
+                  </section>
+                )}
 
                 <section className="pt-[30px]">
                   <div>
@@ -604,7 +685,7 @@ const ShoppingCart = ({
 
                 <div className="xl:py-[30px] py-[15px] flex justify-center">
                   <button
-                    onClick={() => handleDivClick("secondTab")}
+                    onClick={handleCheckout}
                     className="xl:w-[93.5%] lg:w-[93.5%] w-[100%] bg-[#FBC700] text-white py-2 rounded-lg"
                   >
                     Checkout

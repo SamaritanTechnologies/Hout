@@ -43,6 +43,7 @@ const Layout = () => {
     "/admin-signup",
     "/admin-forgot",
     "/admin-reset",
+    "/admin-payment",
   ];
 
   const currentPath = useLocation().pathname;

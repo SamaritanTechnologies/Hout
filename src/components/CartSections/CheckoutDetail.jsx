@@ -187,6 +187,10 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
       toast.warn("Please select a payment method");
       return;
     }
+    if (!cartSummary?.payment_option) {
+      toast.warn("Please select a payment method");
+      return;
+    }
 
     try {
       setLoading(true);
@@ -195,6 +199,7 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
         total: cartSummary?.total,
         order_status: cartSummary?.order_status,
         delivery_method: selectedPaymentMethod.name,
+        payment_option: cartSummary?.payment_option,
         delivery_price:
           cartSummary?.deliveryFee !== null &&
           cartSummary?.deliveryFee !== undefined
