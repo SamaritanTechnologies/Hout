@@ -5,6 +5,8 @@ import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import { getDeliveryFee } from "../../redux/actions/productActions";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { clearCart } from "../../redux/slices/cartSlice";
 
 const OrderComplete = ({
   response,
@@ -14,6 +16,7 @@ const OrderComplete = ({
   orderAmount,
   handleClick,
 }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [data, setData] = useState(null);
 
@@ -36,6 +39,12 @@ const OrderComplete = ({
       }
     };
     fetchEstimateDay();
+  }, []);
+
+  useEffect(() => {
+    if (response) {
+      dispatch(clearCart());
+    }
   }, []);
 
   const estimatedDelivery = data?.time_estimate || "5 days";

@@ -645,7 +645,7 @@ const ShoppingCart = ({
                     <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
                       {t("s_subtotal_excl_vat")}
                     </div>
-                    <div>€{Number(totalPrice || 0).toFixed(2)}</div>
+                    <div>€ {Number(totalPrice || 0).toFixed(2)}</div>
                   </section>
 
                   <section className="flex justify-between pt-[25px]">
@@ -653,7 +653,7 @@ const ShoppingCart = ({
                       {t("s_delivery_fee")}
                     </div>
                     <div>
-                      €{deliveryCharge}
+                      € {deliveryCharge}
                       {/* {Number(delivery || 0).toFixed(2)} */}
                     </div>
                   </section>
@@ -669,7 +669,7 @@ const ShoppingCart = ({
                         {t("s_you_saved")}
                       </div>
                       <div className="text-green-600">
-                        €{discount.toFixed(2)}
+                        € {discount.toFixed(2)}
                       </div>
                     </section>
                   )}
@@ -678,7 +678,7 @@ const ShoppingCart = ({
                       {t("s_total")}
                     </div>
                     <div className="text-customYellow font-medium xl:text-18 lg:text-16 text-14">
-                      €{total?.toFixed(2)}
+                      € {total?.toFixed(2)}
                     </div>
                   </section>
                 </section>

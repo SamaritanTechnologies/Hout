@@ -184,7 +184,7 @@ export const AddNewProduct = () => {
           width: "",
           thickness: "",
           weight_per_m3: "",
-          place_on_goedgeplaatst: true,
+          place_on_goedgeplaatst: false,
         }}
         validationSchema={Yup.object({
           name_nl: Yup.string().required("Name is required"),
@@ -200,6 +200,7 @@ export const AddNewProduct = () => {
           ),
         })}
         onSubmit={async (values, { setSubmitting }) => {
+          console.log("Form values:", values);
           if (!images?.length) {
             setIsErrors((prev) => ({ ...prev, images: true }));
             return;

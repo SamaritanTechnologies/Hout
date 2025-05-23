@@ -87,6 +87,18 @@ export const AdminWehshop = () => {
 
       if (image?.file) {
         payload.append("image", image.file);
+      } else if (existingImage) {
+        try {
+          const response = await fetch(existingImage);
+          const blob = await response.blob();
+          const file = new File([blob], "existingImage.png", {
+            type: blob.type,
+          });
+          payload.append("image", file);
+          console.log("Existing image fetched and appended");
+        } catch (error) {
+          console.error("Failed to fetch image:", error);
+        }
       }
 
       const response = await addHomepageImage(payload);

@@ -6,6 +6,8 @@ import FormikField from "../components/Common/FormikField";
 import Textarea from "../components/Common/Textarea";
 import { Formik, Form, Field, ErrorMessage } from "formik"; // Import ErrorMessage
 import { XCircleIcon } from "@heroicons/react/24/outline";
+import nlflag from "../assets/DashboardImages/flag-netherlands.svg";
+import usaflag from "../assets/DashboardImages/USA-flag.svg";
 import {
   addOurAssortment,
   getOurAssortment,
@@ -242,12 +244,17 @@ export const OurAssortment = () => {
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
-                    <div>
+                    <div className="relative">
                       <Field
                         type="text"
                         name={`name_nl[${index}]`}
                         placeholder="Naam"
                         component={FormikField}
+                      />
+                      <img
+                        className="absolute right-2 top-4 w-5 h-5"
+                        src={nlflag}
+                        alt="USA flag"
                       />
                       <ErrorMessage
                         name={`name_nl[${index}]`}
@@ -255,12 +262,17 @@ export const OurAssortment = () => {
                         className="text-red text-sm mt-1"
                       />
                     </div>
-                    <div>
+                    <div className="relative">
                       <Field
                         type="text"
                         name={`name_en[${index}]`}
                         placeholder="Name"
                         component={FormikField}
+                      />{" "}
+                      <img
+                        className="absolute right-2 top-4 w-5 h-5"
+                        src={usaflag}
+                        alt="USA flag"
                       />
                       <ErrorMessage
                         name={`name_en[${index}]`}
