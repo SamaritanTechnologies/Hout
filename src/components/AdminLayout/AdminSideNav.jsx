@@ -14,7 +14,7 @@ const AdminSidenav = () => {
     { name: "Products", link: "/products", active: false },
     { name: "Orders", link: "/orders", active: false },
     { name: "Product Options", link: "/product-options", active: false },
-    { name: "Homepage Image", link: "/homepage-image", active: false },
+    { name: "Homepage Header", link: "/homepage-image", active: false },
     { name: "Homepage Products", link: "/homepage-products", active: false },
     { name: "Our Values", link: "/our-values", active: false },
     { name: "Our Assortment", link: "/our-assortment", active: false },

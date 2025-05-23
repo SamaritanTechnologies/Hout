@@ -12,6 +12,7 @@ import {
   createWhyHoutTotal,
   fetchWhyHoutTotal,
 } from "../redux/actions/dashboardActions";
+import { ClassSharp } from "@mui/icons-material";
 
 export const WhyHoutTotaal = () => {
   const [loading, setLoading] = useState(false);
@@ -81,8 +82,10 @@ export const WhyHoutTotaal = () => {
   };
 
   // Remove a selected video
-  const handleRemoveVideo = (index) => {
-    setVideos(videos.filter((_, i) => i !== index));
+  const handleRemoveVideo = (id, setFieldValue) => {
+    const updatedVideos = videos.filter((video) => video.id !== id);
+    setVideos(updatedVideos);
+    setFieldValue("videos", updatedVideos); // Sync with Formik
   };
 
   const fetchVideoAsFile = async (url) => {
@@ -104,10 +107,8 @@ export const WhyHoutTotaal = () => {
       // Append videos
       for (const video of videos) {
         if (video.file) {
-          // If it's a new file, append it directly
           formData.append("videos", video.file);
         } else if (video.url) {
-          // If it's an existing video, fetch it and convert to binary
           const file = await fetchVideoAsFile(video.url);
           formData.append("videos", file);
         }
@@ -133,7 +134,7 @@ export const WhyHoutTotaal = () => {
         onSubmit={handleSave}
         enableReinitialize
       >
-        {({ values }) => (
+        {({ values, setFieldValue }) => (
           <Form className="flex flex-col gap-5 max-w-[848px] mx-auto">
             {/* Name Fields */}
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4">
@@ -210,7 +211,7 @@ export const WhyHoutTotaal = () => {
             {videos.length > 0 && (
               <div className="grid grid-cols-2 gap-4">
                 {videos.map((video, index) => (
-                  <div key={index} className="relative">
+                  <div key={video.id} className="relative">
                     <video controls className="w-full h-48 object-cover">
                       <source
                         src={video.url} // Use the URL for preview
@@ -219,7 +220,7 @@ export const WhyHoutTotaal = () => {
                     </video>
                     <button
                       type="button"
-                      onClick={() => handleRemoveVideo(index)}
+                      onClick={() => handleRemoveVideo(video.id, setFieldValue)}
                       className="text-white absolute top-2 right-2"
                     >
                       <XCircleIcon className="h-6 w-6 text-[#FBC700]" />

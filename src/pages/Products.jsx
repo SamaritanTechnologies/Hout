@@ -141,6 +141,7 @@ export const Products = () => {
   return (
     <>
       <DeleteModal
+        description={"Are you sure you want to delete product?"}
         isOpen={open}
         closeModal={() => setOpen(!open)}
         handleDelete={handleDelete}
