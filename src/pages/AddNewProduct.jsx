@@ -61,6 +61,7 @@ const relatedInitial = {
 export const AddNewProduct = () => {
   const navigate = useNavigate();
   const { productCategories: categories } = useSelector((state) => state.admin);
+  // console.log("categories", categories);
   const [lengths, setLengths] = useState([{ ...lengthItem }]);
   const [images, setImages] = useState([]);
   const [isErrors, setIsErrors] = useState({
@@ -143,7 +144,7 @@ export const AddNewProduct = () => {
         const response = await getProducts();
         const data = response.results;
         const options = data.map((product) => ({
-          label: product.name_en,
+          label: product.name_nl,
           value: product.id,
         }));
         setRelatedProductsOptions(options);
@@ -262,7 +263,7 @@ export const AddNewProduct = () => {
                     name="group"
                     id="group"
                     options={getChoicesByName("group")}
-                    displayValue="name_en"
+                    displayValue="name_nl"
                     selectedValues={values.group}
                     onSelect={(selectedList) => {
                       setFieldValue("group", selectedList);
@@ -282,7 +283,7 @@ export const AddNewProduct = () => {
                     name="product_type"
                     id="product_type"
                     options={getChoicesByName("type")}
-                    displayValue="name_en"
+                    displayValue="name_nl"
                     selectedValues={values.product_type}
                     onSelect={(selectedList) => {
                       setFieldValue("product_type", selectedList);
@@ -297,7 +298,7 @@ export const AddNewProduct = () => {
                     name="material"
                     id="material"
                     options={getChoicesByName("material")}
-                    displayValue="name_en"
+                    displayValue="name_nl"
                     selectedValues={values.material}
                     onSelect={(selectedList) => {
                       setFieldValue("material", selectedList);
@@ -314,7 +315,7 @@ export const AddNewProduct = () => {
                     name="profile"
                     id="profile"
                     options={getChoicesByName("profile")}
-                    displayValue="name_en"
+                    displayValue="name_nl"
                     selectedValues={values.profile}
                     onSelect={(selectedList) => {
                       setFieldValue("profile", selectedList);
@@ -331,7 +332,7 @@ export const AddNewProduct = () => {
                     name="durability_class"
                     id="durability_class"
                     options={getChoicesByName("durability")}
-                    displayValue="name_en"
+                    displayValue="name_nl"
                     selectedValues={values.durability_class}
                     onSelect={(selectedList) => {
                       setFieldValue("durability_class", selectedList);
@@ -349,7 +350,7 @@ export const AddNewProduct = () => {
                     name="quality"
                     id="quality"
                     options={getChoicesByName("quality")}
-                    displayValue="name_en"
+                    displayValue="name_nl"
                     selectedValues={values.quality}
                     onSelect={(selectedList) => {
                       setFieldValue("quality", selectedList);
@@ -364,7 +365,7 @@ export const AddNewProduct = () => {
                     name="application"
                     id="application"
                     options={getChoicesByName("application")}
-                    displayValue="name_en"
+                    displayValue="name_nl"
                     selectedValues={values.application}
                     onSelect={(selectedList) => {
                       setFieldValue("application", selectedList);

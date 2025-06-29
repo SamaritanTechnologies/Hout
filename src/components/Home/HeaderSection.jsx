@@ -246,7 +246,7 @@ const HeaderSection = () => {
           <div className="header-logo flex flex-1 items-center justify-center w-full mt-2 lg:w-auto xl:w-auto pl-6 pr-6 md:pr-0">
             <img
               src={headerImage}
-              className="cursor-pointer w-[160px] h-[43px] "
+              className="cursor-pointer w-[138px] h-[58px] "
               onClick={() => {
                 scrollToTop();
                 setIsActive(false);

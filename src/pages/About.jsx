@@ -7,11 +7,13 @@ import { axiosApi } from "../providers";
 import { useNavigate } from "react-router-dom";
 import { getAboutImage, getAboutUs } from "../redux/actions/dashboardActions";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export const About = () => {
   const navigate = useNavigate();
   const [aboutUs, setAbouUs] = useState("");
   const [image, setImage] = useState("");
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     const fetchAboutUs = async () => {
@@ -70,7 +72,11 @@ export const About = () => {
       </section>
 
       <section className="grid xl:grid-cols-2  lg:grid-cols-2  md:grid-cols-1 sm:grid-cols-1 xs:grid-cols-1   px-[100px] lg:px-[60px] md:px[40px] sm:px-[30px] xs:px-[20px]  pt-[100px] gap-x-4 ">
-        <section className="w-full">{aboutUs.description_en}</section>
+        <section className="w-full">
+          {i18n.language === "en"
+            ? aboutUs.description_en
+            : aboutUs.description_nl}
+        </section>
         <section className="xl:w-[100%] lg:w-[100%]  w-[100%]     md:pt-10 sm:pt-10 xs:pt-10 ">
           <img src={gridGroup} />
         </section>

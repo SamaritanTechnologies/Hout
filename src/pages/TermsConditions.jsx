@@ -4,16 +4,21 @@ import { Link } from "react-router-dom";
 import DOMPurify from "dompurify";
 import { getTermsCondition } from "../redux/actions/userActions";
 import { getTermAndConditionsImage } from "../redux/actions/dashboardActions";
+import { useTranslation } from "react-i18next";
 
 export const TermsConditions = () => {
   const [data, setData] = useState("");
   const [image, setImage] = useState("");
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     const fetchTermsConditions = async () => {
       try {
         const data = await getTermsCondition();
-        setData(DOMPurify.sanitize(data.description_en));
+        const lang = i18n.language;
+        const description =
+          lang === "nl" ? data.description_nl : data.description_en;
+        setData(DOMPurify.sanitize(description));
       } catch (error) {
         console.error("Error fetching terms and conditions", error);
         setData(
@@ -23,7 +28,7 @@ export const TermsConditions = () => {
     };
 
     fetchTermsConditions();
-  }, []);
+  }, [i18n.language]);
 
   const fetchExistingImage = async () => {
     try {

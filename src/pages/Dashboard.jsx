@@ -97,11 +97,15 @@ export const Dashboard = () => {
   }, []);
 
   const inventoryStats = state?.stats?.find(
-    (stat) => stat.key === "total_inventory"
+    (stat) => stat.key === "amount_of_orders_this_month"
   );
 
-  const skuStats = state?.stats?.find((stat) => stat.key === "total_sku");
-  const salesStats = state?.stats?.find((stat) => stat.key === "total_sales");
+  const skuStats = state?.stats?.find(
+    (stat) => stat.key === "total_sales_by_webshop_this_month"
+  );
+  const salesStats = state?.stats?.find(
+    (stat) => stat.key === "total_sales_current_year"
+  );
 
   const handleSearchChange = (e) => {
     setState((prev) => ({
@@ -152,12 +156,20 @@ export const Dashboard = () => {
         {/* analytics row  */}
         <div className="dashCardRow grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-2 lg:gap-4 xl:gap-8 xl:mb-[15.76px] mb-[10px]">
           <StatsCard
-            name="Total Inventory"
+            name="Total Orders This Month"
             image={inventory}
             stats={inventoryStats}
           />
-          <StatsCard name="Total SKU" image={skuImg} stats={skuStats} />
-          <StatsCard name="Total Sales" image={salesImg} stats={salesStats} />
+          <StatsCard
+            name="Total Sales This Month"
+            image={skuImg}
+            stats={skuStats}
+          />
+          <StatsCard
+            name="Total Sales This Year"
+            image={salesImg}
+            stats={salesStats}
+          />
         </div>
 
         {/* analytics row end  */}
@@ -268,7 +280,7 @@ export const Dashboard = () => {
                       <tr key={index} className="border-b-[0.4px] border-gray">
                         <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
                           <p className="text-gray-900 whitespace-no-wrap xl:text-15 text-12">
-                            {item.id}
+                            {item.order_id}
                           </p>
                         </td>
                         <td className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-semibold text-gray3">

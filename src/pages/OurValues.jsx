@@ -294,7 +294,7 @@ export const OurValues = () => {
             <Button
               loading={loading}
               type="submit"
-              btnText="Save"
+              btnText="Updates"
               paddingX="20px"
               textColor="#000000"
               breakpoint="xl:w-[354px] lg:w-[280px] w-[240px]"

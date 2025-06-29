@@ -75,6 +75,7 @@ export const UpdateProduct = () => {
 
       if (res) {
         setProduct(res);
+        console.log("product", res);
         setLengths(res.lengths || [{ ...productItem }]);
 
         const newImages = res.images?.map((image) => ({
@@ -269,6 +270,7 @@ export const UpdateProduct = () => {
             durability_class: product?.durability_class ?? [],
             quality: product?.quality ?? [],
             application: product?.application ?? [],
+            place_on_goedgeplaatst: product?.place_on_goedgeplaatst ?? false,
           }}
           validationSchema={Yup.object({
             name_en: Yup.string().required("Name is required"),
@@ -640,7 +642,18 @@ export const UpdateProduct = () => {
                 </div>
                 <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
                 <div className="flex gap-5 items-center mb-[24px]">
-                  <img src={checkSquareIcon} alt="check square" />
+                  <Field
+                    type="checkbox"
+                    name="place_on_goedgeplaatst"
+                    className="h-8 w-8  cursor-pointer"
+                    checked={values.place_on_goedgeplaatst}
+                    onChange={() =>
+                      setFieldValue(
+                        "place_on_goedgeplaatst",
+                        !values.place_on_goedgeplaatst
+                      )
+                    }
+                  />
                   <p className="font-semibold text-lg text-[#111727]">
                     Place Product on GoedGeplaatst via API
                   </p>

@@ -22,15 +22,22 @@ const StatsCard = ({ name, image, stats }) => {
           />
         </div>
       </div>
-      {stats?.percentage_change ? (
+      {stats?.percentage_change !== undefined &&
+      stats?.percentage_change !== null ? (
         <div className="flex items-center xl:gap-[10px] gap-[3px]">
           <img
             src={stats?.trend === "up" ? trendUp : trendDown}
             alt={stats?.trend}
           />
           <p className="text-xl font-semibold text-[#606060]">
-            <span className="text-[#00B69B]">
-              {stats?.percentage_change || 23}% {stats?.trend}
+            <span
+              className={
+                stats?.percentage_change < 0
+                  ? "text-[#FF4B4B]"
+                  : "text-[#00B69B]"
+              }
+            >
+              {stats?.percentage_change}% {stats?.trend}
             </span>
           </p>
         </div>

@@ -61,7 +61,7 @@ export const enTranslations = {
   // Reset Password page
 
   // ProductsSection
-  p_products_heading: "Products",
+  p_products_heading: "Related Products",
 
   // OurValuesSection
   o_our_values_heading: "Our Values",
@@ -188,7 +188,7 @@ export const enTranslations = {
 
   // Order History Section
   o_orders_history_title: "Orders History",
-  o_number_id: "Number ID",
+  o_number_id: "Order ID",
   o_date: "Date",
   o_status: "Status",
   o_price: "Price",
@@ -235,6 +235,23 @@ export const enTranslations = {
     "I Agree to the General Terms and Conditions and waive the Right of Withdrawal because this is a customized product",
   sk_confirm_order_button: "Confirm Order",
   sk_confirming_text: "Confirming..",
+
+  // Order Complete Section
+  c_thank_you_message: "Thank you! 🎉",
+  c_order_confirmed_message: "Your order has been confirmed!",
+  c_order_code_label: "Order code:",
+  c_order_date_label: "Date:",
+  c_order_total_label: "Total:",
+  c_payment_method_label: "Payment method:",
+  c_estimated_delivery_label: "Estimated Delivery Time:",
+  c_back_to_home_button: "Back to Home",
+  c_order_complete_image_alt: "Order complete",
+  // Transaction Failed Section
+  c_transaction_failed_title: "Transaction Failed",
+  c_transaction_failed_description:
+    "Something went wrong. Please try again. If the problem persists, contact our",
+  c_transaction_failed_support_team: "Support Team",
+  c_transaction_failed_button: "Return to Home",
 
   // Product Detail Section
   p_showPrices: "Show Prices",

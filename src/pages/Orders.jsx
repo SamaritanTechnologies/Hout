@@ -217,7 +217,7 @@ export const Orders = () => {
                       <tr key={index} className="border-b-[0.4px] border-gray">
                         <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
                           <p className="text-gray-900 whitespace-no-wrap xl:text-15 text-12">
-                            {item.id}
+                            {item.order_id}
                           </p>
                         </td>
                         <td className="px-[12px] py-[12px] text-left font-semibold text-gray3">

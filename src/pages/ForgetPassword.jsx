@@ -26,9 +26,7 @@ export const ForgetPassword = () => {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
   const navigate = useNavigate();
-
   const [data, setData] = useState();
-
   const fetchImage = async () => {
     try {
       const response = await getForgotImage();

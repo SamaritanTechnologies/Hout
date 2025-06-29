@@ -59,7 +59,7 @@ export const nlTranslations = {
   f_sign_up: "Meld je aan!",
 
   // ProductsSection
-  p_products_heading: "Producten",
+  p_products_heading: "Gerelateerde producten",
 
   // OurValuesSection
   o_our_values_heading: "Onze waarden",
@@ -135,7 +135,7 @@ export const nlTranslations = {
   s_continue_shopping_button: "Doorgaan met winkelen",
   s_subtotal_excl_vat: "Subtotaal excl. btw",
   s_delivery_fee: "Bezorgkosten",
-  s_tax: "Belasting",
+  s_tax: "BWT",
   s_you_saved: "Je hebt bespaard",
   s_total: "Totaal",
 
@@ -202,7 +202,7 @@ export const nlTranslations = {
 
   // Order History Section
   o_orders_history_title: "Bestelgeschiedenis",
-  o_number_id: "Nummer ID",
+  o_number_id: "Bestel ID",
   o_date: "Datum",
   o_status: "Status",
   o_price: "Prijs",
@@ -263,6 +263,22 @@ export const nlTranslations = {
   p_inventoryQuantity: "Voorraadhoeveelheid",
   p_outOfStock: "Niet op voorraad",
 
+  // Order Confirmation Section
+  c_thank_you_message: "Dank je wel! 🎉",
+  c_order_confirmed_message: "Je bestelling is bevestigd!",
+  c_order_code_label: "Bestelcode:",
+  c_order_date_label: "Datum:",
+  c_order_total_label: "Totaal:",
+  c_payment_method_label: "Betaalmethode:",
+  c_estimated_delivery_label: "Geschatte levertijd:",
+  c_back_to_home_button: "Terug naar Home",
+  c_order_complete_image_alt: "Bestelling voltooid",
+  // Transaction Failed Section
+  c_transaction_failed_title: "Transactie mislukt",
+  c_transaction_failed_description:
+    "Er is iets misgegaan. Probeer het opnieuw. Als het probleem aanhoudt, neem dan contact op met onze",
+  c_transaction_failed_support_team: "Ondersteuningsteam",
+  c_transaction_failed_button: "Terug naar Home",
   // Footer Sections
   // Newsletter Section
 

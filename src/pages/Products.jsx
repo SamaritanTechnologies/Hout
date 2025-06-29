@@ -80,7 +80,7 @@ export const Products = () => {
 
     return category.choices?.map((choice) => ({
       value: choice.id,
-      label: choice.name_en,
+      label: choice.name_nl,
     }));
   };
 
