@@ -194,7 +194,15 @@ export const ProductDetail = () => {
                   </LinkedinShareButton>
                 </div>
                 <div>
-                  <PinterestShareButton url={shareUrl}>
+                  <PinterestShareButton
+                    url={shareUrl}
+                    media={productDetail?.images?.[0]?.image}
+                    description={
+                      currentLang == "en"
+                        ? productDetail?.description_en
+                        : productDetail?.description_nl
+                    }
+                  >
                     <img src={pintrest} alt="Pinterest" />
                   </PinterestShareButton>
                 </div>
@@ -253,7 +261,15 @@ export const ProductDetail = () => {
                 </LinkedinShareButton>
               </div>
               <div>
-                <PinterestShareButton url={shareUrl}>
+                <PinterestShareButton
+                  url={shareUrl}
+                  media={productDetail?.images?.[0]?.image}
+                  description={
+                    currentLang == "en"
+                      ? productDetail?.description_en
+                      : productDetail?.description_nl
+                  }
+                >
                   <img src={pintrest} alt="Pinterest" />
                 </PinterestShareButton>
               </div>
@@ -349,7 +365,7 @@ export const ProductDetail = () => {
                   <div className="text-16 font-bold flex-1">{t("p_width")}</div>
 
                   <div className="text-[#333333] flex-1 xl:text-16 lg:text-15 text-14">
-                    {productDetail?.width} cm
+                    {productDetail?.width} mm
                   </div>
                 </div>
                 <div className="flex items-center border-b border-[#E6E6E6] min-h-10">
@@ -357,7 +373,7 @@ export const ProductDetail = () => {
                     {t("p_thickness")}
                   </div>
                   <div className="text-[#333333] flex-1 xl:text-16 lg:text-15 text-14">
-                    {productDetail?.thickness} cm
+                    {productDetail?.thickness} mm
                   </div>
                 </div>
               </div>

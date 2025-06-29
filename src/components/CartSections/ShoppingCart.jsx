@@ -166,10 +166,10 @@ const ShoppingCart = ({
   const calculateTotal = (
     totalPrice,
     delivery,
-    // taxPercentage,
+    taxPercentage,
     coupon = null
   ) => {
-    // console.log("delivery fee", delivery);
+    console.log("taxPercentage", taxPercentage);
     let deliveryCharge = 0;
     const numericTotalPrice = Number(totalPrice || 0);
 
@@ -200,34 +200,32 @@ const ShoppingCart = ({
     }
 
     const amountAfterDiscount = subtotal - discountAmount;
-    // const taxRate = Number(taxPercentage || 0);
-
-    // if (taxRate > 0) {
-    //   const taxAmount = amountAfterDiscount * (taxRate / 100);
-    //   return {
-    //     total: amountAfterDiscount + taxAmount,
-    //     discount: discountAmount,
-    //     subtotal: subtotal,
-    //     isMinimumOrderMet,
-    //   };
-    // }
+    const taxRate = Number(taxPercentage || 0);
+    let taxAmount = 0;
+    let totalWithTax = amountAfterDiscount;
+    if (taxRate > 0) {
+      taxAmount = amountAfterDiscount * (taxRate / 100);
+      totalWithTax = amountAfterDiscount + taxAmount;
+    }
 
     return {
-      total: amountAfterDiscount,
+      total: totalWithTax,
       discount: discountAmount,
       subtotal: subtotal,
       isMinimumOrderMet,
       deliveryCharge,
+      taxAmount,
     };
   };
 
-  const { total, discount, deliveryCharge, subtotal, isMinimumOrderMet } =
-    calculateTotal(
-      totalPrice,
-      delivery,
-      // taxData,
-      couponData
-    );
+  const {
+    total,
+    discount,
+    deliveryCharge,
+    subtotal,
+    isMinimumOrderMet,
+    taxAmount,
+  } = calculateTotal(totalPrice, delivery, taxData, couponData);
 
   useEffect(() => {
     dispatch(
@@ -265,8 +263,14 @@ const ShoppingCart = ({
       const response = await axiosWithCredentials.get(
         `coupons/by-code/?code=${encodeURIComponent(couponCode)}`
       );
-      setCouponData(response?.data);
-      toast.success("Coupon applied successfully!");
+      if (response?.data?.is_active) {
+        setCouponData(response?.data);
+        toast.success("Coupon applied successfully!");
+      } else {
+        setCouponData(null);
+        setError("This coupon is not active.");
+        toast.error("This coupon is not active.");
+      }
     } catch (err) {
       setCouponData(null);
       setError(err.response?.data?.message || "Invalid coupon code");

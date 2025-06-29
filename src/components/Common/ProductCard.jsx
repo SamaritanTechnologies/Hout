@@ -114,6 +114,10 @@ const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
     toast.success("Product added to cart!");
   };
 
+  const handleViewProduct = () => {
+    navigate(`/product-detail/${product.id}`);
+    window.scrollTo(0, 0); // Scrolls to the top of the window
+  };
   return (
     <div className="relative bg-[#F4F5F7] h-auto">
       {minimumPrice?.discount > 0 && (
@@ -150,14 +154,17 @@ const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
           <span className="text-xl font-semibold text-[#111727]">
             €
             {includeVAT
-              ? product?.lengths[0]?.discounted_price_in_vat
-              : minimumPrice.discounted_price_ex_vat}
+              ? Number(product?.lengths[0]?.discounted_price_in_vat).toFixed(2)
+              : Number(minimumPrice.discounted_price_ex_vat).toFixed(2)}
           </span>
-          {minimumPrice.discount > 0 && (
-            <span className="text-[#B0B0B0] line-through self-center">
-              € {minimumPrice.full_price_ex_vat}
-            </span>
-          )}
+
+          <span className="text-[#B0B0B0] line-through self-center">
+            €
+            {includeVAT
+              ? Number(product?.lengths[0]?.full_price_in_vat).toFixed(2)
+              : Number(product?.lengths[0]?.full_price_ex_vat).toFixed(2)}
+            {/* {minimumPrice.full_price_ex_vat} */}
+          </span>
         </div>
         <div className="flex gap-x-4 items-center justify-between">
           <div
@@ -166,7 +173,7 @@ const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
             //     ? handleAddToLocal(product)
             //     : handleAddToCart(product);
             // }}
-            onClick={() => navigate(`/product-detail/${product.id}`)}
+            onClick={handleViewProduct}
             className="border-2 cursor-pointer border-[#898989] px-2 flex items-center justify-center py-3  gap-x-3  add-cart-btn md:text-[12px] lg:text-[12px]"
           >
             {/* {cartLoading === product.id ? (

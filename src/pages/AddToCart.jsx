@@ -108,7 +108,10 @@ export const AddToCart = () => {
     // If trying to go to third tab without response, block it
     if (tab === "thirdTab" && !orderCompleteData.hasResponse) return;
     if (tab === "secondTab" && !isAuthenticated) {
-      setShowLoginModal(true);
+      // setShowLoginModal(true);
+      localStorage.setItem("path", "");
+      navigate("/sign-in");
+      localStorage.setItem("path", "/cart");
       return;
     }
 

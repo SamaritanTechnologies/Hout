@@ -139,7 +139,12 @@ export const Signin = () => {
         if (user.is_superuser) {
           navigate("/dashboard");
         } else {
-          navigate("/");
+          const path = localStorage.getItem("path");
+          if (path) {
+            navigate(path);
+          } else {
+            navigate("/");
+          }
         }
       }, 500);
     } catch (error) {

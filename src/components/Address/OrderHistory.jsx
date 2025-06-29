@@ -12,7 +12,7 @@ const OrderHistory = () => {
   const { t } = useTranslation();
   const [orderList, setOrderList] = useState([]);
   const [loadingItems, setLoadingItems] = useState({});
-  const [currentPage, setCurrentPage] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [loading, setLoading] = useState(false);
 
@@ -37,9 +37,10 @@ const OrderHistory = () => {
     fetchOrdersList();
   }, [fetchOrdersList]);
 
-  const handlePageChange = ({ selected }) => {
+  const handlePageChange = useCallback(({ selected }) => {
     setCurrentPage(selected + 1); // Convert to one-based
-  };
+  }, []);
+
   const downloadInvoice = async (id) => {
     if (!id) {
       toast.error("There is no invoice related to this order");
@@ -111,7 +112,7 @@ const OrderHistory = () => {
                       key={item.id}
                       className="border-b border-[#E8ECEF] text-left"
                     >
-                      <td className="py-3">{item?.id || "-"}</td>
+                      <td className="py-3">{item?.order_id || "-"}</td>
                       <td className="py-3">
                         {item?.dates
                           ? moment(item?.dates).format("MMMM DD, YYYY")

@@ -7,19 +7,23 @@ import {
   getPrivacyPolicyImage,
   getTermAndConditionsImage,
 } from "../redux/actions/dashboardActions";
+import { useTranslation } from "react-i18next";
 
 export const PrivacyPolicy = () => {
   const [data, setData] = useState("");
   const [image, setImage] = useState("");
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     fetchPrivacyPolicy();
-  }, []);
+  }, [i18n.language]);
 
   const fetchPrivacyPolicy = async () => {
     try {
       const data = await getPrivacyPolicy();
-      setData(DOMPurify.sanitize(data.description_en));
+      const description =
+        i18n.language === "nl" ? data.description_nl : data.description_en;
+      setData(DOMPurify.sanitize(description));
     } catch (error) {
       console.error("Error fetching privacy policy", error);
       setData("<p className='text-center'>Failed to load Privacy Policy.</p>");

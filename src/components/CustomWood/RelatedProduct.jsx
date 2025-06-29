@@ -64,7 +64,7 @@ const RelatedProduct = ({ relatedProducts }) => {
     }
   };
 
-  if(!relatedProducts?.length) return;
+  if (!relatedProducts?.length) return;
 
   return (
     <>
