@@ -5,7 +5,6 @@ import {
   getAboutImage,
   getAboutUs,
 } from "../redux/actions/dashboardActions";
-import ArrowBack from "../assets/DashboardImages/arrowback.svg";
 import Button from "../components/Common/Button";
 import { Formik, Form, Field } from "formik";
 import Textarea from "../components/Common/Textarea";
@@ -14,16 +13,41 @@ import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
 import Dropzone from "../components/Common/Dropzone";
 import { toast } from "react-toastify";
 import { XCircleIcon } from "@heroicons/react/24/outline";
+
+// Define valid image types
 const validTypes = ["image/jpeg", "image/png", "image/webp"];
+
+// Custom InputField component
+const InputField = ({ field, form, className, ...props }) => (
+  <input
+    {...field}
+    {...props}
+    className={`block w-full appearance-none font-footer1 placeholder-[#5A5A5A] rounded-md xl:py-3 xl:ps-3 py-2 ps-3 outline-none border border-[#D9D9D9] focus:outline-none sm:text-sm ${
+      className || ""
+    }`}
+  />
+);
+
+// Custom Textarea component (assumed implementation with consistent styling)
+const TextareaField = ({ field, form, className, ...props }) => (
+  <textarea
+    {...field}
+    {...props}
+    className={`block w-full appearance-none font-footer1 placeholder-[#5A5A5A] rounded-md xl:py-3 xl:ps-3 py-2 ps-3 outline-none border border-[#D9D9D9] focus:outline-none  sm:text-sm ${
+      className || ""
+    }`}
+  />
+);
 
 export const AdminAboutUs = () => {
   const [initialData, setInitialData] = useState({
     description_en: "",
     description_nl: "",
+    heading_en: "",
+    heading_nl: "",
   });
-  const [loading, setLoading] = useState(false);
-  const [dataLoaded, setDataLoaded] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [image, setImage] = useState(null);
   const [existingImage, setExistingImage] = useState(null);
 
@@ -35,12 +59,9 @@ export const AdminAboutUs = () => {
       }
     } catch (error) {
       console.error("Error fetching existing image:", error);
+      toast.error("Failed to fetch existing image");
     }
   }, []);
-
-  useEffect(() => {
-    fetchExistingImage();
-  }, [fetchExistingImage]);
 
   useEffect(() => {
     const fetchAboutUs = async () => {
@@ -48,31 +69,32 @@ export const AdminAboutUs = () => {
         const data = await getAboutUs();
         if (data) {
           setInitialData({
-            description_en: data.description_en,
-            description_nl: data.description_nl,
+            description_en: data.description_en || "",
+            description_nl: data.description_nl || "",
+            heading_en: data.heading_en || "",
+            heading_nl: data.heading_nl || "",
           });
-          setDataLoaded(true);
         }
       } catch (error) {
-        toast.error("Failed to fetch About Us");
+        toast.error("Failed to fetch About Us data");
         console.error("Error fetching About Us:", error);
       }
     };
 
     fetchAboutUs();
-  }, []);
+    fetchExistingImage();
+  }, [fetchExistingImage]);
 
-  // Handle form submission
   const handleSubmit = async (values, { setSubmitting }) => {
-    setLoading(true);
+    setIsSubmitting(true);
     try {
       await addAboutUs(values);
       toast.success("About Us saved successfully!");
     } catch (error) {
-      toast.error("Failed to save About Us");
-      console.error("Error:", error);
+      toast.error("Failed to save About Us data");
+      console.error("Error saving About Us:", error);
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
       setSubmitting(false);
     }
   };
@@ -89,7 +111,6 @@ export const AdminAboutUs = () => {
     (acceptedFiles) => {
       const file = acceptedFiles[0];
       if (file && validTypes.includes(file.type)) {
-        // Revoke previous URL if exists
         if (image?.preview) {
           URL.revokeObjectURL(image.preview);
         }
@@ -109,22 +130,21 @@ export const AdminAboutUs = () => {
       return;
     }
 
-    setIsLoading(true);
+    setIsUploading(true);
     try {
       const payload = new FormData();
       payload.append("title", "about");
       payload.append("image", image.file);
 
-      const response = await addHomepageImage(payload);
+      await addHomepageImage(payload);
       toast.success("Image uploaded successfully!");
-      fetchExistingImage();
-      // setExistingImage(response?.imageUrl || null);
+      await fetchExistingImage();
       setImage(null);
     } catch (error) {
       toast.error("Failed to upload image.");
       console.error("Error uploading image:", error);
     } finally {
-      setIsLoading(false);
+      setIsUploading(false);
     }
   };
 
@@ -139,45 +159,110 @@ export const AdminAboutUs = () => {
   return (
     <div className="flex flex-col gap-10 xl:gap-12">
       <h2 className="xl:text-32 lg:text-28 text-26 font-bold">About Us</h2>
-      {/* Formik Wrapper */}
       <Formik
         initialValues={initialData}
         onSubmit={handleSubmit}
         enableReinitialize
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting: formikSubmitting }) => (
           <Form className="flex flex-col gap-10 max-w-[848px] mx-auto w-full">
             <div className="flex gap-4">
-              <div className="w-1/2 relative">
-                <Field
-                  name="description_nl"
-                  placeholder="Description (nl)"
-                  component={Textarea}
-                  rows="12"
-                />
-                <img
-                  src={countryflag}
-                  alt="Flag"
-                  className="cursor-pointer h-5 w-5 absolute right-[6px] top-[10px]"
-                />
+              <div className="w-1/2">
+                <label
+                  htmlFor="heading_nl"
+                  className="text-[16px] font-bold py-[12px] block"
+                >
+                  Koptekst
+                </label>
+                <div className="relative">
+                  <Field
+                    id="heading_nl"
+                    name="heading_nl"
+                    placeholder="Heading (Dutch)"
+                    component={InputField}
+                    aria-label="Heading in Dutch"
+                  />
+                  <img
+                    src={countryflag}
+                    alt="Dutch flag"
+                    className="cursor-pointer h-5 w-5 absolute right-[6px] top-[10px]"
+                  />
+                </div>
               </div>
-              <div className="w-1/2 relative">
-                <Field
-                  name="description_en"
-                  placeholder="Description (en)"
-                  component={Textarea}
-                  rows="12"
-                />
-                <img
-                  src={countryflag2}
-                  alt="Flag"
-                  className="cursor-pointer h-5 w-5 absolute right-[6px] top-[10px]"
-                />
+              <div className="w-1/2">
+                <label
+                  htmlFor="heading_en"
+                  className="text-[16px] font-bold py-[12px] block"
+                >
+                  Heading
+                </label>
+                <div className="relative">
+                  <Field
+                    id="heading_en"
+                    name="heading_en"
+                    placeholder="Heading (English)"
+                    component={InputField}
+                    aria-label="Heading in English"
+                  />
+                  <img
+                    src={countryflag2}
+                    alt="English flag"
+                    className="cursor-pointer h-5 w-5 absolute right-[6px] top-[10px]"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <div className="w-1/2">
+                <label
+                  htmlFor="description_nl"
+                  className="text-[16px] font-bold py-[12px] block"
+                >
+                  Beschrijving
+                </label>
+                <div className="relative">
+                  <Field
+                    id="description_nl"
+                    name="description_nl"
+                    placeholder="Description (Dutch)"
+                    component={TextareaField}
+                    rows="12"
+                    aria-label="Description in Dutch"
+                  />
+                  <img
+                    src={countryflag}
+                    alt="Dutch flag"
+                    className="cursor-pointer h-5 w-5 absolute right-[6px] top-[10px]"
+                  />
+                </div>
+              </div>
+              <div className="w-1/2">
+                <label
+                  htmlFor="description_en"
+                  className="text-[16px] font-bold py-[12px] block"
+                >
+                  Description
+                </label>
+                <div className="relative">
+                  <Field
+                    id="description_en"
+                    name="description_en"
+                    placeholder="Description (English)"
+                    component={TextareaField}
+                    rows="12"
+                    aria-label="Description in English"
+                  />
+                  <img
+                    src={countryflag2}
+                    alt="English flag"
+                    className="cursor-pointer h-5 w-5 absolute right-[6px] top-[10px]"
+                  />
+                </div>
               </div>
             </div>
 
             <Button
-              loading={loading || isSubmitting}
+              loading={isSubmitting || formikSubmitting}
               type="submit"
               btnText="Save"
               textColor="#000000"
@@ -186,10 +271,10 @@ export const AdminAboutUs = () => {
           </Form>
         )}
       </Formik>
-      {/* Image Upload Section */}
+      {/* Image Upload Section remains unchanged */}
       <section className="flex flex-col gap-6">
         <h2 className="xl:text-32 lg:text-28 text-26 font-bold">
-          Upload Terms and Conditions Wallpaper
+          Upload About Us Image
         </h2>
         <div className="flex flex-col gap-6 ml-20">
           <div className="flex gap-[14px] flex-wrap items-center">
@@ -197,13 +282,14 @@ export const AdminAboutUs = () => {
               <div className="relative w-[215px] h-[215px] rounded-lg overflow-hidden border border-gray-200">
                 <img
                   src={image.preview}
-                  alt="Selected Preview"
+                  alt="Selected image preview"
                   className="w-full h-full object-cover"
                 />
                 <button
                   type="button"
                   onClick={handleRemoveImage}
                   className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md"
+                  aria-label="Remove selected image"
                 >
                   <XCircleIcon className="h-6 w-6 text-[#FBC700]" />
                 </button>
@@ -212,13 +298,14 @@ export const AdminAboutUs = () => {
               <div className="relative w-[215px] h-[215px] rounded-lg overflow-hidden border border-gray-200">
                 <img
                   src={existingImage}
-                  alt="Existing Wallpaper"
+                  alt="Existing About Us image"
                   className="w-full h-full object-cover"
                 />
                 <button
                   type="button"
                   onClick={handleRemoveImage}
                   className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md"
+                  aria-label="Remove existing image"
                 >
                   <XCircleIcon className="h-6 w-6 text-[#FBC700]" />
                 </button>
@@ -228,18 +315,18 @@ export const AdminAboutUs = () => {
                 width="215px"
                 height="215px"
                 onDrop={handleDrop}
-                accept="image/jpeg, image/png, image/webp"
+                accept="image/jpeg,image/png,image/webp"
               />
             )}
           </div>
           <Button
-            loading={isLoading}
+            loading={isUploading}
             type="button"
             btnText="Save Image"
             paddingX="20px"
             textColor="#000000"
             breakpoint="w-full max-w-[280px]"
-            disabled={!image?.file || isLoading}
+            disabled={!image?.file || isUploading}
             onClick={handleImageSave}
           />
         </div>
@@ -247,3 +334,5 @@ export const AdminAboutUs = () => {
     </div>
   );
 };
+
+export default AdminAboutUs;

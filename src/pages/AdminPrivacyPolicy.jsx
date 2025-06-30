@@ -13,6 +13,7 @@ import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
 import { toast } from "react-toastify";
 import Dropzone from "../components/Common/Dropzone";
 import { XCircleIcon } from "@heroicons/react/24/outline";
+import InputField from "../components/Common/InputField";
 
 const validTypes = ["image/jpeg", "image/png", "image/webp"];
 
@@ -20,6 +21,8 @@ export const AdminPrivacyPolicy = () => {
   const [policy, setPolicy] = useState({
     description_en: "",
     description_nl: "",
+    heading_en: "",
+    heading_nl: "",
   });
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,6 +52,8 @@ export const AdminPrivacyPolicy = () => {
           setPolicy({
             description_en: data.description_en,
             description_nl: data.description_nl,
+            heading_en: data.heading_en,
+            heading_nl: data.heading_nl,
           });
         }
       } catch (error) {
@@ -146,6 +151,43 @@ export const AdminPrivacyPolicy = () => {
       </h2>
       <div className="flex flex-col max-w-[848px] mx-auto gap-10">
         {/* Policy Editor Section */}
+        <div className="flex gap-4">
+          <div className="w-1/2 relative">
+            <div>
+              <h5 className="text-[16px] font-bold py-[12px]">Koptekst</h5>
+              <InputField
+                type="text"
+                placeholder="Kop invoeren"
+                name="heading_nl"
+                value={policy.heading_nl}
+                onChange={(e) => handleChange("heading_nl", e.target.value)}
+              />
+            </div>
+            <img
+              src={countryflag}
+              alt="Flag"
+              className="cursor-pointer h-5 w-5 absolute right-[6px] top-[60px]"
+            />
+          </div>
+          <div className="w-1/2 relative">
+            <div>
+              <h5 className="text-[16px] font-bold py-[12px]">Heading</h5>
+              <InputField
+                className="text-[16px] font-bold py-[12px]"
+                type="text"
+                placeholder="Enter heading"
+                name="heading_en"
+                value={policy.heading_en}
+                onChange={(e) => handleChange("heading_en", e.target.value)}
+              />
+            </div>
+            <img
+              src={countryflag2}
+              alt="Flag"
+              className="cursor-pointer h-5 w-5 absolute right-[6px] top-[60px]"
+            />
+          </div>
+        </div>
         <div className="flex gap-4">
           <div className="w-1/2 relative">
             <RichTextEditor

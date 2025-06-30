@@ -57,7 +57,7 @@ export const About = () => {
       >
         <div className="w-[320px] m-auto  text-center bg-transparentGray text-white py-[35px] rounded-lg ">
           <div className="text-white text-30 md:tex-40 lg:text-44 xl:text-48 font-medium">
-            About US
+            {i18n.language === "en" ? aboutUs.heading_en : aboutUs.heading_nl}
           </div>
           <div className="text-white flex items-center justify-center gap-x-3 pt-5 ">
             <div className="flex items-center gap-x-3">
@@ -66,7 +66,10 @@ export const About = () => {
               </p>{" "}
               <img src={rightArrow} />
             </div>
-            <div>About us</div>
+            <div>
+              {" "}
+              {i18n.language === "en" ? aboutUs.heading_en : aboutUs.heading_nl}
+            </div>
           </div>
         </div>
       </section>
