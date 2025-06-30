@@ -14,6 +14,7 @@ import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
 import Dropzone from "../components/Common/Dropzone";
 import { toast } from "react-toastify";
 import { XCircleIcon } from "@heroicons/react/24/outline";
+import InputField from "../components/Common/InputField";
 const validTypes = ["image/jpeg", "image/png", "image/webp"];
 
 export const TermsAndConditions = () => {
@@ -21,6 +22,8 @@ export const TermsAndConditions = () => {
   const [image, setImage] = useState(null);
   const [existingImage, setExistingImage] = useState(null);
   const [termsCondition, setTermsCondition] = useState({
+    heading_nl: "avdsvsafvsdv",
+    heading_en: "",
     description_nl: "",
     description_en: "",
   });
@@ -50,6 +53,8 @@ export const TermsAndConditions = () => {
           setTermsCondition({
             description_en: data.description_en,
             description_nl: data.description_nl,
+            heading_en: data.heading_en,
+            heading_nl: data.heading_nl,
           });
         }
         // toast.success("Terms & Conditions fetched successfully!");
@@ -147,6 +152,44 @@ export const TermsAndConditions = () => {
         Terms and Conditions
       </h2>
       <div className="flex flex-col gap-10 w-full max-w-[848px] mx-auto">
+        <div className="flex gap-4">
+          <div className="w-1/2 relative">
+            <div>
+              <h5 className="text-[16px] font-bold py-[12px]">Koptekst</h5>
+              <InputField
+                type="text"
+                placeholder="Kop invoeren"
+                name="heading_nl"
+                value={termsCondition.heading_nl}
+                onChange={(e) => handleChange("heading_nl", e.target.value)}
+              />
+            </div>
+            <img
+              src={countryflag}
+              alt="Flag"
+              className="cursor-pointer h-5 w-5 absolute right-[6px] top-[60px]"
+            />
+          </div>
+          <div className="w-1/2 relative">
+            <div>
+              <h5 className="text-[16px] font-bold py-[12px]">Heading</h5>
+              <InputField
+                className="text-[16px] font-bold py-[12px]"
+                type="text"
+                placeholder="Enter heading"
+                name="heading_en"
+                value={termsCondition.heading_en}
+                onChange={(e) => handleChange("heading_en", e.target.value)}
+              />
+            </div>
+            <img
+              src={countryflag2}
+              alt="Flag"
+              className="cursor-pointer h-5 w-5 absolute right-[6px] top-[60px]"
+            />
+          </div>
+        </div>
+
         <div className="flex gap-4">
           <div className="w-1/2 relative">
             <RichTextEditor

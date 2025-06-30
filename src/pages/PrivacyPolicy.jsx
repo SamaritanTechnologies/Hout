@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 
 export const PrivacyPolicy = () => {
   const [data, setData] = useState("");
+  const [heading, setHeading] = useState("");
   const [image, setImage] = useState("");
   const { i18n } = useTranslation();
 
@@ -21,9 +22,13 @@ export const PrivacyPolicy = () => {
   const fetchPrivacyPolicy = async () => {
     try {
       const data = await getPrivacyPolicy();
+      console.log("Data", data);
       const description =
         i18n.language === "nl" ? data.description_nl : data.description_en;
       setData(DOMPurify.sanitize(description));
+      const heading =
+        i18n.language === "nl" ? data.heading_nl : data.heading_en;
+      setHeading(heading);
     } catch (error) {
       console.error("Error fetching privacy policy", error);
       setData("<p className='text-center'>Failed to load Privacy Policy.</p>");
@@ -59,13 +64,13 @@ export const PrivacyPolicy = () => {
         }}
       >
         <div className="w-[320px] m-auto  text-center bg-transparentGray text-white py-[35px] rounded-lg ">
-          <div className="text-white text-48 font-medium">Privacy Policy </div>
+          <div className="text-white text-48 font-medium">{heading} </div>
           <div className="text-white flex items-center justify-center gap-x-3 pt-5 ">
             <div className="flex items-center gap-x-3">
               <Link to="/">Home</Link>
               <img src={rightArrow} />
             </div>
-            <div>Privacy Policy</div>
+            <div>{heading}</div>
           </div>
         </div>
       </section>
