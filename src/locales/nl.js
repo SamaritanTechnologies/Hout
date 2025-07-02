@@ -513,4 +513,6 @@ export const nlTranslations = {
   pa_invoice_address_update_success: "Factuuradres succesvol bijgewerkt",
   pa_invoice_address_update_error:
     "Er is iets misgegaan bij het bijwerken van het factuuradres",
+  // HeadLessDropDown Toasts
+  dropdown_logout_success: "Succesvol uitgelogd!",
 };

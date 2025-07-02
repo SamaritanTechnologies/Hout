@@ -528,4 +528,7 @@ export const enTranslations = {
   pa_invoice_address_update_success: "Invoice address successfully updated",
   pa_invoice_address_update_error:
     "Something went wrong updating invoice address",
+
+  // HeadLessDropDown Toasts
+  dropdown_logout_success: "Logged out successfully!",
 };

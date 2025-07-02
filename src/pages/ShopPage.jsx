@@ -34,15 +34,19 @@ export const ShopPage = () => {
   const [filterKey, setFilterKey] = useState(0);
   const { productCategories } = useSelector((state) => state.admin);
 
-  const categories = [
-    t("s_group"),
-    t("s_type"),
-    t("s_material"),
-    t("s_profile"),
-    t("s_durability"),
-    t("s_quality"),
-    t("s_application"),
-  ];
+  const translatedCategories = useMemo(
+    () => [
+      t("s_group"),
+      t("s_type"),
+      t("s_material"),
+      t("s_profile"),
+      t("s_durability"),
+      t("s_quality"),
+      t("s_application"),
+    ],
+    [i18n.language, t]
+  );
+
   const [categoryData, setCategoryData] = useState({});
   const [includeVAT, setIncludeVAT] = useState(false);
   const [filters, setFilters] = useState({
@@ -72,15 +76,6 @@ export const ShopPage = () => {
   }, []);
 
   useEffect(() => {
-    const translatedCategories = [
-      t("s_group"),
-      t("s_type"),
-      t("s_material"),
-      t("s_profile"),
-      t("s_durability"),
-      t("s_quality"),
-      t("s_application"),
-    ];
     const initialData = translatedCategories.reduce((acc, category) => {
       const foundCategory = productCategories?.find(
         (c) => c.name?.toLowerCase() === category.toLowerCase()
@@ -90,7 +85,7 @@ export const ShopPage = () => {
     }, {});
 
     setCategoryData(initialData);
-  }, [productCategories]);
+  }, [productCategories, translatedCategories]);
 
   const categoryArray = Object.values(categoryData);
   const [filterDrawer, setFilterDrawer] = useState(false);

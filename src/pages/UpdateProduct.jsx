@@ -79,7 +79,7 @@ export const UpdateProduct = () => {
 
       if (res) {
         setProduct(res);
-        console.log("product", res);
+        console.log("product sdsddsa", res);
         setLengths(res.lengths || [{ ...productItem }]);
 
         const newImages = res.images?.map((image) => ({
@@ -279,7 +279,7 @@ export const UpdateProduct = () => {
             durability_class: product?.durability_class ?? [],
             quality: product?.quality ?? [],
             application: product?.application ?? [],
-            place_on_goedgeplaatst: product?.place_on_goedgeplaatst ?? false,
+            place_on_goedgeplaatst: product?.place_on_goedgeplaatst ?? true,
           }}
           validationSchema={Yup.object({
             name_en: Yup.string().required("Name is required"),

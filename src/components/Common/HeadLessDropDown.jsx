@@ -7,19 +7,21 @@ import { setAccessToken, setRefreshToken } from "../../providers";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../redux";
+import { useTranslation } from "react-i18next";
 
 const HeadLessDropDown = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const authState = useSelector((state) => state.auth);
   const isAuthenticated = authState.isLoggedIn;
+  const { t } = useTranslation();
 
   const handleLogout = () => {
     dispatch(logoutUser());
     setAccessToken("");
     setRefreshToken("");
 
-    toast.success("Logged Out!");
+    toast.success(t("dropdown_logout_success"));
 
     setTimeout(() => {
       navigate("/sign-in");

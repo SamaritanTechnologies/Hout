@@ -5,7 +5,7 @@ import {
   getRefreshToken,
 } from "../../providers";
 import { getUserId } from "../slices/authSlice";
-import { i18n } from "../../i18n";
+import i18n from "i18next";
 
 export const updatePass = async (values, id, { setSubmitting }) => {
   // const id = getUserId();
