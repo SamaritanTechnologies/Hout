@@ -6,6 +6,7 @@ import {
   AddDeliveryFee,
   getDeliveryFee,
 } from "../redux/actions/productActions";
+import { useTranslation } from "react-i18next";
 
 const DeliveryValue = () => {
   const [data, setData] = useState({
@@ -15,6 +16,7 @@ const DeliveryValue = () => {
     time_estimate: "",
   });
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchDelivery = async () => {
@@ -29,11 +31,11 @@ const DeliveryValue = () => {
           });
         }
       } catch (error) {
-        toast.error("Failed to fetch delivery settings.");
+        toast.error(t("delivery_fetch_fail"));
       }
     };
     fetchDelivery();
-  }, []);
+  }, [t]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -53,13 +55,13 @@ const DeliveryValue = () => {
       isNaN(parseFloat(data.above_1500)) ||
       parseFloat(data.above_1500) < 0
     ) {
-      toast.error("Please enter valid values for all delivery fees.");
+      toast.error(t("delivery_invalid"));
       return;
     }
 
     // Validate time estimate (non-empty string)
     if (!data.time_estimate.trim()) {
-      toast.error("Please enter a delivery time estimate.");
+      toast.error(t("delivery_time_required"));
       return;
     }
 
@@ -72,9 +74,9 @@ const DeliveryValue = () => {
         time_estimate: data.time_estimate.trim(),
       };
       await AddDeliveryFee(payload);
-      toast.success("Delivery settings saved successfully!");
+      toast.success(t("delivery_save_success"));
     } catch (error) {
-      toast.error("Failed to save delivery settings. Please try again.");
+      toast.error(t("delivery_save_fail"));
     } finally {
       setLoading(false);
     }

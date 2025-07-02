@@ -98,7 +98,7 @@ export const Signin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!formData.email.trim() || !formData.password.trim()) {
-      toast.error("Please fill in all fields");
+      toast.error(t("signin_fill_all_fields"));
       return;
     }
 
@@ -149,7 +149,7 @@ export const Signin = () => {
       }, 500);
     } catch (error) {
       const errorMessage =
-        error?.response?.data?.message || "Wrong credentials!";
+        error?.response?.data?.message || t("signin_wrong_credentials");
       toast.error(errorMessage);
     } finally {
       setBtnLoading(false);

@@ -3,10 +3,12 @@ import InputField from "../components/Common/InputField";
 import Button from "../components/Common/Button";
 import { addVatRate, getVatRate } from "../redux/actions/productActions";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export const VatValue = () => {
   const [vat, setVat] = useState("");
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchVatRate = async () => {
@@ -16,11 +18,11 @@ export const VatValue = () => {
           setVat(data.rate);
         }
       } catch (error) {
-        toast.error("Failed to fetch VAT rate.");
+        toast.error(t("vat_fetch_fail"));
       }
     };
     fetchVatRate();
-  }, []);
+  }, [t]);
 
   const handleInputChange = (event) => {
     setVat(event.target.value);
@@ -28,7 +30,7 @@ export const VatValue = () => {
 
   const handleSubmit = async () => {
     if (!vat || isNaN(vat) || vat < 0) {
-      toast.error("Please enter a valid VAT rate.");
+      toast.error(t("vat_invalid"));
       return;
     }
 
@@ -36,9 +38,9 @@ export const VatValue = () => {
     try {
       const payload = { rate: vat };
       await addVatRate(payload);
-      toast.success("VAT rate saved successfully!");
+      toast.success(t("vat_save_success"));
     } catch (error) {
-      toast.error("Failed to save VAT rate. Please try again.");
+      toast.error(t("vat_save_fail"));
     } finally {
       setLoading(false);
     }

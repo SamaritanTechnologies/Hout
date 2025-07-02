@@ -22,6 +22,8 @@ import checkSquareIcon from "../assets/DashboardImages/check-square.svg";
 import { useSelector } from "react-redux";
 import countryflag from "../assets/DashboardImages/UK-Flag.svg";
 import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const styleMultiSelect = {
   chips: {
@@ -68,6 +70,8 @@ export const UpdateProduct = () => {
 
   const [relatedProducts, setRelatedProducts] = useState(relatedInitial);
   const [relatedProductsOptions, setRelatedProductsOptions] = useState([]);
+
+  const { t } = useTranslation();
 
   const getProductDetails = async (id) => {
     try {
@@ -170,7 +174,12 @@ export const UpdateProduct = () => {
 
   const handleChange = (index, field, value) => {
     const updatedProducts = [...lengths];
-    updatedProducts[index][field] = value;
+    // Convert to number for numeric fields
+    if (["length", "full_price_ex_vat", "discount", "stock"].includes(field)) {
+      updatedProducts[index][field] = value === "" ? "" : Number(value);
+    } else {
+      updatedProducts[index][field] = value;
+    }
     setLengths(updatedProducts);
   };
 
@@ -291,6 +300,7 @@ export const UpdateProduct = () => {
               return;
             }
             try {
+              console.log("Submitting lengths:", lengths);
               await updateProduct(id, values, lengths, images, relatedProducts);
               navigate("/products");
             } catch (error) {

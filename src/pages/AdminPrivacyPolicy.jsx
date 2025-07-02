@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import Dropzone from "../components/Common/Dropzone";
 import { XCircleIcon } from "@heroicons/react/24/outline";
 import InputField from "../components/Common/InputField";
+import { useTranslation } from "react-i18next";
 
 const validTypes = ["image/jpeg", "image/png", "image/webp"];
 
@@ -28,6 +29,7 @@ export const AdminPrivacyPolicy = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [image, setImage] = useState(null);
   const [existingImage, setExistingImage] = useState(null);
+  const { t } = useTranslation();
 
   const fetchExistingImage = useCallback(async () => {
     try {
@@ -57,13 +59,13 @@ export const AdminPrivacyPolicy = () => {
           });
         }
       } catch (error) {
-        toast.error("Failed to fetch privacy policy");
+        toast.error(t("adminprivacypolicy_fetch_fail"));
         console.error("Error fetching privacy policy:", error);
       }
     };
 
     fetchPrivacyPolicy();
-  }, []);
+  }, [t]);
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
@@ -77,10 +79,10 @@ export const AdminPrivacyPolicy = () => {
         setImage({ file, preview });
         setExistingImage(null);
       } else {
-        toast.error("Invalid file type. Only JPEG, PNG, and WebP are allowed.");
+        toast.error(t("adminprivacypolicy_invalid_type"));
       }
     },
-    [image]
+    [image, t]
   );
 
   const handleRemoveImage = useCallback(() => {
@@ -95,9 +97,9 @@ export const AdminPrivacyPolicy = () => {
     setLoading(true);
     try {
       await addPrivacyPolicies(policy);
-      toast.success("Privacy policy saved successfully!");
+      toast.success(t("adminprivacypolicy_save_success"));
     } catch (error) {
-      toast.error("Failed to save Privacy Policy");
+      toast.error(t("adminprivacypolicy_save_fail"));
       console.error("Error:", error);
     } finally {
       setLoading(false);
@@ -113,7 +115,7 @@ export const AdminPrivacyPolicy = () => {
 
   const handleImageSave = async () => {
     if (!image?.file) {
-      toast.error("Please select an image to upload.");
+      toast.error(t("adminprivacypolicy_select_required"));
       return;
     }
 
@@ -124,12 +126,12 @@ export const AdminPrivacyPolicy = () => {
       payload.append("image", image.file);
 
       const response = await addHomepageImage(payload);
-      toast.success("Image uploaded successfully!");
+      toast.success(t("adminprivacypolicy_image_upload_success"));
       fetchExistingImage();
       // setExistingImage(response?.imageUrl || null);
       setImage(null);
     } catch (error) {
-      toast.error("Failed to upload image.");
+      toast.error(t("adminprivacypolicy_image_upload_fail"));
       console.error("Error uploading image:", error);
     } finally {
       setIsLoading(false);

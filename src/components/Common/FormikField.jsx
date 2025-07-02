@@ -40,16 +40,17 @@ const FormikField = ({
             IconComponent ? "pl-10" : ""
           } rounded-md xl:py-3 xl:px-3 py-2 px-2 outline-none border border-[#D9D9D9] focus:outline-none sm:text-sm input-field ${
             touched[field.name] && errors[field.name] ? "border-red-500" : ""
-          }`}
+          } ${className}`}
           placeholder={placeholder}
           type={
             type === "password" ? (hidePassword ? "password" : "text") : type
           }
-          
           {...field}
           {...props}
         />
-        {postfix && <span className="absolute right-3 text-sm text-gray2">{postfix}</span> }
+        {postfix && (
+          <span className="absolute right-3 text-sm text-gray2">{postfix}</span>
+        )}
         {type === "password" && (
           <img
             src={hidePassword ? eyes : showEye}
@@ -59,10 +60,10 @@ const FormikField = ({
         )}
         {flag && (
           <img
-          src={flag}
-          alt="Flag"
-          className="cursor-pointer h-5 w-5 absolute right-4 top-1/2 transform -translate-y-1/2"
-        />
+            src={flag}
+            alt="Flag"
+            className="cursor-pointer h-5 w-5 absolute right-4 top-1/2 transform -translate-y-1/2"
+          />
         )}
       </div>
       {touched[field.name] && errors[field.name] && (

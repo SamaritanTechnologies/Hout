@@ -15,6 +15,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setProductCategories } from "../redux";
 import Activebadge from "../assets/DashboardImages/ActiveBadge.svg";
 import ActiveTableHead from "../assets/DashboardImages/ActiveTableHead.svg";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const initialState = {
   results: [],
@@ -39,6 +41,7 @@ export const Products = () => {
     thickness: [],
     width: [],
   });
+  const { t } = useTranslation();
 
   const fetchProducts = async (selectedOptions) => {
     try {
@@ -62,9 +65,11 @@ export const Products = () => {
       if (selectedItem) {
         await deleteProduct(selectedItem?.id);
         setIsDeleted(!isDeleted);
+        toast.success(t("product_delete_success"));
       }
     } catch (error) {
       console.error("Error fetching user data:");
+      toast.error(t("product_delete_fail"));
     }
   };
 

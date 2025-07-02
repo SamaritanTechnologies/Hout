@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import { axiosApi, axiosWithCredentials } from "../../providers";
+import i18n from "i18next";
 
 export const addVatRate = async (payload) => {
   const response = await axiosWithCredentials.post(`/vat-rate/`, payload);
@@ -49,9 +50,9 @@ export const deleteProduct = async (id) => {
   try {
     await axiosWithCredentials.delete(`/product/${id}/delete/`);
 
-    toast.success("Successfully deleted");
+    toast.success(i18n.t("product_delete_success"));
   } catch (error) {
-    toast.error("Something went wrong ");
+    toast.error(i18n.t("product_delete_fail"));
     console.log(error, "error");
   }
 };
@@ -179,10 +180,10 @@ export const addProduct = async (values, lengths, images, relatedProducts) => {
         headers: { "Content-Type": "multipart/form-data" },
       }
     );
-    toast.success("Product added successfully!");
+    toast.success(i18n.t("product_add_success"));
     return response.data;
   } catch (error) {
-    toast.error("Failed to add product.");
+    toast.error(i18n.t("product_add_fail"));
     console.error("Error adding product:", error);
     throw error;
   }
@@ -269,10 +270,10 @@ export const updateProduct = async (
         headers: { "Content-Type": "multipart/form-data" },
       }
     );
-    toast.success("Product updated successfully!");
+    toast.success(i18n.t("product_update_success"));
     return response.data;
   } catch (error) {
-    toast.error("Failed to update product.");
+    toast.error(i18n.t("product_update_fail"));
     console.error("Error updating product:", error);
     throw error;
   }

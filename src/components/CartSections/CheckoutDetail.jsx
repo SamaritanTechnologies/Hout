@@ -174,21 +174,21 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
       !state?.delivery_address?.zip_code ||
       !state?.delivery_address?.country
     ) {
-      toast.warn("Please provide complete delivery address");
+      toast.warn(t("cd_address_incomplete"));
       return;
     }
 
     if (!terms) {
-      toast.warn("Please accept terms and conditions first");
+      toast.warn(t("cd_terms_required"));
       return;
     }
 
     if (!selectedPaymentMethod) {
-      toast.warn("Please select a payment method");
+      toast.warn(t("cd_payment_method_required"));
       return;
     }
     if (!cartSummary?.payment_option) {
-      toast.warn("Please select a payment method");
+      toast.warn(t("cd_payment_method_required"));
       return;
     }
 
@@ -214,11 +214,13 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
       if (response?.data?.checkout_url) {
         window.open(response.data.checkout_url, "_blank");
       } else {
-        toast.error("Payment initialization failed");
+        toast.error(t("cd_payment_init_fail"));
       }
     } catch (error) {
       console.error("Payment error:", error);
-      toast.error(error.response?.data?.message || "Payment processing failed");
+      toast.error(
+        error.response?.data?.message || t("cd_payment_processing_fail")
+      );
     } finally {
       setLoading(false);
     }
@@ -387,9 +389,9 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
                         fetchUser();
                         setSubmitting(false);
                         resetForm(false);
-                        toast.success("Delivery address successfully updated");
+                        toast.success(t("cd_address_update_success"));
                       } catch (error) {
-                        toast.error("Something went wrong");
+                        toast.error(t("cd_address_update_fail"));
                         setSubmitting(false);
                       }
                     }}

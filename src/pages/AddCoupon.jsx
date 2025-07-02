@@ -9,6 +9,7 @@ import { deleteCoupon, getCoupons } from "../redux/actions/couponAction";
 import { toast } from "react-toastify";
 import EditCoupon from "../components/Coupon/EditCoupon";
 import AddCouponModal from "../components/Coupon/AddCouponModal";
+import { useTranslation } from "react-i18next";
 
 const AddCoupon = () => {
   const [coupons, setCoupons] = useState([]);
@@ -16,6 +17,7 @@ const AddCoupon = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [currentCoupon, setCurrentCoupon] = useState(null);
+  const { t } = useTranslation();
 
   const fetchCoupons = async () => {
     try {
@@ -23,7 +25,7 @@ const AddCoupon = () => {
       setCoupons(res);
     } catch (error) {
       console.error("Error:", error);
-      toast.error("Error to fetch coupons");
+      toast.error(t("coupon_fetch_fail"));
     }
   };
 
