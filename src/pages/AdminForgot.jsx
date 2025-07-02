@@ -11,6 +11,7 @@ import {
 } from "../redux/actions/dashboardActions";
 import { toast } from "react-toastify";
 import { XCircleIcon } from "@heroicons/react/24/outline";
+import { useTranslation } from "react-i18next";
 
 const validTypes = ["image/jpeg", "image/png", "image/webp"];
 
@@ -27,6 +28,7 @@ export const AdminForgot = () => {
     button_text_en: "",
     button_text_nl: "",
   });
+  const { t } = useTranslation();
 
   const fetchExistingImage = async () => {
     try {
@@ -57,7 +59,7 @@ export const AdminForgot = () => {
       setImage({ file, preview: URL.createObjectURL(file) });
       setExistingImage(null);
     } else {
-      toast.error("Invalid file type. Only JPEG, PNG, and WebP are allowed.");
+      toast.error(t("adminforgot_invalid_type"));
     }
   };
 
@@ -76,7 +78,7 @@ export const AdminForgot = () => {
 
   const handleSave = async () => {
     if (!image?.file && !existingImage) {
-      toast.error("Please select an image to upload.");
+      toast.error(t("adminforgot_select_required"));
       return;
     }
 
@@ -104,7 +106,7 @@ export const AdminForgot = () => {
       }
 
       const response = await addHomepageImage(payload);
-      toast.success("Homepage content saved successfully!");
+      toast.success(t("adminforgot_save_success"));
       fetchExistingImage();
 
       if (response?.data?.imageUrl) {
@@ -112,8 +114,8 @@ export const AdminForgot = () => {
       }
       setImage(null);
     } catch (error) {
-      toast.error("Failed to save homepage content.");
-      console.error("Error saving homepage content:", error);
+      toast.error(t("adminforgot_save_fail"));
+      console.error("Error saving forgot page content:", error);
     } finally {
       setIsLoading(false);
     }

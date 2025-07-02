@@ -10,6 +10,9 @@ import { addOurValues, getOurValues } from "../redux/actions/dashboardActions";
 import { toast } from "react-toastify";
 import * as Yup from "yup"; // Import Yup for validation
 import { fetchImageAsFile } from "../redux/actions/productActions";
+import nlflag from "../assets/DashboardImages/flag-netherlands.svg";
+import usaflag from "../assets/DashboardImages/USA-flag.svg";
+import { useTranslation } from "react-i18next";
 
 export const OurValues = () => {
   const [loading, setLoading] = useState(false);
@@ -22,6 +25,8 @@ export const OurValues = () => {
   });
 
   const [selectedImages, setSelectedImages] = useState(new Array(4).fill(null));
+
+  const { t } = useTranslation();
 
   // Validation Schema
   const validationSchema = Yup.object().shape({
@@ -89,7 +94,7 @@ export const OurValues = () => {
         setValues(updatedValues);
         setSelectedImages(updatedImages);
       } catch (error) {
-        toast.error("Failed to fetch data!");
+        toast.error(t("ourvalues_fetch_fail"));
       } finally {
         setLoading(false);
       }
@@ -102,7 +107,7 @@ export const OurValues = () => {
   const handleDrop = (acceptedFiles, index, setFieldValue) => {
     const file = acceptedFiles[0];
     if (!file.type.startsWith("image/")) {
-      toast.error("Please upload a valid image file.");
+      toast.error(t("ourvalues_invalid_image"));
       return;
     }
 
@@ -165,9 +170,9 @@ export const OurValues = () => {
       }
 
       await addOurValues(formData);
-      toast.success("Data saved successfully!");
+      toast.success(t("ourvalues_save_success"));
     } catch (error) {
-      toast.error("Error saving data!");
+      toast.error(t("ourvalues_save_fail"));
       console.error("Error:", error);
     } finally {
       setLoading(false);
@@ -184,16 +189,16 @@ export const OurValues = () => {
         onSubmit={handleSave}
       >
         {({ setFieldValue, isValid, touched }) => (
-          <Form className="flex flex-col gap-[40px] min-w-[600px] max-w-[848px] mx-auto">
+          <Form className="flex flex-col gap-[40px] min-w-[700px] max-w-[1200px] mx-auto">
             <div className="grid grid-cols-2 gap-4">
               {values.title_en.map((_, index) => (
                 <div
                   key={index}
-                  className="flex gap-[12px] flex-wrap flex-col p-2 rounded bg-white"
+                  className="flex gap-[12px] flex-wrap flex-col p-2 rounded bg-white "
                 >
                   <label
                     htmlFor={`value-${index}`}
-                    className="text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block"
+                    className="text-black text-xs font-semibold xl:mb-[12px] mb-[8px] block w-"
                   >
                     Value {index + 1}
                   </label>
@@ -228,15 +233,18 @@ export const OurValues = () => {
                       className="text-red text-sm mt-1"
                     />
                   </div>
-                  <div
-                  // className="grid grid-cols-2 gap-4"
-                  >
-                    <div className="hidden">
+                  <div className="grid grid-cols-2 gap-4 w-[500px]">
+                    <div className="relative">
                       <Field
                         type="text"
                         name={`title_nl[${index}]`}
                         placeholder="Naam"
                         component={FormikField}
+                      />
+                      <img
+                        className="absolute right-2 top-4 w-5 h-5 bg-white "
+                        src={nlflag}
+                        alt="USA flag"
                       />
                       <ErrorMessage
                         name={`title_nl[${index}]`}
@@ -244,12 +252,18 @@ export const OurValues = () => {
                         className="text-red text-sm mt-1"
                       />
                     </div>
-                    <div>
+                    <div className="relative ">
                       <Field
                         type="text"
                         name={`title_en[${index}]`}
                         placeholder="Name"
                         component={FormikField}
+                        className=""
+                      />
+                      <img
+                        className="absolute right-2 top-4 w-5 h-5 bg-white "
+                        src={usaflag}
+                        alt="USA flag"
                       />
                       <ErrorMessage
                         name={`title_en[${index}]`}
@@ -258,29 +272,37 @@ export const OurValues = () => {
                       />
                     </div>
                   </div>
-                  <div
-                  // className="grid grid-cols-2 gap-4"
-                  >
-                    <div className="hidden">
+                  <div className="grid grid-cols-2 gap-4 w-[500px]">
+                    <div className="relative">
                       <Field
                         as="textarea"
                         name={`description_nl[${index}]`}
                         placeholder="Description (nl)"
                         component={Textarea}
                       />
+                      {/* <img
+                        className="absolute right-2 top-4 w-5 h-5"
+                        src={nlflag}
+                        alt="USA flag"
+                      /> */}
                       <ErrorMessage
                         name={`description_nl[${index}]`}
                         component="div"
                         className="text-red text-sm mt-1"
                       />
                     </div>
-                    <div>
+                    <div className="relative">
                       <Field
                         as="textarea"
                         name={`description_en[${index}]`}
                         placeholder="Description (en)"
                         component={Textarea}
                       />
+                      {/* <img
+                        className="absolute right-2 top-4 w-5 h-5"
+                        src={usaflag}
+                        alt="USA flag"
+                      /> */}
                       <ErrorMessage
                         name={`description_en[${index}]`}
                         component="div"

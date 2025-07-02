@@ -45,7 +45,7 @@ export const ProductDetail = () => {
         console.log("data", data);
       } catch (error) {
         console.error("Error fetching product details:", error);
-        toast.error("Failed to fetch product details. Please try again.");
+        toast.error(t("productDetail_fetchError"));
       } finally {
         setLoading(false);
       }

@@ -57,6 +57,8 @@ export const enTranslations = {
   f_button_submit: "Submit",
   f_dont_have_account: "Don't have an account?",
   f_sign_up: "Sign up!",
+  fp_reset_link_sent: "Reset link sent to your email",
+  fp_reset_link_error: "Error sending password reset link",
 
   // Reset Password page
 
@@ -94,6 +96,40 @@ export const enTranslations = {
   w_wishlist_table_description: "Description",
   w_wishlist_table_price: "Price",
   w_wishlist_table_action: "Action",
+  w_wishlist_toast_removed: "Product removed from wishlist!",
+
+  // ProductCard Toasts
+  pc_wishlist_add_success: "Product added to wishlist!",
+  pc_wishlist_add_fail: "Failed to add product to wishlist!",
+  pc_wishlist_remove_success: "Product removed from wishlist!",
+  pc_cart_add_success: "Product added to cart!",
+  pc_cart_out_of_stock: "This product is out of stock.",
+  pc_cart_error: "Something went wrong",
+  // ProductVaritants Toasts
+  pv_cart_add_success: "Product added to cart!",
+  pv_cart_quantity_warning: "Please enter a valid quantity",
+  pv_cart_out_of_stock: "This product is out of stock.",
+  pv_cart_error: "Something went wrong",
+  // ShoppingCart Toasts
+  sc_remove_fail: "Failed to remove item from the cart.",
+  sc_coupon_applied_success: "Coupon applied successfully!",
+  sc_coupon_not_active: "This coupon is not active.",
+  sc_coupon_invalid: "Invalid coupon code",
+  sc_payment_admin_required:
+    "Payment method requires admin approval. Please contact the administrator.",
+  sc_payment_option_required: "Please select a payment option",
+  // orderActions Toasts
+  oa_cart_add_success: "Successfully added to cart",
+  oa_cart_add_error: "Something went wrong",
+  oa_cart_remove_success: "Item removed from cart",
+  // CheckoutDetail Toasts
+  cd_address_incomplete: "Please provide complete delivery address",
+  cd_terms_required: "Please accept terms and conditions first",
+  cd_payment_method_required: "Please select a payment method",
+  cd_payment_init_fail: "Payment initialization failed",
+  cd_payment_processing_fail: "Payment processing failed",
+  cd_address_update_success: "Delivery address successfully updated",
+  cd_address_update_fail: "Something went wrong",
 
   // Delete Modal
   d_warning: "Warning!",
@@ -310,4 +346,189 @@ export const enTranslations = {
   f_bank_account: "NL65 BUNQ 2064 2611 33",
   f_pay: "Pay",
   f_copyright: "Copyright © {{year}} Hout Totaal",
+
+  // Product Detail Section
+
+  // Toast messages
+
+  productDetail_fetchError:
+    "Failed to fetch product details. Please try again.",
+
+  // Coupon Toasts
+  coupon_add_success: "Coupon successfully added!",
+  coupon_add_fail: "Failed to add coupon.",
+  coupon_update_success: "Coupon successfully updated!",
+  coupon_update_fail: "Failed to update coupon.",
+  coupon_delete_success: "Coupon deleted successfully!",
+  coupon_delete_fail: "Failed to delete coupon.",
+  coupon_fetch_fail: "Failed to fetch coupons.",
+
+  // VAT Toasts
+  vat_fetch_fail: "Failed to fetch VAT rate.",
+  vat_invalid: "Please enter a valid VAT rate.",
+  vat_save_success: "VAT rate saved successfully!",
+  vat_save_fail: "Failed to save VAT rate. Please try again.",
+
+  // Delivery Toasts
+  delivery_fetch_fail: "Failed to fetch delivery settings.",
+  delivery_invalid: "Please enter valid values for all delivery fees.",
+  delivery_time_required: "Please enter a delivery time estimate.",
+  delivery_save_success: "Delivery settings saved successfully!",
+  delivery_save_fail: "Failed to save delivery settings. Please try again.",
+
+  // Product Toasts
+  product_delete_success: "Product deleted successfully!",
+  product_delete_fail: "Failed to delete product.",
+  product_add_success: "Product added successfully!",
+  product_add_fail: "Failed to add product.",
+  product_update_success: "Product updated successfully!",
+  product_update_fail: "Failed to update product.",
+
+  // HomePageImage Toasts
+  homepage_image_invalid_type:
+    "Invalid file type. Only JPEG, PNG, and WebP are allowed.",
+  homepage_image_select_required: "Please select an image to upload.",
+  homepage_image_save_success: "Homepage content saved successfully!",
+  homepage_image_save_fail: "Failed to save homepage content.",
+
+  // HomePageProducts Toasts
+  homepage_products_select_required: "Please select at least one product.",
+  homepage_products_save_success: "Products added successfully!",
+  homepage_products_save_fail: "Failed to add products.",
+
+  // OurValues Toasts
+  ourvalues_fetch_fail: "Failed to fetch data!",
+  ourvalues_invalid_image: "Please upload a valid image file.",
+  ourvalues_save_success: "Data saved successfully!",
+  ourvalues_save_fail: "Error saving data!",
+
+  // OurAssortment Toasts
+  ourassortment_fetch_fail: "Failed to fetch data!",
+  ourassortment_invalid_image: "Please upload a valid image file.",
+  ourassortment_save_success: "Data saved successfully!",
+  ourassortment_save_fail: "Error saving data!",
+
+  // WhyHoutTotaal Toasts
+  whyhouttotaal_fetch_fail: "Failed to fetch data!",
+  whyhouttotaal_save_success: "Data saved successfully!",
+  whyhouttotaal_save_fail: "Error saving data!",
+
+  // TermsAndConditions Toasts
+  termsconditions_fetch_fail: "Failed to fetch Terms & Conditions!",
+  termsconditions_save_success: "Terms & Conditions saved successfully!",
+  termsconditions_save_fail: "Failed to save Terms & Conditions!",
+  termsconditions_invalid_type:
+    "Invalid file type. Only JPEG, PNG, and WebP are allowed.",
+  termsconditions_select_required: "Please select an image to upload.",
+  termsconditions_image_upload_success: "Image uploaded successfully!",
+  termsconditions_image_upload_fail: "Failed to upload image.",
+
+  // AdminPrivacyPolicy Toasts
+  adminprivacypolicy_fetch_fail: "Failed to fetch privacy policy",
+  adminprivacypolicy_save_success: "Privacy policy saved successfully!",
+  adminprivacypolicy_save_fail: "Failed to save Privacy Policy",
+  adminprivacypolicy_invalid_type:
+    "Invalid file type. Only JPEG, PNG, and WebP are allowed.",
+  adminprivacypolicy_select_required: "Please select an image to upload.",
+  adminprivacypolicy_image_upload_success: "Image uploaded successfully!",
+  adminprivacypolicy_image_upload_fail: "Failed to upload image.",
+
+  // AdminAboutUs Toasts
+  adminaboutus_fetch_fail: "Failed to fetch About Us data",
+  adminaboutus_save_success: "About Us saved successfully!",
+  adminaboutus_save_fail: "Failed to save About Us data",
+  adminaboutus_invalid_type:
+    "Invalid file type. Only JPEG, PNG, and WebP are allowed.",
+  adminaboutus_select_required: "Please select an image to upload.",
+  adminaboutus_image_upload_success: "Image uploaded successfully!",
+  adminaboutus_image_upload_fail: "Failed to upload image.",
+  adminaboutus_fetch_image_fail: "Failed to fetch existing image",
+
+  // AdminFAQ Toasts
+  adminfaq_fetch_fail: "Failed to fetch FAQs.",
+  adminfaq_save_success: "FAQs saved successfully!",
+  adminfaq_save_fail: "Failed to save FAQs. Please try again.",
+
+  // AdminWehshop Toasts
+  adminwehshop_invalid_type:
+    "Invalid file type. Only JPEG, PNG, and WebP are allowed.",
+  adminwehshop_select_required: "Please select an image to upload.",
+  adminwehshop_save_success: "Shop page content saved successfully!",
+  adminwehshop_save_fail: "Failed to save shop page content.",
+
+  // AdminSignIn Toasts
+  adminsignin_invalid_type:
+    "Invalid file type. Only JPEG, PNG, and WebP are allowed.",
+  adminsignin_select_required: "Please select an image to upload.",
+  adminsignin_save_success: "Signin page content saved successfully!",
+  adminsignin_save_fail: "Failed to save signin page content.",
+
+  // AdminSignUp Toasts
+  adminsignup_invalid_type:
+    "Invalid file type. Only JPEG, PNG, and WebP are allowed.",
+  adminsignup_select_required: "Please select an image to upload.",
+  adminsignup_save_success: "Signup page content saved successfully!",
+  adminsignup_save_fail: "Failed to save signup page content.",
+
+  // AdminForgot Toasts
+  adminforgot_invalid_type:
+    "Invalid file type. Only JPEG, PNG, and WebP are allowed.",
+  adminforgot_select_required: "Please select an image to upload.",
+  adminforgot_save_success: "Forgot page content saved successfully!",
+  adminforgot_save_fail: "Failed to save forgot page content.",
+
+  // AdminReset Toasts
+  adminreset_invalid_type:
+    "Invalid file type. Only JPEG, PNG, and WebP are allowed.",
+  adminreset_select_required: "Please select an image to upload.",
+  adminreset_save_success: "Reset page content saved successfully!",
+  adminreset_save_fail: "Failed to save reset page content.",
+
+  // PaymentOptions Toasts
+  paymentoptions_select_user: "Please select a user.",
+  paymentoptions_update_success: "Payment options updated successfully.",
+  paymentoptions_update_fail: "Failed to update payment option.",
+
+  // Signin Toasts
+  signin_fill_all_fields: "Please fill in all fields.",
+  signin_wrong_credentials: "Wrong credentials!",
+
+  // Signup Toasts
+  signup_fill_all_fields: "Please fill in all fields.",
+  signup_password_min_length: "Password must be at least 6 characters.",
+  signup_password_uppercase:
+    "Password must contain at least one uppercase letter.",
+  signup_password_lowercase:
+    "Password must contain at least one lowercase letter.",
+  signup_password_special:
+    "Password must contain at least one special character.",
+  signup_passwords_no_match: "Passwords do not match.",
+  signup_success: "Thank you for sign up! Please check your email.",
+  signup_email_exists: "This email is already registered.",
+  signup_generic_error: "Something went wrong, Try Again.",
+
+  pa_password_update_success: "Password successfully updated",
+  pa_password_update_error: "Something went wrong updating password",
+  pa_profile_update_success: "Profile successfully updated",
+  pa_profile_update_error: "Something went wrong updating profile",
+  pa_reset_link_sent: "Reset link sent to your email",
+  pa_reset_link_error: "Error sending password reset link",
+  pa_password_reset_success: "Your password has been reset successfully",
+  pa_password_reset_error: "Something went wrong resetting password",
+  pa_invoice_delivery_update_success:
+    "Invoice delivery address successfully updated",
+  pa_invoice_delivery_update_error:
+    "Something went wrong updating invoice delivery address",
+  pa_no_image_selected: "No image selected.",
+  pa_profile_pic_update_success: "Successfully updated profile picture",
+  pa_profile_pic_update_error: "Error uploading image",
+  pa_delivery_address_update_success: "Delivery address successfully updated",
+  pa_delivery_address_update_error:
+    "Something went wrong updating delivery address",
+  pa_invoice_address_update_success: "Invoice address successfully updated",
+  pa_invoice_address_update_error:
+    "Something went wrong updating invoice address",
+
+  // HeadLessDropDown Toasts
+  dropdown_logout_success: "Logged out successfully!",
 };

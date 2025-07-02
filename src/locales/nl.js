@@ -57,6 +57,8 @@ export const nlTranslations = {
   f_button_submit: "Verzenden",
   f_dont_have_account: "Heb je geen account?",
   f_sign_up: "Meld je aan!",
+  fp_reset_link_sent: "Resetlink is naar je e-mail gestuurd",
+  fp_reset_link_error: "Fout bij het verzenden van de resetlink",
 
   // ProductsSection
   p_products_heading: "Gerelateerde producten",
@@ -92,6 +94,7 @@ export const nlTranslations = {
   w_wishlist_table_description: "Beschrijving",
   w_wishlist_table_price: "Prijs",
   w_wishlist_table_action: "Actie",
+  w_wishlist_toast_removed: "Product verwijderd uit verlanglijst!",
 
   // Delete Modal
   d_warning: "Waarschuwing!",
@@ -135,7 +138,7 @@ export const nlTranslations = {
   s_continue_shopping_button: "Doorgaan met winkelen",
   s_subtotal_excl_vat: "Subtotaal excl. btw",
   s_delivery_fee: "Bezorgkosten",
-  s_tax: "BWT",
+  s_tax: "BTW",
   s_you_saved: "Je hebt bespaard",
   s_total: "Totaal",
 
@@ -311,4 +314,205 @@ export const nlTranslations = {
   f_bank_account: "NL65 BUNQ 2064 2611 33",
   f_pay: "Betalen",
   f_copyright: "Copyright © {{year}} Hout Totaal",
+
+  // Product Detail Section
+
+  // Toast messages
+
+  productDetail_fetchError:
+    "Kan productgegevens niet ophalen. Probeer het opnieuw.",
+  // ProductCard Toasts
+  pc_wishlist_add_success: "Product toegevoegd aan verlanglijst!",
+  pc_wishlist_add_fail: "Product toevoegen aan verlanglijst mislukt!",
+  pc_wishlist_remove_success: "Product verwijderd uit verlanglijst!",
+  pc_cart_add_success: "Product toegevoegd aan winkelwagen!",
+  pc_cart_out_of_stock: "Dit product is niet op voorraad.",
+  pc_cart_error: "Er is iets misgegaan",
+  // ProductVaritants Toasts
+  pv_cart_add_success: "Product toegevoegd aan winkelwagen!",
+  pv_cart_quantity_warning: "Voer een geldige hoeveelheid in",
+  pv_cart_out_of_stock: "Dit product is niet op voorraad.",
+  pv_cart_error: "Er is iets misgegaan",
+  // ShoppingCart Toasts
+  sc_remove_fail: "Verwijderen van artikel uit winkelwagen mislukt.",
+  sc_coupon_applied_success: "Coupon succesvol toegepast!",
+  sc_coupon_not_active: "Deze coupon is niet actief.",
+  sc_coupon_invalid: "Ongeldige couponcode",
+  sc_payment_admin_required:
+    "Betaalmethode vereist goedkeuring van de beheerder. Neem contact op met de beheerder.",
+  sc_payment_option_required: "Selecteer een betaalmethode",
+  // orderActions Toasts
+  oa_cart_add_success: "Succesvol toegevoegd aan winkelwagen",
+  oa_cart_add_error: "Er is iets misgegaan",
+  oa_cart_remove_success: "Artikel verwijderd uit winkelwagen",
+  // CheckoutDetail Toasts
+  cd_address_incomplete: "Vul het volledige bezorgadres in",
+  cd_terms_required: "Accepteer eerst de algemene voorwaarden",
+  cd_payment_method_required: "Selecteer een betaalmethode",
+  cd_payment_init_fail: "Betalingsinitialisatie mislukt",
+  cd_payment_processing_fail: "Betaling mislukt",
+  cd_address_update_success: "Bezorgadres succesvol bijgewerkt",
+  cd_address_update_fail: "Er is iets misgegaan",
+  // Coupon Toasts
+  coupon_add_success: "Coupon succesvol toegevoegd!",
+  coupon_add_fail: "Coupon toevoegen mislukt.",
+  coupon_update_success: "Coupon succesvol bijgewerkt!",
+  coupon_update_fail: "Coupon bijwerken mislukt.",
+  coupon_delete_success: "Coupon succesvol verwijderd!",
+  coupon_delete_fail: "Coupon verwijderen mislukt.",
+  coupon_fetch_fail: "Coupons ophalen mislukt.",
+  // VAT Toasts
+  vat_fetch_fail: "Btw-tarief ophalen mislukt.",
+  vat_invalid: "Voer een geldig btw-tarief in.",
+  vat_save_success: "Btw-tarief succesvol opgeslagen!",
+  vat_save_fail: "Btw-tarief opslaan mislukt. Probeer het opnieuw.",
+  // Delivery Toasts
+  delivery_fetch_fail: "Bezorginstellingen ophalen mislukt.",
+  delivery_invalid: "Voer geldige waarden in voor alle bezorgkosten.",
+  delivery_time_required: "Voer een geschatte bezorgtijd in.",
+  delivery_save_success: "Bezorginstellingen succesvol opgeslagen!",
+  delivery_save_fail:
+    "Bezorginstellingen opslaan mislukt. Probeer het opnieuw.",
+  // Product Toasts
+  product_delete_success: "Product succesvol verwijderd!",
+  product_delete_fail: "Product verwijderen mislukt.",
+  product_add_success: "Product succesvol toegevoegd!",
+  product_add_fail: "Product toevoegen mislukt.",
+  product_update_success: "Product succesvol bijgewerkt!",
+  product_update_fail: "Product bijwerken mislukt.",
+  // HomePageImage Toasts
+  homepage_image_invalid_type:
+    "Ongeldig bestandstype. Alleen JPEG, PNG en WebP zijn toegestaan.",
+  homepage_image_select_required: "Selecteer een afbeelding om te uploaden.",
+  homepage_image_save_success: "Homepage-inhoud succesvol opgeslagen!",
+  homepage_image_save_fail: "Opslaan van homepage-inhoud mislukt.",
+  // HomePageProducts Toasts
+  homepage_products_select_required: "Selecteer ten minste één product.",
+  homepage_products_save_success: "Producten succesvol toegevoegd!",
+  homepage_products_save_fail: "Producten toevoegen mislukt.",
+  // OurValues Toasts
+  ourvalues_fetch_fail: "Gegevens ophalen mislukt!",
+  ourvalues_invalid_image: "Upload een geldig afbeeldingsbestand.",
+  ourvalues_save_success: "Gegevens succesvol opgeslagen!",
+  ourvalues_save_fail: "Fout bij het opslaan van gegevens!",
+  // OurAssortment Toasts
+  ourassortment_fetch_fail: "Gegevens ophalen mislukt!",
+  ourassortment_invalid_image: "Upload een geldig afbeeldingsbestand.",
+  ourassortment_save_success: "Gegevens succesvol opgeslagen!",
+  ourassortment_save_fail: "Fout bij het opslaan van gegevens!",
+  // WhyHoutTotaal Toasts
+  whyhouttotaal_fetch_fail: "Gegevens ophalen mislukt!",
+  whyhouttotaal_save_success: "Gegevens succesvol opgeslagen!",
+  whyhouttotaal_save_fail: "Fout bij het opslaan van gegevens!",
+  // TermsAndConditions Toasts
+  termsconditions_fetch_fail: "Ophalen van Algemene Voorwaarden mislukt!",
+  termsconditions_save_success: "Algemene Voorwaarden succesvol opgeslagen!",
+  termsconditions_save_fail: "Opslaan van Algemene Voorwaarden mislukt!",
+  termsconditions_invalid_type:
+    "Ongeldig bestandstype. Alleen JPEG, PNG en WebP zijn toegestaan.",
+  termsconditions_select_required: "Selecteer een afbeelding om te uploaden.",
+  termsconditions_image_upload_success: "Afbeelding succesvol geüpload!",
+  termsconditions_image_upload_fail: "Afbeelding uploaden mislukt.",
+  // AdminPrivacyPolicy Toasts
+  adminprivacypolicy_fetch_fail: "Ophalen van privacybeleid mislukt",
+  adminprivacypolicy_save_success: "Privacybeleid succesvol opgeslagen!",
+  adminprivacypolicy_save_fail: "Opslaan van privacybeleid mislukt",
+  adminprivacypolicy_invalid_type:
+    "Ongeldig bestandstype. Alleen JPEG, PNG en WebP zijn toegestaan.",
+  adminprivacypolicy_select_required:
+    "Selecteer een afbeelding om te uploaden.",
+  adminprivacypolicy_image_upload_success: "Afbeelding succesvol geüpload!",
+  adminprivacypolicy_image_upload_fail: "Afbeelding uploaden mislukt.",
+  // AdminAboutUs Toasts
+  adminaboutus_fetch_fail: "Ophalen van Over Ons-gegevens mislukt",
+  adminaboutus_save_success: "Over Ons succesvol opgeslagen!",
+  adminaboutus_save_fail: "Opslaan van Over Ons-gegevens mislukt",
+  adminaboutus_invalid_type:
+    "Ongeldig bestandstype. Alleen JPEG, PNG en WebP zijn toegestaan.",
+  adminaboutus_select_required: "Selecteer een afbeelding om te uploaden.",
+  adminaboutus_image_upload_success: "Afbeelding succesvol geüpload!",
+  adminaboutus_image_upload_fail: "Afbeelding uploaden mislukt.",
+  adminaboutus_fetch_image_fail: "Ophalen van bestaande afbeelding mislukt",
+  // AdminFAQ Toasts
+  adminfaq_fetch_fail: "Ophalen van veelgestelde vragen mislukt.",
+  adminfaq_save_success: "Veelgestelde vragen succesvol opgeslagen!",
+  adminfaq_save_fail:
+    "Opslaan van veelgestelde vragen mislukt. Probeer het opnieuw.",
+  // AdminWehshop Toasts
+  adminwehshop_invalid_type:
+    "Ongeldig bestandstype. Alleen JPEG, PNG en WebP zijn toegestaan.",
+  adminwehshop_select_required: "Selecteer een afbeelding om te uploaden.",
+  adminwehshop_save_success: "Winkelwagenpagina-inhoud succesvol opgeslagen!",
+  adminwehshop_save_fail: "Opslaan van winkelwagenpagina-inhoud mislukt.",
+  // AdminSignIn Toasts
+  adminsignin_invalid_type:
+    "Ongeldig bestandstype. Alleen JPEG, PNG en WebP zijn toegestaan.",
+  adminsignin_select_required: "Selecteer een afbeelding om te uploaden.",
+  adminsignin_save_success: "Inlogpagina-inhoud succesvol opgeslagen!",
+  adminsignin_save_fail: "Opslaan van inlogpagina-inhoud mislukt.",
+  // AdminSignUp Toasts
+  adminsignup_invalid_type:
+    "Ongeldig bestandstype. Alleen JPEG, PNG en WebP zijn toegestaan.",
+  adminsignup_select_required: "Selecteer een afbeelding om te uploaden.",
+  adminsignup_save_success: "Aanmeldpagina-inhoud succesvol opgeslagen!",
+  adminsignup_save_fail: "Opslaan van aanmeldpagina-inhoud mislukt.",
+  // AdminForgot Toasts
+  adminforgot_invalid_type:
+    "Ongeldig bestandstype. Alleen JPEG, PNG en WebP zijn toegestaan.",
+  adminforgot_select_required: "Selecteer een afbeelding om te uploaden.",
+  adminforgot_save_success:
+    "Wachtwoord vergeten pagina-inhoud succesvol opgeslagen!",
+  adminforgot_save_fail:
+    "Opslaan van wachtwoord vergeten pagina-inhoud mislukt.",
+  // AdminReset Toasts
+  adminreset_invalid_type:
+    "Ongeldig bestandstype. Alleen JPEG, PNG en WebP zijn toegestaan.",
+  adminreset_select_required: "Selecteer een afbeelding om te uploaden.",
+  adminreset_save_success: "Resetpagina-inhoud succesvol opgeslagen!",
+  adminreset_save_fail: "Opslaan van resetpagina-inhoud mislukt.",
+  // PaymentOptions Toasts
+  paymentoptions_select_user: "Selecteer een gebruiker.",
+  paymentoptions_update_success: "Betaalopties succesvol bijgewerkt.",
+  paymentoptions_update_fail: "Bijwerken van betaaloptie mislukt.",
+  // Signin Toasts
+  signin_fill_all_fields: "Vul alle velden in.",
+  signin_wrong_credentials: "Onjuiste inloggegevens!",
+  // Signup Toasts
+  signup_fill_all_fields: "Vul alle velden in.",
+  signup_password_min_length: "Wachtwoord moet minimaal 6 tekens bevatten.",
+  signup_password_uppercase:
+    "Wachtwoord moet minstens één hoofdletter bevatten.",
+  signup_password_lowercase:
+    "Wachtwoord moet minstens één kleine letter bevatten.",
+  signup_password_special:
+    "Wachtwoord moet minstens één speciaal teken bevatten.",
+  signup_passwords_no_match: "Wachtwoorden komen niet overeen.",
+  signup_success: "Bedankt voor het aanmelden! Controleer uw e-mail.",
+  signup_email_exists: "Dit e-mailadres is al geregistreerd.",
+  signup_generic_error: "Er is iets misgegaan, probeer het opnieuw.",
+  pa_password_update_success: "Wachtwoord succesvol bijgewerkt",
+  pa_password_update_error:
+    "Er is iets misgegaan bij het bijwerken van het wachtwoord",
+  pa_profile_update_success: "Profiel succesvol bijgewerkt",
+  pa_profile_update_error:
+    "Er is iets misgegaan bij het bijwerken van het profiel",
+  pa_reset_link_sent: "Resetlink is naar je e-mail gestuurd",
+  pa_reset_link_error: "Fout bij het verzenden van de resetlink",
+  pa_password_reset_success: "Je wachtwoord is succesvol opnieuw ingesteld",
+  pa_password_reset_error:
+    "Er is iets misgegaan bij het opnieuw instellen van het wachtwoord",
+  pa_invoice_delivery_update_success: "Factuuradres succesvol bijgewerkt",
+  pa_invoice_delivery_update_error:
+    "Er is iets misgegaan bij het bijwerken van het factuuradres",
+  pa_no_image_selected: "Geen afbeelding geselecteerd.",
+  pa_profile_pic_update_success: "Profielfoto succesvol bijgewerkt",
+  pa_profile_pic_update_error: "Fout bij het uploaden van de afbeelding",
+  pa_delivery_address_update_success: "Bezorgadres succesvol bijgewerkt",
+  pa_delivery_address_update_error:
+    "Er is iets misgegaan bij het bijwerken van het bezorgadres",
+  pa_invoice_address_update_success: "Factuuradres succesvol bijgewerkt",
+  pa_invoice_address_update_error:
+    "Er is iets misgegaan bij het bijwerken van het factuuradres",
+  // HeadLessDropDown Toasts
+  dropdown_logout_success: "Succesvol uitgelogd!",
 };

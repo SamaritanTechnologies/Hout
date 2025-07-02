@@ -14,6 +14,7 @@ import {
 } from "../redux/actions/dashboardActions";
 import { toast } from "react-toastify";
 import * as Yup from "yup"; // Import Yup for validation
+import { useTranslation } from "react-i18next";
 
 export const OurAssortment = () => {
   const [loading, setLoading] = useState(false);
@@ -26,6 +27,8 @@ export const OurAssortment = () => {
   });
 
   const [selectedImages, setSelectedImages] = useState(new Array(9).fill(null));
+
+  const { t } = useTranslation();
 
   // Validation Schema
   const validationSchema = Yup.object().shape({
@@ -93,7 +96,7 @@ export const OurAssortment = () => {
         setValues(updatedValues);
         setSelectedImages(updatedImages);
       } catch (error) {
-        toast.error("Failed to fetch data!");
+        toast.error(t("ourassortment_fetch_fail"));
       } finally {
         setLoading(false);
       }
@@ -106,7 +109,7 @@ export const OurAssortment = () => {
   const handleDrop = (acceptedFiles, index, setFieldValue) => {
     const file = acceptedFiles[0];
     if (!file.type.startsWith("image/")) {
-      toast.error("Please upload a valid image file.");
+      toast.error(t("ourassortment_invalid_image"));
       return;
     }
 
@@ -178,9 +181,9 @@ export const OurAssortment = () => {
       }
 
       await addOurAssortment(formData);
-      toast.success("Data saved successfully!");
+      toast.success(t("ourassortment_save_success"));
     } catch (error) {
-      toast.error("Error saving data!");
+      toast.error(t("ourassortment_save_fail"));
       console.error("Error:", error);
     } finally {
       setLoading(false);

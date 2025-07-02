@@ -31,10 +31,10 @@ const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
       fetchProduct();
 
       setTimeout(() => {
-        toast.success("Successfully Product add to wishlist!");
+        toast.success(t("pc_wishlist_add_success"));
       }, 1000);
     } catch (error) {
-      toast.error("Failed to add product to wishlist!");
+      toast.error(t("pc_wishlist_add_fail"));
     } finally {
       setLoading(false);
     }
@@ -49,7 +49,7 @@ const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
       fetchProduct();
 
       setTimeout(() => {
-        toast.success("Product removed from wishlist!");
+        toast.success(t("pc_wishlist_remove_success"));
       }, 1000);
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -68,7 +68,7 @@ const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
         quantity: 1,
       };
       await axiosWithCredentials.post(`/add-to-cart/`, payload);
-      toast.success("Product added to cart!");
+      toast.success(t("pc_cart_add_success"));
 
       const res = await getCart();
       dispatch(setCartItems(res.cart_items));
@@ -79,12 +79,12 @@ const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
         error.response.data.message
       ) {
         if (error.response.data.message === "No more product left in stock.") {
-          toast.error("This product is out of stock.");
+          toast.error(t("pc_cart_out_of_stock"));
         } else {
           toast.error(error.response.data.message);
         }
       } else {
-        toast.error("Something went wrong");
+        toast.error(t("pc_cart_error"));
       }
     } finally {
       setCartLoading("");
@@ -112,6 +112,7 @@ const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
     window.dispatchEvent(new Event("localCartUpdated"));
 
     toast.success("Product added to cart!");
+    toast.success(t("pc_cart_add_success"));
   };
 
   const handleViewProduct = () => {

@@ -7,10 +7,12 @@ import countryflag from "../assets/DashboardImages/UK-Flag.svg";
 import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
 import { addFaqs, getFaqs } from "../redux/actions/dashboardActions";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export const AdminFAQ = () => {
   const [faqSections, setFaqSections] = useState([]);
   const [newSubject, setNewSubject] = useState("");
+  const { t } = useTranslation();
 
   // Fetch FAQs on component mount
   useEffect(() => {
@@ -20,10 +22,11 @@ export const AdminFAQ = () => {
         setFaqSections(data);
       } catch (error) {
         console.error("Error fetching FAQs:", error);
+        toast.error(t("adminfaq_fetch_fail"));
       }
     };
     fetchFaqs();
-  }, []);
+  }, [t]);
 
   // Add a new FAQ section with one default FAQ field
   const handleAddSection = () => {
@@ -96,10 +99,10 @@ export const AdminFAQ = () => {
       // Call the API to save FAQs
       const response = await addFaqs(payload);
       console.log("FAQs saved successfully:", response);
-      toast.success("FAQs saved successfully!");
+      toast.success(t("adminfaq_save_success"));
     } catch (error) {
       console.error("Error saving FAQs:", error);
-      toast.error("Failed to save FAQs. Please try again.");
+      toast.error(t("adminfaq_save_fail"));
     }
   };
 

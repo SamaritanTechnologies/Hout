@@ -13,6 +13,7 @@ import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
 import Dropzone from "../components/Common/Dropzone";
 import { toast } from "react-toastify";
 import { XCircleIcon } from "@heroicons/react/24/outline";
+import { useTranslation } from "react-i18next";
 
 // Define valid image types
 const validTypes = ["image/jpeg", "image/png", "image/webp"];
@@ -50,6 +51,7 @@ export const AdminAboutUs = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [image, setImage] = useState(null);
   const [existingImage, setExistingImage] = useState(null);
+  const { t } = useTranslation();
 
   const fetchExistingImage = useCallback(async () => {
     try {
@@ -59,9 +61,9 @@ export const AdminAboutUs = () => {
       }
     } catch (error) {
       console.error("Error fetching existing image:", error);
-      toast.error("Failed to fetch existing image");
+      toast.error(t("adminaboutus_fetch_image_fail"));
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     const fetchAboutUs = async () => {
@@ -76,22 +78,22 @@ export const AdminAboutUs = () => {
           });
         }
       } catch (error) {
-        toast.error("Failed to fetch About Us data");
+        toast.error(t("adminaboutus_fetch_fail"));
         console.error("Error fetching About Us:", error);
       }
     };
 
     fetchAboutUs();
     fetchExistingImage();
-  }, [fetchExistingImage]);
+  }, [fetchExistingImage, t]);
 
   const handleSubmit = async (values, { setSubmitting }) => {
     setIsSubmitting(true);
     try {
       await addAboutUs(values);
-      toast.success("About Us saved successfully!");
+      toast.success(t("adminaboutus_save_success"));
     } catch (error) {
-      toast.error("Failed to save About Us data");
+      toast.error(t("adminaboutus_save_fail"));
       console.error("Error saving About Us:", error);
     } finally {
       setIsSubmitting(false);
@@ -118,15 +120,15 @@ export const AdminAboutUs = () => {
         setImage({ file, preview });
         setExistingImage(null);
       } else {
-        toast.error("Invalid file type. Only JPEG, PNG, and WebP are allowed.");
+        toast.error(t("adminaboutus_invalid_type"));
       }
     },
-    [image]
+    [image, t]
   );
 
   const handleImageSave = async () => {
     if (!image?.file) {
-      toast.error("Please select an image to upload.");
+      toast.error(t("adminaboutus_select_required"));
       return;
     }
 
@@ -137,11 +139,11 @@ export const AdminAboutUs = () => {
       payload.append("image", image.file);
 
       await addHomepageImage(payload);
-      toast.success("Image uploaded successfully!");
+      toast.success(t("adminaboutus_image_upload_success"));
       await fetchExistingImage();
       setImage(null);
     } catch (error) {
-      toast.error("Failed to upload image.");
+      toast.error(t("adminaboutus_image_upload_fail"));
       console.error("Error uploading image:", error);
     } finally {
       setIsUploading(false);

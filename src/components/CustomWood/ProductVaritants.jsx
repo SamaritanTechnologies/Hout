@@ -34,10 +34,10 @@ const ProductVaritants = ({ variants, vat }) => {
         input.value = 0;
         const res = await getCart();
         dispatch(setCartItems(res.cart_items));
-        toast.success("Product added to cart!");
+        toast.success(t("pv_cart_add_success"));
         // navigate("/cart");
       } else {
-        toast.warning("Please enter a valid quantity");
+        toast.warning(t("pv_cart_quantity_warning"));
       }
     } catch (error) {
       if (
@@ -46,12 +46,12 @@ const ProductVaritants = ({ variants, vat }) => {
         error.response.data.message
       ) {
         if (error.response.data.message === "No more product left in stock.") {
-          toast.error("This product is out of stock.");
+          toast.error(t("pv_cart_out_of_stock"));
         } else {
           toast.error(error.response.data.message);
         }
       } else {
-        toast.error("Something went wrong");
+        toast.error(t("pv_cart_error"));
       }
     } finally {
       setLoading(false);
@@ -88,9 +88,9 @@ const ProductVaritants = ({ variants, vat }) => {
       // Dispatch custom event
       window.dispatchEvent(new Event("localCartUpdated"));
 
-      toast.success("Product added to cart!");
+      toast.success(t("pv_cart_add_success"));
     } else {
-      toast.warning("Please enter a valid quantity");
+      toast.warning(t("pv_cart_quantity_warning"));
     }
   };
 

@@ -26,6 +26,8 @@ import countryflag from "../assets/DashboardImages/UK-Flag.svg";
 import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
 import { XCircleIcon } from "@heroicons/react/24/outline";
 import { FlashOnTwoTone } from "@mui/icons-material";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const styleMultiSelect = {
   chips: {
@@ -69,6 +71,7 @@ export const AddNewProduct = () => {
   });
   const [relatedProducts, setRelatedProducts] = useState(relatedInitial);
   const [relatedProductsOptions, setRelatedProductsOptions] = useState([]);
+  const { t } = useTranslation();
 
   const getChoicesByName = (name) => {
     const category = categories?.find(

@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import { axiosWithCredentials } from "../../providers";
+import i18n from "i18next";
 
 export const getOrderDetails = async (month, day, page = 1, page_size) => {
   try {
@@ -53,13 +54,13 @@ export const addToCart = async (values) => {
   try {
     const response = await axiosWithCredentials.post(`/add-to-cart/`, payload);
 
-    toast.success("Successfully added to cart");
+    toast.success(i18n.t("oa_cart_add_success"));
     return response.data;
   } catch (error) {
     if (error.response.data.product?.length) {
       toast.error(error.response.data.product[0]);
     } else {
-      toast.error("Something went wrong");
+      toast.error(i18n.t("oa_cart_add_error"));
     }
     throw error;
   }
@@ -92,7 +93,7 @@ export const deleteCartItem = async (id) => {
     const response = await axiosWithCredentials.delete(
       `/delete/add-to-cart/${id}/`
     );
-    toast.success("Item removed from cart");
+    toast.success(i18n.t("oa_cart_remove_success"));
 
     return response.data;
   } catch (error) {

@@ -80,7 +80,7 @@ export const Signup = () => {
     let isValid = true;
     const newErrors = { ...errors };
     if (Object.values(formData).some((field) => field.trim() === "")) {
-      toast.error("Please fill in all fields");
+      toast.error(t("signup_fill_all_fields"));
       isValid = false;
     }
 
@@ -97,23 +97,20 @@ export const Signup = () => {
     const newErrors = { ...errors };
 
     if (password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+      newErrors.password = t("signup_password_min_length");
     } else if (!/[A-Z]/.test(password)) {
-      newErrors.password =
-        "Password must contain at least one uppercase letter";
+      newErrors.password = t("signup_password_uppercase");
     } else if (!/[a-z]/.test(password)) {
-      newErrors.password =
-        "Password must contain at least one lowercase letter";
-    } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-      newErrors.password =
-        "Password must contain at least one special character";
+      newErrors.password = t("signup_password_lowercase");
+    } else if (!/[!@#$%^&*(),.?\":{}|<>]/.test(password)) {
+      newErrors.password = t("signup_password_special");
     } else {
       newErrors.password = "";
     }
 
     // Confirm password validation
     if (password !== confirmPassword && confirmPassword) {
-      newErrors.confirm_password = "Passwords do not match";
+      newErrors.confirm_password = t("signup_passwords_no_match");
     } else {
       newErrors.confirm_password = "";
     }
@@ -139,16 +136,16 @@ export const Signup = () => {
     try {
       const response = await axiosApi.post("/accounts/sign_up/", data);
       setBtnLoading(false);
-      toast.success("Thank you for sign up! Please check your email.");
+      toast.success(t("signup_success"));
       setTimeout(() => {
         navigate("/sign-in");
       }, 1000);
     } catch (error) {
       setBtnLoading(false);
       if (error?.response?.data?.email) {
-        toast.error(error?.response?.data?.email[0]);
+        toast.error(t("signup_email_exists"));
       } else {
-        toast.error("Something went wrong, Try Again");
+        toast.error(t("signup_generic_error"));
       }
     }
   };

@@ -104,6 +104,12 @@ const ShoppingCart = ({
           `/accounts/payment-options/${userId}/`
         );
         setPaymentOption(res.data);
+        // Auto-select if only one payment method is available
+        if (res.data.cash_payment && !res.data.credit_card) {
+          setSelectedOption("cash");
+        } else if (!res.data.cash_payment && res.data.credit_card) {
+          setSelectedOption("credit");
+        }
       } catch (error) {
         console.error("Error fetching payment options:", error);
       }
@@ -154,7 +160,7 @@ const ShoppingCart = ({
       const res = await getCart();
       dispatch(setCartItems(res.cart_items));
     } catch (error) {
-      toast.error("Failed to remove item from the cart.");
+      toast.error(t("sc_remove_fail"));
     }
   };
 
@@ -265,16 +271,16 @@ const ShoppingCart = ({
       );
       if (response?.data?.is_active) {
         setCouponData(response?.data);
-        toast.success("Coupon applied successfully!");
+        toast.success(t("sc_coupon_applied_success"));
       } else {
         setCouponData(null);
-        setError("This coupon is not active.");
-        toast.error("This coupon is not active.");
+        setError(t("sc_coupon_not_active"));
+        toast.error(t("sc_coupon_not_active"));
       }
     } catch (err) {
       setCouponData(null);
-      setError(err.response?.data?.message || "Invalid coupon code");
-      toast.error(err.response?.data?.message || "Invalid coupon code");
+      setError(err.response?.data?.message || t("sc_coupon_invalid"));
+      toast.error(err.response?.data?.message || t("sc_coupon_invalid"));
     } finally {
       setIsLoading(false);
     }
@@ -346,15 +352,14 @@ const ShoppingCart = ({
   };
 
   const handleCheckout = () => {
-    if (!paymentOption?.cash_payment || !paymentOption?.credit_card) {
-      toast.warn(
-        "Payment method requires admin approval. Please contact the administrator."
-      );
+    // Check if at least one payment method is available
+    if (!paymentOption?.cash_payment && !paymentOption?.credit_card) {
+      toast.warn(t("sc_payment_admin_required"));
       return;
     }
 
     if (!selectedOption) {
-      toast.warn("Please select a payment option");
+      toast.warn(t("sc_payment_option_required"));
       return;
     }
     handleDivClick("secondTab");

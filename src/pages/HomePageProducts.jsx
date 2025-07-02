@@ -8,6 +8,7 @@ import {
   getHomepageProducts,
   addHomepageProducts,
 } from "../redux/actions/dashboardActions";
+import { useTranslation } from "react-i18next";
 
 const pageProductsInitials = {
   product1: null,
@@ -22,6 +23,7 @@ export const HomePageProducts = () => {
   const [homePageProduct, setHomePageProduct] = useState(pageProductsInitials);
   const [productOptions, setProductOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -88,7 +90,7 @@ export const HomePageProducts = () => {
       .map((product) => product.value);
 
     if (selectedProducts.length === 0) {
-      toast.error("Please select at least one product.");
+      toast.error(t("homepage_products_select_required"));
       return;
     }
 
@@ -101,9 +103,9 @@ export const HomePageProducts = () => {
       };
 
       await addHomepageProducts(payload);
-      toast.success("Products added successfully!");
+      toast.success(t("homepage_products_save_success"));
     } catch (error) {
-      toast.error("Failed to add products.");
+      toast.error(t("homepage_products_save_fail"));
       console.error("Error adding products:", error);
     } finally {
       setIsLoading(false);

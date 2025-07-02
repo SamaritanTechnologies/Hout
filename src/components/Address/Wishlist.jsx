@@ -50,39 +50,10 @@ const Wishlist = () => {
       if (selectedItem) {
         await deleteWishList({ id: selectedItem });
         setIsDeleted(!isDeleted);
-        toast.success("Product removed from wishlist!");
+        toast.success(t("w_wishlist_toast_removed"));
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
-    }
-  };
-
-  const handleAddToCart = async (product) => {
-    setLoadingStates((prev) => ({ ...prev, [product.id]: true }));
-    try {
-      const payload = {
-        product_length: product?.lengths[0]?.id,
-        quantity: 1,
-      };
-
-      await axiosWithCredentials.post(`/add-to-cart/`, payload);
-      toast.success("Product added to cart!");
-    } catch (error) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        if (error.response.data.message === "No more product left in stock.") {
-          toast.error("This product is out of stock.");
-        } else {
-          toast.error(error.response.data.message);
-        }
-      } else {
-        toast.error("Something went wrong");
-      }
-    } finally {
-      setLoadingStates((prev) => ({ ...prev, [product.id]: false }));
     }
   };
 

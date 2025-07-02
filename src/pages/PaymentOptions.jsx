@@ -4,6 +4,7 @@ import Button from "../components/Common/Button";
 import { axiosWithCredentials } from "../providers";
 import Select from "react-select";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const PaymentOptions = () => {
   const [users, setUsers] = useState([]);
@@ -13,6 +14,7 @@ const PaymentOptions = () => {
     credit_card: false,
   });
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   // Fetch users on mount
   useEffect(() => {
@@ -45,7 +47,7 @@ const PaymentOptions = () => {
 
   const handleSubmit = async () => {
     if (!selectedUser) {
-      alert("Please select a user.");
+      toast.error(t("paymentoptions_select_user"));
       return;
     }
 
@@ -64,10 +66,10 @@ const PaymentOptions = () => {
         `/accounts/payment-options/${userId}/`,
         payload
       );
-      toast.success("Payment options updated successfully");
+      toast.success(t("paymentoptions_update_success"));
     } catch (err) {
       console.error("Error updating payment option", err);
-      toast.error("Failed to update payment option.");
+      toast.error(t("paymentoptions_update_fail"));
     } finally {
       setLoading(false);
     }

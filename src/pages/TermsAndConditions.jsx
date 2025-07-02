@@ -15,6 +15,7 @@ import Dropzone from "../components/Common/Dropzone";
 import { toast } from "react-toastify";
 import { XCircleIcon } from "@heroicons/react/24/outline";
 import InputField from "../components/Common/InputField";
+import { useTranslation } from "react-i18next";
 const validTypes = ["image/jpeg", "image/png", "image/webp"];
 
 export const TermsAndConditions = () => {
@@ -29,6 +30,7 @@ export const TermsAndConditions = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   const fetchExistingImage = useCallback(async () => {
     try {
@@ -59,21 +61,21 @@ export const TermsAndConditions = () => {
         }
         // toast.success("Terms & Conditions fetched successfully!");
       } catch (error) {
-        toast.error("Failed to fetch Terms & Conditions!");
+        toast.error(t("termsconditions_fetch_fail"));
         console.error("Error fetching privacy policy:", error);
       }
     };
 
     fetchTermsAndConditions();
-  }, []);
+  }, [t]);
 
   const handleSave = async () => {
     setLoading(true);
     try {
       await addTermsCondition(termsCondition);
-      toast.success("Terms & Conditions saved successfully!");
+      toast.success(t("termsconditions_save_success"));
     } catch (error) {
-      toast.error("Failed to save Terms & Conditions!");
+      toast.error(t("termsconditions_save_fail"));
       console.error("Error:", error);
     } finally {
       setLoading(false);
@@ -92,10 +94,10 @@ export const TermsAndConditions = () => {
         setImage({ file, preview });
         setExistingImage(null);
       } else {
-        toast.error("Invalid file type. Only JPEG, PNG, and WebP are allowed.");
+        toast.error(t("termsconditions_invalid_type"));
       }
     },
-    [image]
+    [image, t]
   );
 
   const handleRemoveImage = useCallback(() => {
@@ -108,7 +110,7 @@ export const TermsAndConditions = () => {
 
   const handleImageSave = async () => {
     if (!image?.file) {
-      toast.error("Please select an image to upload.");
+      toast.error(t("termsconditions_select_required"));
       return;
     }
 
@@ -119,12 +121,12 @@ export const TermsAndConditions = () => {
       payload.append("image", image.file);
 
       const response = await addHomepageImage(payload);
-      toast.success("Image uploaded successfully!");
+      toast.success(t("termsconditions_image_upload_success"));
       fetchExistingImage();
       // setExistingImage(response?.imageUrl || null);
       setImage(null);
     } catch (error) {
-      toast.error("Failed to upload image.");
+      toast.error(t("termsconditions_image_upload_fail"));
       console.error("Error uploading image:", error);
     } finally {
       setIsLoading(false);

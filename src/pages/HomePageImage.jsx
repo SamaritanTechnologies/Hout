@@ -9,6 +9,7 @@ import {
 } from "../redux/actions/dashboardActions";
 import { toast } from "react-toastify";
 import { XCircleIcon } from "@heroicons/react/24/outline";
+import { useTranslation } from "react-i18next";
 
 const validTypes = ["image/jpeg", "image/png", "image/webp"];
 
@@ -25,6 +26,7 @@ export const HomePageImage = () => {
     button_text_en: "",
     button_text_nl: "",
   });
+  const { t } = useTranslation();
 
   const fetchExistingImage = async () => {
     try {
@@ -59,7 +61,7 @@ export const HomePageImage = () => {
       setImage({ file, preview: URL.createObjectURL(file) });
       setExistingImage(null);
     } else {
-      toast.error("Invalid file type. Only JPEG, PNG, and WebP are allowed.");
+      toast.error(t("homepage_image_invalid_type"));
     }
   };
 
@@ -78,7 +80,7 @@ export const HomePageImage = () => {
 
   const handleSave = async () => {
     if (!image?.file && !existingImage) {
-      toast.error("Please select an image to upload.");
+      toast.error(t("homepage_image_select_required"));
       return;
     }
 
@@ -106,7 +108,7 @@ export const HomePageImage = () => {
       }
 
       const response = await addHomepageImage(payload);
-      toast.success("Homepage content saved successfully!");
+      toast.success(t("homepage_image_save_success"));
       fetchExistingImage();
 
       if (response?.data?.imageUrl) {
@@ -114,7 +116,7 @@ export const HomePageImage = () => {
       }
       setImage(null);
     } catch (error) {
-      toast.error("Failed to save homepage content.");
+      toast.error(t("homepage_image_save_fail"));
       console.error("Error saving homepage content:", error);
     } finally {
       setIsLoading(false);

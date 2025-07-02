@@ -13,6 +13,7 @@ import {
   fetchWhyHoutTotal,
 } from "../redux/actions/dashboardActions";
 import { ClassSharp } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 export const WhyHoutTotaal = () => {
   const [loading, setLoading] = useState(false);
@@ -24,6 +25,7 @@ export const WhyHoutTotaal = () => {
     description_en: "",
     videos: [],
   });
+  const { t } = useTranslation();
 
   // Fetch initial data on component mount
   useEffect(() => {
@@ -50,7 +52,7 @@ export const WhyHoutTotaal = () => {
           setVideos(videoURLs);
         }
       } catch (error) {
-        toast.error("Failed to fetch data!");
+        toast.error(t("whyhouttotaal_fetch_fail"));
       } finally {
         setLoading(false);
       }
@@ -115,9 +117,9 @@ export const WhyHoutTotaal = () => {
       }
 
       await createWhyHoutTotal(formData);
-      toast.success("Data saved successfully!");
+      toast.success(t("whyhouttotaal_save_success"));
     } catch (error) {
-      toast.error("Error saving data!");
+      toast.error(t("whyhouttotaal_save_fail"));
       console.error("Error:", error);
     } finally {
       setLoading(false);
