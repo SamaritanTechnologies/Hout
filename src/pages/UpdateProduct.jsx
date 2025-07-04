@@ -279,7 +279,7 @@ export const UpdateProduct = () => {
             durability_class: product?.durability_class ?? [],
             quality: product?.quality ?? [],
             application: product?.application ?? [],
-            place_on_goedgeplaatst: product?.place_on_goedgeplaatst ?? true,
+            place_on_goedgeplaatst: product?.place_on_goedgeplaatst ?? false,
           }}
           validationSchema={Yup.object({
             name_en: Yup.string().required("Name is required"),
@@ -300,7 +300,14 @@ export const UpdateProduct = () => {
               return;
             }
             try {
-              console.log("Submitting lengths:", lengths);
+              console.log(
+                "Submitting lengths:",
+                id,
+                values,
+                lengths,
+                images,
+                relatedProducts
+              );
               await updateProduct(id, values, lengths, images, relatedProducts);
               navigate("/products");
             } catch (error) {
@@ -655,14 +662,16 @@ export const UpdateProduct = () => {
                   <Field
                     type="checkbox"
                     name="place_on_goedgeplaatst"
-                    className="h-8 w-8  cursor-pointer"
+                    className="h-8 w-8 cursor-pointer"
                     checked={values.place_on_goedgeplaatst}
-                    onChange={() =>
-                      setFieldValue(
-                        "place_on_goedgeplaatst",
-                        !values.place_on_goedgeplaatst
-                      )
-                    }
+                    onChange={() => {
+                      if (product?.place_on_goedgeplaatst !== true) {
+                        setFieldValue(
+                          "place_on_goedgeplaatst",
+                          !values.place_on_goedgeplaatst
+                        );
+                      }
+                    }}
                   />
                   <p className="font-semibold text-lg text-[#111727]">
                     Place Product on GoedGeplaatst via API

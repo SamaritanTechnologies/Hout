@@ -48,10 +48,11 @@ export const HomePageProducts = () => {
     const fetchHomepageProducts = async () => {
       try {
         const response = await getHomepageProducts();
-        const homepageProducts = response.find(
-          (item) => item.category === "homepage products"
-        );
-        if (homepageProducts) {
+        // Handle both array and object response
+        const homepageProducts = Array.isArray(response)
+          ? response.find((item) => item.category === "homepage products")
+          : response;
+        if (homepageProducts && homepageProducts.products) {
           const selectedProducts = homepageProducts.products;
           const updatedHomePageProduct = { ...pageProductsInitials };
           Object.keys(updatedHomePageProduct).forEach((key, index) => {
