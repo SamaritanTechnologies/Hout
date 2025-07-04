@@ -118,18 +118,26 @@ const OrderHistory = () => {
                           ? moment(item?.dates).format("MMMM DD, YYYY")
                           : "N/A"}
                       </td>
-                      <td className="py-3">
-                        <span
-                          className={`p-2 rounded-full text-sm ${
+                      <td className="py-3  flex justify-center items-center ">
+                        <p
+                          className={`p-2  rounded-full ${
                             {
                               pending: "bg-[#FCBE2D] text-white",
-                              delivered: "bg-green1 text-white",
-                            }[item?.status?.toLowerCase()] ||
-                            "bg-gray-200 text-gray-800"
+                              rejected: "bg-[#FD5454] text-white",
+                              delivered: "bg-[#22C55E] text-white",
+                              "order picken": "bg-[#3B82F6] text-white",
+                              "delivery planning": "bg-[#8B5CF6] text-white",
+                              "ready for pickup": "bg-[#F59E42] text-white",
+                              "in transit": "bg-[#14B8A6] text-white",
+                            }[
+                              item?.status
+                                ? item.status.toLowerCase().trim()
+                                : ""
+                            ] || "bg-gray-200 text-gray-800"
                           }`}
                         >
                           {item?.status || "Unknown"}
-                        </span>
+                        </p>
                       </td>
                       <td className="py-3">
                         {(() => {

@@ -249,15 +249,20 @@ export const Orders = () => {
                         </td>
                         <td className="px-[12px] py-[12px] text-center font-semibold text-gray3">
                           <p
-                            className={`rounded-full px-[10px] py-[5px] text-white text-14 font-bold ${
-                              item?.status === "Rejected"
-                                ? "bg-[#FD5454]"
-                                : item?.status === "Pending"
-                                ? "bg-[#FCBE2D]"
-                                : "bg-green1"
+                            className={`p-2  rounded-full ${
+                              {
+                                pending: "bg-[#FCBE2D] text-white",
+                                rejected: "bg-[#FD5454] text-white",
+                                delivered: "bg-[#22C55E] text-white",
+                                "order picken": "bg-[#3B82F6] text-white",
+                                "delivery planning": "bg-[#8B5CF6] text-white",
+                                "ready for pickup": "bg-[#F59E42] text-white",
+                                "in transit": "bg-[#14B8A6] text-white",
+                              }[item?.status?.toLowerCase()] ||
+                              "bg-gray-200 text-gray-800"
                             }`}
                           >
-                            {item?.status}
+                            {item?.status || "Unknown"}
                           </p>
                         </td>
                       </tr>
