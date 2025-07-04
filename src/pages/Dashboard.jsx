@@ -327,15 +327,20 @@ export const Dashboard = () => {
 
                         <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
                           <p
-                            className={`rounded-full ${
-                              item?.status === "Rejected"
-                                ? "bg-[#FD5454]"
-                                : item?.status === "Pending"
-                                ? "bg-[#FCBE2D]"
-                                : "bg-green1"
-                            } text-white px-[4px] py-[7px] text-14 font-bold text-center`}
+                            className={`p-2 text-center  rounded-full ${
+                              {
+                                pending: "bg-[#FCBE2D] text-white",
+                                rejected: "bg-[#FD5454] text-white",
+                                delivered: "bg-[#22C55E] text-white",
+                                "order picken": "bg-[#3B82F6] text-white",
+                                "delivery planning": "bg-[#8B5CF6] text-white",
+                                "ready for pickup": "bg-[#F59E42] text-white",
+                                "in transit": "bg-[#14B8A6] text-white",
+                              }[item?.status?.toLowerCase()] ||
+                              "bg-gray-200 text-gray-800"
+                            }`}
                           >
-                            {item?.status}
+                            {item?.status || "Unknown"}
                           </p>
                         </td>
                       </tr>
