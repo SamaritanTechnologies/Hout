@@ -66,7 +66,7 @@ function Routes() {
         <Route element={<AdminRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/add-coupon" element={<AddCoupon />} />
-          <Route path="/vat-value" element={<VatValue />} />
+          {/* <Route path="/vat-value" element={<VatValue />} /> */}
           <Route path="/delivery" element={<DeliveryValue />} />
           <Route path="/products" element={<Products />} />
           <Route path="/orders" element={<Orders />} />

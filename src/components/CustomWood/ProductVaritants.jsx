@@ -145,9 +145,9 @@ const ProductVaritants = ({ variants, vat }) => {
                   <div className="flex flex-col gap-[3px]">
                     <div className="font-bold text-14 text-[#111727]">
                       {t("p_price")}
-                      <span className="text-[#888888] text-[11px] font-normal">
+                      {/* <span className="text-[#888888] text-[11px] font-normal">
                         {t("p_IncBTW")}
-                      </span>
+                      </span> */}
                     </div>
                     <div className="text-14 text-[#111727] font-medium">
                       {/* discounted_price_in_vat */}€

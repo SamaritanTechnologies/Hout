@@ -65,7 +65,7 @@ export const Products = () => {
       if (selectedItem) {
         await deleteProduct(selectedItem?.id);
         setIsDeleted(!isDeleted);
-        toast.success(t("product_delete_success"));
+        // toast.success(t("product_delete_success"));
       }
     } catch (error) {
       console.error("Error fetching user data:");
