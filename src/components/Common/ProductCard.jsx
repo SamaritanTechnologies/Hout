@@ -128,7 +128,8 @@ const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
       )}
       <div
         className="cursor-pointer h-[250px] xl:h-[310px]"
-        onClick={() => navigate(`/product-detail/${product.id}`)}
+        // onClick={() => navigate(`/product-detail/${product.id}`)}
+        onClick={handleViewProduct}
       >
         {product.images?.length ? (
           <img
@@ -141,7 +142,8 @@ const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
       </div>
       <div className="flex flex-col gap-4 px-4 py-5">
         <h3
-          onClick={() => navigate(`/product-detail/${product.id}`)}
+          // onClick={() => navigate(`/product-detail/${product.id}`)}
+          onClick={handleViewProduct}
           className="hover:underline cursor-pointer font-semibold text-[#111727] text-2xl overflow-hidden whitespace-nowrap text-ellipsis"
         >
           {currentLang === "en" ? product.name_en : product.name_nl}

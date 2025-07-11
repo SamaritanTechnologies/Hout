@@ -133,15 +133,16 @@ const FooterSection = ({ isShow }) => {
               <div
                 className="text-sm text-[#111727] cursor-pointer"
                 onClick={() => {
-                  navigate("/");
-                  setTimeout(() => {
-                    navigate("/");
-                    document
-                      .getElementById("products-section")
-                      ?.scrollIntoView({
-                        behavior: "smooth",
-                      });
-                  }, 100);
+                  navigate("/shop-page");
+                  scrollToTop();
+                  // setTimeout(() => {
+                  //   navigate("/");
+                  //   document
+                  //     .getElementById("products-section")
+                  //     ?.scrollIntoView({
+                  //       behavior: "smooth",
+                  //     });
+                  // }, 100);
                 }}
               >
                 {t("f_products")}

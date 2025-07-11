@@ -13,6 +13,7 @@ import { setCartItems } from "../../redux/slices/cartSlice";
 import { useNavigate } from "react-router-dom";
 import { setCartSummaryData } from "../../redux/slices/totalSummarySlice";
 import { useTranslation } from "react-i18next";
+import { calculateTotal } from "./amount";
 
 const ShoppingCart = ({
   cartData,
@@ -57,6 +58,8 @@ const ShoppingCart = ({
         window.removeEventListener("localCartUpdated", loadLocalCart);
       };
     }
+    // Always return a cleanup function
+    return () => {};
   }, [dispatch, isAuthenticated]);
 
   const updateQuantity = async ({ id, productId, price, newQuantity }) => {
@@ -97,26 +100,26 @@ const ShoppingCart = ({
     }
   }, [updatedItem]);
 
-  useEffect(() => {
-    const fetchPaymentOptions = async () => {
-      try {
-        const res = await axiosWithCredentials.get(
-          `/accounts/payment-options/${userId}/`
-        );
-        setPaymentOption(res.data);
-        // Auto-select if only one payment method is available
-        if (res.data.cash_payment && !res.data.credit_card) {
-          setSelectedOption("cash");
-        } else if (!res.data.cash_payment && res.data.credit_card) {
-          setSelectedOption("credit");
-        }
-      } catch (error) {
-        console.error("Error fetching payment options:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchPaymentOptions = async () => {
+  //     try {
+  //       const res = await axiosWithCredentials.get(
+  //         `/accounts/payment-options/${userId}/`
+  //       );
+  //       setPaymentOption(res.data);
+  //       // Auto-select if only one payment method is available
+  //       if (res.data.cash_payment && !res.data.credit_card) {
+  //         setSelectedOption("cash");
+  //       } else if (!res.data.cash_payment && res.data.credit_card) {
+  //         setSelectedOption("credit");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching payment options:", error);
+  //     }
+  //   };
 
-    fetchPaymentOptions();
-  }, []);
+  //   fetchPaymentOptions();
+  // }, []);
   const handleIncrement = (id) => {
     const item = cartItem?.find((item) => item.id === id);
     if (item) {
@@ -169,60 +172,60 @@ const ShoppingCart = ({
     0
   );
 
-  const calculateTotal = (
-    totalPrice,
-    delivery,
-    taxPercentage,
-    coupon = null
-  ) => {
-    console.log("taxPercentage", taxPercentage);
-    let deliveryCharge = 0;
-    const numericTotalPrice = Number(totalPrice || 0);
+  // const calculateTotal = (
+  //   totalPrice,
+  //   delivery,
+  //   taxPercentage,
+  //   coupon = null
+  // ) => {
+  //   console.log("taxPercentage", taxPercentage);
+  //   let deliveryCharge = 0;
+  //   const numericTotalPrice = Number(totalPrice || 0);
 
-    if (selectedMethod !== "pickup") {
-      if (numericTotalPrice < 750) {
-        deliveryCharge = Number(delivery?.upto_750 || 0);
-      } else if (numericTotalPrice >= 750 && numericTotalPrice <= 1500) {
-        deliveryCharge = Number(delivery?.from_750_to_1500 || 0);
-      } else {
-        deliveryCharge = Number(delivery?.above_1500 || 0);
-      }
-    } else {
-      deliveryCharge = 0;
-    }
+  //   if (selectedMethod !== "pickup") {
+  //     if (numericTotalPrice < 750) {
+  //       deliveryCharge = Number(delivery?.upto_750 || 0);
+  //     } else if (numericTotalPrice >= 750 && numericTotalPrice <= 1500) {
+  //       deliveryCharge = Number(delivery?.from_750_to_1500 || 0);
+  //     } else {
+  //       deliveryCharge = Number(delivery?.above_1500 || 0);
+  //     }
+  //   } else {
+  //     deliveryCharge = 0;
+  //   }
 
-    const subtotal = numericTotalPrice + deliveryCharge;
-    let discountAmount = 0;
-    let isMinimumOrderMet = true;
+  //   const subtotal = numericTotalPrice + deliveryCharge;
+  //   let discountAmount = 0;
+  //   let isMinimumOrderMet = true;
 
-    if (coupon && subtotal >= Number(coupon.minimum_order_amount)) {
-      if (coupon.discount_type === "percentage") {
-        discountAmount = subtotal * (Number(coupon.discount_value) / 100);
-      } else if (coupon.discount_type === "fixed") {
-        discountAmount = Number(coupon.discount_value);
-      }
-    } else if (coupon) {
-      isMinimumOrderMet = false;
-    }
+  //   if (coupon && subtotal >= Number(coupon.minimum_order_amount)) {
+  //     if (coupon.discount_type === "percentage") {
+  //       discountAmount = subtotal * (Number(coupon.discount_value) / 100);
+  //     } else if (coupon.discount_type === "fixed") {
+  //       discountAmount = Number(coupon.discount_value);
+  //     }
+  //   } else if (coupon) {
+  //     isMinimumOrderMet = false;
+  //   }
 
-    const amountAfterDiscount = subtotal - discountAmount;
-    const taxRate = Number(taxPercentage || 0);
-    let taxAmount = 0;
-    let totalWithTax = amountAfterDiscount;
-    if (taxRate > 0) {
-      taxAmount = amountAfterDiscount * (taxRate / 100);
-      totalWithTax = amountAfterDiscount + taxAmount;
-    }
+  //   const amountAfterDiscount = subtotal - discountAmount;
+  //   const taxRate = Number(taxPercentage || 0);
+  //   let taxAmount = 0;
+  //   let totalWithTax = amountAfterDiscount;
+  //   if (taxRate > 0) {
+  //     taxAmount = amountAfterDiscount * (taxRate / 100);
+  //     totalWithTax = amountAfterDiscount + taxAmount;
+  //   }
 
-    return {
-      total: totalWithTax,
-      discount: discountAmount,
-      subtotal: subtotal,
-      isMinimumOrderMet,
-      deliveryCharge,
-      taxAmount,
-    };
-  };
+  //   return {
+  //     total: totalWithTax,
+  //     discount: discountAmount,
+  //     subtotal: subtotal,
+  //     isMinimumOrderMet,
+  //     deliveryCharge,
+  //     taxAmount,
+  //   };
+  // };
 
   const {
     total,
@@ -231,7 +234,7 @@ const ShoppingCart = ({
     subtotal,
     isMinimumOrderMet,
     taxAmount,
-  } = calculateTotal(totalPrice, delivery, taxData, couponData);
+  } = calculateTotal(totalPrice, delivery, taxData, couponData, selectedMethod);
 
   useEffect(() => {
     dispatch(
@@ -241,8 +244,9 @@ const ShoppingCart = ({
         tax: Number(taxData || 0).toFixed(2),
         youSaved: discount.toFixed(2),
         total: total?.toFixed(2),
-        order_status: selectedMethod,
+        // order_status: selectedMethod,
         payment_option: selectedOption,
+        tax_amount: taxAmount.toFixed(2),
       })
     );
   }, [
@@ -341,10 +345,10 @@ const ShoppingCart = ({
     return acc + price * quantity;
   }, 0);
 
-  const handleMethod = (e) => {
-    const { value, checked } = e.target;
-    setSelectedMethod(checked ? value : "");
-  };
+  // const handleMethod = (e) => {
+  //   const { value, checked } = e.target;
+  //   setSelectedMethod(checked ? value : "");
+  // };
 
   const handleOption = (e) => {
     const { value } = e.target;
@@ -353,15 +357,15 @@ const ShoppingCart = ({
 
   const handleCheckout = () => {
     // Check if at least one payment method is available
-    if (!paymentOption?.cash_payment && !paymentOption?.credit_card) {
-      toast.warn(t("sc_payment_admin_required"));
-      return;
-    }
+    // if (!paymentOption?.cash_payment && !paymentOption?.credit_card) {
+    //   toast.warn(t("sc_payment_admin_required"));
+    //   return;
+    // }
 
-    if (!selectedOption) {
-      toast.warn(t("sc_payment_option_required"));
-      return;
-    }
+    // if (!selectedOption) {
+    //   toast.warn(t("sc_payment_option_required"));
+    //   return;
+    // }
     handleDivClick("secondTab");
   };
 
@@ -457,7 +461,7 @@ const ShoppingCart = ({
                                         {t("s_length_label")}
                                       </div>
                                       <div className="xl:text-14 text-[13px]">
-                                        {item?.product_length?.length} mm
+                                        {item?.product_length?.length} cm
                                       </div>
                                     </div>
                                   </div>
@@ -504,7 +508,7 @@ const ShoppingCart = ({
                   </table>
                 </div>
 
-                <section>
+                {/* <section>
                   <div>
                     <h2 className="text-2xl font-semibold mb-2">
                       Select a delivery method
@@ -532,8 +536,8 @@ const ShoppingCart = ({
                       </label>
                     </div>
                   </div>
-                </section>
-
+                </section> */}
+                {/* 
                 {(paymentOption?.cash_payment ||
                   paymentOption?.credit_card) && (
                   <section>
@@ -569,7 +573,7 @@ const ShoppingCart = ({
                       </div>
                     </div>
                   </section>
-                )}
+                )} */}
 
                 <section className="pt-[30px]">
                   <div>
@@ -806,7 +810,7 @@ const ShoppingCart = ({
                                       {t("s_length_label")}
                                     </div>
                                     <div className="xl:text-14 text-[13px]">
-                                      {item?.length} mm
+                                      {item?.length} cm
                                     </div>
                                   </div>
                                 </div>
@@ -940,7 +944,7 @@ const ShoppingCart = ({
                   <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
                     {t("s_tax")}
                   </div>
-                  <div>{Number(taxData || 0).toFixed(2)} %</div>
+                  <div>€ {Number(taxData || 0).toFixed(2)} </div>
                 </section>
                 {couponData && isMinimumOrderMet && discount > 0 && (
                   <section className="flex justify-between pt-[25px]">

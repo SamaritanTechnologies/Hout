@@ -89,6 +89,11 @@ export const enTranslations = {
   c_message_placeholder: "Message*",
   c_send_button: "Send",
   c_sending_button: "Sending...",
+  cd_delivery_address_title: "Delivery Address",
+  cd_quantity_label: "Quantity",
+  cd_delivery_method_title: "Delivery Method",
+  cd_delivery_option_label: "Delivery",
+  cd_pickup_option_label: "Pickup",
 
   // Wishlist Sections
   w_wishlist_heading: "Your Wishlist",
@@ -531,4 +536,9 @@ export const enTranslations = {
 
   // HeadLessDropDown Toasts
   dropdown_logout_success: "Logged out successfully!",
+  tb_subtotal_excl_vat: "Subtotal excl VAT",
+  tb_delivery_fee: "Delivery Fee",
+  tb_tax: "Tax",
+  tb_you_save: "You save",
+  tb_total: "Total",
 };
