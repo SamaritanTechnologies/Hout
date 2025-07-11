@@ -106,7 +106,7 @@ export const nlTranslations = {
   // Cart Sections
   c_cart_heading: "Winkelwagen",
   c_tab_shopping_cart: "Winkelwagen",
-  c_tab_checkout_details: "Afrekeningsgegevens",
+  c_tab_checkout_details: "Bestellem",
   c_tab_order_complete: "Bestelling voltooid",
   c_login_required_heading: "Inloggen vereist",
   c_login_required_message: "U moet inloggen om door te gaan naar afrekenen.",
@@ -118,9 +118,9 @@ export const nlTranslations = {
   s_table_header_quantity: "Aantal",
   s_table_header_price: "Prijs",
   s_table_header_subtotal: "Subtotaal",
-  s_thickness_label: "DIKTE",
-  s_width_label: "BREDTE",
-  s_length_label: "LENGTE",
+  s_thickness_label: "Dikte",
+  s_width_label: "Breedte",
+  s_length_label: "Lengte",
   s_have_coupon_text: "Heb je een coupon?",
   s_add_code_text:
     "Voeg je code toe voor een directe kortingen op de winkelwagen",
@@ -224,8 +224,8 @@ export const nlTranslations = {
   sk_company_name_placeholder: "Bedrijfsnaam (optioneel)",
   sk_street_number_label: "Straat & Nummer",
   sk_street_number_placeholder: "Straat & Nummer",
-  sk_city_label: "Stad",
-  sk_city_placeholder: "Stad",
+  sk_city_label: "Plaats",
+  sk_city_placeholder: "Plaats",
   sk_last_name_label: "Achternaam",
   sk_last_name_placeholder: "Achternaam",
   sk_zip_code_label: "Postcode",
@@ -236,7 +236,7 @@ export const nlTranslations = {
   sk_saving_button: "Bezig met opslaan..",
   sk_terms_agreement_text:
     "Ik ga akkoord met de algemene voorwaarden en doe afstand van het herroepingsrecht omdat dit een op maat gemaakt product is",
-  sk_confirm_order_button: "Bevestig Bestelling",
+  sk_confirm_order_button: "Bestellen",
   sk_confirming_text: "Bevestigen..",
 
   // Product Detail Section
@@ -353,6 +353,11 @@ export const nlTranslations = {
   cd_payment_processing_fail: "Betaling mislukt",
   cd_address_update_success: "Bezorgadres succesvol bijgewerkt",
   cd_address_update_fail: "Er is iets misgegaan",
+  cd_delivery_method_title: "Bezorgmethode",
+  cd_delivery_option_label: "Bezorgen",
+  cd_pickup_option_label: "Afhalen",
+  cd_delivery_address_title: "(Alfever) Adres",
+  cd_quantity_label: "Aantal",
   // Coupon Toasts
   coupon_add_success: "Coupon succesvol toegevoegd!",
   coupon_add_fail: "Coupon toevoegen mislukt.",
@@ -513,6 +518,12 @@ export const nlTranslations = {
   pa_invoice_address_update_success: "Factuuradres succesvol bijgewerkt",
   pa_invoice_address_update_error:
     "Er is iets misgegaan bij het bijwerken van het factuuradres",
+
   // HeadLessDropDown Toasts
   dropdown_logout_success: "Succesvol uitgelogd!",
+  tb_subtotal_excl_vat: "Subtotaal excl BTW",
+  tb_delivery_fee: "Transport bijdrage",
+  tb_tax: "BTW",
+  tb_you_save: "Korting",
+  tb_total: "Totaal",
 };

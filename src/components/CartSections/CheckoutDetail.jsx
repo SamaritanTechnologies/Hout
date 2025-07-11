@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useState } from "react";
 // import plus from "../../assets/addToCart/plus.svg";
 // import RadioButtons from "../Common/RadioButtons";
 // import { debounce } from "lodash";
+import { Truck, Package } from "lucide-react";
 import Button from "../../components/Common/Button";
 import { paymentMethods } from "../../utils/helper";
 import PaymentCard from "../Common/PaymentCard";
@@ -41,6 +42,9 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
   const [updatedItem, setUpdatedItem] = useState(null);
   const [terms, setTerms] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [selectedMethod, setSelectedMethod] = useState("delivery");
+  const [paymentOption, setPaymentOption] = useState(null);
+  const [selectedPaymentOption, setSelectedPaymentOption] = useState(null);
 
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required("First Name is required"),
@@ -51,6 +55,22 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
     zipCode: Yup.string().required("Zip Code is required"),
     country: Yup.string().required("Country is required"),
   });
+
+  useEffect(() => {
+    const fetchPaymentOptions = async () => {
+      try {
+        const res = await axiosWithCredentials.get(
+          `/accounts/payment-options/${user?.id}/`
+        );
+        console.log("res", res);
+      } catch (error) {
+        console.error("Error fetching payment options:", error);
+      }
+    };
+    fetchPaymentOptions();
+    // No cleanup needed
+    return undefined;
+  }, []);
 
   const fetchUser = async () => {
     try {
@@ -99,10 +119,6 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
   //   debounce((item) => updateQuantity(item), 500),
   //   []
   // );
-
-  useEffect(() => {
-    fetchUser();
-  }, []);
 
   // useEffect(() => {
   //   if (updatedItem) {
@@ -163,8 +179,38 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
 
   // const total = calculateTotal(totalPrice, delivery, taxData);
 
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const fetchPaymentOptions = async () => {
+      try {
+        const res = await axiosWithCredentials.get(
+          `/accounts/payment-options/${user?.id}/`
+        );
+        setPaymentOption(res.data);
+        // Auto-select if only one payment method is available
+        //  if (res.data.cash_payment && !res.data.credit_card) {
+        //    setSelectedOption("cash");
+        //  } else if (!res.data.cash_payment && res.data.credit_card) {
+        //    setSelectedOption("credit");
+        //  }
+      } catch (error) {
+        console.error("Error fetching payment options:", error);
+      }
+    };
+
+    fetchPaymentOptions();
+  }, []);
+
+  const handleMethod = (value) => {
+    setSelectedMethod(selectedMethod === value ? "" : value);
+  };
+
   const handlePaymentMethodChange = (method) => {
     setSelectedPaymentMethod(method);
+    setSelectedPaymentOption(method.name);
   };
 
   const confirmOrder = async () => {
@@ -187,7 +233,8 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
       toast.warn(t("cd_payment_method_required"));
       return;
     }
-    if (!cartSummary?.payment_option) {
+
+    if (!selectedPaymentOption) {
       toast.warn(t("cd_payment_method_required"));
       return;
     }
@@ -197,15 +244,16 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
       const payload = {
         gross_total: cartSummary?.subtotal,
         total: cartSummary?.total,
-        order_status: cartSummary?.order_status,
+        order_status: selectedMethod,
         delivery_method: selectedPaymentMethod.name,
-        payment_option: cartSummary?.payment_option,
+        payment_option: selectedPaymentOption,
         delivery_price:
           cartSummary?.deliveryFee !== null &&
           cartSummary?.deliveryFee !== undefined
             ? cartSummary?.deliveryFee
             : 0,
       };
+      // console.log("payload", payload);
       const response = await axiosWithCredentials.post(
         `/confirm-order/`,
         payload
@@ -237,6 +285,18 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
     zipCode: userDetail?.delivery_address?.zip_code || "",
     country: userDetail?.delivery_address?.country || "",
   };
+
+  const filteredPaymentMethods = paymentMethods.filter((method) => {
+    if (method.name === "Cash" && paymentOption && !paymentOption.cash_payment)
+      return false;
+    if (
+      method.name === "Buy on Credit " &&
+      paymentOption &&
+      !paymentOption.credit_card
+    )
+      return false;
+    return true;
+  });
 
   return (
     <>
@@ -273,7 +333,7 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
                                   {t("sk_thickness_label")}
                                 </div>
                                 <div>
-                                  {item?.product_length?.product?.thickness} cm
+                                  {item?.product_length?.product?.thickness} mm
                                 </div>
                               </div>
 
@@ -282,7 +342,7 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
                                   {t("sk_width_label")}
                                 </div>
                                 <div>
-                                  {item?.product_length?.product?.width} cm
+                                  {item?.product_length?.product?.width} mm
                                 </div>
                               </div>
 
@@ -311,7 +371,8 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
                           </div>
                         </div> */}
                           <div className="flex justify-between border items-center px-[10px] py-[6px] rounded-md xl:min-w-[118px] lg:w-[170px] md:w-[170px] sm:w-[170px] xs:w-[170px]">
-                            <span>Quantity:</span> <h6>{item.quantity}</h6>
+                            <span>{t("cd_quantity_label")}:</span>{" "}
+                            <h6>{item.quantity}</h6>
                           </div>
                           <div className="w-full text-right  xl:text-22 lg:text-20 md:text-18 text-16 font-bold">
                             €{item?.product_price}
@@ -361,7 +422,7 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
 
                 <section className="col-span-12 xl:col-span-8 font-bold text-md">
                   <div className="xl:text-22 lg:text-20 md:text-18 text-16 font-semibold border-b pb-2 border-[#D9D9D9]">
-                    Delivery Address
+                    {t("cd_delivery_address_title")}
                   </div>
 
                   <Formik
@@ -484,12 +545,88 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
                     )}
                   </Formik>
 
+                  <section className="my-4 xl:w-2/3 w-full h-auto py-4 border-t border-[#D9D9D9]">
+                    <div>
+                      <h2 className="text-2xl font-semibold mb-6 text-gray-900">
+                        {t("cd_delivery_method_title")}
+                      </h2>
+
+                      <div className="space-y-4">
+                        {/* Delivery Option */}
+                        <div
+                          className={`relative  rounded-lg p-4 cursor-pointer transition-all duration-200 ${
+                            selectedMethod === "delivery"
+                              ? "border border-blue-500 bg-blue-50"
+                              : " bg-[#F5F4F8]"
+                          }`}
+                          onClick={() => handleMethod("delivery")}
+                        >
+                          <div className="flex items-center space-x-4">
+                            <div className="relative">
+                              <input
+                                type="radio"
+                                name="deliveryMethod"
+                                checked={selectedMethod === "delivery"}
+                                onChange={() => handleMethod("delivery")}
+                                style={{ display: "block" }}
+                                className="payMain absolute -top-2"
+                              />
+                            </div>
+
+                            <div className="flex-shrink-0">
+                              <Truck className="h-8 w-8 text-gray-700" />
+                            </div>
+
+                            <div className="flex-1">
+                              <h3 className="text-lg font-medium text-gray-900">
+                                {t("cd_delivery_option_label")}
+                              </h3>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Pickup Option */}
+                        <div
+                          className={`relative  rounded-lg p-4 cursor-pointer transition-all duration-200 ${
+                            selectedMethod === "pickup"
+                              ? "border border-blue-500 bg-blue-50"
+                              : " bg-[#F5F4F8]"
+                          }`}
+                          onClick={() => handleMethod("pickup")}
+                        >
+                          <div className="flex items-center space-x-4">
+                            <div className="relative">
+                              <input
+                                type="radio"
+                                name="pickupMethod"
+                                checked={selectedMethod === "pickup"}
+                                onChange={() => handleMethod("pickup")}
+                                style={{ display: "block" }}
+                                className="payMain absolute -top-2"
+                              />
+                            </div>
+
+                            <div className="flex-shrink-0">
+                              <Package className="h-8 w-8 text-gray-700" />
+                            </div>
+
+                            <div className="flex-1">
+                              <h3 className="text-lg font-medium text-gray-900">
+                                {t("cd_pickup_option_label")}
+                              </h3>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
                   <div className="mt-8 pb-[100px] my-4">
                     <h2 className="text-2xl font-bold my-2 border-b border-[#D9D9D9] pb-3">
                       {t("sk_payment_method_title")}
                     </h2>
 
-                    {paymentMethods.map((item) => (
+                    {filteredPaymentMethods.map((item) => (
                       <div
                         className="my-4 xl:w-2/3 w-full h-auto"
                         key={item.id}

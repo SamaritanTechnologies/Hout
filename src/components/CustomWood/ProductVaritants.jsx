@@ -129,7 +129,7 @@ const ProductVaritants = ({ variants, vat }) => {
                       {t("p_variant")}
                     </div>
                     <div className="text-14 text-[#111727]">
-                      {variant.length}cm
+                      {variant.length} cm
                     </div>
                   </div>
                 </td>
