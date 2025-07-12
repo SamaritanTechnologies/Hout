@@ -247,6 +247,14 @@ const ShoppingCart = ({
         // order_status: selectedMethod,
         payment_option: selectedOption,
         tax_amount: taxAmount.toFixed(2),
+        cart_data: {
+          totalPrice: totalPrice,
+          delivery: delivery,
+          taxData: taxData,
+          couponData: couponData,
+          selectedMethod: selectedMethod,
+          selectedOption: selectedOption,
+        },
       })
     );
   }, [

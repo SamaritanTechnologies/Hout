@@ -24,11 +24,15 @@ import { getLoggedInUser, loginUser } from "../../redux";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { calculateTotal } from "./amount";
+import { setCartSummaryData } from "../../redux/slices/totalSummarySlice";
 
 const CheckoutDetail = ({ cartData, fetchCart }) => {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
   const cartSummary = useSelector((state) => state.summary);
+  const cart_data = useSelector((state) => state.summary.cart_data);
+  console.log("cart_data", cart_data);
   const userDetail = useSelector((state) => state.auth.user);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   const navigate = useNavigate();
@@ -55,6 +59,52 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
     zipCode: Yup.string().required("Zip Code is required"),
     country: Yup.string().required("Country is required"),
   });
+
+  const { totalPrice, delivery, taxData, couponData } = cart_data;
+
+  useEffect(() => {
+    const {
+      total,
+      discount,
+      deliveryCharge,
+      subtotal,
+      isMinimumOrderMet,
+      taxAmount,
+    } = calculateTotal(
+      totalPrice,
+      delivery,
+      taxData,
+      couponData,
+      selectedMethod
+    );
+    dispatch(
+      setCartSummaryData({
+        subtotal: Number(totalPrice || 0).toFixed(2),
+        deliveryFee: deliveryCharge,
+        tax: Number(taxData || 0).toFixed(2),
+        youSaved: discount.toFixed(2),
+        total: total?.toFixed(2),
+        // order_status: selectedMethod,
+        // payment_option: selectedOption,
+        tax_amount: taxAmount.toFixed(2),
+        cart_data: {
+          totalPrice: totalPrice,
+          delivery: delivery,
+          taxData: taxData,
+          couponData: couponData,
+          selectedMethod: selectedMethod,
+          // selectedOption: selectedOption,
+        },
+      })
+    );
+  }, [
+    totalPrice,
+    delivery,
+    taxData,
+    couponData,
+    selectedMethod,
+    selectedMethod,
+  ]);
 
   useEffect(() => {
     const fetchPaymentOptions = async () => {
