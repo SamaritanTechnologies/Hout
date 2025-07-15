@@ -288,6 +288,10 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
       toast.warn(t("cd_payment_method_required"));
       return;
     }
+    if (!selectedMethod) {
+      toast.warn(t("cd_delivery_method_required"));
+      return;
+    }
 
     try {
       setLoading(true);

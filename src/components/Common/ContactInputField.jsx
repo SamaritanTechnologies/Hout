@@ -26,6 +26,7 @@ const ContactInputField = (props) => {
     marginBottom,
     name,
     icon: IconComponent,
+    className,
   } = props;
   return (
     <section>
@@ -46,9 +47,11 @@ const ContactInputField = (props) => {
             </span>
           )}
           <input
-            className={`block w-full  ${
-              IconComponent ? "pl-10" : ""
-            } ${color ? `text-[${color}]` : "text-[#000]"} py-3 px-3 outline-none bg-[#000000] border-[#FFF] border-b-2  focus:outline-none sm:text-sm `}
+            className={`block w-full  ${IconComponent ? "pl-10" : ""} ${
+              color ? `text-[${color}]` : "text-[#000]"
+            } py-3 px-3 outline-none bg-[#000000] border-[#FFF] border-b-2  focus:outline-none sm:text-sm ${
+              className ? className : ""
+            }`}
             id={id}
             label={label}
             type={type}
