@@ -26,11 +26,11 @@ export const updatePass = async (values, id, { setSubmitting }) => {
   } catch (error) {
     console.log(error, "error");
     if (error?.response?.data?.password) {
-      error?.response?.data?.password.map((item) => {
-        toast.error(i18n.t("pa_password_update_error"));
+      error.response.data.password.forEach((item) => {
+        toast.error(item);
       });
     } else if (error?.response?.data?.old_password?.old_password) {
-      toast.error(i18n.t("pa_password_update_error"));
+      toast.error(error.response.data.old_password.old_password);
     } else {
       toast.error(i18n.t("pa_password_update_error"));
     }

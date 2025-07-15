@@ -94,6 +94,7 @@ export const enTranslations = {
   cd_delivery_method_title: "Delivery Method",
   cd_delivery_option_label: "Delivery",
   cd_pickup_option_label: "Pickup",
+  cd_delivery_method_required: "Please select a delivery method",
 
   // Wishlist Sections
   w_wishlist_heading: "Your Wishlist",
@@ -541,4 +542,14 @@ export const enTranslations = {
   tb_tax: "Tax",
   tb_you_save: "You save",
   tb_total: "Total",
+
+  // Contact Us Toasts
+  contactus_first_name_required: "First Name is required.",
+  contactus_last_name_required: "Last Name is required.",
+  contactus_email_invalid: "Please enter a valid email address.",
+  contactus_message_too_short: "Message must be at least 10 characters long.",
+  contactus_success:
+    "Your message has been sent! We will get back to you as soon as possible.",
+  contactus_generic_error:
+    "An unexpected error occurred. Please try again later.",
 };

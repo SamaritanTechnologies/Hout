@@ -358,6 +358,7 @@ export const nlTranslations = {
   cd_pickup_option_label: "Afhalen",
   cd_delivery_address_title: "(Alfever) Adres",
   cd_quantity_label: "Aantal",
+  cd_delivery_method_required: "Selecteer een bezorgmethode",
   // Coupon Toasts
   coupon_add_success: "Coupon succesvol toegevoegd!",
   coupon_add_fail: "Coupon toevoegen mislukt.",
@@ -526,4 +527,14 @@ export const nlTranslations = {
   tb_tax: "BTW",
   tb_you_save: "Korting",
   tb_total: "Totaal",
+
+  // Contact Us Toasts
+  contactus_first_name_required: "Voornaam is verplicht.",
+  contactus_last_name_required: "Achternaam is verplicht.",
+  contactus_email_invalid: "Voer een geldig e-mailadres in.",
+  contactus_message_too_short: "Bericht moet minimaal 10 tekens bevatten.",
+  contactus_success:
+    "Uw bericht is verzonden! We nemen zo snel mogelijk contact met u op.",
+  contactus_generic_error:
+    "Er is een onverwachte fout opgetreden. Probeer het later opnieuw.",
 };

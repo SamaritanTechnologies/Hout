@@ -124,7 +124,7 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
               setSubmitting,
             });
             fetchUser();
-            resetForm();
+            // resetForm();
           } catch (error) {
             console.error("Error updating user data:", error);
             setSubmitting(false);
@@ -205,6 +205,7 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
             resetForm(false);
             setSubmitting(false);
           } catch (error) {
+            console.log(error);
             toast.error("Password not updated");
             console.error("Error updating password:", error);
             setSubmitting(false);

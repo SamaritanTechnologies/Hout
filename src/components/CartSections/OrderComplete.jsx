@@ -67,45 +67,47 @@ const OrderComplete = ({
             <img src={smallVideo} alt={t("c_order_complete_image_alt")} />
           </div>
 
-          <div className="flex space-x-[148px] xl:px-[80px] lg:px-[50px] md:px-[30px] px-[15px] items-center pt-5">
+          <div className="flex justify-between xl:px-[40px] lg:px-[50px] md:px-[30px] px-[15px] items-center pt-5">
             <div className="text-[#6C7275] text-14 font-semibold">
               {t("c_order_code_label")}
             </div>
-            <div className="text-14 font-semibold text-left">{orderId}</div>
+            <div className="text-14 font-semibold text-left w-32">
+              {orderId}
+            </div>
           </div>
 
-          <div className="flex space-x-48 xl:px-[80px] lg:px-[50px] md:px-[30px] px-[15px] items-center pt-5">
+          <div className="flex  justify-between xl:px-[40px] lg:px-[50px] md:px-[30px] px-[15px] items-center pt-5">
             <div className="text-[#6C7275] text-14 font-semibold">
               {t("c_order_date_label")}
             </div>
-            <div className="text-14 font-semibold text-left">
+            <div className="text-14 font-semibold text-left w-32">
               {formattedEstimateDate}
             </div>
           </div>
 
-          <div className="flex space-x-48 xl:px-[80px] lg:px-[50px] md:px-[30px] px-[15px] items-center pt-5">
+          <div className="flex justify-between xl:px-[40px] lg:px-[50px] md:px-[30px] px-[15px] items-center pt-5">
             <div className="text-[#6C7275] text-14 font-semibold">
               {t("c_order_total_label")}
             </div>
-            <div className="text-14 font-semibold text-left">
+            <div className="text-14 font-semibold text-left w-32">
               €{orderAmount}
             </div>
           </div>
 
-          <div className="flex space-x-28 xl:px-[80px] lg:px-[50px] md:px-[30px] px-[15px] items-center pt-5">
+          <div className="flex justify-between xl:px-[40px] lg:px-[50px] md:px-[30px] px-[15px] items-center pt-5">
             <div className="text-[#6C7275] text-14 font-semibold">
               {t("c_payment_method_label")}
             </div>
-            <div className="text-14 font-semibold text-left">
+            <div className="text-14 font-semibold text-left w-32">
               {paymentMethod}
             </div>
           </div>
 
-          <div className="flex space-x-16 xl:px-[80px] lg:px-[50px] md:px-[30px] px-[15px] items-center pt-5">
+          <div className="flex justify-between xl:px-[40px] lg:px-[50px] md:px-[30px] px-[15px] items-center pt-5">
             <div className="text-[#6C7275] text-14 font-semibold">
               {t("c_estimated_delivery_label")}
             </div>
-            <div className="text-14 font-semibold text-left">
+            <div className="text-14 font-semibold text-left w-32">
               {estimatedDelivery}
             </div>
           </div>

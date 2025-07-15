@@ -63,9 +63,7 @@ export const MyAccount = () => {
 
     toast.success("Logged Out!");
 
-    setTimeout(() => {
-      navigate("/");
-    }, 700);
+    navigate("/");
   };
 
   const getImageSrc = () => {

@@ -8,10 +8,12 @@ import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
 import { addFaqs, getFaqs } from "../redux/actions/dashboardActions";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import TableBody1 from "../components/Common/TableBody1";
 
 export const AdminFAQ = () => {
   const [faqSections, setFaqSections] = useState([]);
   const [newSubject, setNewSubject] = useState("");
+  const [newSubject_nl, setNewSubject_nl] = useState("");
   const { t } = useTranslation();
 
   // Fetch FAQs on component mount
@@ -31,9 +33,10 @@ export const AdminFAQ = () => {
   // Add a new FAQ section with one default FAQ field
   const handleAddSection = () => {
     if (newSubject.trim() === "") return;
+    if (newSubject_nl.trim() === "") return;
     const newSection = {
       name_en: newSubject,
-      name_nl: null,
+      name_nl: newSubject_nl,
       faqs: [
         {
           question_en: "",
@@ -111,11 +114,16 @@ export const AdminFAQ = () => {
       <h2 className="xl:text-32 lg:text-28 text-26 font-bold">FAQ</h2>
       {/* Add New FAQ Section */}
       <div className="w-full max-w-[848px] mx-auto">
-        <div className="flex gap-3 items-center mb-8">
+        <div className="flex gap-3 items-center mb-8 w-[800px]">
           <InputField
-            placeholder="New Main Subject"
+            placeholder="New Main Subject EN"
             value={newSubject}
             onChange={(e) => setNewSubject(e.target.value)}
+          />
+          <InputField
+            placeholder="New Main Subject NL"
+            value={newSubject_nl}
+            onChange={(e) => setNewSubject_nl(e.target.value)}
           />
           <Button
             loading={false}
@@ -144,6 +152,16 @@ export const AdminFAQ = () => {
                   setFaqSections(updatedSections);
                 }}
               />
+              <InputField
+                placeholder="Main Subject NL"
+                value={section.name_nl}
+                onChange={(e) => {
+                  const updatedSections = [...faqSections];
+                  updatedSections[sectionIndex].name_nl = e.target.value;
+                  setFaqSections(updatedSections);
+                }}
+              />
+
               <Button
                 loading={false}
                 type="submit"
@@ -163,7 +181,7 @@ export const AdminFAQ = () => {
                     <th className="px-[24px] py-[16px] text-left text-14 font-bold rounded-ss-2xl bg-[#cbcbcb] relative">
                       Question (EN)
                       <img
-                        src={countryflag}
+                        src={countryflag2}
                         alt="Flag"
                         className="cursor-pointer h-5 w-5 absolute right-4 top-5"
                       />
@@ -179,6 +197,40 @@ export const AdminFAQ = () => {
                   </tr>
                 </thead>
                 <TableBody2
+                  faqs={section.faqs}
+                  onAddFaq={() => handleAddFaq(sectionIndex)}
+                  onRemoveFaq={(faqIndex) =>
+                    handleRemoveFaq(sectionIndex, faqIndex)
+                  }
+                  onEditFaq={(faqIndex, updatedFaq) =>
+                    handleEditFaq(sectionIndex, faqIndex, updatedFaq)
+                  }
+                />
+              </table>
+            </div>
+            <div className="inline-block min-w-full rounded-lg overflow-hidden">
+              <table className="min-w-full leading-normal">
+                <thead>
+                  <tr>
+                    <th className="px-[24px] py-[16px] text-left text-14 font-bold rounded-ss-2xl bg-[#cbcbcb] relative">
+                      Question (NL)
+                      <img
+                        src={countryflag}
+                        alt="Flag"
+                        className="cursor-pointer h-5 w-5 absolute right-4 top-5"
+                      />
+                    </th>
+                    <th className="bg-[#cbcbcb] px-[24px] py-[16px] text-left text-16 font-semibold rounded-se-2xl relative">
+                      Answer (NL)
+                      <img
+                        src={countryflag}
+                        alt="Flag"
+                        className="cursor-pointer h-5 w-5 absolute right-4 top-5"
+                      />
+                    </th>
+                  </tr>
+                </thead>
+                <TableBody1
                   faqs={section.faqs}
                   onAddFaq={() => handleAddFaq(sectionIndex)}
                   onRemoveFaq={(faqIndex) =>

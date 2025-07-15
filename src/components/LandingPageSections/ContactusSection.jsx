@@ -19,19 +19,19 @@ export const ContactusSection = () => {
 
   const validateForm = () => {
     if (!formData.first_name?.trim()) {
-      toast.error("First Name is required.");
+      toast.error(t("contactus_first_name_required"));
       return false;
     }
     if (!formData.last_name?.trim()) {
-      toast.error("Last Name is required.");
+      toast.error(t("contactus_last_name_required"));
       return false;
     }
     if (!formData.email?.trim() || !/\S+@\S+\.\S+/.test(formData.email)) {
-      toast.error("Please enter a valid email address.");
+      toast.error(t("contactus_email_invalid"));
       return false;
     }
     if (!formData.message?.trim() || formData.message.length < 10) {
-      toast.error("Message must be at least 10 characters long.");
+      toast.error(t("contactus_message_too_short"));
       return false;
     }
     return true;
@@ -55,17 +55,15 @@ export const ContactusSection = () => {
     setLoading(true);
     try {
       const response = await submitContactForm(formData);
-      if (response?.status === 201 || response?.status === 200) {
-        toast.success(
-          "Your message has been sent! We will get back to you as soon as possible."
-        );
+      if (response) {
+        toast.success(t("contactus_success"));
         resetForm();
       }
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ||
         error.message ||
-        "An unexpected error occurred. Please try again later.";
+        t("contactus_generic_error");
       toast.error(errorMessage);
     } finally {
       setLoading(false);
@@ -93,6 +91,7 @@ export const ContactusSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-7">
           <ContactInputField
             value={formData.first_name}
+            className="contact-input-field"
             type="text"
             required={true}
             color="#fff"
@@ -104,6 +103,7 @@ export const ContactusSection = () => {
           />
           <ContactInputField
             value={formData.last_name}
+            className="contact-input-field"
             color="#fff"
             type="text"
             required={true}
@@ -115,6 +115,7 @@ export const ContactusSection = () => {
           />
           <ContactInputField
             value={formData.email}
+            className="contact-input-field"
             color="#fff"
             type="email"
             required={true}
@@ -128,6 +129,7 @@ export const ContactusSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-7">
           <ContactInputField
             value={formData.company}
+            className="contact-input-field"
             color="#fff"
             type="text"
             placeholder={t("c_company_placeholder")}
@@ -138,6 +140,7 @@ export const ContactusSection = () => {
           />
           <ContactInputField
             value={formData.phone_number}
+            className="contact-input-field"
             color="#fff"
             type="tel"
             placeholder={t("c_phone_number_placeholder")}
@@ -149,6 +152,7 @@ export const ContactusSection = () => {
         </div>
         <ContactInputField
           value={formData.message}
+          className="contact-input-field"
           color="#fff"
           type="text"
           required={true}
