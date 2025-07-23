@@ -100,7 +100,6 @@ const ShoppingCart = ({
     }
   }, [updatedItem]);
 
-  // useEffect(() => {
   //   const fetchPaymentOptions = async () => {
   //     try {
   //       const res = await axiosWithCredentials.get(
@@ -172,60 +171,11 @@ const ShoppingCart = ({
     0
   );
 
-  // const calculateTotal = (
-  //   totalPrice,
-  //   delivery,
-  //   taxPercentage,
-  //   coupon = null
-  // ) => {
-  //   console.log("taxPercentage", taxPercentage);
-  //   let deliveryCharge = 0;
-  //   const numericTotalPrice = Number(totalPrice || 0);
-
-  //   if (selectedMethod !== "pickup") {
-  //     if (numericTotalPrice < 750) {
-  //       deliveryCharge = Number(delivery?.upto_750 || 0);
-  //     } else if (numericTotalPrice >= 750 && numericTotalPrice <= 1500) {
-  //       deliveryCharge = Number(delivery?.from_750_to_1500 || 0);
-  //     } else {
-  //       deliveryCharge = Number(delivery?.above_1500 || 0);
-  //     }
-  //   } else {
-  //     deliveryCharge = 0;
-  //   }
-
-  //   const subtotal = numericTotalPrice + deliveryCharge;
-  //   let discountAmount = 0;
-  //   let isMinimumOrderMet = true;
-
-  //   if (coupon && subtotal >= Number(coupon.minimum_order_amount)) {
-  //     if (coupon.discount_type === "percentage") {
-  //       discountAmount = subtotal * (Number(coupon.discount_value) / 100);
-  //     } else if (coupon.discount_type === "fixed") {
-  //       discountAmount = Number(coupon.discount_value);
-  //     }
-  //   } else if (coupon) {
-  //     isMinimumOrderMet = false;
-  //   }
-
-  //   const amountAfterDiscount = subtotal - discountAmount;
-  //   const taxRate = Number(taxPercentage || 0);
-  //   let taxAmount = 0;
-  //   let totalWithTax = amountAfterDiscount;
-  //   if (taxRate > 0) {
-  //     taxAmount = amountAfterDiscount * (taxRate / 100);
-  //     totalWithTax = amountAfterDiscount + taxAmount;
-  //   }
-
-  //   return {
-  //     total: totalWithTax,
-  //     discount: discountAmount,
-  //     subtotal: subtotal,
-  //     isMinimumOrderMet,
-  //     deliveryCharge,
-  //     taxAmount,
-  //   };
-  // };
+  const cartTotal = localCart?.reduce((acc, item) => {
+    const price = Number(item?.discounted_price_ex_vat || 0);
+    const quantity = Number(item?.quantity || 0);
+    return acc + price * quantity;
+  }, 0);
 
   const {
     total,
@@ -234,7 +184,13 @@ const ShoppingCart = ({
     subtotal,
     isMinimumOrderMet,
     taxAmount,
-  } = calculateTotal(totalPrice, delivery, taxData, couponData, selectedMethod);
+  } = calculateTotal(
+    isAuthenticated ? totalPrice : cartTotal,
+    delivery,
+    taxData,
+    couponData,
+    selectedMethod
+  );
 
   useEffect(() => {
     dispatch(
@@ -346,12 +302,6 @@ const ShoppingCart = ({
     localStorage.setItem("cart", JSON.stringify(updatedCart));
     window.dispatchEvent(new Event("localCartUpdated"));
   };
-
-  const cartTotal = localCart?.reduce((acc, item) => {
-    const price = Number(item?.discounted_price_ex_vat || 0);
-    const quantity = Number(item?.quantity || 0);
-    return acc + price * quantity;
-  }, 0);
 
   // const handleMethod = (e) => {
   //   const { value, checked } = e.target;
@@ -868,68 +818,6 @@ const ShoppingCart = ({
                   </tbody>
                 </table>
               </div>
-
-              {/* <section className="pt-[30px]">
-                <div>
-                  <h6 className="xl:text-16 lg:text-14 text-[13px]">
-                    Have a coupon?
-                  </h6>
-                </div>
-                <div className="pt-2">
-                  <p className="xl:text-16 lg:text-14 text-[13px] text-[#6C7275]">
-                    Add your code for an instant cart discount
-                  </p>
-                </div>
-                {couponData ? (
-                  <div className="flex items-center justify-between bg-green-50 p-3 rounded-md mt-3">
-                    <div className="flex items-center">
-                      <span className="text-green-700 font-medium">
-                        {couponData.code} applied ({couponData.discount_value}
-                        {couponData.discount_type === "percentage"
-                          ? "%"
-                          : "€"}{" "}
-                        off)
-                      </span>
-                    </div>
-                    <button
-                      onClick={handleRemoveCoupon}
-                      className="cursor-pointer p-4 bg-[#FBC700] rounded-md rounded-l-none hover:bg-[#e6b800] transition-colors"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex border border-[#6C727580] justify-between items-center rounded-[10px] flex-1 xl:w-[442px] w-[100%] pl-3 mt-3">
-                    <div className="flex gap-x-2 xl:py-[14px] lg:py-[12px] py-[8px] items-center">
-                      <img src={coupon} alt="Coupon icon" />
-                      <input
-                        type="text"
-                        className="outline-none border-none bg-transparent w-full text-[#6C7275] placeholder-[#6C7275]"
-                        placeholder="Enter coupon code"
-                        value={couponCode}
-                        onChange={(e) => setCouponCode(e.target.value)}
-                      />
-                    </div>
-                    <button
-                      className="cursor-pointer p-4 bg-[#FBC700] rounded-md rounded-l-none hover:bg-[#e6b800] transition-colors"
-                      onClick={handleApplyCoupon}
-                      disabled={isLoading}
-                    >
-                      {isLoading ? "Applying..." : "Apply"}
-                    </button>
-                  </div>
-                )}
-                {error && !couponData && (
-                  <div className="text-rose-500 mt-2">{error}</div>
-                )}
-                {couponData && !isMinimumOrderMet && (
-                  <div className="text-amber-600 mt-2">
-                    Add €
-                    {(couponData.minimum_order_amount - subtotal).toFixed(2)}
-                    more to your cart to apply this coupon
-                  </div>
-                )}
-              </section> */}
             </section>
 
             {/* Right side of grid  */}
@@ -946,20 +834,22 @@ const ShoppingCart = ({
                   <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
                     {t("s_delivery_fee")}
                   </div>
-                  <div>€{Number(delivery || 0).toFixed(2)}</div>
+                  <div>€ {Number(deliveryCharge || 0).toFixed(2)}</div>
                 </section>
                 <section className="flex justify-between pt-[25px] border-b border-[#D9D9D9] pb-3">
                   <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
                     {t("s_tax")}
                   </div>
-                  <div>€ {Number(taxData || 0).toFixed(2)} </div>
+                  <div>€ {Number(taxAmount || 0).toFixed(2)} </div>
                 </section>
                 {couponData && isMinimumOrderMet && discount > 0 && (
                   <section className="flex justify-between pt-[25px]">
                     <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
                       {t("s_you_saved")}
                     </div>
-                    <div className="text-green-600">€{discount.toFixed(2)}</div>
+                    <div className="text-green-600">
+                      € {discount.toFixed(2)}
+                    </div>
                   </section>
                 )}
                 <section className="flex justify-between pt-[25px] pb-5">
@@ -967,7 +857,7 @@ const ShoppingCart = ({
                     {t("s_total")}
                   </div>
                   <div className="text-customYellow font-medium xl:text-18 lg:text-16 text-14">
-                    €{cartTotal?.toFixed(2)}
+                    € {total?.toFixed(2)}
                   </div>
                 </section>
               </section>

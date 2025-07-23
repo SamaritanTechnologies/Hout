@@ -18,7 +18,7 @@ const TotalBalance = () =>
                 <div className="text-[#111727] xl:text-16 lg:text-15 text-14">
                   {t("tb_subtotal_excl_vat")}
                 </div>
-                <div className="text-[#111727]">€{cartSummary.subtotal}</div>
+                <div className="text-[#111727]">€ {cartSummary.subtotal}</div>
               </section>
 
               <section className="flex justify-between xl:pt-[25px] lg:pt-[20px] pt-[10px]">
@@ -26,7 +26,7 @@ const TotalBalance = () =>
                   {t("tb_delivery_fee")}
                 </div>
                 <div className="text-[#111727]">
-                  €{Number(cartSummary.deliveryFee || 0).toFixed(2)}
+                  € {Number(cartSummary.deliveryFee || 0).toFixed(2)}
                 </div>
               </section>
 
@@ -46,7 +46,7 @@ const TotalBalance = () =>
                   </div>
                   <div className="text-customYellow font-medium xl:text-18 lg:text-16 text-14">
                     {/* USD €{cartItems?.length ? Number(total || 0).toFixed(2) : 0} */}
-                    €{cartSummary.youSaved}
+                    € {cartSummary.youSaved}
                   </div>
                 </section>
               )}
@@ -57,7 +57,7 @@ const TotalBalance = () =>
                 </div>
                 <div className="text-customYellow font-medium xl:text-18 lg:text-16 text-14">
                   {/* USD €{cartItems?.length ? Number(total || 0).toFixed(2) : 0} */}
-                  €{cartSummary.total}
+                  € {cartSummary.total}
                 </div>
               </section>
             </section>

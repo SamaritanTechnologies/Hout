@@ -199,7 +199,7 @@ export const nlTranslations = {
   s_type: "Type",
   s_material: "Materiaal",
   s_profile: "Profiel",
-  s_durability: "Duurzaamheid",
+  s_durability: "Duurzaamheidsklasse",
   s_quality: "Kwaliteit",
   s_application: "Toepassing",
 
