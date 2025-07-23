@@ -28,11 +28,11 @@ export const ShopPage = () => {
   const { t, i18n } = useTranslation();
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get("search");
-  console.log("search:", searchQuery);
   const currentLang = i18n.language;
   const [wallpaper, setWallpaper] = useState("");
   const [filterKey, setFilterKey] = useState(0);
   const { productCategories } = useSelector((state) => state.admin);
+  console.log("productCategories", productCategories);
 
   const translatedCategories = useMemo(
     () => [
@@ -64,7 +64,6 @@ export const ShopPage = () => {
       const res = await getWebshopImage();
       if (res) {
         setWallpaper(res);
-        console.log("shop res", res);
       }
     } catch (error) {
       console.error("Error fetching existing image:", error);
@@ -75,16 +74,31 @@ export const ShopPage = () => {
     fetchExistingImage();
   }, []);
 
+  // useEffect(() => {
+  //   const initialData = translatedCategories.reduce((acc, category) => {
+  //     const foundCategory = productCategories?.find(
+  //       (c) => c.name?.toLowerCase() === category.toLowerCase()
+  //     );
+  //     acc[category] = foundCategory || { name: category, choices: [] };
+  //     return acc;
+  //   }, {});
+
+  //   setCategoryData(initialData);
+  // }, [productCategories, translatedCategories]);
+
   useEffect(() => {
     const initialData = translatedCategories.reduce((acc, category) => {
-      const foundCategory = productCategories?.find(
-        (c) => c.name?.toLowerCase() === category.toLowerCase()
-      );
+      const foundCategory = productCategories?.find((c) => {
+        const nameMatch = c.name?.toLowerCase() === category.toLowerCase();
+        const nameNlMatch = c.name_nl?.toLowerCase() === category.toLowerCase();
+        return nameMatch || nameNlMatch;
+      });
+
       acc[category] = foundCategory || { name: category, choices: [] };
       return acc;
     }, {});
 
-    setCategoryData(initialData);
+    setCategoryData(initialData); // Make sure you're calling this
   }, [productCategories, translatedCategories]);
 
   const categoryArray = Object.values(categoryData);

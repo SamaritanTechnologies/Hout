@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import { current } from "@reduxjs/toolkit";
 
 const Filters = ({ categories, onFilterChange, initialFilters }) => {
+  console.log("categories ", categories);
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
   const [expanded, setExpanded] = useState([]);
@@ -87,7 +88,9 @@ const Filters = ({ categories, onFilterChange, initialFilters }) => {
           onChange={handleAccordionChange(category.name)}
         >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography>{category?.name}</Typography>
+            <Typography>
+              {currentLang === "en" ? category?.name : category?.name_nl}
+            </Typography>
           </AccordionSummary>
           <AccordionDetails>
             <FormGroup>

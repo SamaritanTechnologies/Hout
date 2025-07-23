@@ -58,7 +58,7 @@ export const ProductDetail = () => {
   return (
     <>
       <section className="px-[30px] md:px-[80px] lg:px-[100px] bg-[#F4F5F7]">
-        <div className="flex flex-col md:flex-row justify-between items-center">
+        <div className="flex flex-row justify-between items-center">
           <tr className="xs:gap-x-3 gap-x-6 flex  items-center  py-[40px]">
             <td
               className="text-[#9F9F9F] xs:text-14 sm:text-15 text-16 cursor-pointer"

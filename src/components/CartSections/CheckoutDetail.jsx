@@ -32,7 +32,6 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
   const currentLang = i18n.language;
   const cartSummary = useSelector((state) => state.summary);
   const cart_data = useSelector((state) => state.summary.cart_data);
-  console.log("cart_data", cart_data);
   const userDetail = useSelector((state) => state.auth.user);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   const navigate = useNavigate();
@@ -112,7 +111,7 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
         const res = await axiosWithCredentials.get(
           `/accounts/payment-options/${user?.id}/`
         );
-        console.log("res", res);
+        // console.log("res", res);
       } catch (error) {
         console.error("Error fetching payment options:", error);
       }
@@ -136,98 +135,6 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
       console.error("Error fetching user data:", error);
     }
   };
-
-  // useEffect(() => {
-  //   setCartItems(cartData?.cart_items || []);
-  // }, [cartData]);
-
-  // const updateQuantity = async ({ id, productId, price, newQuantity }) => {
-  //   try {
-  //     const payload = {
-  //       cart: user?.card_id,
-  //       user: user?.id,
-  //       product: productId,
-  //       quantity: newQuantity,
-  //       product_price: price,
-  //     };
-  //     await axiosWithCredentials.put(`/change-quantity/${id}/`, payload);
-
-  //     fetchCart();
-  //   } catch (error) {
-  //     let errorMessage = "Something went wrong!";
-  //     if (error.response?.data?.product?.length) {
-  //       errorMessage = error.response.data.product[0];
-  //     } else if (error?.response?.data?.message) {
-  //       errorMessage = error?.response?.data?.message;
-  //     }
-  //     fetchCart();
-  //     toast.error(errorMessage);
-  //   }
-  // };
-
-  // const debouncedUpdateQuantity = useCallback(
-  //   debounce((item) => updateQuantity(item), 500),
-  //   []
-  // );
-
-  // useEffect(() => {
-  //   if (updatedItem) {
-  //     debouncedUpdateQuantity(updatedItem);
-  //   }
-  // }, [updatedItem]);
-
-  // const handleIncrement = (id) => {
-  //   const item = cartItems?.find((item) => item.id === id);
-  //   if (item) {
-  //     const newQuantity = item.quantity + 1;
-  //     setCartItems((prevItems) =>
-  //       prevItems.map((item) =>
-  //         item.id === id ? { ...item, quantity: newQuantity } : item
-  //       )
-  //     );
-  //     setUpdatedItem({
-  //       id,
-  //       productId: item.product?.id,
-  //       price: item.product_price,
-  //       newQuantity,
-  //     });
-  //   }
-  // };
-
-  // const handleDecrement = (id) => {
-  //   const item = cartItems?.find((item) => item.id === id);
-  //   if (item && item.quantity > 1) {
-  //     const newQuantity = item.quantity - 1;
-  //     setCartItems((prevItems) =>
-  //       prevItems.map((item) =>
-  //         item.id === id ? { ...item, quantity: newQuantity } : item
-  //       )
-  //     );
-  //     setUpdatedItem({
-  //       id,
-  //       productId: item.product?.id,
-  //       price: item.product_price,
-  //       newQuantity,
-  //     });
-  //   }
-  // };
-
-  // const totalPrice = cartItems?.reduce(
-  //   (sum, item) => sum + parseFloat(item.product_price),
-  //   0
-  // );
-
-  // const calculateTotal = (totalPrice, delivery, taxPercentage) => {
-  //   const subtotal = Number(totalPrice || 0) + Number(delivery || 0);
-  //   const taxRate = Number(taxPercentage || 0);
-  //   if (taxRate > 0) {
-  //     const taxAmount = subtotal * (taxRate / 100);
-  //     return subtotal + taxAmount;
-  //   }
-  //   return subtotal;
-  // };
-
-  // const total = calculateTotal(totalPrice, delivery, taxData);
 
   useEffect(() => {
     fetchUser();
@@ -306,18 +213,19 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
           cartSummary?.deliveryFee !== undefined
             ? cartSummary?.deliveryFee
             : 0,
+        language: currentLang,
       };
-      // console.log("payload", payload);
-      const response = await axiosWithCredentials.post(
-        `/confirm-order/`,
-        payload
-      );
+      console.log("payload", payload);
+      // const response = await axiosWithCredentials.post(
+      //   `/confirm-order/`,
+      //   payload
+      // );
 
-      if (response?.data?.checkout_url) {
-        window.open(response.data.checkout_url, "_blank");
-      } else {
-        toast.error(t("cd_payment_init_fail"));
-      }
+      // if (response?.data?.checkout_url) {
+      //   window.open(response.data.checkout_url, "_blank");
+      // } else {
+      //   toast.error(t("cd_payment_init_fail"));
+      // }
     } catch (error) {
       console.error("Payment error:", error);
       toast.error(
@@ -365,7 +273,7 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
                   </div>
 
                   {cartItems?.map((item) => {
-                    console.log("items Data:", item);
+                    // console.log("items Data:", item);
                     return (
                       <div key={item.id}>
                         <section className="flex pt-5 items-center">
@@ -429,7 +337,7 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
                             <h6>{item.quantity}</h6>
                           </div>
                           <div className="w-full text-right  xl:text-22 lg:text-20 md:text-18 text-16 font-bold">
-                            €{item?.product_price}
+                            € {item?.product_price}
                           </div>
                         </section>
                       </div>

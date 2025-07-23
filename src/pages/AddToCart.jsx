@@ -7,7 +7,7 @@ import OrderComplete from "../components/CartSections/OrderComplete";
 import check from "../assets/addToCart/check.svg";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getCart } from "../redux/actions/orderActions";
-import { axiosWithCredentials } from "../providers";
+import { axiosApi, axiosWithCredentials } from "../providers";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
@@ -154,7 +154,8 @@ export const AddToCart = () => {
 
   const getTaxDelivery = async () => {
     try {
-      const response = await axiosWithCredentials.get(`/get-tax-delivery/`);
+      const response = await axiosApi.get(`/get-tax-delivery/`);
+      // console.log("get-tax-delivery", response);
       setState((prev) => ({
         ...prev,
         tax: response.data?.vat_rate,
@@ -167,27 +168,14 @@ export const AddToCart = () => {
   };
 
   useEffect(() => {
+    // if (!isAuthenticated) {
+    //   get;
+    // }
+    getTaxDelivery();
     if (isAuthenticated) {
-      getTaxDelivery();
       fetchCart();
     }
   }, [isAuthenticated]);
-
-  // if (!isAuthenticated) {
-  //   return (
-  //     <div className="flex justify-center items-center h-60 w-full">
-  //       <div className="flex gap-1 items-center">
-  //         <span> Please sign-in to view the items in your cart.</span>
-  //         <button
-  //           className="bg-[#FBC700] text-[#161922] p-2 rounded-md"
-  //           onClick={() => navigate("/sign-in")}
-  //         >
-  //           Sign-in
-  //         </button>
-  //       </div>
-  //     </div>
-  //   );
-  // }
 
   return (
     <>
