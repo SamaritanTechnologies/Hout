@@ -14,7 +14,7 @@ i18n.use(initReactI18next).init({
       translation: nlTranslations,
     },
   },
-  fallbackLng: getDefaultLanguage() || "en",
+  fallbackLng: getDefaultLanguage() || "nl",
   interpolation: {
     escapeValue: false,
   },

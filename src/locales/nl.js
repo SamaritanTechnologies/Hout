@@ -537,4 +537,5 @@ export const nlTranslations = {
     "Uw bericht is verzonden! We nemen zo snel mogelijk contact met u op.",
   contactus_generic_error:
     "Er is een onverwachte fout opgetreden. Probeer het later opnieuw.",
+  pc_view_product: "Bekijk product",
 };

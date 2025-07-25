@@ -74,7 +74,7 @@ export const TermsConditions = () => {
         </div>
       </section>
 
-      <section className="min-h-48 w-full p-16">
+      <section className="min-h-48 w-full p-16 pb-24">
         <div dangerouslySetInnerHTML={{ __html: data }} />
       </section>
     </>

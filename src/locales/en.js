@@ -552,4 +552,5 @@ export const enTranslations = {
     "Your message has been sent! We will get back to you as soon as possible.",
   contactus_generic_error:
     "An unexpected error occurred. Please try again later.",
+  pc_view_product: "View Product",
 };

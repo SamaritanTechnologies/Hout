@@ -15,7 +15,7 @@ import { useTranslation } from "react-i18next";
 import { current } from "@reduxjs/toolkit";
 
 const Filters = ({ categories, onFilterChange, initialFilters }) => {
-  console.log("categories ", categories);
+  // console.log("categories ", categories);
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
   const [expanded, setExpanded] = useState([]);

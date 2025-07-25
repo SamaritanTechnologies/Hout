@@ -149,7 +149,7 @@ export const TermsAndConditions = () => {
   };
 
   return (
-    <div className="flex flex-col gap-12 xl:gap-12">
+    <div className="flex flex-col gap-12 xl:gap-12 ">
       <h2 className="xl:text-32 lg:text-28 text-26 font-bold">
         Terms and Conditions
       </h2>

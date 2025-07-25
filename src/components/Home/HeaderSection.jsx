@@ -22,8 +22,8 @@ import { useTranslation } from "react-i18next";
 import InputField from "../Common/InputField";
 
 const languages = [
-  { code: "en", name: "English", flag: countryflag2 },
   { code: "nl", name: "Dutch", flag: countryflag1 },
+  { code: "en", name: "English", flag: countryflag2 },
 ];
 
 const HeaderSection = () => {
