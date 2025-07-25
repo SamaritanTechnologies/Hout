@@ -215,17 +215,17 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
             : 0,
         language: currentLang,
       };
-      console.log("payload", payload);
-      // const response = await axiosWithCredentials.post(
-      //   `/confirm-order/`,
-      //   payload
-      // );
+      // console.log("payload", payload);
+      const response = await axiosWithCredentials.post(
+        `/confirm-order/`,
+        payload
+      );
 
-      // if (response?.data?.checkout_url) {
-      //   window.open(response.data.checkout_url, "_blank");
-      // } else {
-      //   toast.error(t("cd_payment_init_fail"));
-      // }
+      if (response?.data?.checkout_url) {
+        window.open(response.data.checkout_url, "_blank");
+      } else {
+        toast.error(t("cd_payment_init_fail"));
+      }
     } catch (error) {
       console.error("Payment error:", error);
       toast.error(

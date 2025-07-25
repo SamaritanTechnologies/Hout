@@ -282,9 +282,13 @@ const ShoppingCart = ({
 
     const updatedCart = storedCart.map((item) => {
       if (item.id === id) {
+        // Only decrement if quantity is greater than 1
+        const newQuantity =
+          item.quantity > 1 ? item.quantity - 1 : item.quantity;
+
         return {
           ...item,
-          quantity: (item.quantity || 0) - 1,
+          quantity: newQuantity,
         };
       }
       return item;

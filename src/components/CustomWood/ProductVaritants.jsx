@@ -13,32 +13,103 @@ import { useTranslation } from "react-i18next";
 const ProductVaritants = ({ variants, vat }) => {
   const { t } = useTranslation();
   const authState = useSelector((state) => state.auth);
+  const cartState = useSelector((state) => state.cart);
+  console.log("CartState", cartState);
   const isAuthenticated = authState.isLoggedIn;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+
+  console.log("Variant", variants);
+
+  // const handleaddToCart = async (variantId) => {
+  //   try {
+  //     const input = document.getElementById(`quantity-${variantId}`);
+  //     const quantity = parseInt(input.value, 10);
+
+  //     if (quantity > 0) {
+  //       const payload = {
+  //         product_length: variantId,
+  //         quantity,
+  //       };
+
+  //       setLoading(true);
+  //       await axiosWithCredentials.post(`/add-to-cart/`, payload);
+  //       input.value = 0;
+  //       const res = await getCart();
+  //       dispatch(setCartItems(res.cart_items));
+  //       toast.success(t("pv_cart_add_success"));
+  //       // navigate("/cart");
+  //     } else {
+  //       toast.warning(t("pv_cart_quantity_warning"));
+  //     }
+  //   } catch (error) {
+  //     if (
+  //       error.response &&
+  //       error.response.data &&
+  //       error.response.data.message
+  //     ) {
+  //       if (error.response.data.message === "No more product left in stock.") {
+  //         toast.error(t("pv_cart_out_of_stock"));
+  //       } else {
+  //         toast.error(error.response.data.message);
+  //       }
+  //     } else {
+  //       toast.error(t("pv_cart_error"));
+  //     }
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleaddToCart = async (variantId) => {
     try {
       const input = document.getElementById(`quantity-${variantId}`);
       const quantity = parseInt(input.value, 10);
 
-      if (quantity > 0) {
-        const payload = {
-          product_length: variantId,
-          quantity,
-        };
-
-        setLoading(true);
-        await axiosWithCredentials.post(`/add-to-cart/`, payload);
-        input.value = 0;
-        const res = await getCart();
-        dispatch(setCartItems(res.cart_items));
-        toast.success(t("pv_cart_add_success"));
-        // navigate("/cart");
-      } else {
+      if (quantity <= 0) {
         toast.warning(t("pv_cart_quantity_warning"));
+        return;
       }
+
+      // Find variant from your variant list
+      const variant = variants.find((v) => v.id === variantId);
+      if (!variant) {
+        toast.error("Variant not found.");
+        return;
+      }
+
+      const stockAvailable = variant.stock;
+
+      // Check if item is already in cart
+      const existingCartItem = cartState.data.find(
+        (item) => item.product_length.id === variantId
+      );
+
+      const existingQuantity = existingCartItem?.quantity || 0;
+      const totalRequested = existingQuantity + quantity;
+
+      if (totalRequested > stockAvailable) {
+        toast.warning(
+          `Only ${stockAvailable - existingQuantity} more in stock.`
+        );
+        return;
+      }
+
+      // Payload to send to backend
+      const payload = {
+        product_length: variantId,
+        quantity,
+      };
+
+      setLoading(true);
+      await axiosWithCredentials.post(`/add-to-cart/`, payload);
+      input.value = 0;
+
+      const res = await getCart();
+      dispatch(setCartItems(res.cart_items));
+      toast.success(t("pv_cart_add_success"));
+      // navigate("/cart");
     } catch (error) {
       if (
         error.response &&

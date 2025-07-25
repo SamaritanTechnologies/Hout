@@ -32,7 +32,7 @@ export const ShopPage = () => {
   const [wallpaper, setWallpaper] = useState("");
   const [filterKey, setFilterKey] = useState(0);
   const { productCategories } = useSelector((state) => state.admin);
-  console.log("productCategories", productCategories);
+  // console.log("productCategories", productCategories);
 
   const translatedCategories = useMemo(
     () => [

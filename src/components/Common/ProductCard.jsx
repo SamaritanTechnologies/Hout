@@ -171,22 +171,10 @@ const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
         </div>
         <div className="flex gap-x-4 items-center justify-between">
           <div
-            // onClick={() => {
-            //   !isAuthenticated
-            //     ? handleAddToLocal(product)
-            //     : handleAddToCart(product);
-            // }}
             onClick={handleViewProduct}
             className="border-2 cursor-pointer border-[#898989] px-2 flex items-center justify-center py-3  gap-x-3  add-cart-btn md:text-[12px] lg:text-[12px]"
           >
-            {/* {cartLoading === product.id ? (
-              "Adding..."
-            ) : (
-              <>
-                <img src={addToCartt} /> */}
-            View Product
-            {/* </>
-            )} */}
+            {t("pc_view_product")}
           </div>
           <div className="cursor-pointer">
             {!isAuthenticated ? (
