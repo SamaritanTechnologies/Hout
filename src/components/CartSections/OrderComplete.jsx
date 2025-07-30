@@ -6,8 +6,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { getDeliveryFee } from "../../redux/actions/productActions";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { clearCart } from "../../redux/slices/cartSlice";
+import { clearCart, setCartItems } from "../../redux/slices/cartSlice";
 import { useTranslation } from "react-i18next";
+import { getCart } from "../../redux/actions/orderActions";
 
 const OrderComplete = ({
   response,
@@ -45,9 +46,17 @@ const OrderComplete = ({
 
   useEffect(() => {
     if (response) {
-      dispatch(clearCart());
+      const timeoutId = setTimeout(() => {
+        const fetchCart = async () => {
+          const res = await getCart();
+          dispatch(setCartItems(res.cart_items));
+        };
+        fetchCart();
+      }, 5000);
+
+      return () => clearTimeout(timeoutId);
     }
-  }, []);
+  }, [response]);
 
   // Use url date if present, otherwise fallback to API/default
   const estimatedDelivery = data?.time_estimate || "5 days";
