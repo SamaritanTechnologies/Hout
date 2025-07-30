@@ -57,9 +57,9 @@ export const ProductDetail = () => {
 
   return (
     <>
-      <section className="px-[30px] md:px-[80px] lg:px-[100px] bg-[#F4F5F7]">
-        <div className="flex flex-row justify-between items-center">
-          <tr className="xs:gap-x-3 gap-x-6 flex  items-center  py-[40px]">
+      <section className="px-[30px] py-4 md:px-[80px] lg:px-[100px] bg-[#F4F5F7]">
+        <div className="flex flex-col md:flex-row lg:flex-row xl:flex-row justify-between items-center">
+          <tr className="xs:gap-x-3 gap-x-6 flex  items-center  pt-[40px]">
             <td
               className="text-[#9F9F9F] xs:text-14 sm:text-15 text-16 cursor-pointer"
               onClick={() => navigate("/")}
@@ -83,7 +83,7 @@ export const ProductDetail = () => {
             </td>
             <td>{productDetail?.name_en}</td>
           </tr>
-          <div className=" flex justify-center  gap-5 pt-5">
+          <div className=" flex justify-center  gap-5 pt-5 md:pt-6 lg:pt-10 xl:pt-10">
             <div className="pops md:text-14 sm:text-14 xs:text-12">
               {t("p_showPrices")}
             </div>

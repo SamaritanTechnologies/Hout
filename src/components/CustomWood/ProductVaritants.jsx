@@ -170,7 +170,7 @@ const ProductVaritants = ({ variants, vat }) => {
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="bg-[#F8F8F8]">
+            <tr className="bg-[#F8F8F8] h-16">
               <th className="font-bold text-15 p-[10px] text-start">
                 {t("p_variant")}
               </th>
@@ -193,9 +193,9 @@ const ProductVaritants = ({ variants, vat }) => {
           </thead>
           <tbody>
             {variants?.map((variant) => (
-              <tr key={variant.id}>
-                <td className="p-[10px]">
-                  <div className="flex flex-col gap-[2px]">
+              <tr key={variant.id} className="">
+                <td className="p-[10px] flex flex-col justify-between h-full">
+                  <div className="flex flex-col justify-between h-16 lg:h-14 ">
                     <div className="font-bold text-14 text-[#111727]">
                       {t("p_variant")}
                     </div>
@@ -205,7 +205,7 @@ const ProductVaritants = ({ variants, vat }) => {
                   </div>
                 </td>
                 <td className="p-[10px]">
-                  <div className="flex flex-col gap-[2px]">
+                  <div className="flex flex-col justify-between h-16 lg:h-14">
                     <div className="font-bold text-14 text-[#111727]">
                       {t("p_articleNumber")}
                     </div>
@@ -213,7 +213,7 @@ const ProductVaritants = ({ variants, vat }) => {
                   </div>
                 </td>
                 <td className="p-[10px]">
-                  <div className="flex flex-col gap-[3px]">
+                  <div className="flex flex-col justify-between h-16 lg:h-14">
                     <div className="font-bold text-14 text-[#111727]">
                       {t("p_price")}
                       {/* <span className="text-[#888888] text-[11px] font-normal">
@@ -235,7 +235,7 @@ const ProductVaritants = ({ variants, vat }) => {
                         {t("p_contactUs")}
                       </span>
                     ) : (
-                      <div className="flex flex-col gap-3">
+                      <div className="flex flex-col justify-between h-16 lg:h-14">
                         <span className="text-sm font-semibold text-[#888888]">
                           {t("p_inventoryQuantity")}
                         </span>
