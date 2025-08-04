@@ -519,6 +519,13 @@ export const nlTranslations = {
   pa_invoice_address_update_success: "Factuuradres succesvol bijgewerkt",
   pa_invoice_address_update_error:
     "Er is iets misgegaan bij het bijwerken van het factuuradres",
+  signup_first_name_required: "Voornaam is verplicht.",
+  signup_last_name_required: "Achternaam is verplicht.",
+  signup_company_name_required: "Bedrijfsnaam is verplicht.",
+  signup_email_required: "E-mail is verplicht.",
+  signup_email_invalid: "Voer een geldig e-mailadres in.",
+  signup_email_invalid_format: "Voer een geldig e-mailadres in",
+  signup_phone_required: "Telefoonnummer is verplicht.",
 
   // HeadLessDropDown Toasts
   dropdown_logout_success: "Succesvol uitgelogd!",

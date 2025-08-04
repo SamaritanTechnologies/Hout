@@ -17,6 +17,8 @@ import InputField from "../components/Common/InputField";
 import { useTranslation } from "react-i18next";
 import { getSignupImage } from "../redux/actions/dashboardActions";
 
+import { BASE_URL } from "../providers";
+
 export const Signup = () => {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
@@ -32,6 +34,11 @@ export const Signup = () => {
     confirm_password: "",
   });
   const [errors, setErrors] = useState({
+    firstName: "",
+    lastName: "",
+    companyName: "",
+    email: "",
+    phone: "",
     password: "",
     confirm_password: "",
   });
@@ -79,17 +86,55 @@ export const Signup = () => {
   const validateForm = () => {
     let isValid = true;
     const newErrors = { ...errors };
-    if (Object.values(formData).some((field) => field.trim() === "")) {
-      toast.error(t("signup_fill_all_fields"));
+    // Validate each field
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = t("signup_first_name_required");
+      isValid = false;
+    } else {
+      newErrors.firstName = "";
+    }
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = t("signup_last_name_required");
+      isValid = false;
+    } else {
+      newErrors.lastName = "";
+    }
+    if (!formData.companyName.trim()) {
+      newErrors.companyName = t("signup_company_name_required");
+      isValid = false;
+    } else {
+      newErrors.companyName = "";
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = t("signup_email_required");
+      isValid = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = t("signup_email_invalid_format");
+      toast.error(t("signup_email_invalid_format"));
+      isValid = false;
+    } else {
+      newErrors.email = "";
+    }
+    if (!formData.phone.trim()) {
+      newErrors.phone = t("signup_phone_required");
+      isValid = false;
+    } else {
+      newErrors.phone = "";
+    }
+    // Password validation
+    if (!formData.password.trim()) {
+      newErrors.password = t("signup_password_min_length"); // Or a new key for required, if you want
       isValid = false;
     }
-
+    if (!formData.confirm_password.trim()) {
+      newErrors.confirm_password = t("signup_passwords_no_match"); // Or a new key for required, if you want
+      isValid = false;
+    }
     validatePassword(formData.password, formData.confirm_password);
-
     if (errors.password || errors.confirm_password) {
       isValid = false;
     }
-
+    setErrors(newErrors);
     return isValid;
   };
 
@@ -218,9 +263,10 @@ export const Signup = () => {
             </div>
             <form className="w-full" onSubmit={createUser}>
               {/* social auth row  */}
-              <div className="socialAuthRow flex gap-3 mb-[12px]">
+
+              <div className="mx-auto socialAuthRow flex gap-2.5 mb-[12px]">
                 <a
-                  href="#"
+                  href={`${BASE_URL}/accounts/google/login/?process=login`}
                   className="flex-1 flex gap-2 items-center rounded-md	xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium font-footer1"
                   style={{ border: "1px solid #ccc" }}
                 >
@@ -228,7 +274,7 @@ export const Signup = () => {
                   <span> Google </span>
                 </a>
                 <a
-                  href="#"
+                  href={`${BASE_URL}/accounts/facebook/login/?process=login`}
                   className="flex-1 flex gap-2 items-center rounded-md		xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium font-footer1"
                   style={{ border: "1px solid #ccc" }}
                 >
@@ -236,8 +282,8 @@ export const Signup = () => {
                   <span> Facebook </span>
                 </a>
                 <a
-                  href="#"
-                  className=" flex-1 flex gap-2 items-center rounded-md xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium font-footer1"
+                  href={`${BASE_URL}/accounts/apple/login/?process=login`}
+                  className="flex-1 flex gap-2 items-center rounded-md xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium font-footer1"
                   style={{ border: "1px solid #ccc" }}
                 >
                   <img src={appleIcon} alt="" />
@@ -265,6 +311,9 @@ export const Signup = () => {
                     value={formData.firstName}
                     onChange={handleFormData}
                   />
+                  {errors.firstName && (
+                    <p className="text-red text-xs mt-1">{errors.firstName}</p>
+                  )}
                 </div>
                 <div className="mb-[23px]">
                   <InputField
@@ -274,6 +323,9 @@ export const Signup = () => {
                     value={formData.lastName}
                     onChange={handleFormData}
                   />
+                  {errors.lastName && (
+                    <p className="text-red text-xs mt-1">{errors.lastName}</p>
+                  )}
                 </div>
                 <div className="mb-[23px]">
                   <InputField
@@ -283,6 +335,11 @@ export const Signup = () => {
                     value={formData.companyName}
                     onChange={handleFormData}
                   />
+                  {errors.companyName && (
+                    <p className="text-red text-xs mt-1">
+                      {errors.companyName}
+                    </p>
+                  )}
                 </div>
                 <div className="mb-[23px]">
                   <InputField
@@ -293,6 +350,9 @@ export const Signup = () => {
                     value={formData.email}
                     onChange={handleFormData}
                   />
+                  {errors.email && (
+                    <p className="text-red text-xs mt-1">{errors.email}</p>
+                  )}
                 </div>
                 <div className="mb-[23px]">
                   <InputField
@@ -302,6 +362,9 @@ export const Signup = () => {
                     value={formData.phone}
                     onChange={handleFormData}
                   />
+                  {errors.phone && (
+                    <p className="text-red text-xs mt-1">{errors.phone}</p>
+                  )}
                 </div>{" "}
                 <div className="mb-[23px]">
                   <InputField
