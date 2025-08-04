@@ -512,6 +512,13 @@ export const enTranslations = {
   signup_success: "Thank you for sign up! Please check your email.",
   signup_email_exists: "This email is already registered.",
   signup_generic_error: "Something went wrong, Try Again.",
+  signup_first_name_required: "First name is required.",
+  signup_last_name_required: "Last name is required.",
+  signup_company_name_required: "Company name is required.",
+  signup_email_required: "Email is required.",
+  signup_email_invalid: "Please enter a valid email address.",
+  signup_email_invalid_format: "Enter a valid email",
+  signup_phone_required: "Phone number is required.",
 
   pa_password_update_success: "Password successfully updated",
   pa_password_update_error: "Something went wrong updating password",

@@ -8,6 +8,7 @@ import { axiosWithCredentials } from "../../providers";
 import { deleteWishList } from "../../redux/actions/productActions";
 
 const RelatedProduct = ({ relatedProducts }) => {
+  console.log("relatedProducts", relatedProducts);
   const navigate = useNavigate();
 
   const getMinimumPriceObject = (lengths) => {

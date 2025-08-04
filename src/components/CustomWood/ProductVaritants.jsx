@@ -236,7 +236,7 @@ const ProductVaritants = ({ variants, vat }) => {
                       </span>
                     ) : (
                       <div className="flex flex-col justify-between h-16 lg:h-14">
-                        <span className="text-sm font-semibold text-[#888888]">
+                        <span className="font-bold text-14 text-[#111727]">
                           {t("p_inventoryQuantity")}
                         </span>
                         <span className="text-sm">{variant.stock}</span>
