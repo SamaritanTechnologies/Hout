@@ -68,3 +68,8 @@ export const getProductsById = async (product_id) => {
   const response = await axiosWithCredentials.get(`/product/${product_id}`);
   return response.data;
 };
+
+export const getRelatedProducts = async (product_id) => {
+  const response = await axiosWithCredentials.get(`/products/${product_id}/related/`);
+  return response.data;
+};
