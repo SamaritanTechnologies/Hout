@@ -320,6 +320,11 @@ export const enTranslations = {
   p_contactUs: "If you are interested, please contact us",
   p_inventoryQuantity: "Inventory quantity",
   p_outOfStock: "Out of stock",
+  p_relatedProducts: "Related Products",
+  p_addToCart: "Add to Cart",
+  p_viewProduct: "View Product",
+  p_viewShop: "View Shop",
+  p_noRelatedProducts: "No related products found for this product",
 
   // Footer Sections
   // Newsletter Section

@@ -52,7 +52,7 @@ const ProductsSection = () => {
           })}
         </div>
         <Button
-          btnText="VIEW SHOP"
+          btnText={t("p_viewShop")}
           paddingX="72px"
           fontbold
           paddingY="22px"

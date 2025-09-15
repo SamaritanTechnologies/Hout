@@ -10,11 +10,11 @@ import twitter from "../assets/customWoodPage/twitter.svg";
 import linkdln from "../assets/customWoodPage/linkdln.svg";
 import email from "../assets/customWoodPage/email.svg";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { getProductsById } from "../redux/actions/userActions";
+import { getProductsById, getRelatedProducts } from "../redux/actions/userActions";
 import { toast } from "react-toastify";
 import PageLoader from "../components/Common/PageLoader";
 import ProductsList from "../components/ShopComponents/ProductsList";
-import ProductsSection from "../components/LandingPageSections/ProductsSection";
+import Button from "../components/Common/Button";
 import {
   FacebookShareButton,
   TwitterShareButton,
@@ -33,6 +33,7 @@ export const ProductDetail = () => {
   const shareUrl = window.location.href;
   const { product_id } = useParams();
   const [productDetail, setProductDetail] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -51,7 +52,19 @@ export const ProductDetail = () => {
       }
     };
 
+    const fetchRelatedProducts = async () => {
+      try {
+        const data = await getRelatedProducts(product_id);
+        setRelatedProducts(data.results || []);
+        console.log("related products", data);
+      } catch (error) {
+        console.error("Error fetching related products:", error);
+        // Don't show error toast for related products as it's not critical
+      }
+    };
+
     fetchProductDetail();
+    fetchRelatedProducts();
   }, [product_id]);
   console.log("product detail", productDetail);
 
@@ -213,7 +226,7 @@ export const ProductDetail = () => {
               <span className="xl:text-24 lg:text-22 md:text-20 sm:text-18 text-[17px] font-bold border-b-3 border-customYellow">
                 {t("p_description")}
               </span>
-              <div className="pt-5 text-18 text-start xs:text-15 sm:text-15">
+              <div className="pt-5 text-18 text-start xs:text-15 sm:text-15 break-words whitespace-pre-wrap overflow-wrap-anywhere">
                 {currentLang == "en"
                   ? productDetail?.description_en
                   : productDetail?.description_nl}
@@ -389,11 +402,18 @@ export const ProductDetail = () => {
         vat={vat}
       />
 
-      {/* <RelatedProduct relatedProducts={productDetail?.related_products} /> */}
+      <RelatedProduct relatedProducts={relatedProducts} vat={vat} />
 
-      <div className="mb-8">
-        <ProductsSection />
-      </div>
+      {/* View Shop Button Section */}
+      <section className="py-12 pb-20 xl:py-20 xxl:py-28 px-[30px] md:px-[80px] lg:px-[100px] xl:px-[100px] flex justify-center">
+        <Button
+          btnText={t("p_viewShop")}
+          paddingX="72px"
+          fontbold
+          paddingY="22px"
+          onClick={() => navigate("/shop-page")}
+        />
+      </section>
     </>
   );
 };

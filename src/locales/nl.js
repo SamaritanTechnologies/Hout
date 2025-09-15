@@ -265,6 +265,11 @@ export const nlTranslations = {
   p_contactUs: "Als u geïnteresseerd bent, neem dan contact met ons op",
   p_inventoryQuantity: "Voorraadhoeveelheid",
   p_outOfStock: "Niet op voorraad",
+  p_relatedProducts: "Gerelateerde producten",
+  p_addToCart: "Toevoegen aan winkelwagen",
+  p_viewProduct: "Bekijk product",
+  p_viewShop: "Bekijk winkel",
+  p_noRelatedProducts: "Geen gerelateerde producten gevonden voor dit product",
 
   // Order Confirmation Section
   c_thank_you_message: "Dank je wel! 🎉",
