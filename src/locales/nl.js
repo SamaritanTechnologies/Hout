@@ -498,7 +498,7 @@ export const nlTranslations = {
   signup_password_special:
     "Wachtwoord moet minstens één speciaal teken bevatten.",
   signup_passwords_no_match: "Wachtwoorden komen niet overeen.",
-  signup_success: "Bedankt voor het aanmelden! Controleer uw e-mail.",
+  signup_success: "Bedankt! voor het aanmelden",
   signup_email_exists: "Dit e-mailadres is al geregistreerd.",
   signup_generic_error: "Er is iets misgegaan, probeer het opnieuw.",
   pa_password_update_success: "Wachtwoord succesvol bijgewerkt",

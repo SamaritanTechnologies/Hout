@@ -64,10 +64,13 @@ export const WhyHoutTotaal = () => {
   const handleVideoChange = (event) => {
     const files = Array.from(event.target.files);
     const newVideos = files.map((file) => ({
+      id: Date.now() + Math.random(), // Generate unique ID for new videos
       file, // Store the File object for new uploads
       url: URL.createObjectURL(file), // Create a preview URL
     }));
     setVideos([...videos, ...newVideos]);
+    // Reset the input value to allow selecting the same file again
+    event.target.value = '';
   };
 
   // Handle video drag & drop
@@ -77,6 +80,7 @@ export const WhyHoutTotaal = () => {
       file.type.startsWith("video/")
     );
     const newVideos = files.map((file) => ({
+      id: Date.now() + Math.random(), // Generate unique ID for new videos
       file, // Store the File object for new uploads
       url: URL.createObjectURL(file), // Create a preview URL
     }));
@@ -85,6 +89,11 @@ export const WhyHoutTotaal = () => {
 
   // Remove a selected video
   const handleRemoveVideo = (id, setFieldValue) => {
+    const videoToRemove = videos.find(video => video.id === id);
+    if (videoToRemove && videoToRemove.url && videoToRemove.url.startsWith('blob:')) {
+      // Revoke the blob URL to free up memory
+      URL.revokeObjectURL(videoToRemove.url);
+    }
     const updatedVideos = videos.filter((video) => video.id !== id);
     setVideos(updatedVideos);
     setFieldValue("videos", updatedVideos); // Sync with Formik
@@ -183,6 +192,7 @@ export const WhyHoutTotaal = () => {
                 className="w-full max-w-[215px] h-[215px] border border-dashed border-[#4C5B66] rounded-lg p-3 flex items-center justify-center cursor-pointer"
                 onDrop={handleDrop}
                 onDragOver={(e) => e.preventDefault()}
+                onClick={() => document.getElementById('video-upload').click()}
               >
                 <input
                   type="file"
@@ -192,10 +202,7 @@ export const WhyHoutTotaal = () => {
                   hidden
                   onChange={handleVideoChange}
                 />
-                <label
-                  htmlFor="video-upload"
-                  className="w-full h-full flex flex-col items-center justify-center"
-                >
+                <div className="w-full h-full flex flex-col items-center justify-center">
                   <img
                     src="/src/assets/DashboardImages/add.svg"
                     className="xl:w-[82px] lg:w-[70px] w-[60px]"
@@ -205,7 +212,7 @@ export const WhyHoutTotaal = () => {
                     Drop video or{" "}
                     <span className="text-customYellow">click to browse</span>
                   </p>
-                </label>
+                </div>
               </div>
             </div>
 

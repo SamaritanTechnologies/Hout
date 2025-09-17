@@ -222,7 +222,7 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
       );
 
       if (response?.data?.checkout_url) {
-        window.open(response.data.checkout_url, "_blank");
+        window.location.href = response.data.checkout_url;
       } else {
         toast.error(t("cd_payment_init_fail"));
       }

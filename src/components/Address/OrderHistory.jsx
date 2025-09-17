@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import Pagination from "../../components/Common/Pagination";
 import { ORDER_PAGE_SIZE } from "../../utils/const";
 import { useTranslation } from "react-i18next";
+import { scrollToTop } from "../../utils/helper";
 
 const OrderHistory = () => {
   const { t } = useTranslation();
@@ -39,6 +40,7 @@ const OrderHistory = () => {
 
   const handlePageChange = useCallback(({ selected }) => {
     setCurrentPage(selected + 1); // Convert to one-based
+    scrollToTop();
   }, []);
 
   const downloadInvoice = async (id) => {

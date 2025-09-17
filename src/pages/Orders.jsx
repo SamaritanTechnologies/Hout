@@ -8,6 +8,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import Pagination from "../components/Common/Pagination";
 import { ORDER_PAGE_SIZE } from "../utils/const";
 import { axiosWithCredentials } from "../providers";
+import { scrollDashboardToTop } from "../utils/helper";
 
 const months = [
   { value: 1, name: "JANUARY" },
@@ -113,6 +114,7 @@ export const Orders = () => {
 
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected + 1);
+    scrollDashboardToTop();
   };
 
   const filteredOrders = sortOrdersByDate(

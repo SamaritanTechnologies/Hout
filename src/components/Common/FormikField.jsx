@@ -38,7 +38,7 @@ const FormikField = ({
         <input
           className={`block w-full appearance-none ${
             IconComponent ? "pl-10" : ""
-          } rounded-md xl:py-3 xl:px-3 py-2 px-2 outline-none border border-[#D9D9D9] focus:outline-none sm:text-sm input-field ${
+          } ${flag ? "pr-10" : ""} rounded-md xl:py-3 xl:px-3 xl:pr-10 py-2 px-2 outline-none border border-[#D9D9D9] focus:outline-none sm:text-sm input-field ${
             touched[field.name] && errors[field.name] ? "border-red-500" : ""
           } ${className}`}
           placeholder={placeholder}
