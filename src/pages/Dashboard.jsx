@@ -12,6 +12,7 @@ import StatsCard from "../components/Dashboard/StatsCard";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { ORDER_PAGE_SIZE } from "../utils/const";
 import Pagination from "../components/Common/Pagination";
+import { scrollDashboardToTop } from "../utils/helper";
 
 const months = [
   { value: 1, name: "JANUARY" },
@@ -145,6 +146,7 @@ export const Dashboard = () => {
 
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected + 1);
+    scrollDashboardToTop();
   };
 
   return (

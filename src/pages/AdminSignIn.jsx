@@ -182,7 +182,7 @@ export const AdminSignIn = () => {
                 Koptekst (Dutch)
               </label>
               <input
-                className="pl-3 block w-full appearance-none font-footer1
+                className="pl-3 pr-10 block w-full appearance-none font-footer1
                placeholder-[#5A5A5A] outline-none border border-[#D9D9D9]
                focus:outline-none
               sm:text-sm rounded-md xl:py-3 xl:ps-3 py-2"
@@ -206,7 +206,7 @@ export const AdminSignIn = () => {
                 Tekst (Dutch)
               </label>
               <textarea
-                className="pl-3 block w-full appearance-none font-footer1
+                className="pl-3 pr-10 block w-full appearance-none font-footer1
                            placeholder-[#5A5A5A] outline-none border border-[#D9D9D9]
                            focus:outline-none
                           sm:text-sm rounded-md xl:py-3 xl:ps-3 py-2"
@@ -234,7 +234,7 @@ export const AdminSignIn = () => {
                 Heading (English)
               </label>
               <input
-                className="pl-3 block w-full appearance-none font-footer1
+                className="pl-3 pr-10 block w-full appearance-none font-footer1
                placeholder-[#5A5A5A] outline-none border border-[#D9D9D9]
                focus:outline-none
               sm:text-sm rounded-md xl:py-3 xl:ps-3 py-2"
@@ -258,7 +258,7 @@ export const AdminSignIn = () => {
                 Text (English)
               </label>
               <textarea
-                className="pl-3 block w-full appearance-none font-footer1
+                className="pl-3 pr-10 block w-full appearance-none font-footer1
                            placeholder-[#5A5A5A] outline-none border border-[#D9D9D9]
                            focus:outline-none
                           sm:text-sm rounded-md xl:py-3 xl:ps-3 py-2"

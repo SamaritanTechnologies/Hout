@@ -52,3 +52,19 @@ export const scrollToTop = () => {
     behavior: "smooth", // This makes the scrolling smooth
   });
 };
+
+export const scrollDashboardToTop = () => {
+  const dashboardContent = document.querySelector('.dashboard-content');
+  if (dashboardContent) {
+    dashboardContent.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  } else {
+    // Fallback to window scroll if dashboard-content not found
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
+};

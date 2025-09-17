@@ -23,7 +23,7 @@ const InputField = ({ field, form, className, ...props }) => (
   <input
     {...field}
     {...props}
-    className={`block w-full appearance-none font-footer1 placeholder-[#5A5A5A] rounded-md xl:py-3 xl:ps-3 py-2 ps-3 outline-none border border-[#D9D9D9] focus:outline-none sm:text-sm ${
+    className={`block w-full appearance-none font-footer1 placeholder-[#5A5A5A] rounded-md xl:py-3 xl:ps-3 py-2 ps-3 pr-10 outline-none border border-[#D9D9D9] focus:outline-none sm:text-sm ${
       className || ""
     }`}
   />
@@ -34,7 +34,7 @@ const TextareaField = ({ field, form, className, ...props }) => (
   <textarea
     {...field}
     {...props}
-    className={`block w-full appearance-none font-footer1 placeholder-[#5A5A5A] rounded-md xl:py-3 xl:ps-3 py-2 ps-3 outline-none border border-[#D9D9D9] focus:outline-none  sm:text-sm ${
+    className={`block w-full appearance-none font-footer1 placeholder-[#5A5A5A] rounded-md xl:py-3 xl:ps-3 py-2 ps-3 pr-10 outline-none border border-[#D9D9D9] focus:outline-none  sm:text-sm ${
       className || ""
     }`}
   />

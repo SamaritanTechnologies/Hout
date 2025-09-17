@@ -164,6 +164,7 @@ export const TermsAndConditions = () => {
                 name="heading_nl"
                 value={termsCondition.heading_nl}
                 onChange={(e) => handleChange("heading_nl", e.target.value)}
+                flag={countryflag}
               />
             </div>
             <img
@@ -182,6 +183,7 @@ export const TermsAndConditions = () => {
                 name="heading_en"
                 value={termsCondition.heading_en}
                 onChange={(e) => handleChange("heading_en", e.target.value)}
+                flag={countryflag2}
               />
             </div>
             <img

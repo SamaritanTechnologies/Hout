@@ -514,7 +514,7 @@ export const enTranslations = {
   signup_password_special:
     "Password must contain at least one special character.",
   signup_passwords_no_match: "Passwords do not match.",
-  signup_success: "Thank you for sign up! Please check your email.",
+  signup_success: "Thank you! for sign up",
   signup_email_exists: "This email is already registered.",
   signup_generic_error: "Something went wrong, Try Again.",
   signup_first_name_required: "First name is required.",

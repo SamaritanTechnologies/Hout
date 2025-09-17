@@ -163,6 +163,7 @@ export const AdminPrivacyPolicy = () => {
                 name="heading_nl"
                 value={policy.heading_nl}
                 onChange={(e) => handleChange("heading_nl", e.target.value)}
+                flag={countryflag}
               />
             </div>
             <img
@@ -181,6 +182,7 @@ export const AdminPrivacyPolicy = () => {
                 name="heading_en"
                 value={policy.heading_en}
                 onChange={(e) => handleChange("heading_en", e.target.value)}
+                flag={countryflag2}
               />
             </div>
             <img
