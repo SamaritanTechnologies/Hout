@@ -19,6 +19,7 @@ import {
   addProduct,
   getProductCategories,
   getProducts,
+  getAllProductsList,
 } from "../redux/actions/productActions";
 import { useSelector } from "react-redux";
 import Select from "react-select";
@@ -144,8 +145,8 @@ export const AddNewProduct = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await getProducts();
-        const data = response.results;
+        const response = await getAllProductsList();
+        const data = response.data; // The new API returns data in response.data
         const options = data.map((product) => ({
           label: product.name_nl,
           value: product.id,
@@ -377,7 +378,7 @@ export const AddNewProduct = () => {
                 </div>
               </div>
               <div className="flex gap-[20px] mb-[24px]">
-                <div className="w-1/2 inline-block rounded-lg overflow-hidden relative">
+                <div className="w-1/2 relative">
                   <Field
                     type="text"
                     name="description_nl"
@@ -386,14 +387,15 @@ export const AddNewProduct = () => {
                     placeholder="Omschrijving"
                     label="Product omschrijving"
                     component={Textarea}
+                    fixedHeight={true}
                   />
                   <img
                     src={countryflag}
                     alt="Flag"
-                    className="cursor-pointer h-5 w-5 absolute right-4 top-8"
+                    className="cursor-pointer h-5 w-5 absolute right-4 top-10"
                   />
                 </div>
-                <div className="w-1/2 inline-block rounded-lg overflow-hidden relative">
+                <div className="w-1/2 relative">
                   <Field
                     type="text"
                     name="description_en"
@@ -402,11 +404,12 @@ export const AddNewProduct = () => {
                     placeholder="Description"
                     label="Product Description"
                     component={Textarea}
+                    fixedHeight={true}
                   />
                   <img
                     src={countryflag2}
                     alt="Flag"
-                    className="cursor-pointer h-5 w-5 absolute right-4 top-8"
+                    className="cursor-pointer h-5 w-5 absolute right-4 top-10"
                   />
                 </div>
               </div>
