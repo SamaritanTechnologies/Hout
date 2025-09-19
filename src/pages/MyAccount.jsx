@@ -60,6 +60,7 @@ export const MyAccount = () => {
     setAccessToken("");
     setRefreshToken("");
     dispatch(setCartItems(null));
+    localStorage.removeItem("path");
 
     toast.success("Logged Out!");
 

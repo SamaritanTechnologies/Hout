@@ -3,7 +3,7 @@ import ArrowBack from "../assets/DashboardImages/arrowback.svg";
 import Button from "../components/Common/Button";
 import Select from "react-select";
 import { toast } from "react-toastify";
-import { getProducts } from "../redux/actions/productActions";
+import { getAllProductsList } from "../redux/actions/productActions";
 import {
   getHomepageProducts,
   addHomepageProducts,
@@ -28,10 +28,10 @@ export const HomePageProducts = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await getProducts();
-        const data = response.results;
+        const response = await getAllProductsList();
+        const data = response.data; // The new API returns data in response.data
         const options = data.map((product) => ({
-          label: product.name_en,
+          label: product.name_nl, // Using name_nl for consistency with other pages
           value: product.id,
         }));
         setProductOptions(options);

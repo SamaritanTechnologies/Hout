@@ -27,11 +27,17 @@ export const getProducts = async (filters = {}) => {
     // Construct query string from filters
     const params = new URLSearchParams();
 
-    Object.entries(filters).forEach(([key, values]) => {
-      if (Array.isArray(values) && values.length > 0) {
-        values.forEach((value) => {
-          params.append(key, value);
+    Object.entries(filters).forEach(([key, value]) => {
+      if (Array.isArray(value) && value.length > 0) {
+        // Handle array values (for filters)
+        value.forEach((item) => {
+          if (item !== null && item !== undefined && item !== '') {
+            params.append(key, item);
+          }
         });
+      } else if (value !== null && value !== undefined && value !== '') {
+        // Handle single values (for pagination, search, etc.)
+        params.append(key, value);
       }
     });
 
@@ -275,6 +281,16 @@ export const updateProduct = async (
   } catch (error) {
     toast.error(i18n.t("product_update_fail"));
     console.error("Error updating product:", error);
+    throw error;
+  }
+};
+
+export const getAllProductsList = async () => {
+  try {
+    const response = await axiosWithCredentials.get("/products/all-list/");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching products list:", error);
     throw error;
   }
 };

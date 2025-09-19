@@ -16,6 +16,7 @@ import {
   getProducts,
   getProductDetailsById,
   updateProduct,
+  getAllProductsList,
 } from "../redux/actions/productActions";
 import { XCircleIcon } from "@heroicons/react/24/outline";
 import checkSquareIcon from "../assets/DashboardImages/check-square.svg";
@@ -135,6 +136,24 @@ export const UpdateProduct = () => {
       getProductDetails(id);
     }
   }, [id]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await getAllProductsList();
+        const data = response.data; // The new API returns data in response.data
+        const options = data.map((product) => ({
+          label: product.name_nl,
+          value: product.id,
+        }));
+        setRelatedProductsOptions(options);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const getChoicesByName = (name) => {
     const category = categories?.find(
@@ -476,7 +495,7 @@ export const UpdateProduct = () => {
                   </div>
                 </div>
                 <div className="flex gap-[20px] mb-[24px]">
-                  <div className="w-1/2 inline-block rounded-lg overflow-hidden relative">
+                  <div className="w-1/2 relative">
                     <Field
                       type="text"
                       name="description_nl"
@@ -485,14 +504,15 @@ export const UpdateProduct = () => {
                       placeholder="Omschrijving"
                       label="Product omschrijving"
                       component={Textarea}
+                      fixedHeight={true}
                     />
                     <img
                       src={countryflag}
                       alt="Flag"
-                      className="cursor-pointer h-5 w-5 absolute right-4 top-8"
+                      className="cursor-pointer h-5 w-5 absolute right-4 top-10"
                     />
                   </div>
-                  <div className="w-1/2 inline-block rounded-lg overflow-hidden relative">
+                  <div className="w-1/2 relative">
                     <Field
                       type="text"
                       name="description_en"
@@ -501,11 +521,12 @@ export const UpdateProduct = () => {
                       placeholder="Description"
                       label="Product Description"
                       component={Textarea}
+                      fixedHeight={true}
                     />
                     <img
                       src={countryflag2}
                       alt="Flag"
-                      className="cursor-pointer h-5 w-5 absolute right-4 top-8"
+                      className="cursor-pointer h-5 w-5 absolute right-4 top-10"
                     />
                   </div>
                 </div>

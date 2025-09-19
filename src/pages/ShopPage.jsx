@@ -23,6 +23,7 @@ import {
 } from "../utils/const";
 import { useTranslation } from "react-i18next";
 import { getWebshopImage } from "../redux/actions/dashboardActions";
+import { scrollToTop } from "../utils/helper";
 
 export const ShopPage = () => {
   const { t, i18n } = useTranslation();
@@ -135,6 +136,7 @@ export const ShopPage = () => {
 
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected);
+    scrollToTop();
   };
 
   const handleResetFilters = () => {

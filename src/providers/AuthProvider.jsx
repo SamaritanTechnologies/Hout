@@ -88,6 +88,7 @@ export function AuthProvider({ children }) {
     setLoading(false);
     setAccessToken("");
     setRefreshToken("");
+    localStorage.removeItem("path");
   };
 
   // Helper function to dispatch Redux action for user info

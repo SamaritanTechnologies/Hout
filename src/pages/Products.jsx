@@ -17,6 +17,9 @@ import Activebadge from "../assets/DashboardImages/ActiveBadge.svg";
 import ActiveTableHead from "../assets/DashboardImages/ActiveTableHead.svg";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import Pagination from "../components/Common/Pagination";
+import { PRODUCT_PAGE_SIZE } from "../utils/const";
+import { scrollDashboardToTop } from "../utils/helper";
 
 const initialState = {
   results: [],
@@ -41,11 +44,27 @@ export const Products = () => {
     thickness: [],
     width: [],
   });
+  const [currentPage, setCurrentPage] = useState(0);
+  const pageSize = PRODUCT_PAGE_SIZE;
   const { t } = useTranslation();
 
-  const fetchProducts = async (selectedOptions) => {
+  const fetchProducts = async (selectedOptions, page = currentPage) => {
     try {
-      const res = await getProducts(selectedOptions);
+      // Filter out empty arrays and add pagination parameters
+      const filteredOptions = Object.entries(selectedOptions).reduce((acc, [key, value]) => {
+        if (Array.isArray(value) && value.length > 0) {
+          acc[key] = value;
+        }
+        return acc;
+      }, {});
+
+      const optionsWithPagination = {
+        ...filteredOptions,
+        page: page + 1, // API uses 1-based indexing
+        page_size: pageSize,
+      };
+
+      const res = await getProducts(optionsWithPagination);
 
       setState((prev) => ({
         ...prev,
@@ -74,8 +93,13 @@ export const Products = () => {
   };
 
   useEffect(() => {
-    fetchProducts();
-  }, [isDeleted]);
+    fetchProducts(selectedOptions, currentPage);
+  }, [isDeleted, currentPage]);
+
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected);
+    scrollDashboardToTop();
+  };
 
   const getTransformedChoices = (name) => {
     const category = productCategories?.find(
@@ -95,7 +119,8 @@ export const Products = () => {
         ...prev,
         [filterKey]: selectedValues,
       };
-      fetchProducts(updatedOptions);
+      setCurrentPage(0); // Reset to first page when filters change
+      fetchProducts(updatedOptions, 0);
       return updatedOptions;
     });
   };
@@ -444,6 +469,17 @@ export const Products = () => {
           </tbody>
         </table>
       </div>
+      
+      {/* Pagination */}
+      {state.count > pageSize && (
+        <div className="mt-6 flex justify-center">
+          <Pagination
+            pageCount={Math.ceil(state.count / pageSize)}
+            onPageChange={handlePageChange}
+            forcePage={currentPage}
+          />
+        </div>
+      )}
     </>
   );
 };

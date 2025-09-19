@@ -20,6 +20,7 @@ const HeadLessDropDown = () => {
     dispatch(logoutUser());
     setAccessToken("");
     setRefreshToken("");
+    localStorage.removeItem("path");
 
     toast.success(t("dropdown_logout_success"));
 
