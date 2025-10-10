@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
@@ -17,11 +17,29 @@ import signinBlur from "../assets/authImages/signinBlur.png";
 import InputField from "../components/Common/InputField";
 import Switch from "../components/Common/Switch";
 import { resetPasswordLink } from "../redux/actions/profileActions";
+import { useTranslation } from "react-i18next";
+import { getForgotImage } from "../redux/actions/dashboardActions";
 
 // Define validation schema using Yup
 
 export const ForgetPassword = () => {
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language;
   const navigate = useNavigate();
+  const [data, setData] = useState();
+  const fetchImage = async () => {
+    try {
+      const response = await getForgotImage();
+      setData(response);
+      console.log("signindata", response);
+    } catch (error) {
+      console.error("Error fetching existing image:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchImage();
+  }, []);
 
   const loginUser = async (values, { setSubmitting }) => {
     try {
@@ -40,7 +58,7 @@ export const ForgetPassword = () => {
         <div className="signUpMain flex flex-row-reverse md:flex-col sm:flex-col xs:flex-col min-h-screen">
           <div className="signUpLeft xl:w-[50%] lg:w-[50%] w-full relative">
             <img
-              src={signInRight}
+              src={data?.image}
               alt="signupleftImg"
               onClick={() => navigate("/")}
               className="cursor-pointer w-[100%] xl:min-h-[100vh] lg:min-h-[100vh] md:h-[70vh] md:min-h-[70vh] sm:h-[70vh] sm:min-h-[70vh] xs:h-[70vh] xs:min-h-[70vh]"
@@ -58,13 +76,14 @@ export const ForgetPassword = () => {
                   <img src={thumbsUp} alt="" />
                   <div>
                     <h6 className="xl:text-20 lg:text-18 md:text-16">
-                      Lorem Ipsum is simply
+                      {currentLang == "en"
+                        ? data?.heading_en
+                        : data?.heading_nl}
                     </h6>
                   </div>
                 </div>
                 <h6 className="flex-1 xl:text-20 lg:text-18 md:text-16 font-normal leading-[24px] mt-[10px] text-primary">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry.
+                  {currentLang == "en" ? data?.text_en : data?.text_nl}
                 </h6>
               </div>
             </div>
@@ -81,10 +100,10 @@ export const ForgetPassword = () => {
             <div className="signUpFormSec max-w-[400px] mx-auto">
               <div className="text-center xl:mb-[42px] lg:mb-[30px] mb-[20px]">
                 <h4 className="xl:text-36 lg:text-24 text-20 font-semibold">
-                  Forget Password
+                  {t("f_forget_password")}
                 </h4>
                 <span className="xl:text-15 text-14 text-gray-500 block font-normal">
-                  Enter your email to receive a password reset link.
+                  {t("f_enter_email_to_receive_reset_link")}
                 </span>
               </div>
               <Formik
@@ -103,7 +122,7 @@ export const ForgetPassword = () => {
                         <Field
                           name="email"
                           type="email"
-                          placeholder="Enter Email"
+                          placeholder={t("f_placeholder_enter_email")}
                           className={`input-field`}
                           component={FormikField}
                         />
@@ -115,15 +134,17 @@ export const ForgetPassword = () => {
                           disabled={isSubmitting}
                           className="bg-[#FBC700] block text-black text-center xl:py-[16px] lg:py-[16px] py-[12px] px-[25px] w-full font-semibold mb-[23px] xl:text-[18px] text-[16px]"
                         >
-                          {isSubmitting ? "Submitting..." : "Submit"}
+                          {isSubmitting
+                            ? t("f_button_submitting")
+                            : t("f_button_submit")}
                         </button>
                         <span className="flex justify-end text-14">
-                          Don't have an account?{" "}
+                          {t("f_dont_have_account")}
                           <a
                             onClick={() => navigate("/sign-up")}
                             className="text-[#FBC700] ml-1 font-semibold cursor-pointer"
                           >
-                            Sign up!
+                            {t("f_sign_up")}
                           </a>
                         </span>
                       </div>

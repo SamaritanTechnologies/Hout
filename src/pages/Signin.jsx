@@ -5,6 +5,7 @@ import {
   setAccessToken,
   BASE_URL,
   setRefreshToken,
+  axiosWithCredentials,
 } from "../providers";
 import { toast } from "react-toastify";
 
@@ -20,11 +21,16 @@ import InputField from "../components/Common/InputField";
 import Switch from "../components/Common/Switch";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../redux";
+import { useTranslation } from "react-i18next";
+import { getSigninImage } from "../redux/actions/dashboardActions";
+import { getCart } from "../redux/actions/orderActions";
 
 export const Signin = () => {
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language;
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const [data, setData] = useState("");
   const [btnLoading, setBtnLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -42,6 +48,40 @@ export const Signin = () => {
     });
   };
 
+  const fetchImage = async () => {
+    try {
+      const response = await getSigninImage();
+      setData(response);
+      console.log("signindata", response);
+    } catch (error) {
+      console.error("Error fetching existing image:", error);
+    }
+  };
+
+  const handleAddtoCartItems = async () => {
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    const formattedCart = storedCart.map((item) => ({
+      product_length: item?.id,
+      quantity: item.quantity,
+    }));
+    const res = await axiosWithCredentials.post(`/add-to-cart/`, formattedCart);
+    if (res) {
+      localStorage.removeItem("cart");
+    }
+  };
+  const fetchCart = async () => {
+    try {
+      const res = await getCart();
+      dispatch(setCartItems(res.cart_items));
+    } catch (error) {
+      console.error("Failed to fetch cart:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchImage();
+  }, []);
+
   useEffect(() => {
     const savedCredentials = localStorage.getItem("savedCredentials");
     if (savedCredentials) {
@@ -58,7 +98,7 @@ export const Signin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!formData.email.trim() || !formData.password.trim()) {
-      toast.error("Please fill in all fields");
+      toast.error(t("signin_fill_all_fields"));
       return;
     }
 
@@ -71,6 +111,9 @@ export const Signin = () => {
 
     try {
       const response = await axiosApi.post("/accounts/login/", data);
+      if (response) {
+        handleAddtoCartItems();
+      }
       const { access_token, refresh_token, user } = response.data;
 
       setAccessToken(access_token);
@@ -96,12 +139,17 @@ export const Signin = () => {
         if (user.is_superuser) {
           navigate("/dashboard");
         } else {
-          navigate("/");
+          const path = localStorage.getItem("path");
+          if (path) {
+            navigate(path);
+          } else {
+            navigate("/");
+          }
         }
       }, 500);
     } catch (error) {
       const errorMessage =
-        error?.response?.data?.message || "Wrong credentials!";
+        error?.response?.data?.message || t("signin_wrong_credentials");
       toast.error(errorMessage);
     } finally {
       setBtnLoading(false);
@@ -110,14 +158,14 @@ export const Signin = () => {
 
   return (
     <>
-      <div>
+      <div className="pb-20">
         <div className="signUpMain flex flex-row-reverse md:flex-col sm:flex-col xs:flex-col min-h-screen">
           <div className="signUpLeft xl:w-[50%] lg:w-[50%] w-full relative">
             <img
-              src={signInRight}
+              src={data?.image}
               alt="signupleftImg"
               onClick={() => navigate("/")}
-              className="cursor-pointer w-[100%] xl:min-h-[100vh] lg:min-h-[100vh] md:h-[70vh] md:min-h-[70vh] sm:h-[70vh] sm:min-h-[70vh] xs:h-[70vh] xs:min-h-[70vh]"
+              className="cursor-pointer  w-[100%] xl:min-h-[100vh] lg:min-h-[100vh] md:h-[70vh] md:min-h-[70vh] sm:h-[70vh] sm:min-h-[70vh] xs:h-[70vh] xs:min-h-[70vh]"
               style={{ objectFit: "cover" }}
             />
             <div>
@@ -135,13 +183,14 @@ export const Signin = () => {
                       className="xl:text-20 lg:text-18 md:text-16
 "
                     >
-                      Lorem Ipsum is simply
+                      {currentLang == "en"
+                        ? data?.heading_en
+                        : data?.heading_nl}
                     </h6>
                   </div>
                 </div>
                 <h6 className="flex-1 xl:text-20 lg:text-18 md:text-16 font-normal leading-[24px]  mt-[10px] text-primary">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry.{" "}
+                  {currentLang == "en" ? data?.text_en : data?.text_nl}
                 </h6>
               </div>
             </div>
@@ -158,10 +207,10 @@ export const Signin = () => {
             <div className="signUpFormSec max-w-[400px] mx-auto">
               <div className="text-center xl:mb-[42px] lg:mb-[30px] mb-[20px]">
                 <h4 className="xl:text-36 lg:text-24 text-20 font-semibold">
-                  Welcome Back
+                  {t("s_welcome_back")}
                 </h4>
                 <span className="xl:text-15 text-14 text-gray-500 block font-normal	">
-                  Login into your account
+                  {t("s_login_into_your_account")}
                 </span>
               </div>
               <form className="w-full" onSubmit={handleLogin}>
@@ -198,7 +247,7 @@ export const Signin = () => {
                     <img src={grayLine} alt="" />
                   </div>
                   <h5 className="w-[32%] text-[13px] xs:text-12 text-center font-footer1 font-normal">
-                    or continue with{" "}
+                    {t("s_or_continue_with")}
                   </h5>
                   <div className="w-[32%]">
                     <img src={grayLine} alt="" />
@@ -208,7 +257,7 @@ export const Signin = () => {
                   <div className="mb-[23px]">
                     <InputField
                       required
-                      placeholder="Email"
+                      placeholder={t("s_placeholder_email")}
                       type="email"
                       name="email"
                       value={formData.email}
@@ -218,7 +267,7 @@ export const Signin = () => {
                   <div className="mb-[23px]">
                     <InputField
                       required
-                      placeholder="Password"
+                      placeholder={t("s_placeholder_password")}
                       type="password"
                       name="password"
                       value={formData.password}
@@ -228,7 +277,7 @@ export const Signin = () => {
 
                   <div className="recPasswrd xl:mb-[30px] mb-[15px] flex w-full justify-between">
                     <Switch
-                      label="Remember me"
+                      label={t("s_remember_me")}
                       name="RememberMe"
                       checked={formData.RememberMe}
                       onChange={handleFormData}
@@ -237,8 +286,8 @@ export const Signin = () => {
                       onClick={() => navigate("/forget-password")}
                       className="text-14 font-footer1 text-[#D93F21] cursor-pointer"
                     >
-                      Recover Password{" "}
-                    </a>{" "}
+                      {t("s_recover_password")}
+                    </a>
                   </div>
 
                   <div className="w-full ">
@@ -247,15 +296,15 @@ export const Signin = () => {
                       disabled={btnLoading}
                       className="bg-[#FBC700] block text-black text-center xl:py-[16px] lg:py-[16px] py-[12px] px-[25px] w-full font-semibold mb-[23px] xl:text-[18px] text-[16px]"
                     >
-                      {btnLoading ? "Loading..." : "Log In"}
+                      {btnLoading ? t("s_button_loading") : t("s_button_login")}
                     </button>
                     <span className="flex justify-end text-14">
-                      Don't have an account?{" "}
+                      {t("s_dont_have_account")}
                       <a
                         onClick={() => navigate("/sign-up")}
                         className="text-[#FBC700] ml-1 font-semibold cursor-pointer"
                       >
-                        Sign up!
+                        {t("s_sign_up")}
                       </a>
                     </span>
                   </div>

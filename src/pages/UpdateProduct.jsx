@@ -16,19 +16,25 @@ import {
   getProducts,
   getProductDetailsById,
   updateProduct,
+  getAllProductsList,
 } from "../redux/actions/productActions";
 import { XCircleIcon } from "@heroicons/react/24/outline";
 import checkSquareIcon from "../assets/DashboardImages/check-square.svg";
 import { useSelector } from "react-redux";
 import countryflag from "../assets/DashboardImages/UK-Flag.svg";
 import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const styleMultiSelect = {
   chips: {
     background: "#F8F8F8",
     borderRadius: "4px",
   },
-  searchBox: {},
+  searchBox: {
+    position: "relative",
+    paddingRight: "30px",
+  },
   option: {
     background: "white",
     color: "black",
@@ -66,30 +72,51 @@ export const UpdateProduct = () => {
   const [relatedProducts, setRelatedProducts] = useState(relatedInitial);
   const [relatedProductsOptions, setRelatedProductsOptions] = useState([]);
 
+  const { t } = useTranslation();
+
   const getProductDetails = async (id) => {
     try {
       const res = await getProductDetailsById(id);
 
       if (res) {
         setProduct(res);
+        console.log("product sdsddsa", res);
         setLengths(res.lengths || [{ ...productItem }]);
 
-        // Initialize images with existing images
         const newImages = res.images?.map((image) => ({
-          id: image.id, // Include the ID for existing images
-          file: image.image, // Use the image URL
-          preview: image.image, // Use the image URL for preview
+          id: image.id,
+          file: image.image,
+          preview: image.image,
         }));
 
         setImages(newImages || []);
 
-        // Initialize related products
         const relatedProductsArray = res.related_products || [];
         const formattedRelatedProducts = {
-          product1: relatedProductsArray[0] ? { value: relatedProductsArray[0]?.id, label: relatedProductsArray[0]?.name_en } : null,
-          product2: relatedProductsArray[1] ? { value: relatedProductsArray[1]?.id, label: relatedProductsArray[1]?.name_en } : null,
-          product3: relatedProductsArray[2] ? { value: relatedProductsArray[2]?.id, label: relatedProductsArray[2]?.name_en } : null,
-          product4: relatedProductsArray[3] ? { value: relatedProductsArray[3]?.id, label: relatedProductsArray[3]?.name_en } : null,
+          product1: relatedProductsArray[0]
+            ? {
+                value: relatedProductsArray[0]?.id,
+                label: relatedProductsArray[0]?.name_en,
+              }
+            : null,
+          product2: relatedProductsArray[1]
+            ? {
+                value: relatedProductsArray[1]?.id,
+                label: relatedProductsArray[1]?.name_en,
+              }
+            : null,
+          product3: relatedProductsArray[2]
+            ? {
+                value: relatedProductsArray[2]?.id,
+                label: relatedProductsArray[2]?.name_en,
+              }
+            : null,
+          product4: relatedProductsArray[3]
+            ? {
+                value: relatedProductsArray[3]?.id,
+                label: relatedProductsArray[3]?.name_en,
+              }
+            : null,
         };
 
         setRelatedProducts(formattedRelatedProducts);
@@ -110,6 +137,24 @@ export const UpdateProduct = () => {
     }
   }, [id]);
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await getAllProductsList();
+        const data = response.data; // The new API returns data in response.data
+        const options = data.map((product) => ({
+          label: product.name_nl,
+          value: product.id,
+        }));
+        setRelatedProductsOptions(options);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   const getChoicesByName = (name) => {
     const category = categories?.find(
       (cat) => cat.name?.toLowerCase() === name.toLowerCase()
@@ -122,17 +167,16 @@ export const UpdateProduct = () => {
 
     categories?.forEach((category) => {
       const categoryName = category.name;
-      const productCategoryIds = product[categoryName] || [];
+      const productCategoryIds = Array.isArray(product[categoryName])
+        ? product[categoryName]
+        : [];
 
-      // Filter choices in the category by matching IDs in the product data
       const matchingChoices = category?.choices?.filter((choice) =>
-        productCategoryIds?.includes(choice.id)
+        productCategoryIds.includes(choice.id)
       );
 
       result[categoryName] = matchingChoices;
     });
-
-    return result;
   };
 
   const handleAddRow = () => {
@@ -149,7 +193,12 @@ export const UpdateProduct = () => {
 
   const handleChange = (index, field, value) => {
     const updatedProducts = [...lengths];
-    updatedProducts[index][field] = value;
+    // Convert to number for numeric fields
+    if (["length", "full_price_ex_vat", "discount", "stock"].includes(field)) {
+      updatedProducts[index][field] = value === "" ? "" : Number(value);
+    } else {
+      updatedProducts[index][field] = value;
+    }
     setLengths(updatedProducts);
   };
 
@@ -249,6 +298,7 @@ export const UpdateProduct = () => {
             durability_class: product?.durability_class ?? [],
             quality: product?.quality ?? [],
             application: product?.application ?? [],
+            place_on_goedgeplaatst: product?.place_on_goedgeplaatst ?? false,
           }}
           validationSchema={Yup.object({
             name_en: Yup.string().required("Name is required"),
@@ -269,6 +319,14 @@ export const UpdateProduct = () => {
               return;
             }
             try {
+              console.log(
+                "Submitting lengths:",
+                id,
+                values,
+                lengths,
+                images,
+                relatedProducts
+              );
               await updateProduct(id, values, lengths, images, relatedProducts);
               navigate("/products");
             } catch (error) {
@@ -437,7 +495,7 @@ export const UpdateProduct = () => {
                   </div>
                 </div>
                 <div className="flex gap-[20px] mb-[24px]">
-                  <div className="w-1/2 inline-block rounded-lg overflow-hidden relative">
+                  <div className="w-1/2 relative">
                     <Field
                       type="text"
                       name="description_nl"
@@ -446,14 +504,15 @@ export const UpdateProduct = () => {
                       placeholder="Omschrijving"
                       label="Product omschrijving"
                       component={Textarea}
+                      fixedHeight={true}
                     />
                     <img
                       src={countryflag}
                       alt="Flag"
-                      className="cursor-pointer h-5 w-5 absolute right-4 top-8"
+                      className="cursor-pointer h-5 w-5 absolute right-4 top-10"
                     />
                   </div>
-                  <div className="w-1/2 inline-block rounded-lg overflow-hidden relative">
+                  <div className="w-1/2 relative">
                     <Field
                       type="text"
                       name="description_en"
@@ -462,11 +521,12 @@ export const UpdateProduct = () => {
                       placeholder="Description"
                       label="Product Description"
                       component={Textarea}
+                      fixedHeight={true}
                     />
                     <img
                       src={countryflag2}
                       alt="Flag"
-                      className="cursor-pointer h-5 w-5 absolute right-4 top-8"
+                      className="cursor-pointer h-5 w-5 absolute right-4 top-10"
                     />
                   </div>
                 </div>
@@ -620,7 +680,20 @@ export const UpdateProduct = () => {
                 </div>
                 <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
                 <div className="flex gap-5 items-center mb-[24px]">
-                  <img src={checkSquareIcon} alt="check square" />
+                  <Field
+                    type="checkbox"
+                    name="place_on_goedgeplaatst"
+                    className="h-8 w-8 cursor-pointer"
+                    checked={values.place_on_goedgeplaatst}
+                    onChange={() => {
+                      if (product?.place_on_goedgeplaatst !== true) {
+                        setFieldValue(
+                          "place_on_goedgeplaatst",
+                          !values.place_on_goedgeplaatst
+                        );
+                      }
+                    }}
+                  />
                   <p className="font-semibold text-lg text-[#111727]">
                     Place Product on GoedGeplaatst via API
                   </p>

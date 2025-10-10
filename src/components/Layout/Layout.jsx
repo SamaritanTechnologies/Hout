@@ -8,10 +8,10 @@ import { WhatsappWidget } from "./WhatsappWidget";
 
 const Layout = () => {
   const authPaths = [
-    "/sign-in",
-    "/sign-up",
-    "/forget-password",
-    "/reset-password",
+    // "/sign-in",
+    // "/sign-up",
+    // "/forget-password",
+    // "/reset-password",
     "/oauth-callback",
   ];
 
@@ -32,11 +32,18 @@ const Layout = () => {
     "/admin-privacy-policy",
     "/admin-about-us",
     "/admin-FAQ",
+    "/delivery",
     // "/inbox",
     "/order-list",
     "/product",
     "/user-profile",
     "/customized-product",
+    "/admin-webshop",
+    "/admin-signin",
+    "/admin-signup",
+    "/admin-forgot",
+    "/admin-reset",
+    "/admin-payment",
   ];
 
   const currentPath = useLocation().pathname;

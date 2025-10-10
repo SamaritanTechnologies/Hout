@@ -19,8 +19,10 @@ import {
   validationDelivery,
   validationInvoice,
 } from "../../utils/validations";
+import { useTranslation } from "react-i18next";
 
 const Account = ({ userData, setSelectedPic, setUserName }) => {
+  const { t, i18n } = useTranslation();
   const [state, setState] = useState({
     userData: null,
     deliveryAddress: null,
@@ -122,7 +124,7 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
               setSubmitting,
             });
             fetchUser();
-            resetForm();
+            // resetForm();
           } catch (error) {
             console.error("Error updating user data:", error);
             setSubmitting(false);
@@ -133,22 +135,22 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
           <Form>
             <section className="md:pt-10">
               <h2 className="text-[20px] my-4 lg:text-xl font-semibold">
-                Account Details
+                {t("a_account_details")}
               </h2>
               <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-4">
                 <div className="w-full md:w-1/2">
                   <Field
                     name="firstName"
-                    placeholder="Enter Name"
-                    label="First name*"
+                    placeholder={t("a_first_name_placeholder")}
+                    label={t("a_first_name_label")}
                     component={FormikField}
                   />
                 </div>
                 <div className="w-full md:w-1/2">
                   <Field
                     name="lastName"
-                    placeholder="Last Name"
-                    label="Last name*"
+                    placeholder={t("a_last_name_placeholder")}
+                    label={t("a_last_name_label")}
                     component={FormikField}
                   />
                 </div>
@@ -157,8 +159,8 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
                 <div className="w-full md:w-1/2">
                   <Field
                     name="companyName"
-                    placeholder="Company Name"
-                    label="Company Name"
+                    placeholder={t("a_company_name_placeholder")}
+                    label={t("a_company_name_label")}
                     component={FormikField}
                   />
                 </div>
@@ -166,24 +168,25 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
                   <Field
                     name="email"
                     type="email"
-                    placeholder="Email"
-                    label="Email*"
+                    placeholder={t("a_email_placeholder")}
+                    label={t("a_email_label")}
                     component={FormikField}
+                    disabled
                   />
                 </div>
                 <div className="w-full md:w-1/2">
                   <Field
                     name="phone"
                     type="text"
-                    placeholder="Phone Number"
-                    label="Phone Number*"
+                    placeholder={t("a_phone_number_placeholder")}
+                    label={t("a_phone_number_label")}
                     component={FormikField}
                   />
                 </div>
               </div>
               <div className="pt-5">
                 <Button
-                  btnText="Save changes"
+                  btnText={t("a_save_changes_btn_text")}
                   disabled={isSubmitting}
                   type="submit"
                 />
@@ -202,6 +205,7 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
             resetForm(false);
             setSubmitting(false);
           } catch (error) {
+            console.log(error);
             toast.error("Password not updated");
             console.error("Error updating password:", error);
             setSubmitting(false);
@@ -212,15 +216,15 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
           <Form>
             <section className="pt-8 pb-8">
               <h2 className="text-[20px] lg:text-xl font-semibold my-2">
-                Password
+                {t("a_password_section_title")}
               </h2>
               <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-4 pt-5">
                 <div className="w-full md:w-1/2">
                   <Field
                     name="oldPassword"
                     type="password"
-                    placeholder="Old Password"
-                    label="Old Password"
+                    placeholder={t("a_old_password_placeholder")}
+                    label={t("a_old_password_label")}
                     component={FormikField}
                   />
                 </div>
@@ -228,8 +232,8 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
                   <Field
                     name="newPassword"
                     type="password"
-                    placeholder="New Password"
-                    label="New Password"
+                    placeholder={t("a_new_password_placeholder")}
+                    label={t("a_new_password_label")}
                     component={FormikField}
                   />
                 </div>
@@ -237,15 +241,15 @@ const Account = ({ userData, setSelectedPic, setUserName }) => {
                   <Field
                     name="repeatNewPassword"
                     type="password"
-                    placeholder="Repeat new password"
-                    label="Repeat new password"
+                    placeholder={t("a_repeat_new_password_placeholder")}
+                    label={t("a_repeat_new_password_label")}
                     component={FormikField}
                   />
                 </div>
               </div>
               <div className="pt-5">
                 <Button
-                  btnText="Save changes"
+                  btnText={t("a_save_changes_btn_text")}
                   disabled={isSubmitting}
                   type="submit"
                 />

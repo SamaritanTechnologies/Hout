@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   addPrivacyPolicies,
   getPrivacyPolicy,
+  getPrivacyPolicyImage,
+  addHomepageImage,
 } from "../redux/actions/dashboardActions";
 import ArrowBack from "../assets/DashboardImages/arrowback.svg";
 import Button from "../components/Common/Button";
@@ -9,13 +11,40 @@ import RichTextEditor from "../components/Common/RichTextEditor";
 import countryflag from "../assets/DashboardImages/UK-Flag.svg";
 import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
 import { toast } from "react-toastify";
+import Dropzone from "../components/Common/Dropzone";
+import { XCircleIcon } from "@heroicons/react/24/outline";
+import InputField from "../components/Common/InputField";
+import { useTranslation } from "react-i18next";
+
+const validTypes = ["image/jpeg", "image/png", "image/webp"];
 
 export const AdminPrivacyPolicy = () => {
   const [policy, setPolicy] = useState({
     description_en: "",
     description_nl: "",
+    heading_en: "",
+    heading_nl: "",
   });
   const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [image, setImage] = useState(null);
+  const [existingImage, setExistingImage] = useState(null);
+  const { t } = useTranslation();
+
+  const fetchExistingImage = useCallback(async () => {
+    try {
+      const response = await getPrivacyPolicyImage();
+      if (response?.image) {
+        setExistingImage(response.image);
+      }
+    } catch (error) {
+      console.error("Error fetching existing image:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchExistingImage();
+  }, [fetchExistingImage]);
 
   useEffect(() => {
     const fetchPrivacyPolicy = async () => {
@@ -25,24 +54,52 @@ export const AdminPrivacyPolicy = () => {
           setPolicy({
             description_en: data.description_en,
             description_nl: data.description_nl,
+            heading_en: data.heading_en,
+            heading_nl: data.heading_nl,
           });
         }
       } catch (error) {
-        toast.error("Failed to fetch privacy policy");
+        toast.error(t("adminprivacypolicy_fetch_fail"));
         console.error("Error fetching privacy policy:", error);
       }
     };
 
     fetchPrivacyPolicy();
-  }, []);
+  }, [t]);
+
+  const handleDrop = useCallback(
+    (acceptedFiles) => {
+      const file = acceptedFiles[0];
+      if (file && validTypes.includes(file.type)) {
+        // Revoke previous URL if exists
+        if (image?.preview) {
+          URL.revokeObjectURL(image.preview);
+        }
+        const preview = URL.createObjectURL(file);
+        setImage({ file, preview });
+        setExistingImage(null);
+      } else {
+        toast.error(t("adminprivacypolicy_invalid_type"));
+      }
+    },
+    [image, t]
+  );
+
+  const handleRemoveImage = useCallback(() => {
+    if (image?.preview) {
+      URL.revokeObjectURL(image.preview);
+    }
+    setImage(null);
+    setExistingImage(null);
+  }, [image]);
 
   const handleSave = async () => {
     setLoading(true);
     try {
       await addPrivacyPolicies(policy);
-      toast.success("Privacy policy saved successfully!");
+      toast.success(t("adminprivacypolicy_save_success"));
     } catch (error) {
-      toast.error("Failed to save Privacy Policy");
+      toast.error(t("adminprivacypolicy_save_fail"));
       console.error("Error:", error);
     } finally {
       setLoading(false);
@@ -56,12 +113,85 @@ export const AdminPrivacyPolicy = () => {
     }));
   };
 
+  const handleImageSave = async () => {
+    if (!image?.file) {
+      toast.error(t("adminprivacypolicy_select_required"));
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const payload = new FormData();
+      payload.append("title", "privacypolicy");
+      payload.append("image", image.file);
+
+      const response = await addHomepageImage(payload);
+      toast.success(t("adminprivacypolicy_image_upload_success"));
+      fetchExistingImage();
+      // setExistingImage(response?.imageUrl || null);
+      setImage(null);
+    } catch (error) {
+      toast.error(t("adminprivacypolicy_image_upload_fail"));
+      console.error("Error uploading image:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (image?.preview) {
+        URL.revokeObjectURL(image.preview);
+      }
+    };
+  }, [image]);
+
   return (
     <div className="flex flex-col gap-10 xl:gap-12">
       <h2 className="xl:text-32 lg:text-28 text-26 font-bold">
         Privacy Policy
       </h2>
       <div className="flex flex-col max-w-[848px] mx-auto gap-10">
+        {/* Policy Editor Section */}
+        <div className="flex gap-4">
+          <div className="w-1/2 relative">
+            <div>
+              <h5 className="text-[16px] font-bold py-[12px]">Koptekst</h5>
+              <InputField
+                type="text"
+                placeholder="Kop invoeren"
+                name="heading_nl"
+                value={policy.heading_nl}
+                onChange={(e) => handleChange("heading_nl", e.target.value)}
+                flag={countryflag}
+              />
+            </div>
+            <img
+              src={countryflag}
+              alt="Flag"
+              className="cursor-pointer h-5 w-5 absolute right-[6px] top-[60px]"
+            />
+          </div>
+          <div className="w-1/2 relative">
+            <div>
+              <h5 className="text-[16px] font-bold py-[12px]">Heading</h5>
+              <InputField
+                className="text-[16px] font-bold py-[12px]"
+                type="text"
+                placeholder="Enter heading"
+                name="heading_en"
+                value={policy.heading_en}
+                onChange={(e) => handleChange("heading_en", e.target.value)}
+                flag={countryflag2}
+              />
+            </div>
+            <img
+              src={countryflag2}
+              alt="Flag"
+              className="cursor-pointer h-5 w-5 absolute right-[6px] top-[60px]"
+            />
+          </div>
+        </div>
         <div className="flex gap-4">
           <div className="w-1/2 relative">
             <RichTextEditor
@@ -72,7 +202,7 @@ export const AdminPrivacyPolicy = () => {
             />
             <img
               src={countryflag}
-              alt="Flag"
+              alt="Dutch Flag"
               className="cursor-pointer h-5 w-5 absolute right-[6px] top-[60px]"
             />
           </div>
@@ -85,7 +215,7 @@ export const AdminPrivacyPolicy = () => {
             />
             <img
               src={countryflag2}
-              alt="Flag"
+              alt="English Flag"
               className="cursor-pointer h-5 w-5 absolute right-[6px] top-[60px]"
             />
           </div>
@@ -101,6 +231,65 @@ export const AdminPrivacyPolicy = () => {
           onClick={handleSave}
         />
       </div>
+
+      {/* Image Upload Section */}
+      <section className="flex flex-col gap-6">
+        <h2 className="xl:text-32 lg:text-28 text-26 font-bold">
+          Upload Privacy Policy Wallpaper
+        </h2>
+        <div className="flex flex-col gap-6 ml-20">
+          <div className="flex gap-[14px] flex-wrap items-center">
+            {image?.preview ? (
+              <div className="relative w-[215px] h-[215px] rounded-lg overflow-hidden border border-gray-200">
+                <img
+                  src={image.preview}
+                  alt="Selected Preview"
+                  className="w-full h-full object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={handleRemoveImage}
+                  className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md"
+                >
+                  <XCircleIcon className="h-6 w-6 text-[#FBC700]" />
+                </button>
+              </div>
+            ) : existingImage ? (
+              <div className="relative w-[215px] h-[215px] rounded-lg overflow-hidden border border-gray-200">
+                <img
+                  src={existingImage}
+                  alt="Existing Wallpaper"
+                  className="w-full h-full object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={handleRemoveImage}
+                  className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md"
+                >
+                  <XCircleIcon className="h-6 w-6 text-[#FBC700]" />
+                </button>
+              </div>
+            ) : (
+              <Dropzone
+                width="215px"
+                height="215px"
+                onDrop={handleDrop}
+                accept="image/jpeg, image/png, image/webp"
+              />
+            )}
+          </div>
+          <Button
+            loading={isLoading}
+            type="button"
+            btnText="Save Image"
+            paddingX="20px"
+            textColor="#000000"
+            breakpoint="w-full max-w-[280px]"
+            disabled={!image?.file || isLoading}
+            onClick={handleImageSave}
+          />
+        </div>
+      </section>
     </div>
   );
 };

@@ -15,25 +15,39 @@ import Switch from "../components/Common/Switch";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Pagination from "../components/Common/Pagination";
+import { useSearchParams } from "react-router-dom";
 import {
   PRODUCT_MAX_PRICE,
   PRODUCT_MIN_PRICE,
   PRODUCT_PAGE_SIZE,
 } from "../utils/const";
+import { useTranslation } from "react-i18next";
+import { getWebshopImage } from "../redux/actions/dashboardActions";
+import { scrollToTop } from "../utils/helper";
 
 export const ShopPage = () => {
+  const { t, i18n } = useTranslation();
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search");
+  const currentLang = i18n.language;
+  const [wallpaper, setWallpaper] = useState("");
   const [filterKey, setFilterKey] = useState(0);
   const { productCategories } = useSelector((state) => state.admin);
+  // console.log("productCategories", productCategories);
 
-  const categories = [
-    "Group",
-    "Type",
-    "Material",
-    "Profile",
-    "Durability",
-    "Quality",
-    "Application",
-  ];
+  const translatedCategories = useMemo(
+    () => [
+      t("s_group"),
+      t("s_type"),
+      t("s_material"),
+      t("s_profile"),
+      t("s_durability"),
+      t("s_quality"),
+      t("s_application"),
+    ],
+    [i18n.language, t]
+  );
+
   const [categoryData, setCategoryData] = useState({});
   const [includeVAT, setIncludeVAT] = useState(false);
   const [filters, setFilters] = useState({
@@ -46,17 +60,47 @@ export const ShopPage = () => {
   const pageSize = PRODUCT_PAGE_SIZE;
   const [totalItems, setTotalItems] = useState(0);
 
+  const fetchExistingImage = async () => {
+    try {
+      const res = await getWebshopImage();
+      if (res) {
+        setWallpaper(res);
+      }
+    } catch (error) {
+      console.error("Error fetching existing image:", error);
+    }
+  };
+
   useEffect(() => {
-    const initialData = categories.reduce((acc, category) => {
-      const foundCategory = productCategories?.find(
-        (c) => c.name?.toLowerCase() === category.toLowerCase()
-      );
+    fetchExistingImage();
+  }, []);
+
+  // useEffect(() => {
+  //   const initialData = translatedCategories.reduce((acc, category) => {
+  //     const foundCategory = productCategories?.find(
+  //       (c) => c.name?.toLowerCase() === category.toLowerCase()
+  //     );
+  //     acc[category] = foundCategory || { name: category, choices: [] };
+  //     return acc;
+  //   }, {});
+
+  //   setCategoryData(initialData);
+  // }, [productCategories, translatedCategories]);
+
+  useEffect(() => {
+    const initialData = translatedCategories.reduce((acc, category) => {
+      const foundCategory = productCategories?.find((c) => {
+        const nameMatch = c.name?.toLowerCase() === category.toLowerCase();
+        const nameNlMatch = c.name_nl?.toLowerCase() === category.toLowerCase();
+        return nameMatch || nameNlMatch;
+      });
+
       acc[category] = foundCategory || { name: category, choices: [] };
       return acc;
     }, {});
 
-    setCategoryData(initialData);
-  }, [productCategories]);
+    setCategoryData(initialData); // Make sure you're calling this
+  }, [productCategories, translatedCategories]);
 
   const categoryArray = Object.values(categoryData);
   const [filterDrawer, setFilterDrawer] = useState(false);
@@ -92,6 +136,7 @@ export const ShopPage = () => {
 
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected);
+    scrollToTop();
   };
 
   const handleResetFilters = () => {
@@ -108,10 +153,24 @@ export const ShopPage = () => {
 
   return (
     <>
-      <nav aria-label="breadcrumb" className="shop">
-        <div className="about flex justify-center items-center">
+      <nav aria-label="breadcrumb" className="">
+        <div
+          className=" flex justify-center items-center"
+          style={{
+            backgroundImage: `url(${wallpaper?.image})`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "bottom",
+            minHeight: "500px",
+            width: "100%",
+          }}
+        >
           <div className="w-[320px] m-auto text-center bg-transparentGray text-white py-[35px] rounded-lg">
-            <h1 className="text-white text-48 font-medium">Shop</h1>
+            <h1 className="text-white text-48 font-medium">
+              {currentLang == "en"
+                ? wallpaper?.heading_en
+                : wallpaper?.heading_nl}
+            </h1>
             <ol className="flex items-center justify-center gap-x-3 pt-5 font-medium text-white">
               <li>
                 <Link to="/" className="cursor-pointer">
@@ -148,35 +207,36 @@ export const ShopPage = () => {
             onClick={handleResetFilters}
             className="p-2 rounded-lg text-white bg-[#FBD232]"
           >
-            Reset Filter
+            {t("s_reset_filter_button")}
           </button>
           <div className="pops md:text-14 sm:text-14 xs:text-12">
-            Showing {currentPage * pageSize + 1}-
-            {Math.min((currentPage + 1) * pageSize, totalItems)} of {totalItems}{" "}
-            results
+            {t("s_showing_results_text", {
+              start: currentPage * pageSize + 1,
+              end: Math.min((currentPage + 1) * pageSize, totalItems),
+              total: totalItems,
+            })}
           </div>
         </div>
 
         <div className="sm:pt-4 xs:pt-4">
           <div className="flex gap-x-6 md:gap-x-5 items-center font-footer1">
             <div className="pops md:text-14 sm:text-14 xs:text-12">
-              Show Prices
+              {t("s_show_prices")}
             </div>
-            {filters.includeVAT == false && (
-              <div className="pops md:text-14 sm:text-14 xs:text-12">
-                Excl. VAT
-              </div>
-            )}
 
             <div className="pops md:text-14 sm:text-14 xs:text-12">
-              Incl. VAT
+              {t("s_excl_vat")}
             </div>
+
             <div className="recPasswrd">
               <Switch
                 optional
                 checked={includeVAT}
                 onChange={handleVATToggle}
               />
+            </div>
+            <div className="pops md:text-14 sm:text-14 xs:text-12">
+              {t("s_incl_vat")}
             </div>
           </div>
         </div>
@@ -203,10 +263,12 @@ export const ShopPage = () => {
         </div>
         <div className="flex flex-col w-full gap-10">
           <ProductsList
+            searchQuery={searchQuery}
             filters={filters}
             currentPage={currentPage}
             pageSize={pageSize}
             setTotalItems={setTotalItems}
+            includeVAT={includeVAT}
           />
 
           {totalItems > pageSize && (

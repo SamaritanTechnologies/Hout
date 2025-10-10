@@ -12,6 +12,8 @@ import {
   createWhyHoutTotal,
   fetchWhyHoutTotal,
 } from "../redux/actions/dashboardActions";
+import { ClassSharp } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 export const WhyHoutTotaal = () => {
   const [loading, setLoading] = useState(false);
@@ -23,6 +25,7 @@ export const WhyHoutTotaal = () => {
     description_en: "",
     videos: [],
   });
+  const { t } = useTranslation();
 
   // Fetch initial data on component mount
   useEffect(() => {
@@ -49,7 +52,7 @@ export const WhyHoutTotaal = () => {
           setVideos(videoURLs);
         }
       } catch (error) {
-        toast.error("Failed to fetch data!");
+        toast.error(t("whyhouttotaal_fetch_fail"));
       } finally {
         setLoading(false);
       }
@@ -61,10 +64,13 @@ export const WhyHoutTotaal = () => {
   const handleVideoChange = (event) => {
     const files = Array.from(event.target.files);
     const newVideos = files.map((file) => ({
+      id: Date.now() + Math.random(), // Generate unique ID for new videos
       file, // Store the File object for new uploads
       url: URL.createObjectURL(file), // Create a preview URL
     }));
     setVideos([...videos, ...newVideos]);
+    // Reset the input value to allow selecting the same file again
+    event.target.value = '';
   };
 
   // Handle video drag & drop
@@ -74,6 +80,7 @@ export const WhyHoutTotaal = () => {
       file.type.startsWith("video/")
     );
     const newVideos = files.map((file) => ({
+      id: Date.now() + Math.random(), // Generate unique ID for new videos
       file, // Store the File object for new uploads
       url: URL.createObjectURL(file), // Create a preview URL
     }));
@@ -81,8 +88,15 @@ export const WhyHoutTotaal = () => {
   };
 
   // Remove a selected video
-  const handleRemoveVideo = (index) => {
-    setVideos(videos.filter((_, i) => i !== index));
+  const handleRemoveVideo = (id, setFieldValue) => {
+    const videoToRemove = videos.find(video => video.id === id);
+    if (videoToRemove && videoToRemove.url && videoToRemove.url.startsWith('blob:')) {
+      // Revoke the blob URL to free up memory
+      URL.revokeObjectURL(videoToRemove.url);
+    }
+    const updatedVideos = videos.filter((video) => video.id !== id);
+    setVideos(updatedVideos);
+    setFieldValue("videos", updatedVideos); // Sync with Formik
   };
 
   const fetchVideoAsFile = async (url) => {
@@ -104,19 +118,17 @@ export const WhyHoutTotaal = () => {
       // Append videos
       for (const video of videos) {
         if (video.file) {
-          // If it's a new file, append it directly
           formData.append("videos", video.file);
         } else if (video.url) {
-          // If it's an existing video, fetch it and convert to binary
           const file = await fetchVideoAsFile(video.url);
           formData.append("videos", file);
         }
       }
 
       await createWhyHoutTotal(formData);
-      toast.success("Data saved successfully!");
+      toast.success(t("whyhouttotaal_save_success"));
     } catch (error) {
-      toast.error("Error saving data!");
+      toast.error(t("whyhouttotaal_save_fail"));
       console.error("Error:", error);
     } finally {
       setLoading(false);
@@ -133,7 +145,7 @@ export const WhyHoutTotaal = () => {
         onSubmit={handleSave}
         enableReinitialize
       >
-        {({ values }) => (
+        {({ values, setFieldValue }) => (
           <Form className="flex flex-col gap-5 max-w-[848px] mx-auto">
             {/* Name Fields */}
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4">
@@ -180,6 +192,7 @@ export const WhyHoutTotaal = () => {
                 className="w-full max-w-[215px] h-[215px] border border-dashed border-[#4C5B66] rounded-lg p-3 flex items-center justify-center cursor-pointer"
                 onDrop={handleDrop}
                 onDragOver={(e) => e.preventDefault()}
+                onClick={() => document.getElementById('video-upload').click()}
               >
                 <input
                   type="file"
@@ -189,10 +202,7 @@ export const WhyHoutTotaal = () => {
                   hidden
                   onChange={handleVideoChange}
                 />
-                <label
-                  htmlFor="video-upload"
-                  className="w-full h-full flex flex-col items-center justify-center"
-                >
+                <div className="w-full h-full flex flex-col items-center justify-center">
                   <img
                     src="/src/assets/DashboardImages/add.svg"
                     className="xl:w-[82px] lg:w-[70px] w-[60px]"
@@ -202,7 +212,7 @@ export const WhyHoutTotaal = () => {
                     Drop video or{" "}
                     <span className="text-customYellow">click to browse</span>
                   </p>
-                </label>
+                </div>
               </div>
             </div>
 
@@ -210,7 +220,7 @@ export const WhyHoutTotaal = () => {
             {videos.length > 0 && (
               <div className="grid grid-cols-2 gap-4">
                 {videos.map((video, index) => (
-                  <div key={index} className="relative">
+                  <div key={video.id} className="relative">
                     <video controls className="w-full h-48 object-cover">
                       <source
                         src={video.url} // Use the URL for preview
@@ -219,7 +229,7 @@ export const WhyHoutTotaal = () => {
                     </video>
                     <button
                       type="button"
-                      onClick={() => handleRemoveVideo(index)}
+                      onClick={() => handleRemoveVideo(video.id, setFieldValue)}
                       className="text-white absolute top-2 right-2"
                     >
                       <XCircleIcon className="h-6 w-6 text-[#FBC700]" />

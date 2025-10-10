@@ -6,8 +6,11 @@ import { axiosWithCredentials } from "../../providers";
 import { toast } from "react-toastify";
 import { getUserId, loginUser } from "../../redux";
 import { getProfileInfo } from "../../redux/actions/profileActions";
+import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 const AddressCard = () => {
+  const { t } = useTranslation();
   const [state, setState] = useState({
     deliveryAddress: null,
     invoiceAddress: null,
@@ -98,14 +101,14 @@ const AddressCard = () => {
       <div className="flex xs:flex-col xs:items-center sm:flex-col sm:items-center lg:mb-32 justify-center">
         <div className="w-full max-w-[707px]">
           <h1 className="text-[16px] font-semibold text-[#111727] mb-[19px] xs:text-center xs:mt-5 sm:mt-8 sm:text-center">
-            Address
+            {t("aa_address_title")}
           </h1>
           <div className="grid grid-cols-2 gap-[23px] xs:grid-cols-1 ">
             {/* / Billing Address Card  */}
             <div className="px-[24px] py-[16px] border-solid border-[1px] border-[#6C7275] rounded-[8px] xs:w-[100%]">
               <div className="mb-[8px] flex justify-between">
                 <h1 className="text-[16px] font-semibold text-[#111727]">
-                  Billing Address
+                  {t("aa_billing_address_title")}
                 </h1>
                 <button
                   onClick={() => {
@@ -116,7 +119,7 @@ const AddressCard = () => {
                 >
                   <span className="text-[16px] font-semibold text-[#6C7275] flex gap-[6px]">
                     <img src={editImg} alt="Edit" />
-                    Edit
+                    {t("aa_edit_button_text")}
                   </span>
                 </button>
               </div>
@@ -138,7 +141,7 @@ const AddressCard = () => {
             <div className="px-[24px] py-[16px] border-solid border-[1px] border-[#6C7275] rounded-[8px] xs:w-[100%]">
               <div className="mb-[8px] flex justify-between">
                 <h1 className="text-[16px] font-semibold text-[#111727]">
-                  Shipping Address
+                  {t("aa_shipping_address_title")}
                 </h1>
                 <button
                   onClick={() => {
@@ -149,7 +152,7 @@ const AddressCard = () => {
                 >
                   <span className="text-[16px] font-semibold text-[#6C7275] flex gap-[6px]">
                     <img src={editImg} alt="Edit" />
-                    Edit
+                    {t("aa_edit_button_text")}
                   </span>
                 </button>
               </div>
@@ -174,17 +177,17 @@ const AddressCard = () => {
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg max-w-md w-full">
             <h2 className="text-xl font-semibold mb-4">
-              Edit {addressType} Address
+              {t("aa_edit_address_title", { addressType: addressType })}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Street and Number
+                  {t("aa_street_and_number_label")}
                 </label>
 
                 <InputField
                   required
-                  placeholder="Enter street And Number"
+                  placeholder={t("aa_street_and_number_placeholder")}
                   type="text"
                   name="streetAndNumber"
                   value={formData.street_and_number}
@@ -198,12 +201,12 @@ const AddressCard = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  ZIP Code
+                  {t("aa_zip_code_label")}
                 </label>
 
                 <InputField
                   required
-                  placeholder="Enter zip code"
+                  placeholder={t("aa_zip_code_placeholder")}
                   name="zipCode"
                   type="text"
                   value={formData.zip_code}
@@ -214,12 +217,12 @@ const AddressCard = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  City
+                  {t("aa_city_label")}
                 </label>
 
                 <InputField
                   required
-                  placeholder="Enter city"
+                  placeholder={t("aa_city_placeholder")}
                   type="text"
                   name="city"
                   value={formData.city}
@@ -230,12 +233,12 @@ const AddressCard = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Country
+                  {t("aa_country_label")}
                 </label>
 
                 <InputField
                   required
-                  placeholder="text"
+                  placeholder={t("aa_country_placeholder")}
                   type="text"
                   name="country"
                   value={formData.country}
@@ -250,13 +253,13 @@ const AddressCard = () => {
                   onClick={() => setShowEditModal(false)}
                   className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
                 >
-                  Cancel
+                  {t("aa_cancel_button_text")}
                 </button>
                 <button
                   type="submit"
                   className="px-4 py-2 text-sm font-medium text-white bg-[#FBC700] rounded-md "
                 >
-                  Update Address
+                  {t("aa_update_address_button_text")}
                 </button>
               </div>
             </form>

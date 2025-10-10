@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ArrowBack from "../assets/DashboardImages/arrowback.svg";
+import ArrowDown from "../assets/DashboardImages/down-arrow.svg";
 import PlusCircle from "../assets/DashboardImages/plusCricle.svg";
 // import CrossCircle from "../assets/DashboardImages/cancelCircle.svg";
 import dltImg from "../assets/DashboardImages/delete.svg";
@@ -18,19 +19,26 @@ import {
   addProduct,
   getProductCategories,
   getProducts,
+  getAllProductsList,
 } from "../redux/actions/productActions";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import countryflag from "../assets/DashboardImages/UK-Flag.svg";
 import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
 import { XCircleIcon } from "@heroicons/react/24/outline";
+import { FlashOnTwoTone } from "@mui/icons-material";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const styleMultiSelect = {
   chips: {
     background: "#F8F8F8",
     borderRadius: "4px",
   },
-  searchBox: {},
+  searchBox: {
+    position: "relative",
+    paddingRight: "30px",
+  },
   option: {
     background: "white",
     color: "black",
@@ -56,6 +64,7 @@ const relatedInitial = {
 export const AddNewProduct = () => {
   const navigate = useNavigate();
   const { productCategories: categories } = useSelector((state) => state.admin);
+  // console.log("categories", categories);
   const [lengths, setLengths] = useState([{ ...lengthItem }]);
   const [images, setImages] = useState([]);
   const [isErrors, setIsErrors] = useState({
@@ -63,6 +72,7 @@ export const AddNewProduct = () => {
   });
   const [relatedProducts, setRelatedProducts] = useState(relatedInitial);
   const [relatedProductsOptions, setRelatedProductsOptions] = useState([]);
+  const { t } = useTranslation();
 
   const getChoicesByName = (name) => {
     const category = categories?.find(
@@ -135,10 +145,10 @@ export const AddNewProduct = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await getProducts();
-        const data = response.results;
+        const response = await getAllProductsList();
+        const data = response.data; // The new API returns data in response.data
         const options = data.map((product) => ({
-          label: product.name_en,
+          label: product.name_nl,
           value: product.id,
         }));
         setRelatedProductsOptions(options);
@@ -196,6 +206,7 @@ export const AddNewProduct = () => {
           ),
         })}
         onSubmit={async (values, { setSubmitting }) => {
+          console.log("Form values:", values);
           if (!images?.length) {
             setIsErrors((prev) => ({ ...prev, images: true }));
             return;
@@ -257,7 +268,7 @@ export const AddNewProduct = () => {
                     name="group"
                     id="group"
                     options={getChoicesByName("group")}
-                    displayValue="name_en"
+                    displayValue="name_nl"
                     selectedValues={values.group}
                     onSelect={(selectedList) => {
                       setFieldValue("group", selectedList);
@@ -277,7 +288,7 @@ export const AddNewProduct = () => {
                     name="product_type"
                     id="product_type"
                     options={getChoicesByName("type")}
-                    displayValue="name_en"
+                    displayValue="name_nl"
                     selectedValues={values.product_type}
                     onSelect={(selectedList) => {
                       setFieldValue("product_type", selectedList);
@@ -292,7 +303,7 @@ export const AddNewProduct = () => {
                     name="material"
                     id="material"
                     options={getChoicesByName("material")}
-                    displayValue="name_en"
+                    displayValue="name_nl"
                     selectedValues={values.material}
                     onSelect={(selectedList) => {
                       setFieldValue("material", selectedList);
@@ -309,7 +320,7 @@ export const AddNewProduct = () => {
                     name="profile"
                     id="profile"
                     options={getChoicesByName("profile")}
-                    displayValue="name_en"
+                    displayValue="name_nl"
                     selectedValues={values.profile}
                     onSelect={(selectedList) => {
                       setFieldValue("profile", selectedList);
@@ -326,7 +337,7 @@ export const AddNewProduct = () => {
                     name="durability_class"
                     id="durability_class"
                     options={getChoicesByName("durability")}
-                    displayValue="name_en"
+                    displayValue="name_nl"
                     selectedValues={values.durability_class}
                     onSelect={(selectedList) => {
                       setFieldValue("durability_class", selectedList);
@@ -344,7 +355,7 @@ export const AddNewProduct = () => {
                     name="quality"
                     id="quality"
                     options={getChoicesByName("quality")}
-                    displayValue="name_en"
+                    displayValue="name_nl"
                     selectedValues={values.quality}
                     onSelect={(selectedList) => {
                       setFieldValue("quality", selectedList);
@@ -359,7 +370,7 @@ export const AddNewProduct = () => {
                     name="application"
                     id="application"
                     options={getChoicesByName("application")}
-                    displayValue="name_en"
+                    displayValue="name_nl"
                     selectedValues={values.application}
                     onSelect={(selectedList) => {
                       setFieldValue("application", selectedList);
@@ -368,7 +379,7 @@ export const AddNewProduct = () => {
                 </div>
               </div>
               <div className="flex gap-[20px] mb-[24px]">
-                <div className="w-1/2 inline-block rounded-lg overflow-hidden relative">
+                <div className="w-1/2 relative">
                   <Field
                     type="text"
                     name="description_nl"
@@ -377,14 +388,15 @@ export const AddNewProduct = () => {
                     placeholder="Omschrijving"
                     label="Product omschrijving"
                     component={Textarea}
+                    fixedHeight={true}
                   />
                   <img
                     src={countryflag}
                     alt="Flag"
-                    className="cursor-pointer h-5 w-5 absolute right-4 top-8"
+                    className="cursor-pointer h-5 w-5 absolute right-4 top-10"
                   />
                 </div>
-                <div className="w-1/2 inline-block rounded-lg overflow-hidden relative">
+                <div className="w-1/2 relative">
                   <Field
                     type="text"
                     name="description_en"
@@ -393,11 +405,12 @@ export const AddNewProduct = () => {
                     placeholder="Description"
                     label="Product Description"
                     component={Textarea}
+                    fixedHeight={true}
                   />
                   <img
                     src={countryflag2}
                     alt="Flag"
-                    className="cursor-pointer h-5 w-5 absolute right-4 top-8"
+                    className="cursor-pointer h-5 w-5 absolute right-4 top-10"
                   />
                 </div>
               </div>
@@ -495,7 +508,7 @@ export const AddNewProduct = () => {
                               type="number"
                               min={0}
                               value={product.full_price_ex_vat}
-                              placeholder="30,000"
+                              placeholder="30,00"
                               onChange={(e) =>
                                 handleChange(
                                   index,
@@ -551,7 +564,18 @@ export const AddNewProduct = () => {
               </div>
               <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
               <div className="flex gap-5 items-center mb-[24px]">
-                <img src={checkSquareIcon} alt="check square" />
+                <Field
+                  type="checkbox"
+                  name="place_on_goedgeplaatst"
+                  className="h-8 w-8  cursor-pointer"
+                  checked={values.place_on_goedgeplaatst}
+                  onChange={() =>
+                    setFieldValue(
+                      "place_on_goedgeplaatst",
+                      !values.place_on_goedgeplaatst
+                    )
+                  }
+                />
                 <p className="font-semibold text-lg text-[#111727]">
                   Place Product on GoedGeplaatst via API
                 </p>

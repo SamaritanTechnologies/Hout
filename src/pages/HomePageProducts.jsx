@@ -3,11 +3,12 @@ import ArrowBack from "../assets/DashboardImages/arrowback.svg";
 import Button from "../components/Common/Button";
 import Select from "react-select";
 import { toast } from "react-toastify";
-import { getProducts } from "../redux/actions/productActions";
+import { getAllProductsList } from "../redux/actions/productActions";
 import {
   getHomepageProducts,
   addHomepageProducts,
 } from "../redux/actions/dashboardActions";
+import { useTranslation } from "react-i18next";
 
 const pageProductsInitials = {
   product1: null,
@@ -22,14 +23,15 @@ export const HomePageProducts = () => {
   const [homePageProduct, setHomePageProduct] = useState(pageProductsInitials);
   const [productOptions, setProductOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await getProducts();
-        const data = response.results;
+        const response = await getAllProductsList();
+        const data = response.data; // The new API returns data in response.data
         const options = data.map((product) => ({
-          label: product.name_en,
+          label: product.name_nl, // Using name_nl for consistency with other pages
           value: product.id,
         }));
         setProductOptions(options);
@@ -46,10 +48,11 @@ export const HomePageProducts = () => {
     const fetchHomepageProducts = async () => {
       try {
         const response = await getHomepageProducts();
-        const homepageProducts = response.find(
-          (item) => item.category === "homepage products"
-        );
-        if (homepageProducts) {
+        // Handle both array and object response
+        const homepageProducts = Array.isArray(response)
+          ? response.find((item) => item.category === "homepage products")
+          : response;
+        if (homepageProducts && homepageProducts.products) {
           const selectedProducts = homepageProducts.products;
           const updatedHomePageProduct = { ...pageProductsInitials };
           Object.keys(updatedHomePageProduct).forEach((key, index) => {
@@ -88,7 +91,7 @@ export const HomePageProducts = () => {
       .map((product) => product.value);
 
     if (selectedProducts.length === 0) {
-      toast.error("Please select at least one product.");
+      toast.error(t("homepage_products_select_required"));
       return;
     }
 
@@ -101,9 +104,9 @@ export const HomePageProducts = () => {
       };
 
       await addHomepageProducts(payload);
-      toast.success("Products added successfully!");
+      toast.success(t("homepage_products_save_success"));
     } catch (error) {
-      toast.error("Failed to add products.");
+      toast.error(t("homepage_products_save_fail"));
       console.error("Error adding products:", error);
     } finally {
       setIsLoading(false);

@@ -8,6 +8,7 @@ import paypal from "../assets/addToCart/paypal.svg";
 import klarna from "../assets/addToCart/klarna.svg";
 import bancontact from "../assets/addToCart/bancontact.svg";
 import buyCredit from "../assets/addToCart/buyCredit.svg";
+import cash from "../assets/addToCart/cash.png";
 
 export const itemDescription = [
   {
@@ -37,11 +38,12 @@ export const itemDescription = [
 ];
 
 export const paymentMethods = [
-  { id: 1, name: "Buy on Credit ", img: buyCredit, checked: false },
-  { id: 2, name: "iDeal", img: ideal, checked: false },
-  { id: 3, name: "Soft/Klarna", img: klarna, checked: false },
-  { id: 4, name: "Bancontact", img: bancontact, checked: true },
-  { id: 5, name: "Paypal", img: paypal, checked: false },
+  { id: 1, name: "Cash", img: cash, checked: false },
+  { id: 2, name: "Buy on Credit ", img: buyCredit, checked: false },
+  { id: 3, name: "iDeal", img: ideal, checked: false },
+  { id: 4, name: "Soft/Klarna", img: klarna, checked: false },
+  { id: 5, name: "Bancontact", img: bancontact, checked: true },
+  { id: 6, name: "Paypal", img: paypal, checked: false },
 ];
 
 export const scrollToTop = () => {
@@ -49,4 +51,20 @@ export const scrollToTop = () => {
     top: 0,
     behavior: "smooth", // This makes the scrolling smooth
   });
+};
+
+export const scrollDashboardToTop = () => {
+  const dashboardContent = document.querySelector('.dashboard-content');
+  if (dashboardContent) {
+    dashboardContent.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  } else {
+    // Fallback to window scroll if dashboard-content not found
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
 };

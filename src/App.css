@@ -449,3 +449,31 @@ input[type="date"] {
   border: none !important;
   border-bottom: 1px solid #ccc !important;
 }
+.multiselect-container .search-wrapper:after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background-image: url(/src/assets/DashboardImages/down-arrow.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  pointer-events: none;
+  background-position-y: center;
+}
+
+
+/* contact us css  */
+.contact-input-field:-webkit-autofill,
+.contact-input-field:-webkit-autofill:focus,
+.contact-input-field:-webkit-autofill:hover,
+.contact-input-field:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #000000 inset !important;
+  box-shadow: 0 0 0 1000px #000000 inset !important;
+  -webkit-text-fill-color: #fff !important;
+  color: #fff !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+/* contact us css end  */

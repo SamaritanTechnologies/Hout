@@ -9,19 +9,77 @@ export const getProducts = async () => {
   return response.data;
 };
 
+//Get Home Wallpaper
+
 export const getHomepageImage = async () => {
   const response = await axiosWithCredentials.get(`/images`);
   return response.data;
 };
+
+//Get Privacypolicy Wallpaper
+export const getPrivacyPolicyImage = async () => {
+  const response = await axiosWithCredentials.get(`/images/privacypolicy`);
+  return response.data;
+};
+
+//Get tems and condition Wallpaper
+export const getTermAndConditionsImage = async () => {
+  const response = await axiosWithCredentials.get(`/images/termAndconditions`);
+  return response.data;
+};
+
+//Get about Wallpaper
+export const getAboutImage = async () => {
+  const response = await axiosWithCredentials.get(`/images/about`);
+  return response.data;
+};
+
+//Get Webshop Wallpaper
+export const getWebshopImage = async () => {
+  const response = await axiosWithCredentials.get(`/images/webshop`);
+  return response.data;
+};
+
+//Get SignIn Wallpaper
+export const getSigninImage = async () => {
+  const response = await axiosWithCredentials.get(`/images/signin`);
+  return response.data;
+};
+
+//Get Signup Wallpaper
+export const getSignupImage = async () => {
+  const response = await axiosWithCredentials.get(`/images/signup`);
+  return response.data;
+};
+
+//Get Forgot Wallpaper
+export const getForgotImage = async () => {
+  const response = await axiosWithCredentials.get(`/images/forgot`);
+  return response.data;
+};
+
+//Get Reset Wallpaper
+export const getResetImage = async () => {
+  const response = await axiosWithCredentials.get(`/images/reset`);
+  return response.data;
+};
+
+// export const getAboutImage = async () => {
+//   const response = await axiosWithCredentials.get(`/images/about`);
+//   return response.data;
+// };
+// Home page
 
 export const addHomepageImage = async (payload) => {
   const response = await axiosWithCredentials.post(`/images/`, payload);
   return response.data;
 };
 
-
 export const addHomepageProducts = async (payload) => {
-  const response = await axiosWithCredentials.post(`/featured-products/`, payload);
+  const response = await axiosWithCredentials.post(
+    `/featured-products/`,
+    payload
+  );
   return response.data;
 };
 

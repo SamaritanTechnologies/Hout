@@ -17,6 +17,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { setProductCategories } from "../redux";
 import Activebadge from "../assets/DashboardImages/ActiveBadge.svg";
 import ActiveTableHead from "../assets/DashboardImages/ActiveTableHead.svg";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
+import Pagination from "../components/Common/Pagination";
+import { PRODUCT_PAGE_SIZE } from "../utils/const";
+import { scrollDashboardToTop } from "../utils/helper";
 
 const initialState = {
   results: [],
@@ -41,10 +46,27 @@ export const Products = () => {
     thickness: [],
     width: [],
   });
+  const [currentPage, setCurrentPage] = useState(0);
+  const pageSize = PRODUCT_PAGE_SIZE;
+  const { t } = useTranslation();
 
-  const fetchProducts = async (selectedOptions) => {
+  const fetchProducts = async (selectedOptions, page = currentPage) => {
     try {
-      const res = await getProducts(selectedOptions);
+      // Filter out empty arrays and add pagination parameters
+      const filteredOptions = Object.entries(selectedOptions).reduce((acc, [key, value]) => {
+        if (Array.isArray(value) && value.length > 0) {
+          acc[key] = value;
+        }
+        return acc;
+      }, {});
+
+      const optionsWithPagination = {
+        ...filteredOptions,
+        page: page + 1, // API uses 1-based indexing
+        page_size: pageSize,
+      };
+
+      const res = await getProducts(optionsWithPagination);
 
       setState((prev) => ({
         ...prev,
@@ -64,15 +86,22 @@ export const Products = () => {
       if (selectedItem) {
         await deleteProduct(selectedItem?.id);
         setIsDeleted(!isDeleted);
+        // toast.success(t("product_delete_success"));
       }
     } catch (error) {
       console.error("Error fetching user data:");
+      toast.error(t("product_delete_fail"));
     }
   };
 
   useEffect(() => {
-    fetchProducts();
-  }, [isDeleted]);
+    fetchProducts(selectedOptions, currentPage);
+  }, [isDeleted, currentPage]);
+
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected);
+    scrollDashboardToTop();
+  };
 
   const getTransformedChoices = (name) => {
     const category = productCategories?.find(
@@ -82,7 +111,7 @@ export const Products = () => {
 
     return category.choices?.map((choice) => ({
       value: choice.id,
-      label: choice.name_en,
+      label: choice.name_nl,
     }));
   };
 
@@ -92,7 +121,8 @@ export const Products = () => {
         ...prev,
         [filterKey]: selectedValues,
       };
-      fetchProducts(updatedOptions);
+      setCurrentPage(0); // Reset to first page when filters change
+      fetchProducts(updatedOptions, 0);
       return updatedOptions;
     });
   };
@@ -154,6 +184,7 @@ export const Products = () => {
   return (
     <>
       <DeleteModal
+        description={"Are you sure you want to delete product?"}
         isOpen={open}
         closeModal={() => setOpen(!open)}
         handleDelete={handleDelete}
@@ -357,7 +388,7 @@ export const Products = () => {
                   </td>
 
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">
-                    <div className="flex flex-col gap-1 items-center">
+                    <div className="flex flex-col gap-1">
                       {rowData?.material && rowData.material.length > 0
                         ? rowData.material.map((item, index) => (
                           <p
@@ -372,7 +403,7 @@ export const Products = () => {
                   </td>
 
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">
-                    <div className="flex flex-col gap-1 items-center justify-center">
+                    <div className="flex flex-col gap-1">
                       {rowData?.profile && rowData.profile.length > 0
                         ? rowData.profile.map((item, index) => (
                           <p
@@ -422,14 +453,23 @@ export const Products = () => {
                       Left
                     </p>
                   </td>
-                  {/* <td>
-                        <div className="border border-[#D0D5DD] rounded-md flex items-center justify-center px-1.5 py-0.5 gap-1">
-                          <div className="w-1.5 h-1.5 rounded-full bg-[#17B26A] shrink-0"></div>
-                          <p className="block shrink-0 text-xs leading-[19px] font-medium text-[#344054]">
-                            Active
-                          </p>
-                        </div>
-                      </td> */}
+                  <td>
+                    {rowData?.is_active_on_goedgeplaatst ? (
+                      <div className="border border-[#D0D5DD] rounded-md flex items-center justify-center px-1.5 py-0.5 gap-1">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#17B26A] shrink-0"></div>
+                        <p className="block shrink-0 text-xs leading-[19px] font-medium text-[#344054]">
+                          Active
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="border border-[#D0D5DD] rounded-md flex items-center justify-center px-1.5 py-0.5 gap-1">
+                        <div className="w-1.5 h-1.5 rounded-full bg-red shrink-0"></div>
+                        <p className="block shrink-0 text-xs leading-[19px] font-medium text-[#344054]">
+                          Inactive
+                        </p>
+                      </div>
+                    )}
+                  </td>
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left xl:text-14 lg-text-[13px] text-12 font-semibold text-gray3 min-w-[100px]">
                     <div className="flex xl:gap-3 gap-2 items-center justify-center">
                       <div

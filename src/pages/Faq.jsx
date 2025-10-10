@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { getFaqs } from "../redux/actions/userActions";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export const Faq = () => {
   const [faqsData, setFaqsData] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
+  const { i18n } = useTranslation();
+  const currentLang = i18n.language;
 
   useEffect(() => {
     const fetchFaq = async () => {
@@ -12,7 +15,7 @@ export const Faq = () => {
         const data = await getFaqs();
         setFaqsData(data);
       } catch (error) {
-        toast.error("Error fetching faq", + error.message);
+        toast.error("Error fetching faq", +error.message);
       }
     };
 
@@ -32,7 +35,7 @@ export const Faq = () => {
         {faqsData.map((subject) => (
           <div key={subject.id} className="mb-4">
             <h3 className="text-xl font-semibold text-gray-800 p-3 border-b border-slate-200">
-              {subject.name_en}
+              {currentLang === "en" ? subject.name_en : subject.name_nl}
             </h3>
             <div className="divide-y divide-slate-200">
               {subject.faqs.map((faq) => (
@@ -44,7 +47,9 @@ export const Faq = () => {
                     aria-expanded={activeIndex === faq.id}
                     aria-controls={`faq-content-${faq.id}`}
                   >
-                    <span>{faq.question_en}</span>
+                    <span>
+                      {currentLang === "en" ? faq.question_en : faq.question_nl}
+                    </span>
                     <svg
                       className={`shrink-0 ml-4 h-6 w-6 transition-transform ${
                         activeIndex === faq.id ? "rotate-180" : ""
@@ -71,7 +76,9 @@ export const Faq = () => {
                         : "max-h-0 opacity-0"
                     }`}
                   >
-                    <p className="text-slate-600">{faq.answer_en}</p>
+                    <p className="text-slate-600">
+                      {currentLang === "en" ? faq.answer_en : faq.answer_nl}
+                    </p>
                   </div>
                 </div>
               ))}

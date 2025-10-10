@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -11,13 +11,17 @@ import signinBlur from "../assets/authImages/signinBlur.png";
 import InputField from "../components/Common/InputField";
 import FormikField from "../components/Common/FormikField";
 import { resetPassword } from "../redux/actions/profileActions";
+import { getResetImage } from "../redux/actions/dashboardActions";
+import { useTranslation } from "react-i18next";
 
 export const ResetPassword = () => {
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language;
   const navigate = useNavigate();
   const location = useLocation();
-
   const searchParams = new URLSearchParams(location.search);
   const uid = searchParams.get("uid");
+  const [data, setData] = useState();
 
   const validationSchema = Yup.object().shape({
     new_password: Yup.string()
@@ -30,6 +34,21 @@ export const ResetPassword = () => {
       .oneOf([Yup.ref("new_password"), null], "Passwords must match")
       .required("Confirm Password is required"),
   });
+
+  const fetchImage = async () => {
+    console.log("fetchImage called");
+    try {
+      const response = await getResetImage();
+      setData(response);
+      console.log("resetpassworddata", response);
+    } catch (error) {
+      console.error("Error fetching existing image:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchImage();
+  }, []);
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const data = {
@@ -58,7 +77,7 @@ export const ResetPassword = () => {
       <div className="signUpMain flex flex-row-reverse md:flex-col sm:flex-col xs:flex-col min-h-screen">
         <div className="signUpLeft xl:w-[50%] lg:w-[50%] w-full relative">
           <img
-            src={signInRight}
+            src={data?.image}
             alt="signupleftImg"
             onClick={() => navigate("/")}
             className="cursor-pointer w-[100%] xl:min-h-[100vh] lg:min-h-[100vh] md:h-[70vh] md:min-h-[70vh] sm:h-[70vh] sm:min-h-[70vh] xs:h-[70vh] xs:min-h-[70vh]"
@@ -76,13 +95,12 @@ export const ResetPassword = () => {
                 <img src={thumbsUp} alt="" />
                 <div>
                   <h6 className="xl:text-20 lg:text-18 md:text-16">
-                    Lorem Ipsum is simply
+                    {currentLang == "en" ? data?.heading_en : data?.heading_nl}
                   </h6>
                 </div>
               </div>
               <h6 className="flex-1 xl:text-20 lg:text-18 md:text-16 font-normal leading-[24px] mt-[10px] text-primary">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry.
+                {currentLang == "en" ? data?.text_en : data?.text_nl}
               </h6>
             </div>
           </div>

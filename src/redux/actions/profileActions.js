@@ -5,6 +5,7 @@ import {
   getRefreshToken,
 } from "../../providers";
 import { getUserId } from "../slices/authSlice";
+import i18n from "i18next";
 
 export const updatePass = async (values, id, { setSubmitting }) => {
   // const id = getUserId();
@@ -20,18 +21,18 @@ export const updatePass = async (values, id, { setSubmitting }) => {
       }
     );
 
-    toast.success("Successfuly Updated");
+    toast.success(i18n.t("pa_password_update_success"));
     setSubmitting(false);
   } catch (error) {
     console.log(error, "error");
     if (error?.response?.data?.password) {
-      error?.response?.data?.password.map((item) => {
+      error.response.data.password.forEach((item) => {
         toast.error(item);
       });
     } else if (error?.response?.data?.old_password?.old_password) {
-      toast.error(error?.response?.data?.old_password?.old_password);
+      toast.error(error.response.data.old_password.old_password);
     } else {
-      toast.error("Something went wrong!");
+      toast.error(i18n.t("pa_password_update_error"));
     }
     console.error("Error:", error);
   }
@@ -62,12 +63,12 @@ export const updateProfile = async (values, id, { setSubmitting }) => {
     };
 
     await axiosWithCredentials.put(`/accounts/update-profile/${id}/`, payload);
-    toast.success("Successfully Updated");
+    toast.success(i18n.t("pa_profile_update_success"));
 
     setSubmitting(false);
   } catch (error) {
     console.error("Error:", error);
-    toast.error("Something went wrong!");
+    toast.error(i18n.t("pa_profile_update_error"));
     setSubmitting(false);
   }
 };
@@ -80,11 +81,11 @@ export const resetPasswordLink = async (values, { setSubmitting }) => {
     };
     const response = await axiosApi.post("/accounts/forget_password/", payload);
     setSubmitting(false);
-    toast.success("Reset link sent to your email");
+    toast.success(i18n.t("pa_reset_link_sent"));
     return response;
   } catch (error) {
     console.error("Error:", error);
-    toast.error("Error sending password reset link");
+    toast.error(i18n.t("pa_reset_link_error"));
   }
 };
 
@@ -101,12 +102,12 @@ export const resetPassword = async (values, { setSubmitting }) => {
       `accounts/forget_password/confirm/${uid}/`,
       payload
     );
-    toast.success("Your password has been reset successfully");
+    toast.success(i18n.t("pa_password_reset_success"));
     setSubmitting(false);
     return response;
   } catch (error) {
     console.error("Error:", error);
-    toast.error("Something went wrong!");
+    toast.error(i18n.t("pa_password_reset_error"));
     setSubmitting(false);
     throw error;
   }
@@ -124,19 +125,19 @@ export const updateInvoiceDelivery = async (values, { setSubmitting }) => {
     };
 
     await axiosWithCredentials.post("/update-address/", payload);
-    toast.success("Successfuly Updated");
+    toast.success(i18n.t("pa_invoice_delivery_update_success"));
 
     setSubmitting(false);
   } catch (error) {
     console.error("Error:", error);
-    toast.error("Something went wrong!");
+    toast.error(i18n.t("pa_invoice_delivery_update_error"));
   }
 };
 
 export const uploadProfilePic = async (formData) => {
   try {
     if (!formData) {
-      toast.error("No image selected.");
+      toast.error(i18n.t("pa_no_image_selected"));
       return;
     }
 
@@ -149,11 +150,11 @@ export const uploadProfilePic = async (formData) => {
         },
       }
     );
-    toast.success("Successfully updated profile picture");
+    toast.success(i18n.t("pa_profile_pic_update_success"));
     return response;
   } catch (error) {
     console.error("Error uploading image:", error);
-    toast.error("Error uploading image");
+    toast.error(i18n.t("pa_profile_pic_update_error"));
   }
 };
 
@@ -188,12 +189,12 @@ export const updateDeliveryAddress = async (values, { setSubmitting }) => {
       `/accounts/update-delivery-address/${id}/`,
       payload
     );
-    toast.success("Successfuly Updated");
+    toast.success(i18n.t("pa_delivery_address_update_success"));
 
     setSubmitting(false);
   } catch (error) {
     console.error("Error:", error);
-    toast.error("Something went wrong!");
+    toast.error(i18n.t("pa_delivery_address_update_error"));
   }
 };
 
@@ -226,11 +227,11 @@ export const updateInvoiceAddress = async (values) => {
       `/accounts/update-invoice-address/${id}/`,
       payload
     );
-    toast.success("Successfully Updated");
+    toast.success(i18n.t("pa_invoice_address_update_success"));
     return response.data;
   } catch (error) {
     console.error("Error:", error);
-    toast.error("Something went wrong!");
+    toast.error(i18n.t("pa_invoice_address_update_error"));
     throw error;
   }
 };
@@ -250,11 +251,11 @@ export const updateDeliverAddress = async (values) => {
       `/accounts/update-delivery-address/${id}/`,
       payload
     );
-    toast.success("Successfully Updated");
+    toast.success(i18n.t("pa_delivery_address_update_success"));
     return response.data;
   } catch (error) {
     console.error("Error:", error);
-    toast.error("Something went wrong!");
+    toast.error(i18n.t("pa_delivery_address_update_error"));
     throw error;
   }
 };

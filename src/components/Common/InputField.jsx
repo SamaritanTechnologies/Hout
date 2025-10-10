@@ -28,6 +28,7 @@ const InputField = (props) => {
     name,
     icon: IconComponent,
     endicon,
+    flag,
   } = props;
 
   const [hidePassword, setHidePassword] = useState(true);
@@ -52,7 +53,7 @@ const InputField = (props) => {
         <input
           className={`pl-3 block w-full appearance-none font-footer1 placeholder-[#5A5A5A] ${
             IconComponent ? "pl-10" : ""
-          } rounded-md xl:py-3 xl:ps-3 py-2 ${
+          } ${flag ? "pr-10" : ""} rounded-md xl:py-3 xl:ps-3 py-2 ${
             type === "password" ? "pe-12" : "pe-3"
           } outline-none border border-[#D9D9D9] focus:outline-none sm:text-sm input-field`}
           id={id}

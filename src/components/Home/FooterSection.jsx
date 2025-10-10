@@ -14,8 +14,11 @@ import {
   getOpeningHours,
   subscribeToNewsletter,
 } from "../../redux/actions/userActions";
+import { useTranslation } from "react-i18next";
 
 const FooterSection = ({ isShow }) => {
+  const { t, i18n } = useTranslation();
+  console.log("Selected Lamguage", i18n.language);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [openingHour, setOpeningHour] = useState([]);
@@ -24,7 +27,7 @@ const FooterSection = ({ isShow }) => {
   useEffect(() => {
     const fetchOpeningHours = async () => {
       try {
-        const data = await getOpeningHours();
+        const data = await getOpeningHours(i18n.language);
         setOpeningHour(data);
       } catch (error) {
         console.error("Error fetching opening hours:", error);
@@ -33,7 +36,7 @@ const FooterSection = ({ isShow }) => {
     };
 
     fetchOpeningHours();
-  }, []);
+  }, [i18n.language]);
 
   const handleNewsLetter = async (e) => {
     e.preventDefault();
@@ -69,7 +72,7 @@ const FooterSection = ({ isShow }) => {
           <div className="flex flex-col flex-1 gap-2">
             <div className="flex flex-col md:flex-row lg:flex-row xl:flex-row gap-4 items-start md:items-center lg:items-center xl:items-center">
               <div className="font-semibold text-[#000] text-[25px] vietnam">
-                Newsletter
+                {t("f_newsletter")}
               </div>
               <form
                 onSubmit={handleNewsLetter}
@@ -81,7 +84,7 @@ const FooterSection = ({ isShow }) => {
                   onChange={(e) => setEmail(e.target.value)}
                   value={email}
                   required={true}
-                  placeholder="Enter Email Address"
+                  placeholder={t("f_enter_email_placeholder")}
                   className="bg-[#F5F4F8] flex-grow input-field text-[#111727] rounded-tl-[12px] rounded-bl-[12px] rounded-tr-[0px] rounded-br-[0px] focus:outline-none text-base p-[18px_30px]"
                 />
                 <button
@@ -89,12 +92,12 @@ const FooterSection = ({ isShow }) => {
                   className="subscribe-btn vietnam  w-[150px] md:w-[200px] lg:w-[253px] xl:w-[253px]"
                   type="submit"
                 >
-                  Subscribe
+                  {t("f_subscribe")}
                 </button>
               </form>
             </div>
             <div className=" pt-2 pl-[15px] text-xs vietnam  text-[#000] xs:text-sm ms-0 md:ms-[140px] lg:ms-[140px] xl:ms-[140px]">
-              Subscribe to Our Newsletter and get updated every time.
+              {t("f_subscribe_description")}
             </div>
           </div>
         </div>
@@ -107,7 +110,7 @@ const FooterSection = ({ isShow }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-7 pt-4 max-w-[1308px] mx-auto">
             <div className="flex flex-col gap-5">
               <h3 className="text-[#111727] font-semibold text-base lg:text-xl xl:text-[22px] mb-1">
-                Home
+                {t("f_home")}
               </h3>
               <div
                 className="text-sm text-[#111727] cursor-pointer "
@@ -116,7 +119,7 @@ const FooterSection = ({ isShow }) => {
                   navigate("/");
                 }}
               >
-                Home
+                {t("f_home")}
               </div>
               <div
                 className="text-sm text-[#111727] cursor-pointer "
@@ -125,23 +128,24 @@ const FooterSection = ({ isShow }) => {
                   navigate("/about");
                 }}
               >
-                About Us
+                {t("f_about_us")}
               </div>
               <div
                 className="text-sm text-[#111727] cursor-pointer"
                 onClick={() => {
-                  navigate("/");
-                  setTimeout(() => {
-                    navigate("/");
-                    document
-                      .getElementById("products-section")
-                      ?.scrollIntoView({
-                        behavior: "smooth",
-                      });
-                  }, 100);
+                  navigate("/shop-page");
+                  scrollToTop();
+                  // setTimeout(() => {
+                  //   navigate("/");
+                  //   document
+                  //     .getElementById("products-section")
+                  //     ?.scrollIntoView({
+                  //       behavior: "smooth",
+                  //     });
+                  // }, 100);
                 }}
               >
-                Products
+                {t("f_products")}
               </div>
               <div
                 className="text-sm text-[#111727] cursor-pointer"
@@ -155,7 +159,7 @@ const FooterSection = ({ isShow }) => {
                   }, 100);
                 }}
               >
-                Our Values
+                {t("f_our_values")}
               </div>
               <div
                 className="text-sm text-[#111727] cursor-pointer"
@@ -171,7 +175,7 @@ const FooterSection = ({ isShow }) => {
                   }, 100);
                 }}
               >
-                Our assortment
+                {t("f_our_assortment")}
               </div>
               <div
                 className="text-sm text-[#111727] cursor-pointer"
@@ -185,7 +189,7 @@ const FooterSection = ({ isShow }) => {
                   }, 100);
                 }}
               >
-                Why Hout Total
+                {t("f_why_hout_total")}
               </div>
               <div
                 className="text-sm text-[#111727] cursor-pointer"
@@ -199,7 +203,7 @@ const FooterSection = ({ isShow }) => {
                   }, 100);
                 }}
               >
-                Contact Us
+                {t("f_contact_us")}
               </div>
               <div
                 className="text-sm text-[#111727] cursor-pointer"
@@ -208,7 +212,7 @@ const FooterSection = ({ isShow }) => {
                   scrollToTop();
                 }}
               >
-                <Link to="/terms-conditions">Terms & Conditions</Link>
+                <Link to="/terms-conditions">{t("f_terms_conditions")}</Link>
               </div>
               <div
                 className="text-sm text-[#111727] cursor-pointer"
@@ -217,7 +221,7 @@ const FooterSection = ({ isShow }) => {
                   scrollToTop();
                 }}
               >
-                <Link to="/privacy-policy">Privacy Policy</Link>
+                <Link to="/privacy-policy">{t("f_privacy_policy")}</Link>
               </div>
               <div
                 className="text-sm text-[#111727] cursor-pointer "
@@ -226,13 +230,13 @@ const FooterSection = ({ isShow }) => {
                   scrollToTop();
                 }}
               >
-                <Link to="/faq">Customer Support/Faq</Link>
+                <Link to="/faq">{t("f_customer_support_faq")}</Link>
               </div>
             </div>
 
             <div className="flex flex-col gap-5">
               <h3 className="mb-1 text-[#111727] font-semibold text-base lg:text-xl xl:text-[22px]">
-                Opening Hours
+                {t("f_opening_hours")}
               </h3>
               {openingHour.weekday_text?.map((item, index) => (
                 <div key={index} className="text-sm text-[#111727]">
@@ -243,25 +247,28 @@ const FooterSection = ({ isShow }) => {
 
             <div className="flex flex-col gap-5">
               <h3 className="mb-1 text-[#111727] font-semibold text-base lg:text-xl xl:text-[22px]">
-                Contact Us
+                {t("f_contact_us_header")}
               </h3>
               <div className="flex items-start gap-x-5 text-[#111727] text-sm vietnam ">
                 {" "}
-                <img src={location} /> Lageweg 35K <br />
-                2222AG Katwijk aan Zee <br />
-                The Netherlands{" "}
+                <img src={location} />
+                {t("f_address_line1")}
+                <br />
+                {t("f_address_line2")} <br />
+                {t("f_address_line3")}
               </div>
               <div className="flex items-center text-[#111727] text-sm gap-x-5 vietnam ">
-                <img src={whatsp} /> +31 63 396 60 02
+                <img src={whatsp} /> {t("f_whatsapp")}
               </div>
               <div className="flex items-center text-[#111727] text-sm gap-x-5 vietnam ">
-                <img src={phone} /> +31 71 203 40 90
+                <img src={phone} />
+                {t("f_phone")}
               </div>
               <a
                 href="mailto:info@makeyourplank.nl"
                 className="flex items-center text-[#111727] text-sm gap-x-5 vietnam cursor-pointer"
               >
-                <img src={emailFooter} alt="Email Icon" /> info@houttotaal.nl
+                <img src={emailFooter} alt="Email Icon" /> {t("f_email")}
               </a>
               <div className="flex items-center text-[#111727] text-sm gap-x-6">
                 <div
@@ -281,7 +288,6 @@ const FooterSection = ({ isShow }) => {
                     )
                   }
                 >
-                  {" "}
                   <img src={cameraFooter} />
                 </div>
               </div>
@@ -289,16 +295,20 @@ const FooterSection = ({ isShow }) => {
 
             <div className="flex flex-col gap-5">
               <h3 className="mb-1 text-[#111727] font-semibold text-base lg:text-xl xl:text-[22px]">
-                Chamber of Commerce
+                {t("f_chamber_of_commerce")}
               </h3>
-              <div className="text-sm text-[#111727]">61392421</div>
-              <div className="text-sm text-[#111727] font-semibold">Bank</div>
               <div className="text-sm text-[#111727]">
-                NL65 BUNQ 2064 2611 33
+                {t("f_chamber_number")}
+              </div>
+              <div className="mb-1 text-[#111727] font-semibold text-base lg:text-xl xl:text-[22px]">
+                {t("f_bank")}
+              </div>
+              <div className="text-sm text-[#111727]">
+                {t("f_bank_account")}
               </div>
               <div className="pay-button">
                 <Button
-                  btnText="Pay"
+                  btnText={t("f_pay")}
                   xl:paddingX="60px"
                   lg:paddingX="30px"
                   breakpoint="w-[155px]"
@@ -314,7 +324,7 @@ const FooterSection = ({ isShow }) => {
         </div>
         <div className="copyright-sect xs:flex-col-reverse flex justify-center items-center sm:gap-[30px] xs:gap-[30px] gap-[100px] py-[30px] px-[30px]">
           <div className="text-[14px] vietnam text-[#111727s]">
-            Copyright © 2024 Hout Totaal
+            {t("f_copyright", { year: new Date().getFullYear() })}
           </div>
           <img src={footerLogo} className="w-[160px] h-[60px] " />
         </div>

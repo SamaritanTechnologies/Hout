@@ -11,8 +11,11 @@ import Button from "../Common/Button";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { axiosWithCredentials } from "../../providers";
+import { useTranslation } from "react-i18next";
 
 const Wishlist = () => {
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language;
   const navigate = useNavigate();
   const userData = getLoggedInUser();
   const authState = useSelector((state) => state.auth);
@@ -47,39 +50,10 @@ const Wishlist = () => {
       if (selectedItem) {
         await deleteWishList({ id: selectedItem });
         setIsDeleted(!isDeleted);
-        toast.success("Product removed from wishlist!");
+        toast.success(t("w_wishlist_toast_removed"));
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
-    }
-  };
-
-  const handleAddToCart = async (product) => {
-    setLoadingStates((prev) => ({ ...prev, [product.id]: true }));
-    try {
-      const payload = {
-        product_length: product?.lengths[0]?.id,
-        quantity: 1,
-      };
-
-      await axiosWithCredentials.post(`/add-to-cart/`, payload);
-      toast.success("Product added to cart!");
-    } catch (error) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        if (error.response.data.message === "No more product left in stock.") {
-          toast.error("This product is out of stock.");
-        } else {
-          toast.error(error.response.data.message);
-        }
-      } else {
-        toast.error("Something went wrong");
-      }
-    } finally {
-      setLoadingStates((prev) => ({ ...prev, [product.id]: false }));
     }
   };
 
@@ -91,30 +65,30 @@ const Wishlist = () => {
             isOpen={showModal}
             closeModal={() => setShowModal(!showModal)}
             handleDelete={handleDelete}
-            actionText="Remove"
-            description="Are you sure you want to remove product from wishlist?"
+            actionText={t("d_action_text")}
+            description={t("d_description_text")}
           />
 
           <div className="flex xs:flex-col xs:items-center sm:flex-col sm:items-center mb-32 justify-center">
             <div className="w-[100%]">
               <h1 className="text-20 font-semibold mb-[18px] sm:mt-12 text-center xs:mt-10 xs:text-center">
-                Your Wishlist
+                {t("w_wishlist_heading")}
               </h1>
               <div className="xs:overflow-auto">
                 <table className="w-[100%] xs:w-[574px]">
                   <thead>
                     <tr className=" border-solid border-b-[1px] border-[#E8ECEF] flex w-[100%] justify-between py-[22px]">
                       <th className="text-[14px] text-[#6C7275] w-[40%] text-left">
-                        Product
+                        {t("w_wishlist_table_product")}
                       </th>
                       <th className="text-[14px] text-[#6C7275] w-[30%] text-left">
-                        Description
+                        {t("w_wishlist_table_description")}
                       </th>
                       <th className="text-[14px] text-[#6C7275] w-[20%] text-left">
-                        Price
+                        {t("w_wishlist_table_price")}
                       </th>
                       <th className="text-[14px] text-[#6C7275] w-[30%] text-left flex justify-center items-center">
-                        Action
+                        {t("w_wishlist_table_action")}
                       </th>
                     </tr>
                   </thead>
@@ -153,30 +127,29 @@ const Wishlist = () => {
                                   }
                                   className="text-[14px] cursor-pointer"
                                 >
-                                  {item.name_en}
+                                  {currentLang === "en"
+                                    ? item.name_en
+                                    : item.name_nl}
                                 </h1>
                               </div>
                             </div>
                           </td>
                           <td className="w-[30%] text-left truncate">
-                            {item?.description_en}
+                            {currentLang === "en"
+                              ? item?.description_en
+                              : item?.description_nl}
                           </td>
                           <td className="w-[20%] text-left">
-                            $ {item.lengths[0].discounted_price_ex_vat}
+                            €{item.lengths[0].discounted_price_ex_vat}
                           </td>
                           <td className="w-[30%] flex justify-center items-center">
                             <button
                               className="px-[24px] py-[6px] bg-[#FBC700] rounded-[8px]"
-                              onClick={() => {
-                                handleAddToCart(item);
-                                disabled = { cartLoading };
-                              }}
+                              onClick={() =>
+                                navigate(`/product-detail/${item?.id}`)
+                              }
                             >
-                              <span className="text-[#fff]">
-                                {loadingStates[item.id]
-                                  ? "Adding..."
-                                  : "Add to cart"}
-                              </span>
+                              <span className="text-[#fff]">View Product</span>
                             </button>
                           </td>
                         </tr>

@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { getOurAssortment } from "../../redux/actions/userActions";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const OurAssortmentSection = () => {
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language;
   const [assortments, setAssortments] = useState([]);
 
   useEffect(() => {
@@ -24,10 +27,10 @@ const OurAssortmentSection = () => {
     >
       <div className="flex flex-col items-center gap-4">
         <h2 className="text-2xl lg:text-4xl xl:text-5xl font-bold text-center text-white">
-          Our assortment
+          {t("o_our_assortment_heading")}
         </h2>
         <p className="text-white text-center text-lg">
-          Discover the world of wood through our extensive range.{" "}
+          {t("o_our_assortment_subheading")}
         </p>
       </div>
 
@@ -42,11 +45,12 @@ const OurAssortmentSection = () => {
                 />
               </div>
               <h3 className="text-white text-center font-bold text-lg lg:text-xl xl:text-2xl">
-                {" "}
-                {assortment.name_en}
+                {currentLang === "en" ? assortment.name_en : assortment.name_nl}
               </h3>
               <p className="text-white text-center text-base xl:text-lg">
-                {assortment.description_en}
+                {currentLang === "en"
+                  ? assortment.description_en
+                  : assortment.description_nl}
               </p>
             </div>
           );

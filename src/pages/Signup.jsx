@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosApi } from "../providers";
 import { toast } from "react-toastify";
@@ -14,8 +14,14 @@ import whiteRin from "../assets/authImages/whiteRin.svg";
 import microscope from "../assets/authImages/microscope.svg";
 import slBlurBg from "../assets/authImages/slBlurBg.png";
 import InputField from "../components/Common/InputField";
+import { useTranslation } from "react-i18next";
+import { getSignupImage } from "../redux/actions/dashboardActions";
+
+import { BASE_URL } from "../providers";
 
 export const Signup = () => {
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language;
   const navigate = useNavigate();
   const [btnLoading, setBtnLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -24,7 +30,33 @@ export const Signup = () => {
     companyName: "",
     email: "",
     phone: "",
+    password: "",
+    confirm_password: "",
   });
+  const [errors, setErrors] = useState({
+    firstName: "",
+    lastName: "",
+    companyName: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirm_password: "",
+  });
+  const [data, setData] = useState();
+
+  const fetchImage = async () => {
+    try {
+      const response = await getSignupImage();
+      setData(response);
+      console.log("signindata", response);
+    } catch (error) {
+      console.error("Error fetching existing image:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchImage();
+  }, []);
 
   const handleFormData = (event) => {
     let name = event.target.name;
@@ -34,15 +66,101 @@ export const Signup = () => {
       ...formData,
       [name]: value,
     });
+
+    if (name === "password") {
+      validatePassword(value, formData.confirm_password);
+    } else if (name === "confirm_password") {
+      validatePassword(formData.password, value);
+    }
   };
 
+  // const validateForm = () => {
+  //   if (Object.values(formData).some((field) => field.trim() === "")) {
+  //     toast.error("Please fill in all fields");
+  //     return false;
+  //   }
+
+  //   return true;
+  // };
+
   const validateForm = () => {
-    if (Object.values(formData).some((field) => field.trim() === "")) {
-      toast.error("Please fill in all fields");
-      return false;
+    let isValid = true;
+    const newErrors = { ...errors };
+    // Validate each field
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = t("signup_first_name_required");
+      isValid = false;
+    } else {
+      newErrors.firstName = "";
+    }
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = t("signup_last_name_required");
+      isValid = false;
+    } else {
+      newErrors.lastName = "";
+    }
+    if (!formData.companyName.trim()) {
+      newErrors.companyName = t("signup_company_name_required");
+      isValid = false;
+    } else {
+      newErrors.companyName = "";
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = t("signup_email_required");
+      isValid = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = t("signup_email_invalid_format");
+      toast.error(t("signup_email_invalid_format"));
+      isValid = false;
+    } else {
+      newErrors.email = "";
+    }
+    if (!formData.phone.trim()) {
+      newErrors.phone = t("signup_phone_required");
+      isValid = false;
+    } else {
+      newErrors.phone = "";
+    }
+    // Password validation
+    if (!formData.password.trim()) {
+      newErrors.password = t("signup_password_min_length"); // Or a new key for required, if you want
+      isValid = false;
+    }
+    if (!formData.confirm_password.trim()) {
+      newErrors.confirm_password = t("signup_passwords_no_match"); // Or a new key for required, if you want
+      isValid = false;
+    }
+    validatePassword(formData.password, formData.confirm_password);
+    if (errors.password || errors.confirm_password) {
+      isValid = false;
+    }
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const validatePassword = (password, confirmPassword) => {
+    const newErrors = { ...errors };
+
+    if (password.length < 6) {
+      newErrors.password = t("signup_password_min_length");
+    } else if (!/[A-Z]/.test(password)) {
+      newErrors.password = t("signup_password_uppercase");
+    } else if (!/[a-z]/.test(password)) {
+      newErrors.password = t("signup_password_lowercase");
+    } else if (!/[!@#$%^&*(),.?\":{}|<>]/.test(password)) {
+      newErrors.password = t("signup_password_special");
+    } else {
+      newErrors.password = "";
     }
 
-    return true;
+    // Confirm password validation
+    if (password !== confirmPassword && confirmPassword) {
+      newErrors.confirm_password = t("signup_passwords_no_match");
+    } else {
+      newErrors.confirm_password = "";
+    }
+
+    setErrors(newErrors);
   };
 
   const createUser = async (e) => {
@@ -56,44 +174,46 @@ export const Signup = () => {
       email: formData.email,
       company_name: formData.companyName,
       phone: formData.phone,
+      password: formData.password,
+      confirm_password: formData.confirm_password,
     };
 
     try {
       const response = await axiosApi.post("/accounts/sign_up/", data);
       setBtnLoading(false);
-      toast.success("Thank you for sign up! Please check your email.");
+      toast.success(t("signup_success"));
       setTimeout(() => {
         navigate("/sign-in");
       }, 1000);
     } catch (error) {
       setBtnLoading(false);
       if (error?.response?.data?.email) {
-        toast.error(error?.response?.data?.email[0]);
+        toast.error(t("signup_email_exists"));
       } else {
-        toast.error("Something went wrong, Try Again");
+        toast.error(t("signup_generic_error"));
       }
     }
   };
 
   return (
-    <div>
+    <div className="pb-20">
       <div className="signUpMain flex min-h-screen flex-row md:flex-col sm:flex-col xs:flex-col">
         <div className="signUpLeft w-[50%] md:w-full sm:w-full xs:w-full relative">
           <img
-            src={signUpLeft}
+            src={data?.image}
             alt="signupleftImg"
             className="w-[100%] min-h-[142px] h-full object-cover"
           />
           <div>
-            <div className=" yellowBar absolute xl:top-[35%] lg:top-[30%] md:top-[10%] sm:top-[20%] xs:top-[20%] left-[50%] translate-x-[-50%]  bg-[#FBC700] w-[291px]  rounded-xl flex items-center xl:py-[10px] py-[6px] xl:px-[20px] px-[12px] gap-2 mb-[22.34px]">
+            <div className=" yellowBar absolute xl:top-[35%] lg:top-[30%] md:top-[10%] sm:top-[20%] xs:top-[20%] left-[50%] translate-x-[-50%]  bg-[#FBC700] w-[291px] rounded-[48px] flex items-center p-3 gap-6 mb-[22.34px]">
               <div className="w-[40px] h-[38px] rounded-[50%] grid place-items-center bg-[#00000066]">
                 <img src={blackRin} alt="" />
               </div>
               <h6
                 className="flex-1 xl:text-20 lg:text-18 md:text-16
- font-medium text-center"
+ font-medium"
               >
-                Lorem Ipsum is{" "}
+                {currentLang == "en" ? data?.heading_en : data?.heading_nl}
               </h6>
             </div>
             <div
@@ -107,10 +227,10 @@ export const Signup = () => {
                 className="flex-1 xl:text-20 lg:text-18 md:text-16
  font-normal leading-[24px]  mt-[10px] text-primary"
               >
-                Lorem Ipsum is simply dummy text of the printing{" "}
+                {currentLang == "en" ? data?.text_en : data?.text_nl}
               </h6>
             </div>
-            <div className=" grayBar absolute xl:top-[50%] lg:top-[65%] md:top-[70%]  sm:top-[70%] xs:top-[70%] xl:right-[-10%] lg:right-[1%] md:right-[50%] sm:right-[50%] xs:right-[50%] translate-x-[20%] md:translate-x-[50%] sm:translate-x-[50%] xs:translate-x-[50%]  bg-[#5A5A5A] min-w-[200px] md:min-w-[291px] sm:min-w-[291px] xs:min-w-[291px]  rounded-full flex items-center xl:py-[10px] py-[5px] xl:px-[20px] px-[10px] gap-2 mb-[22.34px]">
+            {/* <div className=" grayBar absolute xl:top-[50%] lg:top-[65%] md:top-[70%]  sm:top-[70%] xs:top-[70%] xl:right-[-10%] lg:right-[1%] md:right-[50%] sm:right-[50%] xs:right-[50%] translate-x-[20%] md:translate-x-[50%] sm:translate-x-[50%] xs:translate-x-[50%]  bg-[#5A5A5A] min-w-[200px] md:min-w-[291px] sm:min-w-[291px] xs:min-w-[291px]  rounded-full flex items-center xl:py-[10px] py-[5px] xl:px-[20px] px-[10px] gap-2 mb-[22.34px]">
               <div className="w-[40px] h-[38px] rounded-[50%] bg-[#9c9c9c] grid place-items-center text-white">
                 <img src={whiteRin} alt="" />
               </div>
@@ -118,9 +238,9 @@ export const Signup = () => {
                 className="flex-1 xl:text-18 lg:text-16 text-14
  font-normal text-center text-primary	"
               >
-                Lorem Ipsum is{" "}
+                Lorem Ipsum is
               </h6>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="xl:min-w-[650px] min-w-[auto] signUpRight xl:w-[50%] lg:w-[55%] w-[100%] sm:w-[100%] xs:w-[100%] xl:py-[25px] py-[18px] xl:px-[51px] lg:px-[30px] px-[20px]">
@@ -135,17 +255,18 @@ export const Signup = () => {
           <div className="signUpFormSec max-w-[400px] mx-auto">
             <div className="text-center xl:mb-[42px] lg:mb-[30px] mb-[20px]">
               <h4 className="xl:text-24 lg:text-20 text-18 font-semibold">
-                Get Started With houttotaal.nl
+                {t("su_get_started_with_houttotaal")}
               </h4>
               <span className="xl:text-15  text-[#7E7E7E] text-14 text-gray-500 block font-normal	">
-                Getting started is easy
+                {t("su_getting_started_is_easy")}
               </span>
             </div>
             <form className="w-full" onSubmit={createUser}>
               {/* social auth row  */}
-              <div className="socialAuthRow flex gap-3 mb-[12px]">
+
+              <div className="mx-auto socialAuthRow flex gap-2.5 mb-[12px]">
                 <a
-                  href="#"
+                  href={`${BASE_URL}/accounts/google/login/?process=login`}
                   className="flex-1 flex gap-2 items-center rounded-md	xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium font-footer1"
                   style={{ border: "1px solid #ccc" }}
                 >
@@ -153,7 +274,7 @@ export const Signup = () => {
                   <span> Google </span>
                 </a>
                 <a
-                  href="#"
+                  href={`${BASE_URL}/accounts/facebook/login/?process=login`}
                   className="flex-1 flex gap-2 items-center rounded-md		xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium font-footer1"
                   style={{ border: "1px solid #ccc" }}
                 >
@@ -161,8 +282,8 @@ export const Signup = () => {
                   <span> Facebook </span>
                 </a>
                 <a
-                  href="#"
-                  className=" flex-1 flex gap-2 items-center rounded-md xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium font-footer1"
+                  href={`${BASE_URL}/accounts/apple/login/?process=login`}
+                  className="flex-1 flex gap-2 items-center rounded-md xl:px-[20px] lg:px-[16px] px-[4px] xl:py-[10px] lg:py-[8px] py-[6px] text-center text-12 font-medium font-footer1"
                   style={{ border: "1px solid #ccc" }}
                 >
                   <img src={appleIcon} alt="" />
@@ -175,7 +296,7 @@ export const Signup = () => {
                   <img src={grayLine} alt="" />
                 </div>
                 <h5 className="w-[32%] text-13 xs:text-12 text-center font-normal">
-                  or continue with{" "}
+                  {t("su_or_continue_with")}
                 </h5>
                 <div className="w-[32%]">
                   <img src={grayLine} alt="" />
@@ -185,48 +306,93 @@ export const Signup = () => {
                 <div className="mb-[23px]">
                   <InputField
                     required
-                    placeholder="First Name"
+                    placeholder={t("su_placeholder_first_name")}
                     name="firstName"
                     value={formData.firstName}
                     onChange={handleFormData}
                   />
+                  {errors.firstName && (
+                    <p className="text-red text-xs mt-1">{errors.firstName}</p>
+                  )}
                 </div>
                 <div className="mb-[23px]">
                   <InputField
                     required
-                    placeholder="Last Name"
+                    placeholder={t("su_placeholder_last_name")}
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleFormData}
                   />
+                  {errors.lastName && (
+                    <p className="text-red text-xs mt-1">{errors.lastName}</p>
+                  )}
                 </div>
                 <div className="mb-[23px]">
                   <InputField
                     required
-                    placeholder="Company Name"
+                    placeholder={t("su_placeholder_company_name")}
                     name="companyName"
                     value={formData.companyName}
                     onChange={handleFormData}
                   />
+                  {errors.companyName && (
+                    <p className="text-red text-xs mt-1">
+                      {errors.companyName}
+                    </p>
+                  )}
                 </div>
                 <div className="mb-[23px]">
                   <InputField
                     required
-                    placeholder="Enter Email"
+                    placeholder={t("su_placeholder_enter_email")}
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleFormData}
                   />
+                  {errors.email && (
+                    <p className="text-red text-xs mt-1">{errors.email}</p>
+                  )}
                 </div>
                 <div className="mb-[23px]">
                   <InputField
                     required
-                    placeholder="Phone Number"
+                    placeholder={t("su_placeholder_phone_number")}
                     name="phone"
                     value={formData.phone}
                     onChange={handleFormData}
                   />
+                  {errors.phone && (
+                    <p className="text-red text-xs mt-1">{errors.phone}</p>
+                  )}
+                </div>{" "}
+                <div className="mb-[23px]">
+                  <InputField
+                    required
+                    placeholder={t("su_placeholder_password")}
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleFormData}
+                  />
+                  {errors.password && (
+                    <p className="text-red text-xs mt-1">{errors.password}</p>
+                  )}
+                </div>
+                <div className="mb-[23px]">
+                  <InputField
+                    required
+                    type="password"
+                    placeholder={t("su_placeholder_confirm_password")}
+                    name="confirm_password"
+                    value={formData.confirm_password}
+                    onChange={handleFormData}
+                  />
+                  {errors.confirm_password && (
+                    <p className="text-red text-xs mt-1">
+                      {errors.confirm_password}
+                    </p>
+                  )}
                 </div>
                 <div className="w-full ">
                   <button
@@ -235,15 +401,17 @@ export const Signup = () => {
                     disabled={btnLoading}
                     className="bg-[#FBC700] block text-black text-center xl:py-[16px] lg:py-[16px] py-[12px] px-[25px] w-full font-semibold mb-[23px] xl:text-[18px] text-[16px]"
                   >
-                    {btnLoading ? "Loading..." : "Create Account"}
+                    {btnLoading
+                      ? t("su_button_loading")
+                      : t("su_button_create_account")}
                   </button>
                   <span className="flex justify-end text-14">
-                    Have an account?{" "}
+                    {t("su_have_account")}
                     <a
                       onClick={() => navigate("/sign-in")}
                       className="text-customYellow  cursor-pointer  ml-1 font-semibold"
                     >
-                      Sign in!
+                      {t("su_sign_in")}
                     </a>
                   </span>
                 </div>

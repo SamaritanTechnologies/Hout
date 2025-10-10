@@ -7,14 +7,17 @@ import OrderComplete from "../components/CartSections/OrderComplete";
 import check from "../assets/addToCart/check.svg";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getCart } from "../redux/actions/orderActions";
-import { axiosWithCredentials } from "../providers";
+import { axiosApi, axiosWithCredentials } from "../providers";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 export const AddToCart = () => {
+  const { t } = useTranslation();
   const authState = useSelector((state) => state.auth);
   const isAuthenticated = authState.isLoggedIn;
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const orderCompleteData = {
     hasResponse: searchParams.has("response"),
@@ -75,7 +78,7 @@ export const AddToCart = () => {
       id: 1,
       image: check,
       name: "firstTab",
-      label: "Shopping cart",
+      label: t("c_tab_shopping_cart"),
       bgColor: "primary",
       textColor: "white",
     },
@@ -83,7 +86,7 @@ export const AddToCart = () => {
       id: 2,
       image: check,
       name: "secondTab",
-      label: "Checkout details",
+      label: t("c_tab_checkout_details"),
       bgColor: "primary",
       textColor: "secondary",
     },
@@ -91,7 +94,7 @@ export const AddToCart = () => {
       id: 3,
       image: check,
       name: "thirdTab",
-      label: "Order complete",
+      label: t("c_tab_order_complete"),
       bgColor: "primary",
       textColor: "secondary",
     },
@@ -104,6 +107,13 @@ export const AddToCart = () => {
 
     // If trying to go to third tab without response, block it
     if (tab === "thirdTab" && !orderCompleteData.hasResponse) return;
+    if (tab === "secondTab" && !isAuthenticated) {
+      // setShowLoginModal(true);
+      localStorage.setItem("path", "");
+      navigate("/sign-in");
+      localStorage.setItem("path", "/cart");
+      return;
+    }
 
     setSelectedTab(tab);
     setSelectedDiv((prev) => {
@@ -144,10 +154,11 @@ export const AddToCart = () => {
 
   const getTaxDelivery = async () => {
     try {
-      const response = await axiosWithCredentials.get(`/get-tax-delivery/`);
+      const response = await axiosApi.get(`/get-tax-delivery/`);
+      // console.log("get-tax-delivery", response);
       setState((prev) => ({
         ...prev,
-        tax: response.data?.vat,
+        tax: response.data?.vat_rate,
         deliveryFee: response?.data?.delivery_fee,
       }));
       return response.data;
@@ -157,27 +168,14 @@ export const AddToCart = () => {
   };
 
   useEffect(() => {
+    // if (!isAuthenticated) {
+    //   get;
+    // }
+    getTaxDelivery();
     if (isAuthenticated) {
-      getTaxDelivery();
       fetchCart();
     }
   }, [isAuthenticated]);
-
-  if (!isAuthenticated) {
-    return (
-      <div className="flex justify-center items-center h-60 w-full">
-        <div className="flex gap-1 items-center">
-          <span> Please sign-in to view the items in your cart.</span>
-          <button
-            className="bg-[#FBC700] text-[#161922] p-2 rounded-md"
-            onClick={() => navigate("/sign-in")}
-          >
-            Sign-in
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
@@ -223,7 +221,7 @@ export const AddToCart = () => {
       </section>
       <section className="xl:pt-[20px] lg:pt-[20px] md:pt-[20px] pt-[15px] flex justify-center">
         <div className="font-medium xl:text-54 lg:text-50 md:text-46 sm:text-44 text-40">
-          Cart
+          {t("c_cart_heading")}
         </div>
       </section>
 
@@ -237,7 +235,9 @@ export const AddToCart = () => {
                   ? "pointer-events-none opacity-50"
                   : ""
               }`}
-              onClick={() => handleDivClick(tab.name)}
+              onClick={() =>
+                handleDivClick(tab.name === "secondTab" ? "firstTab" : tab.name)
+              }
             >
               <div
                 className={`${
@@ -295,6 +295,33 @@ export const AddToCart = () => {
           />
         )}
       </section>
+      {showLoginModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-md shadow-md text-center w-[300px]">
+            <h2 className="text-lg font-semibold mb-4">
+              {t("c_login_required_heading")}
+            </h2>
+            <p className="mb-4">{t("c_login_required_message")}</p>
+            <div className="flex justify-center gap-4">
+              <button
+                className="bg-gray-300 text-black py-2 px-4 rounded"
+                onClick={() => setShowLoginModal(false)}
+              >
+                {t("c_login_required_cancel_button")}
+              </button>
+              <button
+                className="bg-[#FBC700] text-[#161922] py-2 px-4 rounded"
+                onClick={() => {
+                  setShowLoginModal(false);
+                  navigate("/sign-in");
+                }}
+              >
+                {t("c_login_required_signin_button")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

@@ -8,6 +8,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import Pagination from "../components/Common/Pagination";
 import { ORDER_PAGE_SIZE } from "../utils/const";
 import { axiosWithCredentials } from "../providers";
+import { scrollDashboardToTop } from "../utils/helper";
 
 const months = [
   { value: 1, name: "JANUARY" },
@@ -113,6 +114,7 @@ export const Orders = () => {
 
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected + 1);
+    scrollDashboardToTop();
   };
 
   const filteredOrders = sortOrdersByDate(
@@ -159,18 +161,20 @@ export const Orders = () => {
               <thead>
                 <tr className="bg-[#F1F4F9]">
                   {[
-                    "Product Name",
-                    "Location",
+                    "Order ID",
+                    "Order Data",
+                    "Customer Name",
+                    "Address",
                     "Date - Time",
-                    "Piece",
-                    "Amount",
+                    // "Piece",
+                    "Order Price",
                     "Status",
                   ].map((head, i) => (
                     <th
                       key={i}
-                      className={`xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold ${
+                      className={`xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold text-nowrap ${
                         i === 0 ? "rounded-l-2xl" : ""
-                      } ${i === 5 ? "text-center rounded-r-2xl" : ""}`}
+                      } ${i === 6 ? "text-center rounded-r-2xl" : ""}`}
                     >
                       {head === "Date - Time" ? (
                         <div className="flex flex-col justify-center items-start gap-1">
@@ -213,6 +217,11 @@ export const Orders = () => {
 
                     return (
                       <tr key={index} className="border-b-[0.4px] border-gray">
+                        <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
+                          <p className="text-gray-900 whitespace-no-wrap xl:text-15 text-12">
+                            {item.order_id}
+                          </p>
+                        </td>
                         <td className="px-[12px] py-[12px] text-left font-semibold text-gray3">
                           <div className="flex gap-2 items-center">
                             <img
@@ -223,29 +232,39 @@ export const Orders = () => {
                             <span>{productNames}</span>
                           </div>
                         </td>
+                        <td className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-semibold text-gray3">
+                          <p className="text-gray-900 whitespace-no-wrap ml-3">
+                            {item?.user.first_name}
+                          </p>
+                        </td>
                         <td className="px-[12px] py-[12px] text-left font-semibold text-gray3">
                           {item?.delivery_address}
                         </td>
                         <td className="px-[12px] py-[12px] text-left font-semibold text-gray3">
                           {formattedDate}
                         </td>
-                        <td className="px-[12px] py-[12px] text-left font-semibold text-gray3">
+                        {/* <td className="px-[12px] py-[12px] text-left font-semibold text-gray3">
                           {productQuantities}
-                        </td>
+                        </td> */}
                         <td className="px-[12px] py-[12px] text-left font-semibold text-gray3">
                           €{totalAmount.toFixed(2)}
                         </td>
                         <td className="px-[12px] py-[12px] text-center font-semibold text-gray3">
                           <p
-                            className={`rounded-full px-[10px] py-[5px] text-white text-14 font-bold ${
-                              item?.status === "Rejected"
-                                ? "bg-[#FD5454]"
-                                : item?.status === "Pending"
-                                ? "bg-[#FCBE2D]"
-                                : "bg-green1"
+                            className={`p-2  rounded-full ${
+                              {
+                                pending: "bg-[#FCBE2D] text-white",
+                                rejected: "bg-[#FD5454] text-white",
+                                delivered: "bg-[#22C55E] text-white",
+                                "order picken": "bg-[#3B82F6] text-white",
+                                "delivery planning": "bg-[#8B5CF6] text-white",
+                                "ready for pickup": "bg-[#F59E42] text-white",
+                                "in transit": "bg-[#14B8A6] text-white",
+                              }[item?.status?.toLowerCase()] ||
+                              "bg-gray-200 text-gray-800"
                             }`}
                           >
-                            {item?.status}
+                            {item?.status || "Unknown"}
                           </p>
                         </td>
                       </tr>

@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import ContactInputField from "../Common/ContactInputField";
 import { toast } from "react-toastify";
 import { submitContactForm } from "../../redux/actions/userActions";
+import { useTranslation } from "react-i18next";
 
 export const ContactusSection = () => {
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language;
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     first_name: "",
@@ -16,15 +19,19 @@ export const ContactusSection = () => {
 
   const validateForm = () => {
     if (!formData.first_name?.trim()) {
-      toast.error("First Name is required.");
+      toast.error(t("contactus_first_name_required"));
+      return false;
+    }
+    if (!formData.last_name?.trim()) {
+      toast.error(t("contactus_last_name_required"));
       return false;
     }
     if (!formData.email?.trim() || !/\S+@\S+\.\S+/.test(formData.email)) {
-      toast.error("Please enter a valid email address.");
+      toast.error(t("contactus_email_invalid"));
       return false;
     }
     if (!formData.message?.trim() || formData.message.length < 10) {
-      toast.error("Message must be at least 10 characters long.");
+      toast.error(t("contactus_message_too_short"));
       return false;
     }
     return true;
@@ -48,17 +55,15 @@ export const ContactusSection = () => {
     setLoading(true);
     try {
       const response = await submitContactForm(formData);
-      if (response?.status === 201 || response?.status === 200) {
-        toast.success(
-          "Your message has been sent! We will get back to you as soon as possible."
-        );
+      if (response) {
+        toast.success(t("contactus_success"));
         resetForm();
       }
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ||
         error.message ||
-        "An unexpected error occurred. Please try again later.";
+        t("contactus_generic_error");
       toast.error(errorMessage);
     } finally {
       setLoading(false);
@@ -72,11 +77,10 @@ export const ContactusSection = () => {
     >
       <div className="flex flex-col gap-7 text-center">
         <h2 className="text-2xl lg:text-4xl xl:text-5xl font-bold text-white">
-          Contact Us
+          {t("c_contact_us_heading")}
         </h2>
         <p className="text-base xl:text-lg text-[#fff]">
-          We invite you to contact us with any questions or concerns. Our
-          dedicated team is ready to guide and support you.
+          {t("c_contact_us_subheading")}
         </p>
       </div>
       <form
@@ -87,10 +91,11 @@ export const ContactusSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-7">
           <ContactInputField
             value={formData.first_name}
+            className="contact-input-field"
             type="text"
             required={true}
             color="#fff"
-            placeholder="First Name*"
+            placeholder={t("c_first_name_placeholder")}
             onChange={(e) =>
               setFormData({ ...formData, first_name: e.target.value })
             }
@@ -98,9 +103,11 @@ export const ContactusSection = () => {
           />
           <ContactInputField
             value={formData.last_name}
+            className="contact-input-field"
             color="#fff"
             type="text"
-            placeholder="Last Name"
+            required={true}
+            placeholder={t("c_last_name_placeholder")}
             onChange={(e) =>
               setFormData({ ...formData, last_name: e.target.value })
             }
@@ -108,10 +115,11 @@ export const ContactusSection = () => {
           />
           <ContactInputField
             value={formData.email}
+            className="contact-input-field"
             color="#fff"
             type="email"
             required={true}
-            placeholder="E-mail Address*"
+            placeholder={t("c_email_placeholder")}
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
             }
@@ -121,9 +129,10 @@ export const ContactusSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-7">
           <ContactInputField
             value={formData.company}
+            className="contact-input-field"
             color="#fff"
             type="text"
-            placeholder="Company"
+            placeholder={t("c_company_placeholder")}
             onChange={(e) =>
               setFormData({ ...formData, company: e.target.value })
             }
@@ -131,9 +140,10 @@ export const ContactusSection = () => {
           />
           <ContactInputField
             value={formData.phone_number}
+            className="contact-input-field"
             color="#fff"
             type="tel"
-            placeholder="Phone Number"
+            placeholder={t("c_phone_number_placeholder")}
             onChange={(e) =>
               setFormData({ ...formData, phone_number: e.target.value })
             }
@@ -142,10 +152,11 @@ export const ContactusSection = () => {
         </div>
         <ContactInputField
           value={formData.message}
+          className="contact-input-field"
           color="#fff"
           type="text"
           required={true}
-          placeholder="Message*"
+          placeholder={t("c_message_placeholder")}
           onChange={(e) =>
             setFormData({ ...formData, message: e.target.value })
           }
@@ -159,7 +170,7 @@ export const ContactusSection = () => {
               loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
-            {loading ? "Sending..." : "Send"}
+            {loading ? t("c_sending_button") : t("c_send_button")}
           </button>
         </div>
       </form>

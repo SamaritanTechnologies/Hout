@@ -35,7 +35,7 @@ const couponSchema = yup.object().shape({
           .required("Maximum discount is required for percentage discounts")
           .test(
             "max-discount",
-            "Maximum discount must be greater than minimum order",
+            "Maximum order amount should be greater than minimum order amount",
             function (value) {
               return value >= this.parent.minimum_order_amount;
             }
@@ -248,12 +248,12 @@ const EditCoupon = ({ coupon, setIsEditModalOpen, fetchCoupons }) => {
 
           <div>
             <InputField
-              label="Maximum Discount Amount (€)"
+              label="Maximum Order Amount (€)"
               type="number"
               name="maximum_discount_amount"
               value={formData.maximum_discount_amount}
               onChange={handleInputChange}
-              placeholder="Enter Max Discount"
+              placeholder="Enter Max Order Amount"
               min="0.01"
               step="0.01"
               hasError={!!errors.maximum_discount_amount}

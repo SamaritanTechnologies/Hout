@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import { axiosApi, axiosWithCredentials } from "../../providers";
+import i18n from "i18next";
 
 export const addVatRate = async (payload) => {
   const response = await axiosWithCredentials.post(`/vat-rate/`, payload);
@@ -11,16 +12,32 @@ export const getVatRate = async () => {
   return response.data;
 };
 
+export const AddDeliveryFee = async (payload) => {
+  const response = await axiosWithCredentials.post(`/delivery-fee/`, payload);
+  return response.data;
+};
+
+export const getDeliveryFee = async () => {
+  const response = await axiosWithCredentials.get("/delivery-fee/");
+  return response.data;
+};
+
 export const getProducts = async (filters = {}) => {
   try {
     // Construct query string from filters
     const params = new URLSearchParams();
 
-    Object.entries(filters).forEach(([key, values]) => {
-      if (Array.isArray(values) && values.length > 0) {
-        values.forEach((value) => {
-          params.append(key, value);
+    Object.entries(filters).forEach(([key, value]) => {
+      if (Array.isArray(value) && value.length > 0) {
+        // Handle array values (for filters)
+        value.forEach((item) => {
+          if (item !== null && item !== undefined && item !== '') {
+            params.append(key, item);
+          }
         });
+      } else if (value !== null && value !== undefined && value !== '') {
+        // Handle single values (for pagination, search, etc.)
+        params.append(key, value);
       }
     });
 
@@ -39,9 +56,9 @@ export const deleteProduct = async (id) => {
   try {
     await axiosWithCredentials.delete(`/product/${id}/delete/`);
 
-    toast.success("Successfully deleted");
+    toast.success(i18n.t("product_delete_success"));
   } catch (error) {
-    toast.error("Something went wrong ");
+    toast.error(i18n.t("product_delete_fail"));
     console.log(error, "error");
   }
 };
@@ -170,10 +187,10 @@ export const addProduct = async (values, lengths, images, relatedProducts) => {
         headers: { "Content-Type": "multipart/form-data" },
       }
     );
-    toast.success("Product added successfully!");
+    toast.success(i18n.t("product_add_success"));
     return response.data;
   } catch (error) {
-    toast.error("Failed to add product.");
+    toast.error(i18n.t("product_add_fail"));
     console.error("Error adding product:", error);
     throw error;
   }
@@ -193,6 +210,7 @@ export const updateProduct = async (
   formData.append("name_en", values.name_en || "");
   formData.append("description_nl", values.description_nl || "");
   formData.append("description_en", values.description_en || "");
+  formData.append("place_on_goedgeplaatst", values.place_on_goedgeplaatst);
 
   // Append numeric fields (ensure they are valid numbers)
   formData.append("width", values.width || 0);
@@ -259,10 +277,10 @@ export const updateProduct = async (
         headers: { "Content-Type": "multipart/form-data" },
       }
     );
-    toast.success("Product updated successfully!");
+    toast.success(i18n.t("product_update_success"));
     return response.data;
   } catch (error) {
-    toast.error("Failed to update product.");
+    toast.error(i18n.t("product_update_fail"));
     console.error("Error updating product:", error);
     throw error;
   }

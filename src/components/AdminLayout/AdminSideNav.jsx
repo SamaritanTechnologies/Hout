@@ -9,11 +9,12 @@ const AdminSidenav = () => {
   const [navs, setNavs] = useState([
     { name: "Dashboard", link: "/dashboard", active: false },
     { name: "Coupon", link: "/add-coupon", active: false },
-    { name: " Add VAT", link: "/vat-value", active: false },
+    // { name: "VAT", link: "/vat-value", active: false },
+    { name: "Delivery", link: "/delivery", active: false },
     { name: "Products", link: "/products", active: false },
     { name: "Orders", link: "/orders", active: false },
     { name: "Product Options", link: "/product-options", active: false },
-    { name: "Homepage Image", link: "/homepage-image", active: false },
+    { name: "Homepage Header", link: "/homepage-image", active: false },
     { name: "Homepage Products", link: "/homepage-products", active: false },
     { name: "Our Values", link: "/our-values", active: false },
     { name: "Our Assortment", link: "/our-assortment", active: false },
@@ -26,6 +27,12 @@ const AdminSidenav = () => {
     { name: "Privacy Policy", link: "/admin-privacy-policy", active: false },
     { name: "About Us", link: "/admin-about-us", active: false },
     { name: "FAQ", link: "/admin-FAQ", active: false },
+    { name: "Webshop", link: "/admin-webshop", active: false },
+    { name: "SignIn  Image", link: "/admin-signin", active: false },
+    { name: "Signup Image", link: "/admin-signup", active: false },
+    { name: "Forgot Image", link: "/admin-forgot", active: false },
+    { name: "Reset Image", link: "/admin-reset", active: false },
+    { name: "Payment Option", link: "/admin-payment", active: false },
   ]);
 
   // useEffect(() => {

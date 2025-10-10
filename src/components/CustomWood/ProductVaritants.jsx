@@ -6,35 +6,110 @@ import { axiosWithCredentials } from "../../providers";
 import { toast } from "react-toastify";
 import { getCart } from "../../redux/actions/orderActions";
 import { setCartItems } from "../../redux/slices/cartSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-const ProductVaritants = ({ variants }) => {
+const ProductVaritants = ({ variants, vat }) => {
+  const { t } = useTranslation();
+  const authState = useSelector((state) => state.auth);
+  const cartState = useSelector((state) => state.cart);
+  console.log("CartState", cartState);
+  const isAuthenticated = authState.isLoggedIn;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+
+  console.log("Variant", variants);
+
+  // const handleaddToCart = async (variantId) => {
+  //   try {
+  //     const input = document.getElementById(`quantity-${variantId}`);
+  //     const quantity = parseInt(input.value, 10);
+
+  //     if (quantity > 0) {
+  //       const payload = {
+  //         product_length: variantId,
+  //         quantity,
+  //       };
+
+  //       setLoading(true);
+  //       await axiosWithCredentials.post(`/add-to-cart/`, payload);
+  //       input.value = 0;
+  //       const res = await getCart();
+  //       dispatch(setCartItems(res.cart_items));
+  //       toast.success(t("pv_cart_add_success"));
+  //       // navigate("/cart");
+  //     } else {
+  //       toast.warning(t("pv_cart_quantity_warning"));
+  //     }
+  //   } catch (error) {
+  //     if (
+  //       error.response &&
+  //       error.response.data &&
+  //       error.response.data.message
+  //     ) {
+  //       if (error.response.data.message === "No more product left in stock.") {
+  //         toast.error(t("pv_cart_out_of_stock"));
+  //       } else {
+  //         toast.error(error.response.data.message);
+  //       }
+  //     } else {
+  //       toast.error(t("pv_cart_error"));
+  //     }
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleaddToCart = async (variantId) => {
     try {
       const input = document.getElementById(`quantity-${variantId}`);
       const quantity = parseInt(input.value, 10);
 
-      if (quantity > 0) {
-        const payload = {
-          product_length: variantId,
-          quantity,
-        };
-
-        setLoading(true);
-        await axiosWithCredentials.post(`/add-to-cart/`, payload);
-        input.value = 0;
-        const res = await getCart();
-        dispatch(setCartItems(res.cart_items));
-        toast.success("Product added to cart!");
-        // navigate("/cart");
-      } else {
-        toast.warning("Please enter a valid quantity");
+      if (quantity <= 0) {
+        toast.warning(t("pv_cart_quantity_warning"));
+        return;
       }
+
+      // Find variant from your variant list
+      const variant = variants.find((v) => v.id === variantId);
+      if (!variant) {
+        toast.error("Variant not found.");
+        return;
+      }
+
+      const stockAvailable = variant.stock;
+
+      // Check if item is already in cart
+      const existingCartItem = cartState.data.find(
+        (item) => item.product_length.id === variantId
+      );
+
+      const existingQuantity = existingCartItem?.quantity || 0;
+      const totalRequested = existingQuantity + quantity;
+
+      if (totalRequested > stockAvailable) {
+        toast.warning(
+          `Only ${stockAvailable - existingQuantity} more in stock.`
+        );
+        return;
+      }
+
+      // Payload to send to backend
+      const payload = {
+        product_length: variantId,
+        quantity,
+      };
+
+      setLoading(true);
+      await axiosWithCredentials.post(`/add-to-cart/`, payload);
+      input.value = 0;
+
+      const res = await getCart();
+      dispatch(setCartItems(res.cart_items));
+      toast.success(t("pv_cart_add_success"));
+      // navigate("/cart");
     } catch (error) {
       if (
         error.response &&
@@ -42,15 +117,51 @@ const ProductVaritants = ({ variants }) => {
         error.response.data.message
       ) {
         if (error.response.data.message === "No more product left in stock.") {
-          toast.error("This product is out of stock.");
+          toast.error(t("pv_cart_out_of_stock"));
         } else {
           toast.error(error.response.data.message);
         }
       } else {
-        toast.error("Something went wrong");
+        toast.error(t("pv_cart_error"));
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAddToLocal = (product, variantId) => {
+    console.log("Product", product);
+    const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    // Get the quantity value from the input field
+    const input = document.getElementById(`quantity-${variantId}`);
+    const quantity = parseInt(input?.value, 10);
+
+    if (quantity > 0) {
+      const productIndex = existingCart.findIndex(
+        (item) => item.id === product.id
+      );
+
+      if (productIndex !== -1) {
+        // Update the quantity
+        existingCart[productIndex].quantity += quantity;
+      } else {
+        // Set the quantity and add to cart
+        product.quantity = quantity;
+        existingCart.push(product);
+      }
+
+      localStorage.setItem("cart", JSON.stringify(existingCart));
+
+      // Reset input value
+      input.value = 0;
+
+      // Dispatch custom event
+      window.dispatchEvent(new Event("localCartUpdated"));
+
+      toast.success(t("pv_cart_add_success"));
+    } else {
+      toast.warning(t("pv_cart_quantity_warning"));
     }
   };
 
@@ -59,53 +170,61 @@ const ProductVaritants = ({ variants }) => {
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="bg-[#F8F8F8]">
-              <th className="font-bold text-15 p-[10px] text-start">Variant</th>
+            <tr className="bg-[#F8F8F8] h-16">
               <th className="font-bold text-15 p-[10px] text-start">
-                Article number
+                {t("p_variant")}
               </th>
-              <th className="font-bold text-15 p-[10px] text-start">Price</th>
-              <th className="font-bold text-15 p-[10px] text-start">Stock</th>
-              <th className="font-bold text-15 p-[10px] text-start">Number</th>
               <th className="font-bold text-15 p-[10px] text-start">
-                Winkelwagen
+                {t("p_articleNumber")}
+              </th>
+              <th className="font-bold text-15 p-[10px] text-start">
+                {t("p_price")}
+              </th>
+              <th className="font-bold text-15 p-[10px] text-start">
+                {t("p_stock")}
+              </th>
+              <th className="font-bold text-15 p-[10px] text-start">
+                {t("p_number")}
+              </th>
+              <th className="font-bold text-15 p-[10px] text-start">
+                {t("p_winkelwagen")}
               </th>
             </tr>
           </thead>
           <tbody>
             {variants?.map((variant) => (
-              <tr key={variant.id}>
-                <td className="p-[10px]">
-                  <div className="flex flex-col gap-[2px]">
+              <tr key={variant.id} className="">
+                <td className="p-[10px] flex flex-col justify-between h-full">
+                  <div className="flex flex-col justify-between h-16 lg:h-14 ">
                     <div className="font-bold text-14 text-[#111727]">
-                      Variant
+                      {t("p_variant")}
                     </div>
                     <div className="text-14 text-[#111727]">
-                      {variant.length}cm
+                      {variant.length} cm
                     </div>
                   </div>
                 </td>
                 <td className="p-[10px]">
-                  <div className="flex flex-col gap-[2px]">
+                  <div className="flex flex-col justify-between h-16 lg:h-14">
                     <div className="font-bold text-14 text-[#111727]">
-                      Article number
+                      {t("p_articleNumber")}
                     </div>
                     <div className="text-14 text-[#111727]">{variant.id}</div>
                   </div>
                 </td>
                 <td className="p-[10px]">
-                  <div className="flex flex-col gap-[3px]">
+                  <div className="flex flex-col justify-between h-16 lg:h-14">
                     <div className="font-bold text-14 text-[#111727]">
-                      Price
-                      <span className="text-[#888888] text-[11px] font-normal">
-                        Inc BTW
-                      </span>
+                      {t("p_price")}
+                      {/* <span className="text-[#888888] text-[11px] font-normal">
+                        {t("p_IncBTW")}
+                      </span> */}
                     </div>
                     <div className="text-14 text-[#111727] font-medium">
-                      €
-                      {variant.full_price_in_vat > 0
-                        ? variant.full_price_in_vat
-                        : 0.0}
+                      {/* discounted_price_in_vat */}€
+                      {vat
+                        ? variant.discounted_price_in_vat
+                        : variant.discounted_price_ex_vat}
                     </div>
                   </div>
                 </td>
@@ -113,12 +232,12 @@ const ProductVaritants = ({ variants }) => {
                   <div className="text-14 text-[#111727]">
                     {variant.stock === 0 ? (
                       <span className="text-14 text-[#111727]">
-                        If you are interested, please contact us
+                        {t("p_contactUs")}
                       </span>
                     ) : (
-                      <div className="flex flex-col gap-3">
-                        <span className="text-sm font-semibold text-[#888888]">
-                          Inventory quantity
+                      <div className="flex flex-col justify-between h-16 lg:h-14">
+                        <span className="font-bold text-14 text-[#111727]">
+                          {t("p_inventoryQuantity")}
                         </span>
                         <span className="text-sm">{variant.stock}</span>
                       </div>
@@ -171,11 +290,18 @@ const ProductVaritants = ({ variants }) => {
                 </td>
                 <td className="p-[10px]">
                   {variant.stock === 0 ? (
-                    <span className="text-14 text-[#111727]">Out of stock</span>
+                    <span className="text-14 text-[#111727]">
+                      {t("p_outOfStock")}
+                    </span>
                   ) : (
                     <button
                       className="cart-button flex items-center justify-center"
-                      onClick={() => handleaddToCart(variant.id)}
+                      onClick={() => {
+                        !isAuthenticated
+                          ? handleAddToLocal(variant, variant.id)
+                          : handleaddToCart(variant.id);
+                      }}
+                      // onClick={() => handleaddToCart(variant.id)}
                       disabled={loading}
                     >
                       <img src={cartIcon} alt="Cart" />

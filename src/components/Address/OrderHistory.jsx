@@ -6,11 +6,14 @@ import { axiosWithCredentials } from "../../providers";
 import { toast } from "react-toastify";
 import Pagination from "../../components/Common/Pagination";
 import { ORDER_PAGE_SIZE } from "../../utils/const";
+import { useTranslation } from "react-i18next";
+import { scrollToTop } from "../../utils/helper";
 
 const OrderHistory = () => {
+  const { t } = useTranslation();
   const [orderList, setOrderList] = useState([]);
   const [loadingItems, setLoadingItems] = useState({});
-  const [currentPage, setCurrentPage] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [loading, setLoading] = useState(false);
 
@@ -35,9 +38,11 @@ const OrderHistory = () => {
     fetchOrdersList();
   }, [fetchOrdersList]);
 
-  const handlePageChange = ({ selected }) => {
+  const handlePageChange = useCallback(({ selected }) => {
     setCurrentPage(selected + 1); // Convert to one-based
-  };
+    scrollToTop();
+  }, []);
+
   const downloadInvoice = async (id) => {
     if (!id) {
       toast.error("There is no invoice related to this order");
@@ -82,16 +87,24 @@ const OrderHistory = () => {
         <div className="flex flex-col items-center mb-32">
           <div className="w-full overflow-auto">
             <h1 className="text-20 font-semibold mb-[18px] text-center">
-              Orders History
+              {t("o_orders_history_title")}
             </h1>
             <table className="w-full min-w-[600px]">
               <thead>
                 <tr className="border-b border-[#E8ECEF] text-left">
-                  <th className="text-sm text-[#6C7275] py-3">Number ID</th>
-                  <th className="text-sm text-[#6C7275] py-3">Date</th>
-                  <th className="text-sm text-[#6C7275] py-3">Status</th>
-                  <th className="text-sm text-[#6C7275] py-3">Price</th>
-                  <th className="text-sm text-[#6C7275] py-3">Invoice</th>
+                  <th className="text-sm text-[#6C7275] py-3">
+                    {t("o_number_id")}
+                  </th>
+                  <th className="text-sm text-[#6C7275] py-3">{t("o_date")}</th>
+                  <th className="text-sm text-[#6C7275] py-3">
+                    {t("o_status")}
+                  </th>
+                  <th className="text-sm text-[#6C7275] py-3">
+                    {t("o_price")}
+                  </th>
+                  <th className="text-sm text-[#6C7275] py-3">
+                    {t("o_invoice")}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -101,24 +114,32 @@ const OrderHistory = () => {
                       key={item.id}
                       className="border-b border-[#E8ECEF] text-left"
                     >
-                      <td className="py-3">{item?.id || "-"}</td>
+                      <td className="py-3">{item?.order_id || "-"}</td>
                       <td className="py-3">
                         {item?.dates
                           ? moment(item?.dates).format("MMMM DD, YYYY")
                           : "N/A"}
                       </td>
-                      <td className="py-3">
-                        <span
-                          className={`p-2 rounded-full text-sm ${
+                      <td className="py-3  flex justify-center items-center ">
+                        <p
+                          className={`p-2  rounded-full ${
                             {
                               pending: "bg-[#FCBE2D] text-white",
-                              delivered: "bg-green1 text-white",
-                            }[item?.status?.toLowerCase()] ||
-                            "bg-gray-200 text-gray-800"
+                              rejected: "bg-[#FD5454] text-white",
+                              delivered: "bg-[#22C55E] text-white",
+                              "order picken": "bg-[#3B82F6] text-white",
+                              "delivery planning": "bg-[#8B5CF6] text-white",
+                              "ready for pickup": "bg-[#F59E42] text-white",
+                              "in transit": "bg-[#14B8A6] text-white",
+                            }[
+                              item?.status
+                                ? item.status.toLowerCase().trim()
+                                : ""
+                            ] || "bg-gray-200 text-gray-800"
                           }`}
                         >
                           {item?.status || "Unknown"}
-                        </span>
+                        </p>
                       </td>
                       <td className="py-3">
                         {(() => {
@@ -145,7 +166,7 @@ const OrderHistory = () => {
                 ) : (
                   <tr>
                     <td colSpan="5" className="text-center text-[#141718] py-5">
-                      No order history found.
+                      {t("o_no_order_history")}
                     </td>
                   </tr>
                 )}

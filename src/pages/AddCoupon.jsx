@@ -9,6 +9,7 @@ import { deleteCoupon, getCoupons } from "../redux/actions/couponAction";
 import { toast } from "react-toastify";
 import EditCoupon from "../components/Coupon/EditCoupon";
 import AddCouponModal from "../components/Coupon/AddCouponModal";
+import { useTranslation } from "react-i18next";
 
 const AddCoupon = () => {
   const [coupons, setCoupons] = useState([]);
@@ -16,6 +17,7 @@ const AddCoupon = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [currentCoupon, setCurrentCoupon] = useState(null);
+  const { t } = useTranslation();
 
   const fetchCoupons = async () => {
     try {
@@ -23,7 +25,7 @@ const AddCoupon = () => {
       setCoupons(res);
     } catch (error) {
       console.error("Error:", error);
-      toast.error("Error to fetch coupons");
+      toast.error(t("coupon_fetch_fail"));
     }
   };
 
@@ -101,9 +103,9 @@ const AddCoupon = () => {
                         {coupon.code}
                       </td>
                       <td className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-semibold text-gray3">
-                        {coupon.discount_type != "percentage" && "€"}
-                        {Number(coupon.discount_value).toFixed(1)}
-                        {coupon.discount_type === "percentage" && "%"}
+                        {coupon.discount_type != "percentage" && "€ "}
+                        {Number(coupon.discount_value).toFixed(2)}
+                        {coupon.discount_type === "percentage" && " %"}
                       </td>
                       <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3 capitalize">
                         {coupon.discount_type}
@@ -116,12 +118,12 @@ const AddCoupon = () => {
                         }
                       </td>
                       <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
-                        ${Number(coupon.minimum_order_amount).toFixed(1)}
+                        € {Number(coupon.minimum_order_amount).toFixed(2)}
                       </td>
                       <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
                         {coupon.maximum_discount_amount
-                          ? `€${Number(coupon.maximum_discount_amount).toFixed(
-                              1
+                          ? `€ ${Number(coupon.maximum_discount_amount).toFixed(
+                              2
                             )}`
                           : "-"}
                       </td>

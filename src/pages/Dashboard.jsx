@@ -12,6 +12,7 @@ import StatsCard from "../components/Dashboard/StatsCard";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { ORDER_PAGE_SIZE } from "../utils/const";
 import Pagination from "../components/Common/Pagination";
+import { scrollDashboardToTop } from "../utils/helper";
 
 const months = [
   { value: 1, name: "JANUARY" },
@@ -97,11 +98,15 @@ export const Dashboard = () => {
   }, []);
 
   const inventoryStats = state?.stats?.find(
-    (stat) => stat.key === "total_inventory"
+    (stat) => stat.key === "amount_of_orders_this_month"
   );
 
-  const skuStats = state?.stats?.find((stat) => stat.key === "total_sku");
-  const salesStats = state?.stats?.find((stat) => stat.key === "total_sales");
+  const skuStats = state?.stats?.find(
+    (stat) => stat.key === "total_sales_by_webshop_this_month"
+  );
+  const salesStats = state?.stats?.find(
+    (stat) => stat.key === "total_sales_current_year"
+  );
 
   const handleSearchChange = (e) => {
     setState((prev) => ({
@@ -141,6 +146,7 @@ export const Dashboard = () => {
 
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected + 1);
+    scrollDashboardToTop();
   };
 
   return (
@@ -152,12 +158,20 @@ export const Dashboard = () => {
         {/* analytics row  */}
         <div className="dashCardRow grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-2 lg:gap-4 xl:gap-8 xl:mb-[15.76px] mb-[10px]">
           <StatsCard
-            name="Total Inventory"
+            name="Total Orders This Month"
             image={inventory}
             stats={inventoryStats}
           />
-          <StatsCard name="Total SKU" image={skuImg} stats={skuStats} />
-          <StatsCard name="Total Sales" image={salesImg} stats={salesStats} />
+          <StatsCard
+            name="Total Sales This Month"
+            image={skuImg}
+            stats={skuStats}
+          />
+          <StatsCard
+            name="Total Sales This Year"
+            image={salesImg}
+            stats={salesStats}
+          />
         </div>
 
         {/* analytics row end  */}
@@ -205,13 +219,19 @@ export const Dashboard = () => {
               <thead>
                 <tr className="bg-[#F1F4F9]">
                   <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold  rounded-l-2xl text-nowrap">
-                    Order Name
+                    Order ID
                   </th>
                   <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	text-nowrap">
-                    Location
+                    Order Data
+                  </th>
+                  <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	text-nowrap">
+                    Customer Name
+                  </th>
+                  <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	text-nowrap">
+                    Address
                   </th>
                   <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold text-nowrap">
-                    <div className="flex flex-col justify-center items-center">
+                    <div className="flex flex-col">
                       <span>Date - Time</span>
                       <input
                         type="date"
@@ -221,11 +241,11 @@ export const Dashboard = () => {
                       />
                     </div>
                   </th>
-                  <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	text-nowrap">
+                  {/* <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	text-nowrap">
                     Piece
-                  </th>
+                  </th> */}
                   <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-bold	text-nowrap">
-                    Amount
+                    Order Price
                   </th>
 
                   <th className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-center xl:text-15 text-14font-bold rounded-r-2xl text-nowrap">
@@ -260,6 +280,11 @@ export const Dashboard = () => {
 
                     return (
                       <tr key={index} className="border-b-[0.4px] border-gray">
+                        <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
+                          <p className="text-gray-900 whitespace-no-wrap xl:text-15 text-12">
+                            {item.order_id}
+                          </p>
+                        </td>
                         <td className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-semibold text-gray3">
                           <div className="flex xl:gap-3 gap-1 items-center">
                             <div className="flex-shrink-0 w-10 h-10">
@@ -278,6 +303,11 @@ export const Dashboard = () => {
                         </td>
                         <td className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-semibold text-gray3">
                           <p className="text-gray-900 whitespace-no-wrap ml-3">
+                            {item?.user.first_name}
+                          </p>
+                        </td>
+                        <td className="xl:px-[24px] lg:px-[20px] px-[12px] xl:py-[16px] lg:py-[14px] py-[12px] text-left xl:text-15 text-14 font-semibold text-gray3">
+                          <p className="text-gray-900 whitespace-no-wrap">
                             {item?.delivery_address}
                           </p>
                         </td>
@@ -286,11 +316,11 @@ export const Dashboard = () => {
                             {formattedDate}
                           </p>
                         </td>
-                        <td className="xl:px-[20px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
+                        {/* <td className="xl:px-[20px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
                           <p className="text-gray-900 whitespace-no-wrap">
                             {productQuantities}
                           </p>
-                        </td>
+                        </td> */}
                         <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
                           <p className="text-[14px] text-[#141718] w-[20%] md:w-[auto] sm:w-[auto]">
                             €{totalAmount.toFixed(2)}
@@ -299,15 +329,20 @@ export const Dashboard = () => {
 
                         <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
                           <p
-                            className={`rounded-full ${
-                              item?.status === "Rejected"
-                                ? "bg-[#FD5454]"
-                                : item?.status === "Pending"
-                                ? "bg-[#FCBE2D]"
-                                : "bg-green1"
-                            } text-white px-[4px] py-[7px] text-14 font-bold text-center`}
+                            className={`p-2 text-center  rounded-full ${
+                              {
+                                pending: "bg-[#FCBE2D] text-white",
+                                rejected: "bg-[#FD5454] text-white",
+                                delivered: "bg-[#22C55E] text-white",
+                                "order picken": "bg-[#3B82F6] text-white",
+                                "delivery planning": "bg-[#8B5CF6] text-white",
+                                "ready for pickup": "bg-[#F59E42] text-white",
+                                "in transit": "bg-[#14B8A6] text-white",
+                              }[item?.status?.toLowerCase()] ||
+                              "bg-gray-200 text-gray-800"
+                            }`}
                           >
-                            {item?.status}
+                            {item?.status || "Unknown"}
                           </p>
                         </td>
                       </tr>
