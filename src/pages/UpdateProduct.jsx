@@ -95,27 +95,27 @@ export const UpdateProduct = () => {
         const formattedRelatedProducts = {
           product1: relatedProductsArray[0]
             ? {
-                value: relatedProductsArray[0]?.id,
-                label: relatedProductsArray[0]?.name_en,
-              }
+              value: relatedProductsArray[0]?.id,
+              label: relatedProductsArray[0]?.name_en,
+            }
             : null,
           product2: relatedProductsArray[1]
             ? {
-                value: relatedProductsArray[1]?.id,
-                label: relatedProductsArray[1]?.name_en,
-              }
+              value: relatedProductsArray[1]?.id,
+              label: relatedProductsArray[1]?.name_en,
+            }
             : null,
           product3: relatedProductsArray[2]
             ? {
-                value: relatedProductsArray[2]?.id,
-                label: relatedProductsArray[2]?.name_en,
-              }
+              value: relatedProductsArray[2]?.id,
+              label: relatedProductsArray[2]?.name_en,
+            }
             : null,
           product4: relatedProductsArray[3]
             ? {
-                value: relatedProductsArray[3]?.id,
-                label: relatedProductsArray[3]?.name_en,
-              }
+              value: relatedProductsArray[3]?.id,
+              label: relatedProductsArray[3]?.name_en,
+            }
             : null,
         };
 
@@ -299,6 +299,7 @@ export const UpdateProduct = () => {
             quality: product?.quality ?? [],
             application: product?.application ?? [],
             place_on_goedgeplaatst: product?.place_on_goedgeplaatst ?? false,
+            label: product?.label ?? false,
           }}
           validationSchema={Yup.object({
             name_en: Yup.string().required("Name is required"),
@@ -698,6 +699,20 @@ export const UpdateProduct = () => {
                     Place Product on GoedGeplaatst via API
                   </p>
                 </div>
+                <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
+                <div className="flex gap-5 items-center mb-[24px]">
+                  <Field
+                    type="checkbox"
+                    name="label"
+                    className="h-8 w-8 cursor-pointer"
+                    checked={values.label}
+                    onChange={() => setFieldValue("label", !values.label)}
+                  />
+                  <p className="font-semibold text-lg text-[#111727]">
+                    Generate Label
+                  </p>
+                </div>
+
                 <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
                 <div className="flex gap-[20px] mb-[24px]">
                   <div className="w-full md:mb-0 relative">
