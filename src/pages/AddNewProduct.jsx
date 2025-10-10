@@ -179,18 +179,20 @@ export const AddNewProduct = () => {
           width: "",
           thickness: "",
           weight_per_m3: "",
+          place_on_goedgeplaatst: false,
+          label: false,
         }}
         validationSchema={Yup.object({
-          name_nl: Yup.string().required("Name is required"),
-          name_en: Yup.string().required("Naam is required"),
+          name_nl: Yup.string().required("Naam is required"),
+          name_en: Yup.string().required("Name is required"),
           thickness: Yup.number().required("Thickness is required"),
           width: Yup.number().required("Width is required"),
           weight_per_m3: Yup.number().required("Weight is required"),
           description_nl: Yup.string().required(
-            "Product Description is required"
+            "Product omschrijving is required"
           ),
           description_en: Yup.string().required(
-            "Product omschrijving is required"
+            "Product Description is required"
           ),
         })}
         onSubmit={async (values, { setSubmitting }) => {
@@ -554,6 +556,18 @@ export const AddNewProduct = () => {
                   Place Product on GoedGeplaatst via API
                 </p>
               </div>
+              <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
+              <div className="flex gap-5 items-center mb-[24px]">
+                <Field
+                  type="checkbox"
+                  name="label"
+                  className="h-8 w-8 cursor-pointer"
+                  checked={values.label}
+                  onChange={() => setFieldValue("label", !values.label)}
+                />
+                <p className="font-semibold text-lg text-[#111727]">Generate Label</p>
+              </div>
+
               <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
               <div className="flex gap-[20px] mb-[24px]">
                 <div className="w-full md:mb-0 relative">

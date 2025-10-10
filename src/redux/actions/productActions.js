@@ -109,6 +109,8 @@ export const addProduct = async (values, lengths, images, relatedProducts) => {
   formData.append("name_en", values.name_en);
   formData.append("description_nl", values.description_nl);
   formData.append("description_en", values.description_en);
+  formData.append("place_on_goedgeplaatst", values.place_on_goedgeplaatst);
+  formData.append("label", values.label);
 
   // Ensure `width`, `thickness`, `weight_per_m3` are valid numbers
   formData.append("width", values.width);
@@ -262,6 +264,36 @@ export const updateProduct = async (
   } catch (error) {
     toast.error("Failed to update product.");
     console.error("Error updating product:", error);
+    throw error;
+  }
+};
+
+export const getAllProductsList = async () => {
+  try {
+    const response = await axiosWithCredentials.get("/products/all-list/");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching products list:", error);
+    throw error;
+  }
+};
+
+
+export const generateProductLabel = async (productId) => {
+  try {
+    const response = await axiosWithCredentials.post(
+      `/product/${productId}/generatelabels/`
+    );
+
+    toast.success(i18n.t("label_generated_success") || "Label generated successfully!");
+    return response.data;
+  } catch (error) {
+    console.error("Error generating label:", error);
+    toast.error(
+      error.response?.data?.detail ||
+        i18n.t("label_generated_fail") ||
+        "Failed to generate label."
+    );
     throw error;
   }
 };
