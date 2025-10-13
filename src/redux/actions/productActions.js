@@ -303,7 +303,7 @@ export const generateProductLabel = async (productId) => {
       `/product/${productId}/generatelabels/`
     );
 
-    toast.success("Label generated successfully!");
+    toast.success("Label generated successfully..");
     return response.data;
   } catch (error) {
     console.error("Error generating label:", error);
