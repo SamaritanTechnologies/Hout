@@ -3,6 +3,7 @@ import editImg from "../assets/DashboardImages/edit.svg";
 import dltImg from "../assets/DashboardImages/delete.svg";
 import { FunnelIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import Button from "../components/Common/Button";
+import ButtonSmall from "../components/Common/Button2";
 import DropdownFilter from "../components/Dashboard/DropdownFilter";
 import { useNavigate } from "react-router-dom";
 import DeleteModal from "../components/Modals/DeleteModal";
@@ -10,6 +11,7 @@ import {
   deleteProduct,
   getProductCategories,
   getProducts,
+  generateProductLabel,
 } from "../redux/actions/productActions";
 import { useDispatch, useSelector } from "react-redux";
 import { setProductCategories } from "../redux";
@@ -145,6 +147,17 @@ export const Products = () => {
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
+
+  const handleGenerateLabel = async (productId) => {
+    try {
+      await generateProductLabel(productId);
+      await fetchProducts(selectedOptions, currentPage); // refresh list
+    } catch (error) {
+      console.error("Label generation failed:", error);
+    }
+  };
+
+
 
   const highlightMatch = (text, query) => {
     if (!query || !text) return text;
@@ -285,10 +298,14 @@ export const Products = () => {
                   />
                 </div>
               </th>
-
+              <th className="px-[10px] py-[12px] text-center text-14 font-medium min-h-12">
+                Label
+              </th>
               <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
                 Stock
               </th>
+
+
               <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
                 <img src={ActiveTableHead} alt="ActiveTableHead" />
               </th>
@@ -303,9 +320,8 @@ export const Products = () => {
               filteredProducts.map((rowData, index) => (
                 <tr
                   key={index}
-                  className={`border-b-[0.4px] w-full border-gray ${
-                    index % 2 !== 0 ? "bg-[#F1F4F9]" : ""
-                  }`}
+                  className={`border-b-[0.4px] w-full border-gray ${index % 2 !== 0 ? "bg-[#F1F4F9]" : ""
+                    }`}
                 >
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">
                     <div className="">
@@ -350,8 +366,8 @@ export const Products = () => {
                     <div className="flex flex-col gap-1 items-start">
                       {rowData?.group && rowData.group?.length > 0
                         ? rowData.group?.map((item, index) => (
-                            <p key={index}>{item.name_en}</p>
-                          ))
+                          <p key={index}>{item.name_en}</p>
+                        ))
                         : "---"}
                     </div>
                   </td>
@@ -360,13 +376,13 @@ export const Products = () => {
                     <div className="flex flex-col gap-1 items-start">
                       {rowData?.product_type && rowData.product_type?.length > 0
                         ? rowData.product_type?.map((item, index) => (
-                            <p
-                              key={index}
-                              className="text-gray-900 whitespace-no-wrap"
-                            >
-                              {item.name_en}
-                            </p>
-                          ))
+                          <p
+                            key={index}
+                            className="text-gray-900 whitespace-no-wrap"
+                          >
+                            {item.name_en}
+                          </p>
+                        ))
                         : "---"}
                     </div>
                   </td>
@@ -375,13 +391,13 @@ export const Products = () => {
                     <div className="flex flex-col gap-1">
                       {rowData?.material && rowData.material.length > 0
                         ? rowData.material.map((item, index) => (
-                            <p
-                              key={index}
-                              className="text-gray-900 whitespace-no-wrap flex gap-2 items-center"
-                            >
-                              <span>{item.name_en}</span>
-                            </p>
-                          ))
+                          <p
+                            key={index}
+                            className="text-gray-900 whitespace-no-wrap flex gap-2 items-center"
+                          >
+                            <span>{item.name_en}</span>
+                          </p>
+                        ))
                         : "---"}
                     </div>
                   </td>
@@ -390,23 +406,49 @@ export const Products = () => {
                     <div className="flex flex-col gap-1">
                       {rowData?.profile && rowData.profile.length > 0
                         ? rowData.profile.map((item, index) => (
-                            <p
-                              key={index}
-                              className="text-gray-900 whitespace-no-wrap flex gap-2 items-center"
-                            >
-                              {item.name_en}
-                            </p>
-                          ))
+                          <p
+                            key={index}
+                            className="text-gray-900 whitespace-no-wrap flex gap-2 items-center"
+                          >
+                            {item.name_en}
+                          </p>
+                        ))
                         : "---"}
                     </div>
                   </td>
+                  <td className="px-[6px] py-[18px] text-center align-middle">
+                    <div className="flex flex-col items-center justify-center gap-1">
+                      {rowData?.label ? (
+                        <>
+                          <a
+                            href={rowData.pdf_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 underline text-[13px] hover:text-blue-800 transition"
+                          >
+                            View PDF
+                          </a>
+                          <ButtonSmall
+                            onClick={() => handleGenerateLabel(rowData.id)}
+                            btnText="Regenerate"
+                          />
+                        </>
+                      ) : (
+                        <ButtonSmall
+                          onClick={() => handleGenerateLabel(rowData.id)}
+                          btnText="Generate"
+                        />
+                      )}
+                    </div>
+                  </td>
+
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">
                     <p className="bg-[#FBC7001A] text-[#FBC700] py-1 px-3 rounded-full min-w-[70px]  text-gray-900 flex gap-2 items-center text-nowrap">
                       {rowData?.lengths && rowData.lengths.length > 0
                         ? rowData.lengths.reduce(
-                            (total, item) => total + item.stock,
-                            0
-                          )
+                          (total, item) => total + item.stock,
+                          0
+                        )
                         : 0}{" "}
                       Left
                     </p>
@@ -469,7 +511,7 @@ export const Products = () => {
           </tbody>
         </table>
       </div>
-      
+
       {/* Pagination */}
       {state.count > pageSize && (
         <div className="mt-6 flex justify-center">
