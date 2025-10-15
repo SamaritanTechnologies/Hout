@@ -307,9 +307,6 @@ export const Products = () => {
 
 
               <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
-                Test Column
-              </th>
-              <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
                 <img src={ActiveTableHead} alt="ActiveTableHead" />
               </th>
               <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12 rounded-tr-lg">
@@ -454,11 +451,6 @@ export const Products = () => {
                         )
                         : 0}{" "}
                       Left
-                    </p>
-                  </td>
-                  <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-center text-14 font-semibold text-gray3">
-                    <p className="bg-blue-100 text-blue-800 py-1 px-3 rounded-full min-w-[80px] text-gray-900 flex gap-2 items-center justify-center text-nowrap">
-                      Test {rowData?.id}
                     </p>
                   </td>
                   <td>
