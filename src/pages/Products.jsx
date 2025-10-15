@@ -307,6 +307,9 @@ export const Products = () => {
 
 
               <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
+                Test Column
+              </th>
+              <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
                 <img src={ActiveTableHead} alt="ActiveTableHead" />
               </th>
               <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12 rounded-tr-lg">
@@ -453,6 +456,11 @@ export const Products = () => {
                       Left
                     </p>
                   </td>
+                  <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-center text-14 font-semibold text-gray3">
+                    <p className="bg-blue-100 text-blue-800 py-1 px-3 rounded-full min-w-[80px] text-gray-900 flex gap-2 items-center justify-center text-nowrap">
+                      Test {rowData?.id}
+                    </p>
+                  </td>
                   <td>
                     {rowData?.is_active_on_goedgeplaatst ? (
                       <div className="border border-[#D0D5DD] rounded-md flex items-center justify-center px-1.5 py-0.5 gap-1">
@@ -501,7 +509,7 @@ export const Products = () => {
             ) : (
               <tr className="w-full">
                 <td
-                  colSpan="10"
+                  colSpan="11"
                   className="text-[14px] text-[#141718] text-center py-[22px]"
                 >
                   No products found
