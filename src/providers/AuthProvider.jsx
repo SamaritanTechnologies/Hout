@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, matchPath } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import {
   getProductCategories,
@@ -37,7 +37,11 @@ export function AuthProvider({ children }) {
   const pathname = location.pathname;
   const [loading, setLoading] = useState(true);
 
-  const isPublicRoute = publicPaths.some((path) => location.pathname === path);
+  const isPublicRoute = publicPaths.some((pathPattern) =>
+    Boolean(
+      matchPath({ path: pathPattern, end: true }, location.pathname)
+    )
+  );
   const isAuthRoute = AuthPaths.some((path) => location.pathname === path);
 
   useEffect(() => {
