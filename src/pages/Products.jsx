@@ -37,6 +37,8 @@ export const Products = () => {
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isDeleted, setIsDeleted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [labelGenerating, setLabelGenerating] = useState({});
   const navigate = useNavigate();
   const [selectedOptions, setSelectedOptions] = useState({
     group: [],
@@ -52,6 +54,7 @@ export const Products = () => {
 
   const fetchProducts = async (selectedOptions, page = currentPage) => {
     try {
+      setIsLoading(true);
       // Filter out empty arrays and add pagination parameters
       const filteredOptions = Object.entries(selectedOptions).reduce((acc, [key, value]) => {
         if (Array.isArray(value) && value.length > 0) {
@@ -78,6 +81,8 @@ export const Products = () => {
     } catch (error) {
       console.error("Error fetching user data:", error);
       setState(initialState);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -150,10 +155,39 @@ export const Products = () => {
 
   const handleGenerateLabel = async (productId) => {
     try {
-      await generateProductLabel(productId);
-      await fetchProducts(selectedOptions, currentPage); // refresh list
+      setLabelGenerating(prev => ({ ...prev, [productId]: true }));
+      const response = await generateProductLabel(productId);
+      
+      console.log("Label generation response:", response); // Debug log
+      
+      // Try to update the specific product in the state first
+      setState(prev => ({
+        ...prev,
+        results: prev.results.map(product => 
+          product.id === productId 
+            ? { 
+                ...product, 
+                label: response?.label || true, // Set label to true if response has label data
+                pdf_url: response?.pdf_url || response?.url || response?.file_url || response?.data?.pdf_url // Try different possible URL fields
+              }
+            : product
+        )
+      }));
+      
+      // If there's a PDF URL in the response, open it
+      const pdfUrl = response?.pdf_url || response?.url || response?.file_url || response?.data?.pdf_url;
+      if (pdfUrl) {
+        window.open(pdfUrl, '_blank', 'noopener,noreferrer');
+      } else {
+        // If no PDF URL in response, refetch the products to get updated data
+        console.log("No PDF URL found in response, refetching products...");
+        await fetchProducts(selectedOptions, currentPage);
+      }
     } catch (error) {
       console.error("Label generation failed:", error);
+      toast.error("Failed to generate label");
+    } finally {
+      setLabelGenerating(prev => ({ ...prev, [productId]: false }));
     }
   };
 
@@ -298,25 +332,35 @@ export const Products = () => {
                   />
                 </div>
               </th>
-              <th className="px-[10px] py-[12px] text-center text-14 font-medium min-h-12">
-                Label
-              </th>
               <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
                 Stock
               </th>
-
-
               <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
                 <img src={ActiveTableHead} alt="ActiveTableHead" />
               </th>
-              <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12 rounded-tr-lg">
+              <th className="px-[10px] py-[12px]  text-center text-14 font-medium min-h-12">
                 Action
+              </th>
+              <th className="px-[10px] py-[12px] text-center text-14 font-medium min-h-12 rounded-tr-lg">
+                Label
               </th>
             </tr>
           </thead>
 
           <tbody>
-            {filteredProducts.length > 0 ? (
+            {isLoading ? (
+              <tr className="w-full">
+                <td
+                  colSpan="12"
+                  className="text-[14px] text-[#141718] text-center py-[22px]"
+                >
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
+                    <span>Loading products...</span>
+                  </div>
+                </td>
+              </tr>
+            ) : filteredProducts.length > 0 ? (
               filteredProducts.map((rowData, index) => (
                 <tr
                   key={index}
@@ -416,31 +460,6 @@ export const Products = () => {
                         : "---"}
                     </div>
                   </td>
-                  <td className="px-[6px] py-[18px] text-center align-middle">
-                    <div className="flex flex-col items-center justify-center gap-1">
-                      {rowData?.label ? (
-                        <>
-                          <a
-                            href={rowData.pdf_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 underline text-[13px] hover:text-blue-800 transition"
-                          >
-                            View PDF
-                          </a>
-                          <ButtonSmall
-                            onClick={() => handleGenerateLabel(rowData.id)}
-                            btnText="Regenerate"
-                          />
-                        </>
-                      ) : (
-                        <ButtonSmall
-                          onClick={() => handleGenerateLabel(rowData.id)}
-                          btnText="Generate"
-                        />
-                      )}
-                    </div>
-                  </td>
 
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">
                     <p className="bg-[#FBC7001A] text-[#FBC700] py-1 px-3 rounded-full min-w-[70px]  text-gray-900 flex gap-2 items-center text-nowrap">
@@ -491,6 +510,33 @@ export const Products = () => {
                       </div>
                     </div>
                   </td>
+                  <td className="px-[6px] py-[18px] text-center align-middle">
+                    <div className="flex flex-col items-center justify-center gap-1">
+                      {rowData?.label ? (
+                        <>
+                          <a
+                            href={rowData.pdf_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 underline text-[13px] hover:text-blue-800 transition"
+                          >
+                            View PDF
+                          </a>
+                          <ButtonSmall
+                            onClick={() => handleGenerateLabel(rowData.id)}
+                            btnText={labelGenerating[rowData.id] ? "Generating..." : "Label"}
+                            disabled={labelGenerating[rowData.id]}
+                          />
+                        </>
+                      ) : (
+                        <ButtonSmall
+                          onClick={() => handleGenerateLabel(rowData.id)}
+                          btnText={labelGenerating[rowData.id] ? "Generating..." : "Label"}
+                          disabled={labelGenerating[rowData.id]}
+                        />
+                      )}
+                    </div>
+                  </td>
                   {/* <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left text-14 font-semibold text-gray3">
                       <div className="flex xl:gap-3 gap-2 items-center justify-center">
                        
@@ -501,7 +547,7 @@ export const Products = () => {
             ) : (
               <tr className="w-full">
                 <td
-                  colSpan="11"
+                  colSpan="12"
                   className="text-[14px] text-[#141718] text-center py-[22px]"
                 >
                   No products found
