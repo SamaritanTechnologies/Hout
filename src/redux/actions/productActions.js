@@ -126,7 +126,15 @@ export const addProduct = async (values, lengths, images, relatedProducts) => {
   formData.append("name_en", values.name_en);
   formData.append("description_nl", values.description_nl);
   formData.append("description_en", values.description_en);
-  formData.append("is_active_on_goedgeplaatst", values.place_on_goedgeplaatst);
+  // Mirror checkbox to both flags as explicit strings
+  formData.append(
+    "place_on_goedgeplaatst",
+    values.place_on_goedgeplaatst ? "true" : "false"
+  );
+  formData.append(
+    "is_active_on_goedgeplaatst",
+    values.place_on_goedgeplaatst ? "true" : "false"
+  );
   formData.append("label", values.label);
 
   // Ensure `width`, `thickness`, `weight_per_m3` are valid numbers
@@ -210,7 +218,15 @@ export const updateProduct = async (
   formData.append("name_en", values.name_en || "");
   formData.append("description_nl", values.description_nl || "");
   formData.append("description_en", values.description_en || "");
-  formData.append("is_active_on_goedgeplaatst", values.place_on_goedgeplaatst);
+  // Mirror checkbox to both flags as explicit strings
+  formData.append(
+    "place_on_goedgeplaatst",
+    values.place_on_goedgeplaatst ? "true" : "false"
+  );
+  formData.append(
+    "is_active_on_goedgeplaatst",
+    values.place_on_goedgeplaatst ? "true" : "false"
+  );
 
   // Append numeric fields (ensure they are valid numbers)
   formData.append("width", values.width || 0);
