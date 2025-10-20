@@ -298,8 +298,7 @@ export const UpdateProduct = () => {
             durability_class: product?.durability_class ?? [],
             quality: product?.quality ?? [],
             application: product?.application ?? [],
-            place_on_goedgeplaatst: product?.place_on_goedgeplaatst ?? false,
-            label: product?.label ?? false,
+            place_on_goedgeplaatst: product?.is_active_on_goedgeplaatst ?? false,
           }}
           validationSchema={Yup.object({
             name_en: Yup.string().required("Name is required"),
@@ -687,29 +686,14 @@ export const UpdateProduct = () => {
                     className="h-8 w-8 cursor-pointer"
                     checked={values.place_on_goedgeplaatst}
                     onChange={() => {
-                      if (product?.place_on_goedgeplaatst !== true) {
-                        setFieldValue(
-                          "place_on_goedgeplaatst",
-                          !values.place_on_goedgeplaatst
-                        );
-                      }
+                      setFieldValue(
+                        "place_on_goedgeplaatst",
+                        !values.place_on_goedgeplaatst
+                      );
                     }}
                   />
                   <p className="font-semibold text-lg text-[#111727]">
                     Place Product on GoedGeplaatst via API
-                  </p>
-                </div>
-                <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
-                <div className="flex gap-5 items-center mb-[24px]">
-                  <Field
-                    type="checkbox"
-                    name="label"
-                    className="h-8 w-8 cursor-pointer"
-                    checked={values.label}
-                    onChange={() => setFieldValue("label", !values.label)}
-                  />
-                  <p className="font-semibold text-lg text-[#111727]">
-                    Generate Label
                   </p>
                 </div>
 
