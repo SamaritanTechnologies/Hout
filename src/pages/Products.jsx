@@ -514,14 +514,6 @@ export const Products = () => {
                     <div className="flex flex-col items-center justify-center gap-1">
                       {rowData?.label ? (
                         <>
-                          <a
-                            href={rowData.pdf_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 underline text-[13px] hover:text-blue-800 transition"
-                          >
-                            View PDF
-                          </a>
                           <ButtonSmall
                             onClick={() => handleGenerateLabel(rowData.id)}
                             btnText={labelGenerating[rowData.id] ? "Generating..." : "Label"}

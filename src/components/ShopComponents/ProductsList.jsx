@@ -11,9 +11,11 @@ const ProductsList = ({
   searchQuery,
 }) => {
   const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchProduct = async () => {
     try {
+      setIsLoading(true);
       const queryParams = new URLSearchParams();
 
       // Add price range
@@ -49,6 +51,8 @@ const ProductsList = ({
       setTotalItems(data.count); // Update total items from API
     } catch (error) {
       console.error("Error fetching products:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
   useEffect(() => {
@@ -81,7 +85,12 @@ const ProductsList = ({
         })}
       </div> */}
       <div className="w-full pt-24 max-w-[915px] mx-auto px-4">
-        {products?.length > 0 ? (
+        {isLoading ? (
+          <div className="flex items-center justify-center gap-2 py-20 text-gray-700">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
+            <span>Loading products...</span>
+          </div>
+        ) : products?.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-7">
             {products.map((product) => {
               const minimumPrice = getMinimumPriceObject(product.lengths);
