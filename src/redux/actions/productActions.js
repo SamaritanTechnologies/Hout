@@ -135,6 +135,11 @@ export const addProduct = async (values, lengths, images, relatedProducts) => {
     "is_active_on_goedgeplaatst",
     values.place_on_goedgeplaatst ? "true" : "false"
   );
+
+  formData.append(
+    "place_on_marktplaats",
+    values.place_on_marktplaats ? "true" : "false"
+  );
   formData.append("label", values.label);
 
   // Ensure `width`, `thickness`, `weight_per_m3` are valid numbers
@@ -226,6 +231,11 @@ export const updateProduct = async (
   formData.append(
     "is_active_on_goedgeplaatst",
     values.place_on_goedgeplaatst ? "true" : "false"
+  );
+
+  formData.append(
+    "place_on_marktplaats",
+    values.place_on_marktplaats ? "true" : "false"
   );
 
   // Append numeric fields (ensure they are valid numbers)
