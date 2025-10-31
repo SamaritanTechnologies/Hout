@@ -299,6 +299,7 @@ export const UpdateProduct = () => {
             quality: product?.quality ?? [],
             application: product?.application ?? [],
             place_on_goedgeplaatst: product?.is_active_on_goedgeplaatst ?? false,
+            place_on_marktplaats: product?.place_on_marktplaats ?? false,
           }}
           validationSchema={Yup.object({
             name_en: Yup.string().required("Name is required"),
