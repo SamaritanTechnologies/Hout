@@ -106,7 +106,7 @@ export const nlTranslations = {
   // Cart Sections
   c_cart_heading: "Winkelwagen",
   c_tab_shopping_cart: "Winkelwagen",
-  c_tab_checkout_details: "Bestellem",
+  c_tab_checkout_details: "Bestellen",
   c_tab_order_complete: "Bestelling voltooid",
   c_login_required_heading: "Inloggen vereist",
   c_login_required_message: "U moet inloggen om door te gaan naar afrekenen.",
@@ -361,7 +361,7 @@ export const nlTranslations = {
   cd_delivery_method_title: "Bezorgmethode",
   cd_delivery_option_label: "Bezorgen",
   cd_pickup_option_label: "Afhalen",
-  cd_delivery_address_title: "(Alfever) Adres",
+  cd_delivery_address_title: "(Aflever) Adres",
   cd_quantity_label: "Aantal",
   cd_delivery_method_required: "Selecteer een bezorgmethode",
   // Coupon Toasts

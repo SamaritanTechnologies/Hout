@@ -581,7 +581,7 @@ export const AddNewProduct = () => {
                   Place Product on GoedGeplaatst via API
                 </p>
               </div>
-              <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
+              {/* <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
               <div className="flex gap-5 items-center mb-[24px]">
                 <Field
                   type="checkbox"
@@ -598,7 +598,7 @@ export const AddNewProduct = () => {
                 <p className="font-semibold text-lg text-[#111727]">
                   Place Product on Marktplaats via API
                 </p>
-              </div>
+              </div> */}
               <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
               <div className="flex gap-[20px] mb-[24px]">
                 <div className="w-full md:mb-0 relative">
