@@ -9,6 +9,7 @@ import { setCartItems } from "../../redux/slices/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { formatPrice } from "../../utils/helper";
 
 const ProductVaritants = ({ variants, vat }) => {
   const { t } = useTranslation();
@@ -222,9 +223,11 @@ const ProductVaritants = ({ variants, vat }) => {
                     </div>
                     <div className="text-14 text-[#111727] font-medium">
                       {/* discounted_price_in_vat */}€
-                      {vat
-                        ? variant.discounted_price_in_vat
-                        : variant.discounted_price_ex_vat}
+                      {formatPrice(
+                        vat
+                          ? variant.discounted_price_in_vat
+                          : variant.discounted_price_ex_vat
+                      )}
                     </div>
                   </div>
                 </td>

@@ -7,6 +7,7 @@ import {
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosWithCredentials } from "../../providers";
+import { formatPrice } from "../../utils/helper";
 
 const formatTimeAgo = (dateString) => {
   const date = new Date(dateString);
@@ -124,7 +125,7 @@ const NotificationModal = ({
                       </div>
                     </div>
                     <p className="text-xs font-medium text-gray-500 mt-1">
-                      $ {Number(order.total_price).toFixed(2)}
+                      $ {formatPrice(order.total_price)}
                     </p>
                     <div className="flex items-center text-xs text-gray-400 mt-1">
                       <ClockIcon className="w-3 h-3 mr-1" />

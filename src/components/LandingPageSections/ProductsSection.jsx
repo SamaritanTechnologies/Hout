@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { getFeaturedProducts } from "../../redux/actions/userActions";
 import ProductCard from "../Common/ProductCard";
 import { useTranslation } from "react-i18next";
+import { parsePrice } from "../../utils/helper";
 
 const ProductsSection = () => {
   const { t } = useTranslation();
@@ -23,8 +24,8 @@ const ProductsSection = () => {
     if (!lengths || lengths.length === 0) return "N/A";
 
     return lengths.reduce((minObj, currentObj) => {
-      const currentPrice = parseFloat(currentObj.full_price_ex_vat);
-      const minPrice = parseFloat(minObj.full_price_ex_vat);
+      const currentPrice = parsePrice(currentObj.full_price_ex_vat);
+      const minPrice = parsePrice(minObj.full_price_ex_vat);
       return currentPrice < minPrice ? currentObj : minObj;
     });
   };

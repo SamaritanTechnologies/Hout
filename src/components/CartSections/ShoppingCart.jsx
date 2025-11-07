@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { setCartSummaryData } from "../../redux/slices/totalSummarySlice";
 import { useTranslation } from "react-i18next";
 import { calculateTotal } from "./amount";
+import { formatPrice } from "../../utils/helper";
 
 const ShoppingCart = ({
   cartData,
@@ -195,14 +196,14 @@ const ShoppingCart = ({
   useEffect(() => {
     dispatch(
       setCartSummaryData({
-        subtotal: Number(totalPrice || 0).toFixed(2),
+        subtotal: formatPrice(totalPrice || 0),
         deliveryFee: deliveryCharge,
-        tax: Number(taxData || 0).toFixed(2),
-        youSaved: discount.toFixed(2),
-        total: total?.toFixed(2),
+        tax: formatPrice(taxData || 0),
+        youSaved: formatPrice(discount),
+        total: formatPrice(total || 0),
         // order_status: selectedMethod,
         payment_option: selectedOption,
-        tax_amount: taxAmount.toFixed(2),
+        tax_amount: formatPrice(taxAmount),
         cart_data: {
           totalPrice: totalPrice,
           delivery: delivery,
@@ -458,7 +459,7 @@ const ShoppingCart = ({
                               </div>
                             </td>
                             <td className="px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
-                              € {item?.product_length?.discounted_price_ex_vat}
+                              € {formatPrice(item?.product_length?.discounted_price_ex_vat)}
                             </td>
                             <td className="px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
                               € {item?.product_price}
@@ -604,9 +605,9 @@ const ShoppingCart = ({
                   {couponData && !isMinimumOrderMet && (
                     <div className="text-amber-600 mt-2">
                       {t("s_add_more_for_coupon", {
-                        amount: (
+                        amount: formatPrice(
                           couponData.minimum_order_amount - subtotal
-                        ).toFixed(2),
+                        ),
                       })}
                     </div>
                   )}
@@ -620,7 +621,7 @@ const ShoppingCart = ({
                     <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
                       {t("s_subtotal_excl_vat")}
                     </div>
-                    <div>€ {Number(totalPrice || 0).toFixed(2)}</div>
+                    <div>€ {formatPrice(totalPrice || 0)}</div>
                   </section>
 
                   <section className="flex justify-between pt-[25px]">
@@ -629,14 +630,14 @@ const ShoppingCart = ({
                     </div>
                     <div>
                       € {deliveryCharge}
-                      {/* {Number(delivery || 0).toFixed(2)} */}
+                      {/* {formatPrice(delivery || 0)} */}
                     </div>
                   </section>
                   <section className="flex justify-between pt-[25px] border-b border-[#D9D9D9] pb-3">
                     <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
                       {t("s_tax")}
                     </div>
-                    <div> € {Number(taxAmount || 0).toFixed(2)} </div>
+                    <div> € {formatPrice(taxAmount || 0)} </div>
                   </section>
                   {couponData && isMinimumOrderMet && discount > 0 && (
                     <section className="flex justify-between pt-[25px]">
@@ -644,7 +645,7 @@ const ShoppingCart = ({
                         {t("s_you_saved")}
                       </div>
                       <div className="text-green-600">
-                        € {discount.toFixed(2)}
+                        € {formatPrice(discount)}
                       </div>
                     </section>
                   )}
@@ -653,7 +654,7 @@ const ShoppingCart = ({
                       {t("s_total")}
                     </div>
                     <div className="text-customYellow font-medium xl:text-18 lg:text-16 text-14">
-                      € {total?.toFixed(2)}
+                      € {formatPrice(total || 0)}
                     </div>
                   </section>
                 </section>
@@ -807,14 +808,14 @@ const ShoppingCart = ({
                             </div>
                           </td>
                           <td className="px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
-                            € {item?.discounted_price_ex_vat}
+                            € {formatPrice(item?.discounted_price_ex_vat)}
                           </td>
                           <td className="px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
                             €{" "}
-                            {(
+                            {formatPrice(
                               (item?.quantity || 1) *
                               parseFloat(item?.discounted_price_ex_vat || 0)
-                            ).toFixed(2)}
+                            )}
                           </td>
                         </tr>
                       );
@@ -831,20 +832,20 @@ const ShoppingCart = ({
                   <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
                     {t("s_subtotal_excl_vat")}
                   </div>
-                  <div>€{Number(cartTotal || 0).toFixed(2)}</div>
+                  <div>€{formatPrice(cartTotal || 0)}</div>
                 </section>
 
                 <section className="flex justify-between pt-[25px]">
                   <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
                     {t("s_delivery_fee")}
                   </div>
-                  <div>€ {Number(deliveryCharge || 0).toFixed(2)}</div>
+                  <div>€ {formatPrice(deliveryCharge || 0)}</div>
                 </section>
                 <section className="flex justify-between pt-[25px] border-b border-[#D9D9D9] pb-3">
                   <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
                     {t("s_tax")}
                   </div>
-                  <div>€ {Number(taxAmount || 0).toFixed(2)} </div>
+                  <div>€ {formatPrice(taxAmount || 0)} </div>
                 </section>
                 {couponData && isMinimumOrderMet && discount > 0 && (
                   <section className="flex justify-between pt-[25px]">
@@ -852,7 +853,7 @@ const ShoppingCart = ({
                       {t("s_you_saved")}
                     </div>
                     <div className="text-green-600">
-                      € {discount.toFixed(2)}
+                      € {formatPrice(discount)}
                     </div>
                   </section>
                 )}
@@ -861,7 +862,7 @@ const ShoppingCart = ({
                     {t("s_total")}
                   </div>
                   <div className="text-customYellow font-medium xl:text-18 lg:text-16 text-14">
-                    € {total?.toFixed(2)}
+                    € {formatPrice(total || 0)}
                   </div>
                 </section>
               </section>

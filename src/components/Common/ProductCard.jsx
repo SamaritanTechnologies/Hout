@@ -10,6 +10,7 @@ import { useState } from "react";
 import { setCartItems } from "../../redux/slices/cartSlice";
 import { getCart } from "../../redux/actions/orderActions";
 import { useTranslation } from "react-i18next";
+import { formatPrice } from "../../utils/helper";
 
 const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
   const { t, i18n } = useTranslation();
@@ -157,15 +158,15 @@ const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
           <span className="text-xl font-semibold text-[#111727]">
             €
             {includeVAT
-              ? Number(product?.lengths[0]?.discounted_price_in_vat).toFixed(2)
-              : Number(minimumPrice.discounted_price_ex_vat).toFixed(2)}
+              ? formatPrice(product?.lengths[0]?.discounted_price_in_vat)
+              : formatPrice(minimumPrice?.discounted_price_ex_vat)}
           </span>
 
           <span className="text-[#B0B0B0] line-through self-center">
             €
             {includeVAT
-              ? Number(product?.lengths[0]?.full_price_in_vat).toFixed(2)
-              : Number(product?.lengths[0]?.full_price_ex_vat).toFixed(2)}
+              ? formatPrice(product?.lengths[0]?.full_price_in_vat)
+              : formatPrice(product?.lengths[0]?.full_price_ex_vat)}
             {/* {minimumPrice.full_price_ex_vat} */}
           </span>
         </div>

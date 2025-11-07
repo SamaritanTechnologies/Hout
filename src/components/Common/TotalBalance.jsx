@@ -2,6 +2,7 @@ import React from "react";
 import Button from "./Button";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { formatPrice } from "../../utils/helper";
 
 const TotalBalance = () =>
   // { subtotal, deliveryFee, tax, total, cartItems }
@@ -26,7 +27,7 @@ const TotalBalance = () =>
                   {t("tb_delivery_fee")}
                 </div>
                 <div className="text-[#111727]">
-                  € {Number(cartSummary.deliveryFee || 0).toFixed(2)}
+                  € {formatPrice(cartSummary.deliveryFee || 0)}
                 </div>
               </section>
 

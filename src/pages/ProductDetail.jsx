@@ -25,6 +25,7 @@ import {
 } from "react-share";
 import Switch from "../components/Common/Switch";
 import { useTranslation } from "react-i18next";
+import { formatPrice } from "../utils/helper";
 
 export const ProductDetail = () => {
   const { t, i18n } = useTranslation();
@@ -176,9 +177,11 @@ export const ProductDetail = () => {
               <h1 className="text-20 font-bold">{productDetail?.name_en}</h1>
               <div className="pt-6 text-44">
                 €
-                {vat
-                  ? productDetail?.lengths[0].discounted_price_in_vat
-                  : productDetail?.lengths[0].discounted_price_ex_vat}
+                {formatPrice(
+                  vat
+                    ? productDetail?.lengths[0].discounted_price_in_vat
+                    : productDetail?.lengths[0].discounted_price_ex_vat
+                )}
               </div>
 
               <div className="flex items-center gap-x-4 pt-5 border-b-2 border-[#D9D9D9] pb-[26px]">
@@ -243,9 +246,11 @@ export const ProductDetail = () => {
             </h1>
             <div className="text-xl text-[#111727]">
               €
-              {vat
-                ? productDetail?.lengths[0].discounted_price_in_vat
-                : productDetail?.lengths[0].discounted_price_ex_vat}
+              {formatPrice(
+                vat
+                  ? productDetail?.lengths[0].discounted_price_in_vat
+                  : productDetail?.lengths[0].discounted_price_ex_vat
+              )}
             </div>
 
             <div className="flex items-center gap-x-4 pt-5 border-b-2 border-[#D9D9D9] pb-[26px]">

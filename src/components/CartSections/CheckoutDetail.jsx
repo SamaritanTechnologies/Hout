@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { calculateTotal } from "./amount";
 import { setCartSummaryData } from "../../redux/slices/totalSummarySlice";
+import { formatPrice } from "../../utils/helper";
 
 const CheckoutDetail = ({ cartData, fetchCart }) => {
   const { t, i18n } = useTranslation();
@@ -78,14 +79,14 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
     );
     dispatch(
       setCartSummaryData({
-        subtotal: Number(totalPrice || 0).toFixed(2),
+        subtotal: formatPrice(totalPrice || 0),
         deliveryFee: deliveryCharge,
-        tax: Number(taxData || 0).toFixed(2),
-        youSaved: discount.toFixed(2),
-        total: total?.toFixed(2),
+        tax: formatPrice(taxData || 0),
+        youSaved: formatPrice(discount),
+        total: formatPrice(total || 0),
         // order_status: selectedMethod,
         // payment_option: selectedOption,
-        tax_amount: taxAmount.toFixed(2),
+        tax_amount: formatPrice(taxAmount),
         cart_data: {
           totalPrice: totalPrice,
           delivery: delivery,

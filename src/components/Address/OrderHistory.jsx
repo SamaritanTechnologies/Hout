@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import Pagination from "../../components/Common/Pagination";
 import { ORDER_PAGE_SIZE } from "../../utils/const";
 import { useTranslation } from "react-i18next";
-import { scrollToTop } from "../../utils/helper";
+import { scrollToTop, formatPrice } from "../../utils/helper";
 
 const OrderHistory = () => {
   const { t } = useTranslation();
@@ -142,12 +142,7 @@ const OrderHistory = () => {
                         </p>
                       </td>
                       <td className="py-3">
-                        {(() => {
-                          const amount = parseFloat(item?.total);
-                          return isNaN(amount)
-                            ? "€0.00"
-                            : `€${amount.toFixed(2)}`;
-                        })()}
+                        €{formatPrice(item?.total || 0)}
                       </td>
                       <td className="py-3">
                         <button

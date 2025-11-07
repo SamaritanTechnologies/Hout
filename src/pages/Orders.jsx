@@ -8,7 +8,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import Pagination from "../components/Common/Pagination";
 import { ORDER_PAGE_SIZE } from "../utils/const";
 import { axiosWithCredentials } from "../providers";
-import { scrollDashboardToTop } from "../utils/helper";
+import { scrollDashboardToTop, formatPrice } from "../utils/helper";
 
 const months = [
   { value: 1, name: "JANUARY" },
@@ -247,7 +247,7 @@ export const Orders = () => {
                           {productQuantities}
                         </td> */}
                         <td className="px-[12px] py-[12px] text-left font-semibold text-gray3">
-                          €{totalAmount.toFixed(2)}
+                          €{formatPrice(totalAmount)}
                         </td>
                         <td className="px-[12px] py-[12px] text-center font-semibold text-gray3">
                           <p

@@ -12,7 +12,7 @@ import StatsCard from "../components/Dashboard/StatsCard";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { ORDER_PAGE_SIZE } from "../utils/const";
 import Pagination from "../components/Common/Pagination";
-import { scrollDashboardToTop } from "../utils/helper";
+import { scrollDashboardToTop, formatPrice } from "../utils/helper";
 
 const months = [
   { value: 1, name: "JANUARY" },
@@ -323,7 +323,7 @@ export const Dashboard = () => {
                         </td> */}
                         <td className="xl:px-[24px] lg:px-[16px] px-[8px] xl:py-[16px] lg:py-[14px] py-[12px] text-left font-semibold text-gray3">
                           <p className="text-[14px] text-[#141718] w-[20%] md:w-[auto] sm:w-[auto]">
-                            €{totalAmount.toFixed(2)}
+                            €{formatPrice(totalAmount)}
                           </p>
                         </td>
 

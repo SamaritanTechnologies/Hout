@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { axiosWithCredentials } from "../../providers";
 import { deleteWishList } from "../../redux/actions/productActions";
 import { useTranslation } from "react-i18next";
+import { formatPrice, parsePrice } from "../../utils/helper";
 
 const RelatedProduct = ({ relatedProducts, vat = false }) => {
   console.log("relatedProducts", relatedProducts);
@@ -17,8 +18,8 @@ const RelatedProduct = ({ relatedProducts, vat = false }) => {
     if (!lengths || lengths.length === 0) return "N/A";
 
     return lengths.reduce((minObj, currentObj) => {
-      const currentPrice = parseFloat(currentObj.full_price_ex_vat);
-      const minPrice = parseFloat(minObj.full_price_ex_vat);
+      const currentPrice = parsePrice(currentObj.full_price_ex_vat);
+      const minPrice = parsePrice(minObj.full_price_ex_vat);
       return currentPrice < minPrice ? currentObj : minObj;
     });
   };
@@ -107,14 +108,18 @@ const RelatedProduct = ({ relatedProducts, vat = false }) => {
 
                   <section className="flex gap-x-3 mb-[20px] md:gap-x-2">
                     <div>
-                      € {vat 
-                        ? minimumPrice.discounted_price_in_vat 
-                        : minimumPrice.discounted_price_ex_vat}
+                      € {formatPrice(
+                        vat 
+                          ? minimumPrice.discounted_price_in_vat 
+                          : minimumPrice.discounted_price_ex_vat
+                      )}
                     </div>
                     <div className="text-gray2 line-through">
-                      € {vat 
-                        ? minimumPrice.full_price_in_vat 
-                        : minimumPrice.full_price_ex_vat}
+                      € {formatPrice(
+                        vat 
+                          ? minimumPrice.full_price_in_vat 
+                          : minimumPrice.full_price_ex_vat
+                      )}
                     </div>
                   </section>
                   <section className="flex gap-x-4 items-center justify-between mt-4">

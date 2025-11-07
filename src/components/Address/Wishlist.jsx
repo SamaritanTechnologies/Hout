@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { axiosWithCredentials } from "../../providers";
 import { useTranslation } from "react-i18next";
+import { formatPrice } from "../../utils/helper";
 
 const Wishlist = () => {
   const { t, i18n } = useTranslation();
@@ -140,7 +141,7 @@ const Wishlist = () => {
                               : item?.description_nl}
                           </td>
                           <td className="w-[20%] text-left">
-                            €{item.lengths[0].discounted_price_ex_vat}
+                            €{formatPrice(item.lengths[0].discounted_price_ex_vat)}
                           </td>
                           <td className="w-[30%] flex justify-center items-center">
                             <button

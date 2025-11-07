@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getProducts } from "../../redux/actions/userActions";
 import ProductCard from "../Common/ProductCard";
+import { parsePrice } from "../../utils/helper";
 
 const ProductsList = ({
   filters,
@@ -62,8 +63,8 @@ const ProductsList = ({
   const getMinimumPriceObject = (lengths) => {
     if (!lengths || lengths.length === 0) return "N/A";
     return lengths.reduce((minObj, currentObj) => {
-      const currentPrice = parseFloat(currentObj.full_price_ex_vat);
-      const minPrice = parseFloat(minObj.full_price_ex_vat);
+      const currentPrice = parsePrice(currentObj.full_price_ex_vat);
+      const minPrice = parsePrice(minObj.full_price_ex_vat);
       return currentPrice < minPrice ? currentObj : minObj;
     });
   };
