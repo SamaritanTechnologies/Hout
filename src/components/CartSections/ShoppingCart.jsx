@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import cross from "../../assets/addToCart/cross.svg";
 import coupon from "../../assets/addToCart/coupon.svg";
 import plus from "../../assets/addToCart/plus.svg";
@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { setCartSummaryData } from "../../redux/slices/totalSummarySlice";
 import { useTranslation } from "react-i18next";
 import { calculateTotal } from "./amount";
-import { formatPrice } from "../../utils/helper";
+import { formatPrice, parsePrice } from "../../utils/helper";
 
 const ShoppingCart = ({
   cartData,
@@ -28,7 +28,14 @@ const ShoppingCart = ({
   const authState = useSelector((state) => state.auth);
   const isAuthenticated = authState.isLoggedIn;
   const userId = authState?.user?.id;
-  const [localCart, setLocalCart] = useState([]);
+  // Initialize localCart from localStorage to avoid flash of empty cart
+  const [localCart, setLocalCart] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("cart")) || [];
+    } catch {
+      return [];
+    }
+  });
   const [paymentOption, setPaymentOption] = useState("");
   const [selectedOption, setSelectedOption] = useState("");
   const [couponCode, setCouponCode] = useState("");
@@ -46,22 +53,30 @@ const ShoppingCart = ({
     setCartItem(cartData?.cart_items || []);
   }, [cartData]);
 
-  const loadLocalCart = () => {
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setLocalCart(storedCart);
-  };
+  const loadLocalCart = useCallback(() => {
+    try {
+      const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+      setLocalCart(storedCart);
+    } catch (error) {
+      console.error("Error loading cart from localStorage:", error);
+      setLocalCart([]);
+    }
+  }, []);
 
   useEffect(() => {
     if (!isAuthenticated) {
+      // Load cart immediately
       loadLocalCart();
+      // Listen for updates
       window.addEventListener("localCartUpdated", loadLocalCart);
       return () => {
         window.removeEventListener("localCartUpdated", loadLocalCart);
       };
+    } else {
+      // Clear local cart when authenticated
+      setLocalCart([]);
     }
-    // Always return a cleanup function
-    return () => {};
-  }, [dispatch, isAuthenticated]);
+  }, [isAuthenticated, loadLocalCart]);
 
   const updateQuantity = async ({ id, productId, price, newQuantity }) => {
     try {
@@ -167,16 +182,34 @@ const ShoppingCart = ({
     }
   };
 
-  const totalPrice = cartItem.reduce(
-    (sum, item) => sum + parseFloat(item.product_price),
-    0
-  );
+  const totalPrice = useMemo(() => {
+    return cartItem.reduce(
+      (sum, item) => sum + parsePrice(item.product_price || 0),
+      0
+    );
+  }, [cartItem]);
 
-  const cartTotal = localCart?.reduce((acc, item) => {
-    const price = Number(item?.discounted_price_ex_vat || 0);
-    const quantity = Number(item?.quantity || 0);
-    return acc + price * quantity;
-  }, 0);
+  // Calculate cart total from localStorage with proper handling
+  const cartTotal = useMemo(() => {
+    if (!localCart || localCart.length === 0) {
+      return 0;
+    }
+    
+    const total = localCart.reduce((acc, item) => {
+      // Use the same field access as the display (item?.discounted_price_ex_vat)
+      const price = parsePrice(item?.discounted_price_ex_vat || 0);
+      const quantity = parseFloat(item?.quantity || 1);
+      const itemTotal = price * quantity;
+      return acc + itemTotal;
+    }, 0);
+    
+    return total;
+  }, [localCart]);
+
+  // Use the appropriate total based on authentication status
+  const currentTotal = useMemo(() => {
+    return isAuthenticated ? totalPrice : cartTotal;
+  }, [isAuthenticated, totalPrice, cartTotal]);
 
   const {
     total,
@@ -186,7 +219,7 @@ const ShoppingCart = ({
     isMinimumOrderMet,
     taxAmount,
   } = calculateTotal(
-    isAuthenticated ? totalPrice : cartTotal,
+    currentTotal,
     delivery,
     taxData,
     couponData,
@@ -196,7 +229,7 @@ const ShoppingCart = ({
   useEffect(() => {
     dispatch(
       setCartSummaryData({
-        subtotal: formatPrice(totalPrice || 0),
+        subtotal: formatPrice(currentTotal || 0),
         deliveryFee: deliveryCharge,
         tax: formatPrice(taxData || 0),
         youSaved: formatPrice(discount),
@@ -205,7 +238,7 @@ const ShoppingCart = ({
         payment_option: selectedOption,
         tax_amount: formatPrice(taxAmount),
         cart_data: {
-          totalPrice: totalPrice,
+          totalPrice: currentTotal,
           delivery: delivery,
           taxData: taxData,
           couponData: couponData,
@@ -217,11 +250,16 @@ const ShoppingCart = ({
   }, [
     selectedMethod,
     selectedOption,
+    currentTotal,
+    cartTotal,
     totalPrice,
+    localCart,
+    isAuthenticated,
     deliveryCharge,
     taxData,
     discount,
     total,
+    taxAmount,
     dispatch,
   ]);
 
@@ -462,7 +500,7 @@ const ShoppingCart = ({
                               € {formatPrice(item?.product_length?.discounted_price_ex_vat)}
                             </td>
                             <td className="px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
-                              € {item?.product_price}
+                              € {formatPrice(parsePrice(item?.product_length?.discounted_price_ex_vat) * Number(item.quantity || 1))}
                             </td>
                           </tr>
                         );
@@ -621,7 +659,7 @@ const ShoppingCart = ({
                     <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
                       {t("s_subtotal_excl_vat")}
                     </div>
-                    <div>€ {formatPrice(totalPrice || 0)}</div>
+                    <div>€ {formatPrice(currentTotal || 0)}</div>
                   </section>
 
                   <section className="flex justify-between pt-[25px]">
@@ -813,8 +851,8 @@ const ShoppingCart = ({
                           <td className="px-[10px] xl:pb-[24px] lg:pb-[18px] pb-[10px]">
                             €{" "}
                             {formatPrice(
-                              (item?.quantity || 1) *
-                              parseFloat(item?.discounted_price_ex_vat || 0)
+                              Number(item?.quantity || 1) *
+                              parsePrice(item?.discounted_price_ex_vat || 0)
                             )}
                           </td>
                         </tr>
@@ -832,7 +870,7 @@ const ShoppingCart = ({
                   <div className="text-[#696C74] xl:text-16 lg:text-15 md:text-14 text-[13px]">
                     {t("s_subtotal_excl_vat")}
                   </div>
-                  <div>€{formatPrice(cartTotal || 0)}</div>
+                  <div>€ {formatPrice(currentTotal || 0)}</div>
                 </section>
 
                 <section className="flex justify-between pt-[25px]">

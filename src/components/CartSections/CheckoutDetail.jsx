@@ -26,7 +26,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { calculateTotal } from "./amount";
 import { setCartSummaryData } from "../../redux/slices/totalSummarySlice";
-import { formatPrice } from "../../utils/helper";
+import { formatPrice, parsePrice } from "../../utils/helper";
 
 const CheckoutDetail = ({ cartData, fetchCart }) => {
   const { t, i18n } = useTranslation();
@@ -204,8 +204,8 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
     try {
       setLoading(true);
       const payload = {
-        gross_total: cartSummary?.subtotal,
-        total: cartSummary?.total,
+        gross_total: cartSummary?.subtotal?.replace(',', '.'),
+        total: cartSummary?.total?.replace(',', '.'),
         order_status: selectedMethod,
         delivery_method: selectedPaymentMethod.name,
         payment_option: selectedPaymentOption,
@@ -338,7 +338,7 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
                             <h6>{item.quantity}</h6>
                           </div>
                           <div className="w-full text-right  xl:text-22 lg:text-20 md:text-18 text-16 font-bold">
-                            € {item?.product_price}
+                            € {formatPrice(parsePrice(item?.product_length?.discounted_price_ex_vat) * Number(item.quantity || 1))}
                           </div>
                         </section>
                       </div>
