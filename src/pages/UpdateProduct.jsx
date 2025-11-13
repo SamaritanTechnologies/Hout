@@ -651,7 +651,7 @@ export const UpdateProduct = () => {
                                 type="number"
                                 min={0}
                                 value={product.full_price_ex_vat}
-                                placeholder="30,000"
+                                placeholder="30,00"
                                 onChange={(e) =>
                                   handleChange(
                                     index,
