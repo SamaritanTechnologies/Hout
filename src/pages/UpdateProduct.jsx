@@ -25,6 +25,7 @@ import countryflag from "../assets/DashboardImages/UK-Flag.svg";
 import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import { parsePrice, formatPrice } from "../utils/helper";
 
 const styleMultiSelect = {
   chips: {
@@ -81,7 +82,22 @@ export const UpdateProduct = () => {
       if (res) {
         setProduct(res);
         console.log("product sdsddsa", res);
-        setLengths(res.lengths || [{ ...productItem }]);
+        
+        const formattedLengths = res.lengths && res.lengths.length > 0
+          ? res.lengths.map((length) => ({
+              ...length,
+              length: length.length || "",
+              full_price_ex_vat: length.full_price_ex_vat 
+                ? parsePrice(length.full_price_ex_vat) 
+                : "",
+              discount: length.discount 
+                ? parsePrice(length.discount) 
+                : "",
+              stock: length.stock || "",
+            }))
+          : [{ ...productItem }];
+        
+        setLengths(formattedLengths);
 
         const newImages = res.images?.map((image) => ({
           id: image.id,
@@ -320,15 +336,25 @@ export const UpdateProduct = () => {
               return;
             }
             try {
+              const formattedLengths = lengths.map((length) => ({
+                ...length,
+                full_price_ex_vat: length.full_price_ex_vat !== "" && length.full_price_ex_vat != null
+                  ? formatPrice(length.full_price_ex_vat) 
+                  : "",
+                discount: length.discount !== "" && length.discount != null
+                  ? formatPrice(length.discount) 
+                  : "",
+              }));
+              
               console.log(
                 "Submitting lengths:",
                 id,
                 values,
-                lengths,
+                formattedLengths,
                 images,
                 relatedProducts
               );
-              await updateProduct(id, values, lengths, images, relatedProducts);
+              await updateProduct(id, values, formattedLengths, images, relatedProducts);
               navigate("/products");
             } catch (error) {
               console.error("Error submitting form:", error);
