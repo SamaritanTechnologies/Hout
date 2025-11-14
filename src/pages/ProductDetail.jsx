@@ -56,7 +56,11 @@ export const ProductDetail = () => {
     const fetchRelatedProducts = async () => {
       try {
         const data = await getRelatedProducts(product_id);
-        setRelatedProducts(data.results || []);
+        // Filter only active webshop products from related products
+        const activeProducts = (data.results || []).filter(product => 
+          product.is_active_webshop !== false
+        );
+        setRelatedProducts(activeProducts);
         console.log("related products", data);
       } catch (error) {
         console.error("Error fetching related products:", error);

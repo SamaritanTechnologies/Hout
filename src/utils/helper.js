@@ -96,3 +96,34 @@ export const formatPrice = (price, decimals = 2) => {
   // Replace dot with comma for display
   return fixed.replace(".", ",");
 };
+
+// Open PDF directly in new tab
+export const openPDFWithAutoPrint = (pdfUrl) => {
+  if (!pdfUrl) return null;
+  return window.open(pdfUrl, '_blank');
+};
+
+// Open PDF directly in same tab
+export const openPDFWithAutoPrintSameTab = (pdfUrl) => {
+  if (!pdfUrl) return;
+  window.location.href = pdfUrl;
+};
+
+// Alternative function to download PDF directly instead of opening in new window
+export const downloadPDF = (pdfUrl, filename = 'label.pdf') => {
+  if (!pdfUrl) return;
+
+  try {
+    const link = document.createElement('a');
+    link.href = pdfUrl;
+    link.download = filename;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error("Error downloading PDF:", error);
+    // Fallback: open in same tab
+    window.location.href = pdfUrl;
+  }
+};

@@ -40,6 +40,9 @@ const ProductsList = ({
       // Add VAT selection
       queryParams.append("use_inclusive_prices", filters.includeVAT || false);
 
+      // Filter only active webshop products
+      queryParams.append("is_active_webshop", "true");
+
       // Add pagination parameters
       queryParams.append("page", currentPage + 1); // API uses 1-based indexing
       queryParams.append("page_size", pageSize);
@@ -48,8 +51,13 @@ const ProductsList = ({
       }
       const data = await getProducts(queryParams.toString());
 
-      setProducts(data.results);
-      setTotalItems(data.count); // Update total items from API
+      // Client-side filtering for active webshop products (until backend supports it)
+      const activeProducts = (data.results || []).filter(product => 
+        product.is_active_webshop !== false
+      );
+
+      setProducts(activeProducts);
+      setTotalItems(activeProducts.length); // Update total items based on filtered results
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {

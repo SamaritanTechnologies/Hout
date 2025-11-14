@@ -13,7 +13,11 @@ const ProductsSection = () => {
 
   const fetchFeaturedProducts = async () => {
     const data = await getFeaturedProducts();
-    setFeatureProducts(data.products);
+    // Filter only active webshop products from featured products
+    const activeProducts = (data.products || []).filter(product => 
+      product.is_active_webshop !== false
+    );
+    setFeatureProducts(activeProducts);
   };
 
   useEffect(() => {

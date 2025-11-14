@@ -9,7 +9,7 @@ import Textarea from "../components/Common/Textarea";
 import Button from "../components/Common/Button";
 import Dropzone from "../components/Common/Dropzone";
 import addImg from "../assets/DashboardImages/add.svg";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import FormikField from "../components/Common/FormikField";
@@ -26,6 +26,7 @@ import Select from "react-select";
 import countryflag from "../assets/DashboardImages/UK-Flag.svg";
 import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
 import { XCircleIcon } from "@heroicons/react/24/outline";
+import ToggleSwitch from "../components/Common/ToggleSwitch";
 import { FlashOnTwoTone } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
@@ -63,16 +64,50 @@ const relatedInitial = {
 
 export const AddNewProduct = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { productCategories: categories } = useSelector((state) => state.admin);
+  
+  // Get copied product data from navigation state
+  const copiedProduct = location.state?.copiedProduct;
+  const isCopy = location.state?.isCopy;
   // console.log("categories", categories);
-  const [lengths, setLengths] = useState([{ ...lengthItem }]);
-  const [images, setImages] = useState([]);
+  const [lengths, setLengths] = useState(
+    copiedProduct?.lengths?.length > 0 
+      ? copiedProduct.lengths.map(length => ({
+          length: length.length || "",
+          discount: length.discount || "",
+          stock: length.stock || "",
+          full_price_ex_vat: length.full_price_ex_vat || "",
+        }))
+      : [{ ...lengthItem }]
+  );
+  const [images, setImages] = useState(
+    copiedProduct?.images?.length > 0 
+      ? copiedProduct.images.map(img => ({
+          file: img.file || img.image, // Use file if available, fallback to image
+          preview: img.preview || img.image, // Use preview if available, fallback to image
+          id: img.id, // Keep ID to track if it's an existing image
+        }))
+      : []
+  );
   const [isErrors, setIsErrors] = useState({
     images: false,
   });
-  const [relatedProducts, setRelatedProducts] = useState(relatedInitial);
+  const [relatedProducts, setRelatedProducts] = useState(
+    copiedProduct?.related_products?.length > 0
+      ? copiedProduct.related_products.reduce((acc, product, index) => {
+          acc[`product${index + 1}`] = {
+            value: product.id,
+            label: product.name_en || product.name_nl,
+          };
+          return acc;
+        }, { ...relatedInitial })
+      : relatedInitial
+  );
   const [relatedProductsOptions, setRelatedProductsOptions] = useState([]);
   const { t } = useTranslation();
+
+
 
   const getChoicesByName = (name) => {
     const category = categories?.find(
@@ -147,7 +182,13 @@ export const AddNewProduct = () => {
       try {
         const response = await getAllProductsList();
         const data = response.data; // The new API returns data in response.data
-        const options = data.map((product) => ({
+        
+        // Filter only active webshop products for related products dropdown
+        const activeProducts = data.filter(product => 
+          product.is_active_webshop !== false
+        );
+        
+        const options = activeProducts.map((product) => ({
           label: product.name_nl,
           value: product.id,
         }));
@@ -175,23 +216,24 @@ export const AddNewProduct = () => {
       </div>
       <Formik
         initialValues={{
-          name_nl: "",
-          name_en: "",
-          group: [],
-          product_type: [],
-          material: [],
-          profile: [],
-          durability_class: [],
-          quality: [],
-          application: [],
-          description_nl: "",
-          description_en: "",
-          width: "",
-          thickness: "",
-          weight_per_m3: "",
-          place_on_goedgeplaatst: false,
-          place_on_marktplaats: false,
-          label: false,
+          name_nl: copiedProduct?.name_nl || "",
+          name_en: copiedProduct?.name_en || "",
+          group: copiedProduct?.group || [],
+          product_type: copiedProduct?.product_type || [],
+          material: copiedProduct?.material || [],
+          profile: copiedProduct?.profile || [],
+          durability_class: copiedProduct?.durability_class || [],
+          quality: copiedProduct?.quality || [],
+          application: copiedProduct?.application || [],
+          description_nl: copiedProduct?.description_nl || "",
+          description_en: copiedProduct?.description_en || "",
+          width: copiedProduct?.width || "",
+          thickness: copiedProduct?.thickness || "",
+          weight_per_m3: copiedProduct?.weight_per_m3 || "",
+          place_on_goedgeplaatst: copiedProduct?.place_on_goedgeplaatst || false,
+          place_on_marktplaats: copiedProduct?.place_on_marktplaats || false,
+          is_active_webshop: copiedProduct?.is_active_webshop ?? true, // Default to active
+          label: copiedProduct?.label || false,
         }}
         validationSchema={Yup.object({
           name_nl: Yup.string().required("Naam is required"),
@@ -213,7 +255,19 @@ export const AddNewProduct = () => {
             return;
           }
           try {
-            await addProduct(values, lengths, images, relatedProducts);
+            // Convert comma decimals to dot decimals for API
+            const formatForAPI = (value) => {
+              if (!value || value === "" || value == null) return "";
+              return String(value).replace(",", ".");
+            };
+
+            const formattedLengths = lengths.map((length) => ({
+              ...length,
+              full_price_ex_vat: formatForAPI(length.full_price_ex_vat),
+              discount: formatForAPI(length.discount),
+            }));
+
+            await addProduct(values, formattedLengths, images, relatedProducts);
             navigate("/products");
           } catch (error) {
             console.error("Error submitting form:", error);
@@ -224,10 +278,18 @@ export const AddNewProduct = () => {
       >
         {({ values, setFieldValue, isSubmitting }) => (
           <Form className="mx-auto max-w-[840px]">
-            <div className="flex mb-4">
-              <h5 className="xl:text-26 lg:text-24 text-22 font-semibold">
+            <div className="flex justify-between items-center mb-8">
+              <h5 className="xl:text-26 lg:text-24 text-22 font-semibold text-gray-800">
                 Add New Product
               </h5>
+                <div className="flex items-center gap-4">
+                  <ToggleSwitch
+                    checked={values.is_active_webshop}
+                    onChange={(checked) => setFieldValue("is_active_webshop", checked)}
+                    label={values.is_active_webshop ? "Active" : "Inactive"}
+                    size="md"
+                  />
+                </div>
             </div>
             <div className="formSec">
               <div className="flex gap-[20px] mb-[24px]">
@@ -581,6 +643,7 @@ export const AddNewProduct = () => {
                   Place Product on GoedGeplaatst via API
                 </p>
               </div>
+
               {/* <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
               <div className="flex gap-5 items-center mb-[24px]">
                 <Field

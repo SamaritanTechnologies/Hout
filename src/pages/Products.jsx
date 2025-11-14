@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import editImg from "../assets/DashboardImages/edit.svg";
 import dltImg from "../assets/DashboardImages/delete.svg";
-import { FunnelIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { FunnelIcon, MagnifyingGlassIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outline";
+import { openPDFWithAutoPrint, downloadPDF, openPDFWithAutoPrintSameTab } from "../utils/helper";
 import Button from "../components/Common/Button";
 import ButtonSmall from "../components/Common/Button2";
 import DropdownFilter from "../components/Dashboard/DropdownFilter";
@@ -12,6 +13,7 @@ import {
   getProductCategories,
   getProducts,
   generateProductLabel,
+  getProductDetailsById,
 } from "../redux/actions/productActions";
 import { useDispatch, useSelector } from "react-redux";
 import { setProductCategories } from "../redux";
@@ -21,7 +23,7 @@ import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import Pagination from "../components/Common/Pagination";
 import { PRODUCT_PAGE_SIZE } from "../utils/const";
-import { scrollDashboardToTop } from "../utils/helper";
+import { scrollDashboardToTop, parsePrice } from "../utils/helper";
 
 const initialState = {
   results: [],
@@ -39,6 +41,7 @@ export const Products = () => {
   const [isDeleted, setIsDeleted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [labelGenerating, setLabelGenerating] = useState({});
+  const [copyingProduct, setCopyingProduct] = useState({});
   const navigate = useNavigate();
   const [selectedOptions, setSelectedOptions] = useState({
     group: [],
@@ -174,20 +177,82 @@ export const Products = () => {
         )
       }));
       
-      // If there's a PDF URL in the response, open it
+      // If there's a PDF URL in the response, open it with auto-print
       const pdfUrl = response?.pdf_url || response?.url || response?.file_url || response?.data?.pdf_url;
       if (pdfUrl) {
-        window.open(pdfUrl, '_blank', 'noopener,noreferrer');
+        // Open PDF in new tab with auto-print (user can allow popups for best experience)
+        openPDFWithAutoPrint(pdfUrl);
       } else {
-        // If no PDF URL in response, refetch the products to get updated data
-        console.log("No PDF URL found in response, refetching products...");
-        await fetchProducts(selectedOptions, currentPage);
+        console.log("Label generated successfully for product:", productId);
       }
     } catch (error) {
       console.error("Label generation failed:", error);
-      toast.error("Failed to generate label");
     } finally {
       setLabelGenerating(prev => ({ ...prev, [productId]: false }));
+    }
+  };
+
+  const handleCopyProduct = async (productId) => {
+    try {
+      setCopyingProduct(prev => ({ ...prev, [productId]: true }));
+      
+      // Fetch detailed product data from API
+      const productDetails = await getProductDetailsById(productId);
+      
+      if (!productDetails) {
+        toast.error("Product not found");
+        return;
+      }
+
+      // Prepare the copied product data with GoedGeplaats unchecked
+      const copiedProductData = {
+        ...productDetails,
+        // Uncheck GoedGeplaats checkbox as requested
+        place_on_goedgeplaatst: false,
+        is_active_on_goedgeplaatst: false,
+        // Default webshop status to active for copied products
+        is_active_webshop: true,
+        // Clear the ID so it creates a new product
+        id: null,
+        // Optionally modify the name to indicate it's a copy
+        name_en: `Copy of ${productDetails.name_en}`,
+        name_nl: `Copy of ${productDetails.name_nl}`,
+        // Map lengths data to expected format (same as UpdateProduct)
+        lengths: productDetails.lengths?.map(length => ({
+          length: length.length || "",
+          full_price_ex_vat: length.full_price_ex_vat && length.full_price_ex_vat !== null
+            ? String(parsePrice(length.full_price_ex_vat))
+            : "",
+          discount: length.discount && length.discount !== null
+            ? String(parsePrice(length.discount))
+            : "",
+          stock: length.stock || "",
+        })) || [],
+        // Map images to expected format (same as UpdateProduct)
+        images: productDetails.images?.map(img => ({
+          id: img.id, // Keep original ID to indicate it's an existing image
+          file: img.image, // Keep the image URL
+          preview: img.image, // Show preview
+        })) || [],
+        // Map related products to expected format
+        related_products: productDetails.related_products?.slice(0, 4) || [], // Limit to 4 products
+      };
+
+
+
+      // Navigate to new product form with copied data
+      navigate("/new-product", { 
+        state: { 
+          copiedProduct: copiedProductData,
+          isCopy: true 
+        } 
+      });
+      
+    } catch (error) {
+      console.error("Product copy failed:", error);
+      toast.error("Failed to copy product");
+    } finally {
+      setCopyingProduct(prev => ({ ...prev, [productId]: false }));
     }
   };
 
@@ -252,10 +317,16 @@ export const Products = () => {
         </div>
       </div>
       <div className="max-w-screen mx-auto overflow-x-auto">
-        <table className="table-auto productsTable w-full min-w-[1154px] min-h-52">
+        <table className="table-auto productsTable w-full min-w-[1200px] min-h-52">
           <thead>
             <tr className="bg-[#F1F4F9] border-b border-[#CACACA33] rounded-tl-lg rounded-tr-lg">
-              <th className="px-[10px] py-[12px] text-sm font-semibold rounded-tl-lg">
+              <th className="px-[10px] py-[12px] text-sm font-semibold rounded-tl-lg text-center">
+                <div className="flex flex-col items-center">
+                  <span>Status</span>
+                  <span className="text-xs font-normal text-gray-500">Webshop</span>
+                </div>
+              </th>
+              <th className="px-[10px] py-[12px] text-sm font-semibold">
                 Product ID
               </th>
 
@@ -351,7 +422,7 @@ export const Products = () => {
             {isLoading ? (
               <tr className="w-full">
                 <td
-                  colSpan="12"
+                  colSpan="13"
                   className="text-[14px] text-[#141718] text-center py-[22px]"
                 >
                   <div className="flex items-center justify-center gap-2">
@@ -367,6 +438,26 @@ export const Products = () => {
                   className={`border-b-[0.4px] w-full border-gray ${index % 2 !== 0 ? "bg-[#F1F4F9]" : ""
                     }`}
                 >
+                  <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-center">
+                    <div className="flex justify-center items-center">
+                      {(() => {
+                        const isActive = rowData?.is_active_webshop ?? true;
+                        return (
+                          <div 
+                            className="w-3 h-3 rounded-full shadow-sm"
+                            style={{
+                              backgroundColor: isActive ? '#10b981' : '#f97316',
+                              width: '12px',
+                              height: '12px',
+                              borderRadius: '50%',
+                              boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
+                            }}
+                            title={`Webshop Status: ${isActive ? 'Active' : 'Inactive'}`}
+                          />
+                        );
+                      })()}
+                    </div>
+                  </td>
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">
                     <div className="">
                       <p className="text-gray-900 whitespace-no-wrap">
@@ -489,15 +580,27 @@ export const Products = () => {
                       </div>
                     )}
                   </td>
-                  <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left xl:text-14 lg-text-[13px] text-12 font-semibold text-gray3 min-w-[100px]">
+                  <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[24px] text-left xl:text-14 lg-text-[13px] text-12 font-semibold text-gray3 min-w-[120px]">
                     <div className="flex xl:gap-3 gap-2 items-center justify-center">
                       <div
                         onClick={() => {
                           navigate(`/product/${rowData.id}`);
                         }}
                         className="cursor-pointer"
+                        title="Edit Product"
                       >
                         <img src={editImg} alt="edit icon image" />
+                      </div>
+                      <div
+                        onClick={() => handleCopyProduct(rowData.id)}
+                        className="cursor-pointer"
+                        title="Copy Product"
+                      >
+                        {copyingProduct[rowData.id] ? (
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900"></div>
+                        ) : (
+                          <DocumentDuplicateIcon className="h-5 w-5 text-gray-600 hover:text-gray-800" />
+                        )}
                       </div>
                       <div
                         className="cursor-pointer"
@@ -505,6 +608,7 @@ export const Products = () => {
                           setSelectedItem(rowData);
                           setOpen(true);
                         }}
+                        title="Delete Product"
                       >
                         <img src={dltImg} alt="Delete icon image" />
                       </div>
@@ -539,7 +643,7 @@ export const Products = () => {
             ) : (
               <tr className="w-full">
                 <td
-                  colSpan="12"
+                  colSpan="13"
                   className="text-[14px] text-[#141718] text-center py-[22px]"
                 >
                   No products found

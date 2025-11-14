@@ -140,6 +140,10 @@ export const addProduct = async (values, lengths, images, relatedProducts) => {
     "place_on_marktplaats",
     values.place_on_marktplaats ? "true" : "false"
   );
+  formData.append(
+    "is_active_webshop",
+    values.is_active_webshop ? "true" : "false"
+  );
   formData.append("label", values.label);
 
   // Ensure `width`, `thickness`, `weight_per_m3` are valid numbers
@@ -175,10 +179,15 @@ export const addProduct = async (values, lengths, images, relatedProducts) => {
     }
   });
 
-  // Append lengths variations
-  images?.forEach((image, index) => {
-    formData.append(`images`, image.file);
-  });
+  // Append images (handle existing and new images)
+  for (const image of images || []) {
+    if (image.id) {
+      const file = await fetchImageAsFile(image.preview); // Convert URL to File for copied images
+      formData.append(`images`, file);
+    } else {
+      formData.append(`images`, image.file); // Use file directly for newly uploaded images
+    }
+  }
 
   // Append lengths variations
   lengths?.forEach((length, index) => {
@@ -236,6 +245,10 @@ export const updateProduct = async (
   formData.append(
     "place_on_marktplaats",
     values.place_on_marktplaats ? "true" : "false"
+  );
+  formData.append(
+    "is_active_webshop",
+    values.is_active_webshop ? "true" : "false"
   );
 
   // Append numeric fields (ensure they are valid numbers)
@@ -330,13 +343,16 @@ export const generateProductLabel = async (productId) => {
     );
 
     toast.success("Label generated successfully..");
+
+    // Return response data without opening PDF here
+    // The calling component will handle opening the PDF
     return response.data;
   } catch (error) {
     console.error("Error generating label:", error);
     toast.error(
       error.response?.data?.detail ||
-        i18n.t("label_generated_fail") ||
-        "Failed to generate label."
+      i18n.t("label_generated_fail") ||
+      "Failed to generate label."
     );
     throw error;
   }

@@ -56,6 +56,7 @@ import AdminForgot from "./pages/AdminForgot";
 import AdminReset from "./pages/AdminReset";
 import PaymentOptions from "./pages/PaymentOptions";
 
+
 function Routes() {
   return (
     <AppRoutes>
@@ -117,6 +118,8 @@ function Routes() {
         <Route path="/faq" element={<Faq />} />
         <Route path="/about" element={<About />} />
       </Route>
+
+
 
       <Route path="*" element={<Navigate to="/" />} />
     </AppRoutes>

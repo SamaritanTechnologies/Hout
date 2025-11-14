@@ -26,6 +26,7 @@ import countryflag2 from "../assets/DashboardImages/USA-flag.svg";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { parsePrice, formatPrice } from "../utils/helper";
+import ToggleSwitch from "../components/Common/ToggleSwitch";
 
 const styleMultiSelect = {
   chips: {
@@ -158,7 +159,13 @@ export const UpdateProduct = () => {
       try {
         const response = await getAllProductsList();
         const data = response.data; // The new API returns data in response.data
-        const options = data.map((product) => ({
+        
+        // Filter only active webshop products for related products dropdown
+        const activeProducts = data.filter(product => 
+          product.is_active_webshop !== false
+        );
+        
+        const options = activeProducts.map((product) => ({
           label: product.name_nl,
           value: product.id,
         }));
@@ -266,7 +273,13 @@ export const UpdateProduct = () => {
       try {
         const response = await getProducts();
         const data = response.results;
-        const options = data.map((product) => ({
+        
+        // Filter only active webshop products for related products dropdown
+        const activeProducts = data.filter(product => 
+          product.is_active_webshop !== false
+        );
+        
+        const options = activeProducts.map((product) => ({
           label: product.name_en,
           value: product.id,
         }));
@@ -316,6 +329,7 @@ export const UpdateProduct = () => {
             application: product?.application ?? [],
             place_on_goedgeplaatst: product?.is_active_on_goedgeplaatst ?? false,
             place_on_marktplaats: product?.place_on_marktplaats ?? false,
+            is_active_webshop: product?.is_active_webshop ?? true,
           }}
           validationSchema={Yup.object({
             name_en: Yup.string().required("Name is required"),
@@ -336,14 +350,16 @@ export const UpdateProduct = () => {
               return;
             }
             try {
+              // Convert comma decimals to dot decimals for API
+              const formatForAPI = (value) => {
+                if (!value || value === "" || value == null) return "";
+                return String(value).replace(",", ".");
+              };
+
               const formattedLengths = lengths.map((length) => ({
                 ...length,
-                full_price_ex_vat: length.full_price_ex_vat !== "" && length.full_price_ex_vat != null
-                  ? formatPrice(length.full_price_ex_vat) 
-                  : "",
-                discount: length.discount !== "" && length.discount != null
-                  ? formatPrice(length.discount) 
-                  : "",
+                full_price_ex_vat: formatForAPI(length.full_price_ex_vat),
+                discount: formatForAPI(length.discount),
               }));
               
               console.log(
@@ -365,10 +381,18 @@ export const UpdateProduct = () => {
         >
           {({ values, setFieldValue, isSubmitting }) => (
             <Form className="mx-auto max-w-[840px]">
-              <div className="flex mb-4">
-                <h5 className="xl:text-26 lg:text-24 text-22 font-semibold">
+              <div className="flex justify-between items-center mb-8">
+                <h5 className="xl:text-26 lg:text-24 text-22 font-semibold text-gray-800">
                   Update Product
                 </h5>
+                  <div className="flex items-center gap-4">
+                    <ToggleSwitch
+                      checked={values.is_active_webshop}
+                      onChange={(checked) => setFieldValue("is_active_webshop", checked)}
+                      label={values.is_active_webshop ? "Active" : "Inactive"}
+                      size="md"
+                    />
+                  </div>
               </div>
               <div className="formSec">
                 <div className="flex gap-[20px] mb-[24px]">
@@ -723,6 +747,7 @@ export const UpdateProduct = () => {
                     Place Product on GoedGeplaatst via API
                   </p>
                 </div>
+
 
                 {/* <div className="h-1.5 blur-sm bg-black w-full mb-[24px]"></div>
                 <div className="flex gap-5 items-center mb-[24px]">

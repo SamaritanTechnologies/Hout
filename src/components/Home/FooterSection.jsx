@@ -265,7 +265,7 @@ const FooterSection = ({ isShow }) => {
                 {t("f_phone")}
               </div>
               <a
-                href="mailto:info@makeyourplank.nl"
+                href="mailto:info@houttotaal.nl"
                 className="flex items-center text-[#111727] text-sm gap-x-5 vietnam cursor-pointer"
               >
                 <img src={emailFooter} alt="Email Icon" /> {t("f_email")}
