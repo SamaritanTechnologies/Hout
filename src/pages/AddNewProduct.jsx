@@ -30,6 +30,7 @@ import ToggleSwitch from "../components/Common/ToggleSwitch";
 import { FlashOnTwoTone } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import { parsePrice, formatPrice } from "../utils/helper";
 
 const styleMultiSelect = {
   chips: {
@@ -67,7 +68,6 @@ export const AddNewProduct = () => {
   const location = useLocation();
   const { productCategories: categories } = useSelector((state) => state.admin);
   
-  // Get copied product data from navigation state
   const copiedProduct = location.state?.copiedProduct;
   const isCopy = location.state?.isCopy;
   // console.log("categories", categories);
@@ -84,15 +84,16 @@ export const AddNewProduct = () => {
   const [images, setImages] = useState(
     copiedProduct?.images?.length > 0 
       ? copiedProduct.images.map(img => ({
-          file: img.file || img.image, // Use file if available, fallback to image
-          preview: img.preview || img.image, // Use preview if available, fallback to image
-          id: img.id, // Keep ID to track if it's an existing image
+          file: img.file || img.image, 
+          preview: img.preview || img.image, 
+          id: img.id, 
         }))
       : []
   );
   const [isErrors, setIsErrors] = useState({
     images: false,
   });
+  const [priceInputs, setPriceInputs] = useState({});
   const [relatedProducts, setRelatedProducts] = useState(
     copiedProduct?.related_products?.length > 0
       ? copiedProduct.related_products.reduce((acc, product, index) => {
@@ -116,6 +117,18 @@ export const AddNewProduct = () => {
     return category ? category.choices : [];
   };
 
+  const formatPriceDisplay = (value) => {
+    if (value === "" || value == null) return "";
+    const numValue = typeof value === "number" ? value : parsePrice(value);
+    if (isNaN(numValue)) return "";
+
+    if (Number.isInteger(numValue)) {
+      return numValue.toString();
+    }
+
+    return numValue.toString().replace(".", ",");
+  };
+
   const handleAddRow = () => {
     setLengths([...lengths, { ...lengthItem }]);
   };
@@ -130,7 +143,22 @@ export const AddNewProduct = () => {
 
   const handleChange = (index, field, value) => {
     const updatedProducts = [...lengths];
-    updatedProducts[index][field] = value;
+
+    if (["length", "stock"].includes(field)) {
+      updatedProducts[index][field] = value === "" ? "" : Number(value);
+    } else if (["full_price_ex_vat", "discount"].includes(field)) {
+
+      if (value === "") {
+        updatedProducts[index][field] = "";
+      } else {
+
+        const normalizedValue = String(value).replace(",", ".");
+        const numValue = parseFloat(normalizedValue);
+        updatedProducts[index][field] = isNaN(numValue) ? "" : numValue;
+      }
+    } else {
+      updatedProducts[index][field] = value;
+    }
     setLengths(updatedProducts);
   };
 
@@ -568,29 +596,121 @@ export const AddNewProduct = () => {
                           <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
                             <input
                               required
-                              type="number"
-                              min={0}
-                              value={product.full_price_ex_vat}
+                              type="text"
+                              inputMode="decimal"
+                              value={
+                                priceInputs[`price_${index}`] !== undefined
+                                  ? priceInputs[`price_${index}`]
+                                  : product.full_price_ex_vat !== "" && product.full_price_ex_vat != null
+                                  ? formatPriceDisplay(product.full_price_ex_vat)
+                                  : ""
+                              }
                               placeholder="30,00"
-                              onChange={(e) =>
+                              onChange={(e) => {
+                                let inputValue = e.target.value.replace(/[^\d,.-]/g, '');
+                                inputValue = inputValue.replace('.', ',');
+                                const parts = inputValue.split(',');
+                                if (parts.length > 2) {
+                                  inputValue = parts[0] + ',' + parts.slice(1).join('');
+                                }
+                                if (parts.length === 2 && parts[1].length > 2) {
+                                  inputValue = parts[0] + ',' + parts[1].substring(0, 2);
+                                }
+                                setPriceInputs(prev => ({
+                                  ...prev,
+                                  [`price_${index}`]: inputValue
+                                }));
                                 handleChange(
                                   index,
                                   "full_price_ex_vat",
-                                  e.target.value
-                                )
-                              }
+                                  inputValue
+                                );
+                              }}
+                              onBlur={(e) => {
+                                const value = product.full_price_ex_vat;
+                                if (value !== "" && value != null) {
+                                  const formatted = formatPrice(value);
+                                  setPriceInputs(prev => ({
+                                    ...prev,
+                                    [`price_${index}`]: formatted
+                                  }));
+                                } else {
+                                  setPriceInputs(prev => {
+                                    const newState = { ...prev };
+                                    delete newState[`price_${index}`];
+                                    return newState;
+                                  });
+                                }
+                              }}
+                              onFocus={(e) => {
+                                const value = product.full_price_ex_vat;
+                                if (value !== "" && value != null) {
+                                  setPriceInputs(prev => ({
+                                    ...prev,
+                                    [`price_${index}`]: formatPriceDisplay(value)
+                                  }));
+                                }
+                              }}
                               className="w-full outline-none bg-transparent"
                             />
                           </td>
                           <td className="px-[24px] py-[16px] text-left text-16 font-normal text-[#6C7275] border border-[#D9D9D9]">
                             <input
-                              type="number"
-                              min={0}
-                              value={product.discount}
-                              placeholder="12%"
-                              onChange={(e) =>
-                                handleChange(index, "discount", e.target.value)
+                              type="text"
+                              inputMode="decimal"
+                              value={
+                                priceInputs[`discount_${index}`] !== undefined
+                                  ? priceInputs[`discount_${index}`]
+                                  : product.discount !== "" && product.discount != null
+                                  ? formatPriceDisplay(product.discount)
+                                  : ""
                               }
+                              placeholder="12,00"
+                              onChange={(e) => {
+                                let inputValue = e.target.value.replace(/[^\d,.-]/g, '');
+                                inputValue = inputValue.replace('.', ',');
+                                const parts = inputValue.split(',');
+                                if (parts.length > 2) {
+                                  inputValue = parts[0] + ',' + parts.slice(1).join('');
+                                }
+                                if (parts.length === 2 && parts[1].length > 2) {
+                                  inputValue = parts[0] + ',' + parts[1].substring(0, 2);
+                                }
+                                setPriceInputs(prev => ({
+                                  ...prev,
+                                  [`discount_${index}`]: inputValue
+                                }));
+                                handleChange(
+                                  index,
+                                  "discount",
+                                  inputValue
+                                );
+                              }}
+                              onBlur={(e) => {
+                                const value = product.discount;
+                                if (value !== "" && value != null) {
+                                  const formatted = formatPrice(value);
+                                  setPriceInputs(prev => ({
+                                    ...prev,
+                                    [`discount_${index}`]: formatted
+                                  }));
+                                } else {
+                                  setPriceInputs(prev => {
+                                    const newState = { ...prev };
+                                    delete newState[`discount_${index}`];
+                                    return newState;
+                                  });
+                                }
+                              }}
+                              onFocus={(e) => {
+                                const value = product.discount;
+                                if (value !== "" && value != null) {
+                                  setPriceInputs(prev => ({
+                                    ...prev,
+                                    [`discount_${index}`]: formatPriceDisplay(value)
+                                  }));
+                                }
+                              }}
                               className="w-full outline-none bg-transparent"
                             />
                           </td>
@@ -687,7 +807,7 @@ export const AddNewProduct = () => {
                         type="file"
                         accept="image/jpeg, image/png, image/webp"
                         style={{ display: "none" }}
-                        onChange={handleImageSelect} // Trigger when an image is selected
+                        onChange={handleImageSelect}  
                         id="image-upload"
                       />
                       <label

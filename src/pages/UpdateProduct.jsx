@@ -70,6 +70,7 @@ export const UpdateProduct = () => {
   const [isErrors, setIsErrors] = useState({
     images: false,
   });
+  const [priceInputs, setPriceInputs] = useState({}); 
 
   const [relatedProducts, setRelatedProducts] = useState(relatedInitial);
   const [relatedProductsOptions, setRelatedProductsOptions] = useState([]);
@@ -158,9 +159,8 @@ export const UpdateProduct = () => {
     const fetchProducts = async () => {
       try {
         const response = await getAllProductsList();
-        const data = response.data; // The new API returns data in response.data
-        
-        // Filter only active webshop products for related products dropdown
+        const data = response.data; 
+
         const activeProducts = data.filter(product => 
           product.is_active_webshop !== false
         );
@@ -183,6 +183,18 @@ export const UpdateProduct = () => {
       (cat) => cat.name?.toLowerCase() === name.toLowerCase()
     );
     return category ? category.choices : [];
+  };
+
+  const formatPriceDisplay = (value) => {
+    if (value === "" || value == null) return "";
+    const numValue = typeof value === "number" ? value : parsePrice(value);
+    if (isNaN(numValue)) return "";
+
+    if (Number.isInteger(numValue)) {
+      return numValue.toString();
+    }
+
+    return numValue.toString().replace(".", ",");
   };
 
   const mapProductCategories = () => {
@@ -218,9 +230,19 @@ export const UpdateProduct = () => {
 
   const handleChange = (index, field, value) => {
     const updatedProducts = [...lengths];
-    // Convert to number for numeric fields
-    if (["length", "full_price_ex_vat", "discount", "stock"].includes(field)) {
+
+    if (["length", "stock"].includes(field)) {
       updatedProducts[index][field] = value === "" ? "" : Number(value);
+    } else if (["full_price_ex_vat", "discount"].includes(field)) {
+
+      if (value === "") {
+        updatedProducts[index][field] = "";
+      } else {
+
+        const normalizedValue = String(value).replace(",", ".");
+        const numValue = parseFloat(normalizedValue);
+        updatedProducts[index][field] = isNaN(numValue) ? "" : numValue;
+      }
     } else {
       updatedProducts[index][field] = value;
     }
@@ -276,7 +298,7 @@ export const UpdateProduct = () => {
         const response = await getProducts();
         const data = response.results;
         
-        // Filter only active webshop products for related products dropdown
+
         const activeProducts = data.filter(product => 
           product.is_active_webshop !== false
         );
@@ -352,7 +374,7 @@ export const UpdateProduct = () => {
               return;
             }
             try {
-              // Convert comma decimals to dot decimals for API
+
               const formatForAPI = (value) => {
                 if (!value || value === "" || value == null) return "";
                 return String(value).replace(",", ".");
@@ -692,33 +714,124 @@ export const UpdateProduct = () => {
                             <td className="px-[24px] py-[16px] text-left text-16 font-normal border border-[#D9D9D9]">
                               <input
                                 required
-                                type="number"
-                                min={0}
-                                value={product.full_price_ex_vat}
+                                type="text"
+                                inputMode="decimal"
+                                value={
+                                  priceInputs[`price_${index}`] !== undefined
+                                    ? priceInputs[`price_${index}`]
+                                    : product.full_price_ex_vat !== "" && product.full_price_ex_vat != null
+                                    ? formatPriceDisplay(product.full_price_ex_vat)
+                                    : ""
+                                }
                                 placeholder="30,00"
-                                onChange={(e) =>
+                                onChange={(e) => {
+                                  let inputValue = e.target.value.replace(/[^\d,.-]/g, '');
+                                  inputValue = inputValue.replace('.', ',');
+                                  const parts = inputValue.split(',');
+                                  if (parts.length > 2) {
+                                    inputValue = parts[0] + ',' + parts.slice(1).join('');
+                                  }
+                                  if (parts.length === 2 && parts[1].length > 2) {
+                                    inputValue = parts[0] + ',' + parts[1].substring(0, 2);
+                                  }
+                                  setPriceInputs(prev => ({
+                                    ...prev,
+                                    [`price_${index}`]: inputValue
+                                  }));
                                   handleChange(
                                     index,
                                     "full_price_ex_vat",
-                                    e.target.value
-                                  )
-                                }
+                                    inputValue
+                                  );
+                                }}
+                                onBlur={(e) => {
+                                  const value = product.full_price_ex_vat;
+                                  if (value !== "" && value != null) {
+                                    const formatted = formatPrice(value);
+                                    setPriceInputs(prev => ({
+                                      ...prev,
+                                      [`price_${index}`]: formatted
+                                    }));
+                                  } else {
+                                    setPriceInputs(prev => {
+                                      const newState = { ...prev };
+                                      delete newState[`price_${index}`];
+                                      return newState;
+                                    });
+                                  }
+                                }}
+                                onFocus={(e) => {
+
+                                  const value = product.full_price_ex_vat;
+                                  if (value !== "" && value != null) {
+                                    setPriceInputs(prev => ({
+                                      ...prev,
+                                      [`price_${index}`]: formatPriceDisplay(value)
+                                    }));
+                                  }
+                                }}
                                 className="w-full outline-none bg-transparent"
                               />
                             </td>
                             <td className="px-[24px] py-[16px] text-left text-16 font-normal border border-[#D9D9D9]">
                               <input
-                                type="number"
-                                min={0}
-                                value={product.discount}
-                                placeholder="12%"
-                                onChange={(e) =>
+                                type="text"
+                                inputMode="decimal"
+                                value={
+                                  priceInputs[`discount_${index}`] !== undefined
+                                    ? priceInputs[`discount_${index}`]
+                                    : product.discount !== "" && product.discount != null
+                                    ? formatPriceDisplay(product.discount)
+                                    : ""
+                                }
+                                placeholder="12,00"
+                                onChange={(e) => {
+                                  let inputValue = e.target.value.replace(/[^\d,.-]/g, '');
+                                  inputValue = inputValue.replace('.', ',');
+                                  const parts = inputValue.split(',');
+                                  if (parts.length > 2) {
+                                    inputValue = parts[0] + ',' + parts.slice(1).join('');
+                                  }
+
+                                  if (parts.length === 2 && parts[1].length > 2) {
+                                    inputValue = parts[0] + ',' + parts[1].substring(0, 2);
+                                  }
+                                  setPriceInputs(prev => ({
+                                    ...prev,
+                                    [`discount_${index}`]: inputValue
+                                  }));
                                   handleChange(
                                     index,
                                     "discount",
-                                    e.target.value
-                                  )
-                                }
+                                    inputValue
+                                  );
+                                }}
+                                onBlur={(e) => {
+
+                                  const value = product.discount;
+                                  if (value !== "" && value != null) {
+                                    const formatted = formatPrice(value);
+                                    setPriceInputs(prev => ({
+                                      ...prev,
+                                      [`discount_${index}`]: formatted
+                                    }));
+                                  } else {
+                                    setPriceInputs(prev => {
+                                      const newState = { ...prev };
+                                      delete newState[`discount_${index}`];
+                                      return newState;
+                                    });
+                                  }
+                                }}
+                                onFocus={(e) => {
+                                  const value = product.discount;
+                                  if (value !== "" && value != null) {
+                                    setPriceInputs(prev => ({
+                                      ...prev,
+                                      [`discount_${index}`]: formatPriceDisplay(value)
+                                    }));
+                                  }
+                                }}
                                 className="w-full outline-none bg-transparent"
                               />
                             </td>
@@ -812,7 +925,7 @@ export const UpdateProduct = () => {
                           type="file"
                           accept="image/jpeg, image/png, image/webp"
                           style={{ display: "none" }}
-                          onChange={handleImageSelect} // Trigger when an image is selected
+                          onChange={handleImageSelect}
                           id="image-upload"
                         />
                         <label
