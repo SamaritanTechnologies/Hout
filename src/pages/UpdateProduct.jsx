@@ -200,6 +200,8 @@ export const UpdateProduct = () => {
 
       result[categoryName] = matchingChoices;
     });
+
+    return result;
   };
 
   const handleAddRow = () => {
@@ -459,6 +461,9 @@ export const UpdateProduct = () => {
                       onSelect={(selectedList) => {
                         setFieldValue("product_type", selectedList);
                       }}
+                      onRemove={(selectedList) =>
+                        setFieldValue("product_type", selectedList)
+                      }
                     />
                   </div>
                   <div className="w-full">
@@ -474,6 +479,9 @@ export const UpdateProduct = () => {
                       onSelect={(selectedList) => {
                         setFieldValue("material", selectedList);
                       }}
+                      onRemove={(selectedList) =>
+                        setFieldValue("material", selectedList)
+                      }
                     />
                   </div>
                 </div>
@@ -491,6 +499,9 @@ export const UpdateProduct = () => {
                       onSelect={(selectedList) => {
                         setFieldValue("profile", selectedList);
                       }}
+                      onRemove={(selectedList) =>
+                        setFieldValue("profile", selectedList)
+                      }
                     />
                   </div>
                   <div className="w-full">
@@ -508,6 +519,9 @@ export const UpdateProduct = () => {
                       onSelect={(selectedList) => {
                         setFieldValue("durability_class", selectedList);
                       }}
+                      onRemove={(selectedList) =>
+                        setFieldValue("durability_class", selectedList)
+                      }
                     />
                   </div>
                 </div>
@@ -526,6 +540,9 @@ export const UpdateProduct = () => {
                       onSelect={(selectedList) => {
                         setFieldValue("quality", selectedList);
                       }}
+                      onRemove={(selectedList) =>
+                        setFieldValue("quality", selectedList)
+                      }
                       closeIconStyle={{ color: "red" }}
                     />
                   </div>
@@ -540,6 +557,9 @@ export const UpdateProduct = () => {
                       displayValue="name_en"
                       selectedValues={values.application}
                       onSelect={(selectedList) => {
+                        setFieldValue("application", selectedList);
+                      }}
+                      onRemove={(selectedList) => {
                         setFieldValue("application", selectedList);
                       }}
                     />
