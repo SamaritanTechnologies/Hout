@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import houtLogo from "../../assets/new-logo.png";
 
-const AdminSidenav = () => {
+const AdminSidenav = ({ sidebarOpen, setSidebarOpen }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -86,16 +87,35 @@ const AdminSidenav = () => {
   }, [location.pathname]);
   const handleNavigation = (item) => {
     navigate(item.link);
+    // Close sidebar on mobile after navigation
+    if (window.innerWidth < 1024 && setSidebarOpen) {
+      setSidebarOpen(false);
+    }
   };
 
   return (
     <section className="">
       <div className="xl:w-[240px] lg:w-[220px] w-[200px] min-h-screen bg-white shadow-md">
-        <div className="mb-[22px] block px-[24px] pt-[10px]">
+        <div className="mb-[22px] block px-[24px] pt-[10px] relative">
+          {/* Close button for mobile */}
+          {setSidebarOpen && (
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="lg:hidden absolute top-2 right-2 p-2 text-gray-600 hover:text-gray-800 transition-colors"
+              aria-label="Close sidebar"
+            >
+              <XMarkIcon className="h-6 w-6" />
+            </button>
+          )}
           <img
             src={houtLogo}
             alt="Hout Totaal Logo"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => {
+              navigate("/dashboard");
+              if (window.innerWidth < 1024 && setSidebarOpen) {
+                setSidebarOpen(false);
+              }
+            }}
             className="w-[160px] lg:w-[135px] h-[70px] mx-auto object-cover cursor-pointer"
           />
         </div>

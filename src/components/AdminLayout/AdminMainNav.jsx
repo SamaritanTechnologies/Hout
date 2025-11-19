@@ -7,13 +7,14 @@ import {
   BellIcon,
   ClockIcon,
   ClipboardDocumentListIcon,
+  Bars3Icon,
 } from "@heroicons/react/24/outline";
 import HeadLessDropDown from "../Common/HeadLessDropDown";
 import NotificationModal from "./NotificationModal";
 import { axiosWithCredentials } from "../../providers";
 import { useSelector } from "react-redux";
 
-const AdminMainNav = () => {
+const AdminMainNav = ({ setSidebarOpen }) => {
   const authState = useSelector((state) => state.auth);
   const isAuthenticated = authState.isLoggedIn;
   const [isScrolled, setIsScrolled] = useState(false);
@@ -88,7 +89,17 @@ const AdminMainNav = () => {
       }`}
     >
       <div className="dashHead xl:px-[30px] lg:px-[26px] px-[20px] xl:py-[16px] py-[10px] flex justify-between items-center">
-        <div className="search w-[40%]">
+        <div className="search w-[40%] flex items-center gap-4">
+          {/* Hamburger menu button for mobile */}
+          {setSidebarOpen && (
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="lg:hidden p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors"
+              aria-label="Open sidebar"
+            >
+              <Bars3Icon className="h-6 w-6" />
+            </button>
+          )}
           <div className="">
             {/* <div className="relative flex items-center w-full max-w-[388px] h-10 rounded-full focus-within:shadow-lg bg-white overflow-hidden border-gray	border-[0.5px]">
               <div className="grid place-items-center h-full w-12 text-gray-300 bg-[#fefbeb]  min-w-[50px]">
