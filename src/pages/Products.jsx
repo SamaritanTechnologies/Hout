@@ -35,6 +35,7 @@ const initialState = {
 export const Products = () => {
   const { productCategories } = useSelector((state) => state.admin);
   const [searchQuery, setSearchQuery] = useState("");
+  const [appliedSearchQuery, setAppliedSearchQuery] = useState("");
   const [state, setState] = useState(initialState);
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -55,7 +56,11 @@ export const Products = () => {
   const pageSize = PRODUCT_PAGE_SIZE;
   const { t } = useTranslation();
 
-  const fetchProducts = async (selectedOptions, page = currentPage) => {
+  const fetchProducts = async (
+    selectedOptions,
+    page = currentPage,
+    searchTerm = appliedSearchQuery
+  ) => {
     try {
       setIsLoading(true);
       // Filter out empty arrays and add pagination parameters
@@ -71,6 +76,10 @@ export const Products = () => {
         page: page + 1, // API uses 1-based indexing
         page_size: pageSize,
       };
+
+      if (searchTerm?.trim()) {
+        optionsWithPagination.search = searchTerm.trim();
+      }
 
       const res = await getProducts(optionsWithPagination);
 
@@ -103,8 +112,8 @@ export const Products = () => {
   };
 
   useEffect(() => {
-    fetchProducts(selectedOptions, currentPage);
-  }, [isDeleted, currentPage]);
+    fetchProducts(selectedOptions, currentPage, appliedSearchQuery);
+  }, [isDeleted, currentPage, selectedOptions, appliedSearchQuery]);
 
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected);
@@ -124,15 +133,11 @@ export const Products = () => {
   };
 
   const onFilterChange = (filterKey, selectedValues) => {
-    setSelectedOptions((prev) => {
-      const updatedOptions = {
-        ...prev,
-        [filterKey]: selectedValues,
-      };
-      setCurrentPage(0); // Reset to first page when filters change
-      fetchProducts(updatedOptions, 0);
-      return updatedOptions;
-    });
+    setSelectedOptions((prev) => ({
+      ...prev,
+      [filterKey]: selectedValues,
+    }));
+    setCurrentPage(0); // Reset to first page when filters change
   };
 
   const FilterLabel = ({ type }) => {
@@ -148,12 +153,20 @@ export const Products = () => {
       </div>
     );
   };
-  const filteredProducts =
-    state.results?.filter((product) =>
-      product.name_en?.toLowerCase().includes(searchQuery.toLowerCase())
-    ) || [];
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
+  };
+
+  const handleSearchSubmit = () => {
+    setAppliedSearchQuery(searchQuery.trim());
+    setCurrentPage(0);
+  };
+
+  const handleSearchKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSearchSubmit();
+    }
   };
 
   const handleGenerateLabel = async (productId) => {
@@ -304,6 +317,7 @@ export const Products = () => {
               placeholder="Search by product name"
               value={searchQuery}
               onChange={handleSearchChange}
+              onKeyDown={handleSearchKeyDown}
             />
           </div>
           <Button
@@ -431,8 +445,8 @@ export const Products = () => {
                   </div>
                 </td>
               </tr>
-            ) : filteredProducts.length > 0 ? (
-              filteredProducts.map((rowData, index) => (
+            ) : state.results?.length > 0 ? (
+              state.results.map((rowData, index) => (
                 <tr
                   key={index}
                   className={`border-b-[0.4px] w-full border-gray ${index % 2 !== 0 ? "bg-[#F1F4F9]" : ""

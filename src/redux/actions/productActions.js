@@ -42,7 +42,8 @@ export const getProducts = async (filters = {}) => {
     });
 
     const queryString = params.toString();
-    const url = queryString ? `/product?${queryString}` : `/product`;
+    const baseUrl = `/product/`;
+    const url = queryString ? `${baseUrl}?${queryString}` : baseUrl;
 
     const response = await axiosWithCredentials.get(url);
     return response.data;
