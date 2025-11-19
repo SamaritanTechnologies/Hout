@@ -14,6 +14,7 @@ import {
   getProducts,
   generateProductLabel,
   getProductDetailsById,
+  getProductImages,
 } from "../redux/actions/productActions";
 import { useDispatch, useSelector } from "react-redux";
 import { setProductCategories } from "../redux";
@@ -43,6 +44,9 @@ export const Products = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [labelGenerating, setLabelGenerating] = useState({});
   const [copyingProduct, setCopyingProduct] = useState({});
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [productImages, setProductImages] = useState({});
+  const [loadingImages, setLoadingImages] = useState(false);
   const navigate = useNavigate();
   const [selectedOptions, setSelectedOptions] = useState({
     group: [],
@@ -293,6 +297,31 @@ export const Products = () => {
     );
   };
 
+  const handleLoadImages = async () => {
+    if (loadingImages) return;
+    
+    try {
+      setLoadingImages(true);
+      const response = await getProductImages();
+      
+      // Create a map of product ID to images array
+      const imagesMap = {};
+      if (response.results) {
+        response.results.forEach((product) => {
+          imagesMap[product.id] = product.images || [];
+        });
+      }
+      
+      setProductImages(imagesMap);
+      setImagesLoaded(true);
+    } catch (error) {
+      console.error("Error loading product images:", error);
+      toast.error("Failed to load product images");
+    } finally {
+      setLoadingImages(false);
+    }
+  };
+
   return (
     <>
       <DeleteModal
@@ -344,8 +373,20 @@ export const Products = () => {
                 Product ID
               </th>
 
-              <th className="px-[10px] py-[12px]  text-left text-14 font-medium min-h-12">
-                Image
+              <th 
+                className="px-[10px] py-[12px] text-left text-14 font-medium min-h-12 cursor-pointer hover:bg-gray-200 transition-colors"
+                onClick={handleLoadImages}
+                title={imagesLoaded ? "Images loaded" : "Click to load images"}
+              >
+                <div className="flex items-center gap-2">
+                  <span>Image</span>
+                  {loadingImages && (
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
+                  )}
+                  {imagesLoaded && !loadingImages && (
+                    <span className="text-xs text-green-600">✓</span>
+                  )}
+                </div>
               </th>
               <th className="px-[10px] py-[12px]  text-left text-14 font-medium min-h-12">
                 Name
@@ -480,16 +521,22 @@ export const Products = () => {
                     </div>
                   </td>
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">
-                    <div className="flex gap-1 items-center">
-                      <div className="block xl:w-[60px] lg:w-[50px] w-[45px]">
-                        {rowData?.images?.length ? (
-                          <img
-                            src={rowData?.images?.[0]?.image}
-                            alt={rowData?.name}
-                            className=""
-                          />
-                        ) : null}
-                      </div>
+                    <div className="flex gap-1 items-center flex-wrap">
+                      {imagesLoaded && productImages[rowData?.id]?.length > 0 ? (
+                        productImages[rowData.id].slice(0, 3).map((img, idx) => (
+                          <div key={idx} className="block xl:w-[60px] lg:w-[50px] w-[45px]">
+                            <img
+                              src={img.url}
+                              alt={`${rowData?.name} thumbnail ${idx + 1}`}
+                              className="w-full h-full object-cover rounded"
+                            />
+                          </div>
+                        ))
+                      ) : imagesLoaded && (!productImages[rowData?.id] || productImages[rowData.id].length === 0) ? (
+                        <span className="text-xs text-gray-400">No images</span>
+                      ) : (
+                        <span className="text-xs text-gray-400">Click header to load</span>
+                      )}
                     </div>
                   </td>
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">

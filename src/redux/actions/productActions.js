@@ -358,3 +358,13 @@ export const generateProductLabel = async (productId) => {
     throw error;
   }
 };
+
+export const getProductImages = async () => {
+  try {
+    const response = await axiosWithCredentials.get(`/product/images/`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching product images:", error);
+    throw error;
+  }
+};
