@@ -14,7 +14,7 @@ const OurAssortmentSection = () => {
         const data = await getOurAssortment();
         setAssortments(Array.isArray(data) ? data : []);
       } catch (error) {
-        toast.error("An error occurred while fetching data: " + error.message);
+        toast.error("Your session is no longer valid. Please sign in again for authorization " + error.message);
       }
     };
     fetchOurValues();

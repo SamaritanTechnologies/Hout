@@ -31,7 +31,7 @@ const FooterSection = ({ isShow }) => {
         setOpeningHour(data);
       } catch (error) {
         console.error("Error fetching opening hours:", error);
-        toast.error("An error occurred while fetching data: " + error.message);
+        toast.error("Your session is no longer valid. Please sign in again for authorization " + error.message);
       }
     };
 

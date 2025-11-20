@@ -14,7 +14,7 @@ const OurValuesSection = () => {
         const data = await getOurValues();
         setValues(Array.isArray(data) ? data : []);
       } catch (error) {
-        toast.error("An error occurred while fetching data: " + error.message);
+        toast.error("Your session is no longer valid. Please sign in again for authorization " + error.message);
       }
     };
 

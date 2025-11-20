@@ -370,10 +370,6 @@ export const Products = () => {
                   <span className="text-xs font-normal text-gray-500">Webshop</span>
                 </div>
               </th>
-              <th className="px-[10px] py-[12px] text-sm font-semibold">
-                Product ID
-              </th>
-
               <th 
                 className="px-[10px] py-[12px] text-left text-14 font-medium min-h-12 cursor-pointer hover:bg-gray-200 transition-colors"
                 onClick={handleLoadImages}
@@ -478,7 +474,7 @@ export const Products = () => {
             {isLoading ? (
               <tr className="w-full">
                 <td
-                  colSpan="13"
+                  colSpan="12"
                   className="text-[14px] text-[#141718] text-center py-[22px]"
                 >
                   <div className="flex items-center justify-center gap-2">
@@ -512,13 +508,6 @@ export const Products = () => {
                           />
                         );
                       })()}
-                    </div>
-                  </td>
-                  <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">
-                    <div className="">
-                      <p className="text-gray-900 whitespace-no-wrap">
-                        {rowData?.id}
-                      </p>
                     </div>
                   </td>
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">
@@ -703,7 +692,7 @@ export const Products = () => {
             ) : (
               <tr className="w-full">
                 <td
-                  colSpan="13"
+                  colSpan="12"
                   className="text-[14px] text-[#141718] text-center py-[22px]"
                 >
                   No products found
