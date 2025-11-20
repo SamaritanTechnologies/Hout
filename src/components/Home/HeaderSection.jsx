@@ -179,6 +179,17 @@ const HeaderSection = () => {
             >
               <XMarkIcon className="h-6 w-6 text-gray-500" />
             </div>
+            <div className="mobile-menu-logo w-full flex justify-center mb-4">
+              <img
+                src={headerImage}
+                className="cursor-pointer w-[138px] h-[58px]"
+                onClick={() => {
+                  scrollToTop();
+                  setIsActive(false);
+                  navigate("/");
+                }}
+              />
+            </div>
             {role === "admin" && (
               <span
                 className="cursor-pointer ml-4"

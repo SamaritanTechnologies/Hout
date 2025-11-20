@@ -116,7 +116,7 @@ const AdminSidenav = ({ sidebarOpen, setSidebarOpen }) => {
                 setSidebarOpen(false);
               }
             }}
-            className="w-[160px] lg:w-[135px] h-[70px] mx-auto object-cover cursor-pointer"
+            className="admin-sidebar-logo w-[160px] lg:w-[135px] h-[70px] mx-auto object-cover cursor-pointer"
           />
         </div>
         <nav className="flex flex-col items-start xl:px-[24px] lg:px-[20px] px-[16px] overflow-y-auto h-[calc(100vh-110px)]">

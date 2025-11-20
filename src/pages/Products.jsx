@@ -332,7 +332,7 @@ export const Products = () => {
         handleDelete={handleDelete}
       />
 
-      <div className="flex justify-between items-center mb-3">
+      <div className="flex justify-between items-center mb-3 flex-wrap sm:flex-nowrap">
         <h1 className="text-2xl xl:text-[32px] font-bold">Products</h1>
 
         <div className="flex items-center gap-4">

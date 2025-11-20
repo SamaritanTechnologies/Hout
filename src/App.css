@@ -477,3 +477,26 @@ input[type="date"] {
   transition: background-color 5000s ease-in-out 0s;
 }
 /* contact us css end  */
+
+/* Logo visibility for mobile screens */
+@media (max-width: 490px) {
+  .header-logo {
+    display: none !important;
+  }
+  
+  .admin-sidebar-logo {
+    display: none !important;
+  }
+  
+  .mobile-menu-logo {
+    display: flex !important;
+    justify-content: left;
+    padding-left: 1rem;
+  }
+}
+
+@media (min-width: 491px) {
+  .mobile-menu-logo {
+    display: none !important;
+  }
+}
