@@ -53,6 +53,37 @@ export const getProducts = async (filters = {}) => {
   }
 };
 
+export const getAdminProducts = async (filters = {}) => {
+  try {
+    // Construct query string from filters
+    const params = new URLSearchParams();
+
+    Object.entries(filters).forEach(([key, value]) => {
+      if (Array.isArray(value) && value.length > 0) {
+        // Handle array values (for filters)
+        value.forEach((item) => {
+          if (item !== null && item !== undefined && item !== '') {
+            params.append(key, item);
+          }
+        });
+      } else if (value !== null && value !== undefined && value !== '') {
+        // Handle single values (for pagination, search, etc.)
+        params.append(key, value);
+      }
+    });
+
+    const queryString = params.toString();
+    const baseUrl = `/product/admin-list/`;
+    const url = queryString ? `${baseUrl}?${queryString}` : baseUrl;
+
+    const response = await axiosWithCredentials.get(url);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching order details:", error);
+    throw error;
+  }
+};
+
 export const deleteProduct = async (id) => {
   try {
     await axiosWithCredentials.delete(`/product/${id}/delete/`);

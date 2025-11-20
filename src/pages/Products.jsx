@@ -12,6 +12,7 @@ import {
   deleteProduct,
   getProductCategories,
   getProducts,
+  getAdminProducts,
   generateProductLabel,
   getProductDetailsById,
   getProductImages,
@@ -85,7 +86,7 @@ export const Products = () => {
         optionsWithPagination.search = searchTerm.trim();
       }
 
-      const res = await getProducts(optionsWithPagination);
+      const res = await getAdminProducts(optionsWithPagination);
 
       setState((prev) => ({
         ...prev,
