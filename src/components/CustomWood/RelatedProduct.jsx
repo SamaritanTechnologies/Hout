@@ -83,7 +83,7 @@ const RelatedProduct = ({ relatedProducts, vat = false }) => {
                   onClick={() => navigate(`/product-detail/${product.id}`)}
                 >
                   <img
-                    src={product.images[0].image}
+                    src={product.images[0].url || product.images[0].image}
                     className="w-full object-cover h-full sm:h-[310px] lg:h-[310px] xl:h-[310px]"
                   />
                 </div>

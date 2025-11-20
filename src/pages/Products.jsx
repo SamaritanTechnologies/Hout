@@ -524,15 +524,13 @@ export const Products = () => {
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">
                     <div className="flex gap-1 items-center flex-wrap">
                       {imagesLoaded && productImages[rowData?.id]?.length > 0 ? (
-                        productImages[rowData.id].slice(0, 3).map((img, idx) => (
-                          <div key={idx} className="block xl:w-[60px] lg:w-[50px] w-[45px]">
-                            <img
-                              src={img.url}
-                              alt={`${rowData?.name} thumbnail ${idx + 1}`}
-                              className="w-full h-full object-cover rounded"
-                            />
-                          </div>
-                        ))
+                        <div className="block xl:w-[60px] lg:w-[50px] w-[45px]">
+                          <img
+                            src={productImages[rowData.id][0]?.url}
+                            alt={`${rowData?.name} thumbnail`}
+                            className="w-full h-full object-cover rounded"
+                          />
+                        </div>
                       ) : imagesLoaded && (!productImages[rowData?.id] || productImages[rowData.id].length === 0) ? (
                         <span className="text-xs text-gray-400">No images</span>
                       ) : (

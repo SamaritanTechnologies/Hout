@@ -134,7 +134,7 @@ const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
       >
         {product.images?.length ? (
           <img
-            src={product.images[0].image}
+            src={product.images[0].url || product.images[0].image}
             className="w-full h-full object-cover"
           />
         ) : (
