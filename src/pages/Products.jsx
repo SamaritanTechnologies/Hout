@@ -528,10 +528,10 @@ export const Products = () => {
                     </div>
                   </td>
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">
-                    {highlightMatch(rowData?.name_en, searchQuery)}
+                    {searchQuery ? highlightMatch(rowData?.name_nl, searchQuery) : rowData?.name_nl}
                   </td>
-                  <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3 w-[12%]">
-                    <p className="text-gray-900 overflow-hidden whitespace-normal line-clamp-3 min-w-[120px]">
+                  <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">
+                    <p className="text-gray-900 whitespace-no-wrap">
                       {rowData?.thickness}
                     </p>
                   </td>
@@ -550,7 +550,7 @@ export const Products = () => {
                     <div className="flex flex-col gap-1 items-start">
                       {rowData?.group && rowData.group?.length > 0
                         ? rowData.group?.map((item, index) => (
-                          <p key={index}>{item.name_en}</p>
+                          <p key={index}>{item.name_nl}</p>
                         ))
                         : "---"}
                     </div>
@@ -564,7 +564,7 @@ export const Products = () => {
                             key={index}
                             className="text-gray-900 whitespace-no-wrap"
                           >
-                            {item.name_en}
+                            {item.name_nl}
                           </p>
                         ))
                         : "---"}
@@ -579,7 +579,7 @@ export const Products = () => {
                             key={index}
                             className="text-gray-900 whitespace-no-wrap flex gap-2 items-center"
                           >
-                            <span>{item.name_en}</span>
+                            <span>{item.name_nl}</span>
                           </p>
                         ))
                         : "---"}
@@ -594,7 +594,7 @@ export const Products = () => {
                             key={index}
                             className="text-gray-900 whitespace-no-wrap flex gap-2 items-center"
                           >
-                            {item.name_en}
+                            {item.name_nl}
                           </p>
                         ))
                         : "---"}

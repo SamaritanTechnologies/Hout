@@ -168,6 +168,18 @@ const ProductVaritants = ({ variants, vat }) => {
 
   return (
     <section className="wood-stock-table px-[30px] pt-[61px] max-w-[1240px] mx-auto reso">
+      {/* Mobile scroll indicator */}
+      <div className="lg:hidden mb-4 flex items-center justify-end gap-2 text-customYellow animate-pulse">
+        <span className="text-14 font-medium">{t("pv_scroll_to_cart")}</span>
+        <svg 
+          className="w-6 h-6 animate-bounce-horizontal" 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </div>
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>

@@ -392,7 +392,8 @@ export const generateProductLabel = async (productId) => {
 
 export const getProductImages = async () => {
   try {
-    const response = await axiosWithCredentials.get(`/product/images/`);
+    // Fetch all product images without pagination by setting a large page_size
+    const response = await axiosWithCredentials.get(`/product/images/?page_size=1000`);
     return response.data;
   } catch (error) {
     console.error("Error fetching product images:", error);

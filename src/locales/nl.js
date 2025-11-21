@@ -550,4 +550,17 @@ export const nlTranslations = {
   contactus_generic_error:
     "Er is een onverwachte fout opgetreden. Probeer het later opnieuw.",
   pc_view_product: "Bekijk product",
+
+  // Quality Section
+  qs_stock: "Voorraad",
+  qs_stock_sub: "",
+  qs_prices: "Scherpe prijzen",
+  qs_prices_sub: "",
+  qs_delivery: "Bezorgen & afhalen",
+  qs_delivery_sub: "",
+  qs_custom: "Maatwerk",
+  qs_custom_sub: "",
+
+  // Product Variants Mobile
+  pv_scroll_to_cart: "Scroll naar rechts om toe te voegen aan winkelwagen",
 };

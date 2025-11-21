@@ -57,7 +57,7 @@ const ProductsList = ({
       );
 
       setProducts(activeProducts);
-      setTotalItems(activeProducts.length); // Update total items based on filtered results
+      setTotalItems(data.count || 0); // Use total count from API for pagination
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {

@@ -565,4 +565,17 @@ export const enTranslations = {
   contactus_generic_error:
     "An unexpected error occurred. Please try again later.",
   pc_view_product: "View Product",
+
+  // Quality Section
+  qs_stock: "High Quality",
+  qs_stock_sub: "crafted from top materials",
+  qs_prices: "Warranty Protection",
+  qs_prices_sub: "Over 2 years",
+  qs_delivery: "Free Shipping",
+  qs_delivery_sub: "Order over 150 $",
+  qs_custom: "24 / 7 Support",
+  qs_custom_sub: "Dedicated support",
+
+  // Product Variants Mobile
+  pv_scroll_to_cart: "Scroll right to add to cart",
 };

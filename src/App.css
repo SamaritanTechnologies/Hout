@@ -500,3 +500,17 @@ input[type="date"] {
     display: none !important;
   }
 }
+/* Hor
+izontal bounce animation for scroll indicator */
+@keyframes bounce-horizontal {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+}
+
+.animate-bounce-horizontal {
+  animation: bounce-horizontal 1s infinite;
+}
