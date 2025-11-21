@@ -514,3 +514,10 @@ izontal bounce animation for scroll indicator */
 .animate-bounce-horizontal {
   animation: bounce-horizontal 1s infinite;
 }
+
+/* Mobile scroll indicator - hide on screens wider than 768px */
+@media (min-width: 632px) {
+  .mobile-scroll-indicator {
+    display: none !important;
+  }
+}
