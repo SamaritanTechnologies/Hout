@@ -268,7 +268,7 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
           <>
             <section className="xl:px-[100px] lg:px-[60px] px-[30px] xs:px-[15px]  mb-16">
               <section className="grid grid-cols-12 gap-4 xs:gap-6 lg:gap-[45px] gap-x-12 ">
-                <section className="col-span-12 xl:col-span-4">
+                <section className="col-span-12 xl:col-span-4 order-2 xl:order-1">
                   <div className="text-22 font-medium border-b border-[#D9D9D9] pb-2">
                     {t("sk_view_order_text")}
                   </div>
@@ -383,7 +383,7 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
 
                 {/* Right Side Section  */}
 
-                <section className="col-span-12 xl:col-span-8 font-bold text-md">
+                <section className="col-span-12 xl:col-span-8 font-bold text-md order-1 xl:order-2">
                   <div className="xl:text-22 lg:text-20 md:text-18 text-16 font-semibold border-b pb-2 border-[#D9D9D9]">
                     {t("cd_delivery_address_title")}
                   </div>
@@ -584,7 +584,7 @@ const CheckoutDetail = ({ cartData, fetchCart }) => {
                     </div>
                   </section>
 
-                  <div className="mt-8 pb-[100px] my-4">
+                  <div className="mt-8 xl:pb-[100px] my-4">
                     <h2 className="text-2xl font-bold my-2 border-b border-[#D9D9D9] pb-3">
                       {t("sk_payment_method_title")}
                     </h2>
