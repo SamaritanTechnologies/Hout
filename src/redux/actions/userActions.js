@@ -5,8 +5,11 @@ export const getHomepageImage = async () => {
   return response.data;
 };
 
-export const getFeaturedProducts = async () => {
-  const response = await axiosWithCredentials.get(`/featured-products-detail`);
+export const getFeaturedProducts = async (config = {}) => {
+  const response = await axiosWithCredentials.get(
+    `/featured-products-detail/`,
+    config
+  );
   return response.data;
 };
 
@@ -59,17 +62,26 @@ export const getFaqs = async () => {
   return response.data;
 };
 
-export const getProducts = async (queryParams = "") => {
-  const response = await axiosWithCredentials.get(`/product/?${queryParams}`);
+export const getProducts = async (queryParams = "", config = {}) => {
+  const response = await axiosWithCredentials.get(
+    `/product/?${queryParams}`,
+    config
+  );
   return response.data;
 };
 
-export const getProductsById = async (product_id) => {
-  const response = await axiosWithCredentials.get(`/product/${product_id}`);
+export const getProductsById = async (product_id, config = {}) => {
+  const response = await axiosWithCredentials.get(
+    `/product/${product_id}/`,
+    config
+  );
   return response.data;
 };
 
-export const getRelatedProducts = async (product_id) => {
-  const response = await axiosWithCredentials.get(`/products/${product_id}/related/`);
+export const getRelatedProducts = async (product_id, config = {}) => {
+  const response = await axiosWithCredentials.get(
+    `/products/${product_id}/related/`,
+    config
+  );
   return response.data;
 };

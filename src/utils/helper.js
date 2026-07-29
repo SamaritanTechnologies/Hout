@@ -10,6 +10,9 @@ import bancontact from "../assets/addToCart/bancontact.svg";
 import buyCredit from "../assets/addToCart/buyCredit.svg";
 import cash from "../assets/addToCart/cash.png";
 
+// Re-exported so the many existing `from "../utils/helper"` imports keep working.
+export { parsePrice, formatPrice } from "./price";
+
 export const itemDescription = [
   {
     id: 1,
@@ -67,34 +70,6 @@ export const scrollDashboardToTop = () => {
       behavior: "smooth",
     });
   }
-};
-
-/**
- * @param {string|number} price - Price string (e.g., "1000,00" or "1000.00") or number
- * @returns {number} - Parsed number
- */
-export const parsePrice = (price) => {
-  if (price === null || price === undefined || price === "") {
-    return 0;
-  }
-  if (typeof price === "number") {
-    return price;
-  }
-  const normalizedPrice = String(price).replace(",", ".");
-  return parseFloat(normalizedPrice) || 0;
-};
-
-/**
- * Formats a number with comma as decimal separator (e.g., 1000.00 -> "1000,00")
- * @param {number|string} price - Price to format
- * @param {number} decimals - Number of decimal places (default: 2)
- * @returns {string} - Formatted price string
- */
-export const formatPrice = (price, decimals = 2) => {
-  const numPrice = parsePrice(price);
-  const fixed = numPrice.toFixed(decimals);
-  // Replace dot with comma for display
-  return fixed.replace(".", ",");
 };
 
 // Open PDF directly in new tab

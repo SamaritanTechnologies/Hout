@@ -4,35 +4,30 @@ import { useNavigate } from "react-router-dom";
 import { getFeaturedProducts } from "../../redux/actions/userActions";
 import ProductCard from "../Common/ProductCard";
 import { useTranslation } from "react-i18next";
-import { parsePrice } from "../../utils/helper";
+import { useVat } from "../../providers";
+import { getCheapestVariant } from "../../utils/vat";
 
 const ProductsSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [featureProducts, setFeatureProducts] = useState([]);
+  const { includeVAT, rate } = useVat();
 
   const fetchFeaturedProducts = async () => {
-    const data = await getFeaturedProducts();
-    // Filter only active webshop products from featured products
-    const activeProducts = (data.products || []).filter(product => 
-      product.is_active_webshop !== false
-    );
-    setFeatureProducts(activeProducts);
+    try {
+      const data = await getFeaturedProducts();
+      const activeProducts = (data.products || []).filter(
+        (product) => product.is_active_webshop !== false
+      );
+      setFeatureProducts(activeProducts);
+    } catch (error) {
+      console.error("Error fetching featured products:", error);
+    }
   };
 
   useEffect(() => {
     fetchFeaturedProducts();
   }, []);
-
-  const getMinimumPriceObject = (lengths) => {
-    if (!lengths || lengths.length === 0) return "N/A";
-
-    return lengths.reduce((minObj, currentObj) => {
-      const currentPrice = parsePrice(currentObj.full_price_ex_vat);
-      const minPrice = parsePrice(minObj.full_price_ex_vat);
-      return currentPrice < minPrice ? currentObj : minObj;
-    });
-  };
 
   return (
     <>
@@ -44,17 +39,17 @@ const ProductsSection = () => {
           {t("p_products_heading")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {featureProducts?.map((product) => {
-            const minimumPrice = getMinimumPriceObject(product.lengths);
-            return (
-              <ProductCard
-                key={product.id}
-                product={product}
-                minimumPrice={minimumPrice}
-                fetchProduct={fetchFeaturedProducts}
-              />
-            );
-          })}
+          {featureProducts?.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              minimumPrice={getCheapestVariant(product.lengths, {
+                includeVAT,
+                rate,
+              })}
+              fetchProduct={fetchFeaturedProducts}
+            />
+          ))}
         </div>
         <Button
           btnText={t("p_viewShop")}

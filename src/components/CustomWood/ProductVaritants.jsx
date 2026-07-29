@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Button from "../Common/Button";
 import cartIcon from "../../assets/customWoodPage/cart-icon.svg";
 import InputField from "../Common/InputField";
-import { axiosWithCredentials } from "../../providers";
+import { axiosWithCredentials, useVat } from "../../providers";
 import { toast } from "react-toastify";
 import { getCart } from "../../redux/actions/orderActions";
 import { setCartItems } from "../../redux/slices/cartSlice";
@@ -10,18 +10,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { formatPrice } from "../../utils/helper";
+import { getVariantPrice } from "../../utils/vat";
 
-const ProductVaritants = ({ variants, vat }) => {
+const ProductVaritants = ({ variants }) => {
   const { t } = useTranslation();
   const authState = useSelector((state) => state.auth);
   const cartState = useSelector((state) => state.cart);
-  console.log("CartState", cartState);
   const isAuthenticated = authState.isLoggedIn;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
-  console.log("Variant", variants);
+  const { includeVAT, rate } = useVat();
 
   // const handleaddToCart = async (variantId) => {
   //   try {
@@ -234,11 +233,9 @@ const ProductVaritants = ({ variants, vat }) => {
                       </span> */}
                     </div>
                     <div className="text-14 text-[#111727] font-medium">
-                      {/* discounted_price_in_vat */}€
+                      €
                       {formatPrice(
-                        vat
-                          ? variant.discounted_price_in_vat
-                          : variant.discounted_price_ex_vat
+                        getVariantPrice(variant, { includeVAT, rate })
                       )}
                     </div>
                   </div>

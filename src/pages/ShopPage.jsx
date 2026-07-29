@@ -24,6 +24,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { getWebshopImage } from "../redux/actions/dashboardActions";
 import { scrollToTop } from "../utils/helper";
+import { useVat } from "../providers";
 
 export const ShopPage = () => {
   const { t, i18n } = useTranslation();
@@ -49,11 +50,10 @@ export const ShopPage = () => {
   );
 
   const [categoryData, setCategoryData] = useState({});
-  const [includeVAT, setIncludeVAT] = useState(false);
+  const { includeVAT, toggleVAT } = useVat();
   const [filters, setFilters] = useState({
     selectedFilters: {},
     price: [PRODUCT_MIN_PRICE, PRODUCT_MAX_PRICE],
-    includeVAT: false,
   });
   const debounceTimer = useRef(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -129,24 +129,18 @@ export const ShopPage = () => {
     [filters.selectedFilters, filters.price]
   );
 
-  const handleVATToggle = () => {
-    setIncludeVAT((prev) => !prev);
-    setFilters((prev) => ({ ...prev, includeVAT: !prev.includeVAT }));
-  };
-
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected);
     scrollToTop();
   };
 
+  // Resetting filters intentionally leaves the VAT preference alone: it is a
+  // display choice the customer made, not a search filter.
   const handleResetFilters = () => {
-    const resetFilters = {
+    setFilters({
       selectedFilters: {},
       price: [PRODUCT_MIN_PRICE, PRODUCT_MAX_PRICE],
-      includeVAT: false,
-    };
-    setFilters(resetFilters);
-    setIncludeVAT(false);
+    });
     setCurrentPage(0);
     setFilterKey((prev) => prev + 1);
   };
@@ -229,11 +223,7 @@ export const ShopPage = () => {
             </div>
 
             <div className="recPasswrd">
-              <Switch
-                optional
-                checked={includeVAT}
-                onChange={handleVATToggle}
-              />
+              <Switch optional checked={includeVAT} onChange={toggleVAT} />
             </div>
             <div className="pops md:text-14 sm:text-14 xs:text-12">
               {t("s_incl_vat")}
@@ -268,7 +258,6 @@ export const ShopPage = () => {
             currentPage={currentPage}
             pageSize={pageSize}
             setTotalItems={setTotalItems}
-            includeVAT={includeVAT}
           />
 
           {totalItems > pageSize && (

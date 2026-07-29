@@ -1,5 +1,7 @@
 import { toast } from "react-toastify";
-import { axiosApi, axiosWithCredentials } from "../../providers";
+// Imported from the module directly rather than the providers barrel, which
+// re-exports the React providers and would form an import cycle.
+import { axiosApi, axiosWithCredentials } from "../../providers/AxiosInstance";
 import i18n from "i18next";
 
 export const addVatRate = async (payload) => {
@@ -8,7 +10,7 @@ export const addVatRate = async (payload) => {
 };
 
 export const getVatRate = async () => {
-  const response = await axiosWithCredentials.get("/vat-rate");
+  const response = await axiosWithCredentials.get("/vat-rate/");
   return response.data;
 };
 

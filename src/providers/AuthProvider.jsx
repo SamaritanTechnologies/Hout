@@ -7,7 +7,11 @@ import {
   getProductStaticValuesByName,
 } from "../redux/actions/productActions";
 import { loginUser, logoutUser, setProductCategories } from "../redux";
-import { getAccessToken, setAccessToken, setRefreshToken } from "../providers";
+import {
+  getAccessToken,
+  setAccessToken,
+  setRefreshToken,
+} from "./AccessToken";
 import {
   getAccessFromRefresh,
   getProfileInfo,

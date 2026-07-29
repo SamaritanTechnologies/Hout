@@ -26,11 +26,13 @@ import {
 import Switch from "../components/Common/Switch";
 import { useTranslation } from "react-i18next";
 import { formatPrice } from "../utils/helper";
+import { useVat } from "../providers";
+import { getCheapestVariant, getVariantPrice } from "../utils/vat";
 
 export const ProductDetail = () => {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
-  const [vat, setVat] = useState(false);
+  const { includeVAT, toggleVAT, rate } = useVat();
   const shareUrl = window.location.href;
   const { product_id } = useParams();
   const [productDetail, setProductDetail] = useState(null);
@@ -39,39 +41,58 @@ export const ProductDetail = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const controller = new AbortController();
+    let active = true;
+    setLoading(true);
+
     const fetchProductDetail = async () => {
       try {
-        const data = await getProductsById(product_id);
-        setProductDetail(data);
-        console.log("detail page", data);
-        console.log("data", data);
+        const data = await getProductsById(product_id, {
+          signal: controller.signal,
+        });
+        if (active) setProductDetail(data);
       } catch (error) {
+        if (!active || controller.signal.aborted) return;
         console.error("Error fetching product details:", error);
         toast.error(t("productDetail_fetchError"));
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     };
 
     const fetchRelatedProducts = async () => {
       try {
-        const data = await getRelatedProducts(product_id);
-        // Filter only active webshop products from related products
-        const activeProducts = (data.results || []).filter(product => 
-          product.is_active_webshop !== false
+        const data = await getRelatedProducts(product_id, {
+          signal: controller.signal,
+        });
+        if (!active) return;
+        const activeProducts = (data.results || []).filter(
+          (product) => product.is_active_webshop !== false
         );
         setRelatedProducts(activeProducts);
-        console.log("related products", data);
       } catch (error) {
+        // Related products are not critical, so this stays silent.
+        if (!active || controller.signal.aborted) return;
         console.error("Error fetching related products:", error);
-        // Don't show error toast for related products as it's not critical
       }
     };
 
     fetchProductDetail();
     fetchRelatedProducts();
-  }, [product_id]);
-  console.log("product detail", productDetail);
+
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, [product_id, t]);
+
+  const advertisedVariant = getCheapestVariant(productDetail?.lengths, {
+    includeVAT,
+    rate,
+  });
+  const advertisedPrice = formatPrice(
+    getVariantPrice(advertisedVariant, { includeVAT, rate })
+  );
 
   return (
     <>
@@ -109,11 +130,7 @@ export const ProductDetail = () => {
               {t("p_exclVAT")}
             </div>
             <div className="recPasswrd">
-              <Switch
-                optional
-                checked={vat ? "checked" : ""}
-                onChange={() => setVat(!vat)}
-              />
+              <Switch optional checked={includeVAT} onChange={toggleVAT} />
             </div>
             <div className="pops md:text-14 sm:text-14 xs:text-12">
               {t("p_inclVAT")}
@@ -179,14 +196,7 @@ export const ProductDetail = () => {
 
             <div className="xl:hidden lg:hidden md:hidden mt-20">
               <h1 className="text-20 font-bold">{productDetail?.name_en}</h1>
-              <div className="pt-6 text-44">
-                €
-                {formatPrice(
-                  vat
-                    ? productDetail?.lengths[0].discounted_price_in_vat
-                    : productDetail?.lengths[0].discounted_price_ex_vat
-                )}
-              </div>
+              <div className="pt-6 text-44">€{advertisedPrice}</div>
 
               <div className="flex items-center gap-x-4 pt-5 border-b-2 border-[#D9D9D9] pb-[26px]">
                 <div className="text-14">{t("p_shareThisPage")}</div>
@@ -248,14 +258,7 @@ export const ProductDetail = () => {
                 ? productDetail?.name_en
                 : productDetail?.name_nl}
             </h1>
-            <div className="text-xl text-[#111727]">
-              €
-              {formatPrice(
-                vat
-                  ? productDetail?.lengths[0].discounted_price_in_vat
-                  : productDetail?.lengths[0].discounted_price_ex_vat
-              )}
-            </div>
+            <div className="text-xl text-[#111727]">€{advertisedPrice}</div>
 
             <div className="flex items-center gap-x-4 pt-5 border-b-2 border-[#D9D9D9] pb-[26px]">
               <div className="text-14">{t("p_shareThisPage")}</div>
@@ -408,10 +411,9 @@ export const ProductDetail = () => {
         variants={productDetail?.lengths}
         image={productDetail?.images}
         product={product_id}
-        vat={vat}
       />
 
-      <RelatedProduct relatedProducts={relatedProducts} vat={vat} />
+      <RelatedProduct relatedProducts={relatedProducts} />
 
       {/* View Shop Button Section */}
       <section className="py-12 pb-20 xl:py-20 xxl:py-28 px-[30px] md:px-[80px] lg:px-[100px] xl:px-[100px] flex justify-center">

@@ -1,34 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import productHeartFilled from "../../assets/LandingPageImages/products/productHeartFilled.svg";
 import productHeart from "../../assets/LandingPageImages/products/productHeart.svg";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { axiosWithCredentials } from "../../providers";
+import { axiosWithCredentials, useVat } from "../../providers";
 import { deleteWishList } from "../../redux/actions/productActions";
 import { useTranslation } from "react-i18next";
-import { formatPrice, parsePrice } from "../../utils/helper";
+import { formatPrice } from "../../utils/helper";
+import { getCheapestVariant, getVariantPrice, hasDiscount } from "../../utils/vat";
 
-const RelatedProduct = ({ relatedProducts, vat = false }) => {
-  console.log("relatedProducts", relatedProducts);
+const RelatedProduct = ({ relatedProducts }) => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
-
-  const getMinimumPriceObject = (lengths) => {
-    if (!lengths || lengths.length === 0) return "N/A";
-
-    return lengths.reduce((minObj, currentObj) => {
-      const currentPrice = parsePrice(currentObj.full_price_ex_vat);
-      const minPrice = parsePrice(minObj.full_price_ex_vat);
-      return currentPrice < minPrice ? currentObj : minObj;
-    });
-  };
+  const { includeVAT, rate } = useVat();
+  const [loading, setLoading] = useState(false);
 
   const handleViewProduct = (product) => {
     navigate(`/product-detail/${product.id}`);
   };
 
   const addWishlist = async (id) => {
+    if (loading) return;
+    setLoading(true);
+
     try {
       await axiosWithCredentials.post("/wishlist/", {
         product_id: id,
@@ -38,6 +33,7 @@ const RelatedProduct = ({ relatedProducts, vat = false }) => {
     } catch (error) {
       toast.error("Failed to add product to wishlist!");
     } finally {
+      setLoading(false);
     }
   };
 
@@ -47,13 +43,9 @@ const RelatedProduct = ({ relatedProducts, vat = false }) => {
 
     try {
       await deleteWishList({ id });
-      fetchProduct();
-
-      setTimeout(() => {
-        toast.success("Product removed from wishlist!");
-      }, 1000);
+      toast.success("Product removed from wishlist!");
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      console.error("Error removing product from wishlist:", error);
     } finally {
       setLoading(false);
     }
@@ -71,13 +63,18 @@ const RelatedProduct = ({ relatedProducts, vat = false }) => {
         ) : (
           <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-[1240px] mx-auto">
           {relatedProducts?.map((product) => {
-            const minimumPrice = getMinimumPriceObject(product.lengths);
+            const variant = getCheapestVariant(product.lengths, {
+              includeVAT,
+              rate,
+            });
+            const discounted = hasDiscount(variant);
             return (
-              // JSX code here
               <div className="relative mb-6" key={product.id}>
-                <div className="w-12 h-12 rounded-full flex items-center justify-center bg-[#E97171] text-white absolute top-6 right-6 text-xs">
-                  -{minimumPrice.discount}%
-                </div>
+                {discounted && (
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center bg-[#E97171] text-white absolute top-6 right-6 text-xs">
+                    -{formatPrice(variant.discount, 0)}%
+                  </div>
+                )}
                 <div
                   className="cursor-pointer"
                   onClick={() => navigate(`/product-detail/${product.id}`)}
@@ -108,19 +105,23 @@ const RelatedProduct = ({ relatedProducts, vat = false }) => {
 
                   <section className="flex gap-x-3 mb-[20px] md:gap-x-2">
                     <div>
-                      € {formatPrice(
-                        vat 
-                          ? minimumPrice.discounted_price_in_vat 
-                          : minimumPrice.discounted_price_ex_vat
+                      €{" "}
+                      {formatPrice(
+                        getVariantPrice(variant, { includeVAT, rate })
                       )}
                     </div>
-                    <div className="text-gray2 line-through">
-                      € {formatPrice(
-                        vat 
-                          ? minimumPrice.full_price_in_vat 
-                          : minimumPrice.full_price_ex_vat
-                      )}
-                    </div>
+                    {discounted && (
+                      <div className="text-gray2 line-through">
+                        €{" "}
+                        {formatPrice(
+                          getVariantPrice(variant, {
+                            includeVAT,
+                            rate,
+                            discounted: false,
+                          })
+                        )}
+                      </div>
+                    )}
                   </section>
                   <section className="flex gap-x-4 items-center justify-between mt-4">
                     <div

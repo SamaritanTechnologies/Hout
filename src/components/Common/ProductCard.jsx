@@ -11,16 +11,35 @@ import { setCartItems } from "../../redux/slices/cartSlice";
 import { getCart } from "../../redux/actions/orderActions";
 import { useTranslation } from "react-i18next";
 import { formatPrice } from "../../utils/helper";
+import { useVat } from "../../providers";
+import { getCheapestVariant, getVariantPrice, hasDiscount } from "../../utils/vat";
 
-const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
+const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
+  const { includeVAT, rate } = useVat();
   const authState = useSelector((state) => state.auth);
   const isAuthenticated = authState.isLoggedIn;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [cartLoading, setCartLoading] = useState("");
   const dispatch = useDispatch();
+
+  // Both prices must describe the same variant, otherwise flipping the VAT
+  // toggle would silently switch which variant is being advertised.
+  const advertisedVariant =
+    minimumPrice ?? getCheapestVariant(product?.lengths, { includeVAT, rate });
+  const currentPrice = getVariantPrice(advertisedVariant, {
+    includeVAT,
+    rate,
+    discounted: true,
+  });
+  const originalPrice = getVariantPrice(advertisedVariant, {
+    includeVAT,
+    rate,
+    discounted: false,
+  });
+  const showOriginalPrice = hasDiscount(advertisedVariant);
 
   const addWishlist = async (id) => {
     if (loading) return;
@@ -65,7 +84,7 @@ const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
 
     try {
       const payload = {
-        product_length: product?.lengths[0]?.id,
+        product_length: advertisedVariant?.id,
         quantity: 1,
       };
       await axiosWithCredentials.post(`/add-to-cart/`, payload);
@@ -122,9 +141,9 @@ const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
   };
   return (
     <div className="relative bg-[#F4F5F7] h-auto">
-      {minimumPrice?.discount > 0 && (
+      {showOriginalPrice && (
         <div className="w-12 h-12 rounded-full flex items-center justify-center bg-[#E97171] text-white absolute top-6 right-6 text-xs">
-          {minimumPrice.discount}%
+          {formatPrice(advertisedVariant.discount, 0)}%
         </div>
       )}
       <div
@@ -156,19 +175,14 @@ const ProductCard = ({ product, minimumPrice, fetchProduct, includeVAT }) => {
         </p>
         <div className="flex gap-4">
           <span className="text-xl font-semibold text-[#111727]">
-            €
-            {includeVAT
-              ? formatPrice(product?.lengths[0]?.discounted_price_in_vat)
-              : formatPrice(minimumPrice?.discounted_price_ex_vat)}
+            €{formatPrice(currentPrice)}
           </span>
 
-          <span className="text-[#B0B0B0] line-through self-center">
-            €
-            {includeVAT
-              ? formatPrice(product?.lengths[0]?.full_price_in_vat)
-              : formatPrice(product?.lengths[0]?.full_price_ex_vat)}
-            {/* {minimumPrice.full_price_ex_vat} */}
-          </span>
+          {showOriginalPrice && (
+            <span className="text-[#B0B0B0] line-through self-center">
+              €{formatPrice(originalPrice)}
+            </span>
+          )}
         </div>
         <div className="flex gap-x-4 items-center justify-between">
           <div

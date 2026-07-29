@@ -1,6 +1,6 @@
 import React from "react";
 import Routes from "./Routes";
-import { AuthProvider } from "./providers";
+import { AuthProvider, VatProvider } from "./providers";
 import { ToastContainer } from "react-toastify";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
@@ -14,8 +14,10 @@ export default function App() {
     <Provider store={store}>
       <I18nextProvider i18n={i18n} defaultNS={"translation"}>
         <AuthProvider>
-          <Routes />
-          <ToastContainer position="bottom-right" />
+          <VatProvider>
+            <Routes />
+            <ToastContainer position="bottom-right" />
+          </VatProvider>
         </AuthProvider>
       </I18nextProvider>
     </Provider>
