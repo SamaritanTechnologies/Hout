@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { Navigate, Outlet, useLocation, useNavigationType } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PageLoader from "../components/Common/PageLoader";
 import { isSuperUser } from "../redux";
@@ -11,10 +11,13 @@ export const AdminRoute = ({ children }) => {
   const isAuthenticated = authState.isLoggedIn;
   const isAdmin = isSuperUser();
   const location = useLocation();
+  const navigationType = useNavigationType();
 
   useEffect(() => {
+    // Keep prior scroll when returning via browser Back/Forward.
+    if (navigationType === "POP") return;
     scrollToTop();
-  }, [location]);
+  }, [location, navigationType]);
 
   if (isLoading) {
     return <PageLoader />;

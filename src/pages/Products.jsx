@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import editImg from "../assets/DashboardImages/edit.svg";
 import dltImg from "../assets/DashboardImages/delete.svg";
 import { FunnelIcon, MagnifyingGlassIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outline";
@@ -6,7 +6,7 @@ import { openPDFWithAutoPrint, downloadPDF, openPDFWithAutoPrintSameTab } from "
 import Button from "../components/Common/Button";
 import ButtonSmall from "../components/Common/Button2";
 import DropdownFilter from "../components/Dashboard/DropdownFilter";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useNavigationType, useSearchParams } from "react-router-dom";
 import DeleteModal from "../components/Modals/DeleteModal";
 import {
   deleteProduct,
@@ -26,6 +26,18 @@ import { useTranslation } from "react-i18next";
 import Pagination from "../components/Common/Pagination";
 import { PRODUCT_PAGE_SIZE } from "../utils/const";
 import { scrollDashboardToTop, parsePrice } from "../utils/helper";
+import {
+  ADMIN_PRODUCTS_SCROLL_STORAGE_KEY,
+  buildAdminSearchParams,
+  consumeAdminProductsScrollRestore,
+  markAdminProductsScrollRestore,
+  parseAdminFiltersFromParams,
+  parsePageFromParams,
+  rememberAdminProductsReturnUrl,
+  restoreDashboardScroll,
+  saveDashboardScroll,
+  searchParamsEqual,
+} from "../utils/listNavigationState";
 
 const initialState = {
   results: [],
@@ -36,30 +48,35 @@ const initialState = {
 
 export const Products = () => {
   const { productCategories } = useSelector((state) => state.admin);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [appliedSearchQuery, setAppliedSearchQuery] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  const navigationType = useNavigationType();
+  const [searchQuery, setSearchQuery] = useState(
+    () => searchParams.get("search") || ""
+  );
+  const [appliedSearchQuery, setAppliedSearchQuery] = useState(
+    () => searchParams.get("search") || ""
+  );
   const [state, setState] = useState(initialState);
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isDeleted, setIsDeleted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [labelGenerating, setLabelGenerating] = useState({});
   const [copyingProduct, setCopyingProduct] = useState({});
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [productImages, setProductImages] = useState({});
   const [loadingImages, setLoadingImages] = useState(false);
   const navigate = useNavigate();
-  const [selectedOptions, setSelectedOptions] = useState({
-    group: [],
-    type: [],
-    material: [],
-    profile: [],
-    thickness: [],
-    width: [],
-  });
-  const [currentPage, setCurrentPage] = useState(0);
+  const [selectedOptions, setSelectedOptions] = useState(() =>
+    parseAdminFiltersFromParams(searchParams)
+  );
+  const [currentPage, setCurrentPage] = useState(() =>
+    parsePageFromParams(searchParams)
+  );
   const pageSize = PRODUCT_PAGE_SIZE;
   const { t } = useTranslation();
+  const didRestoreScroll = useRef(false);
 
   const fetchProducts = async (
     selectedOptions,
@@ -119,6 +136,64 @@ export const Products = () => {
   useEffect(() => {
     fetchProducts(selectedOptions, currentPage, appliedSearchQuery);
   }, [isDeleted, currentPage, selectedOptions, appliedSearchQuery]);
+
+  // Persist list state in the URL so browser Back restores page + filters + search.
+  useEffect(() => {
+    const next = buildAdminSearchParams({
+      selectedOptions,
+      currentPage,
+      search: appliedSearchQuery,
+    });
+    if (!searchParamsEqual(next, searchParams)) {
+      setSearchParams(next, { replace: true });
+    }
+    rememberAdminProductsReturnUrl(
+      `${location.pathname}${next.toString() ? `?${next.toString()}` : ""}`
+    );
+  }, [
+    selectedOptions,
+    currentPage,
+    appliedSearchQuery,
+    searchParams,
+    setSearchParams,
+    location.pathname,
+  ]);
+
+  // Persist dashboard scroll; restore after Back from product edit.
+  useEffect(() => {
+    const el = document.querySelector(".dashboard-content");
+    if (!el) return undefined;
+
+    const onScroll = () => saveDashboardScroll(ADMIN_PRODUCTS_SCROLL_STORAGE_KEY);
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      onScroll();
+      el.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (didRestoreScroll.current) return;
+    if (isLoading) return;
+
+    const flagged = consumeAdminProductsScrollRestore();
+    const shouldRestore = navigationType === "POP" || flagged;
+    if (!shouldRestore) return;
+
+    const restore = () =>
+      restoreDashboardScroll(ADMIN_PRODUCTS_SCROLL_STORAGE_KEY);
+    restore();
+    const frame = requestAnimationFrame(restore);
+    const timer = setTimeout(() => {
+      restore();
+      didRestoreScroll.current = true;
+    }, 150);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      clearTimeout(timer);
+    };
+  }, [navigationType, isLoading, state.results]);
 
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected);
@@ -633,6 +708,11 @@ export const Products = () => {
                     <div className="flex xl:gap-3 gap-2 items-center justify-center">
                       <div
                         onClick={() => {
+                          saveDashboardScroll(ADMIN_PRODUCTS_SCROLL_STORAGE_KEY);
+                          markAdminProductsScrollRestore();
+                          rememberAdminProductsReturnUrl(
+                            `${location.pathname}${location.search}`
+                          );
                           navigate(`/product/${rowData.id}`);
                         }}
                         className="cursor-pointer"

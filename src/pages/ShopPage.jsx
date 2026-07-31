@@ -12,10 +12,9 @@ import ProductsList from "../components/ShopComponents/ProductsList";
 import Filters from "../components/ShopComponents/Filters";
 import QualitySection from "../components/Common/QualitySection";
 import Switch from "../components/Common/Switch";
-import { Link } from "react-router-dom";
+import { Link, useNavigationType, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Pagination from "../components/Common/Pagination";
-import { useSearchParams } from "react-router-dom";
 import {
   PRODUCT_MAX_PRICE,
   PRODUCT_MIN_PRICE,
@@ -25,16 +24,27 @@ import { useTranslation } from "react-i18next";
 import { getWebshopImage } from "../redux/actions/dashboardActions";
 import { scrollToTop } from "../utils/helper";
 import { useVat } from "../providers";
+import {
+  areShopFiltersEqual,
+  buildShopSearchParams,
+  parsePageFromParams,
+  parseShopFiltersFromParams,
+  restoreWindowScroll,
+  saveWindowScroll,
+  searchParamsEqual,
+  rememberShopReturnUrl,
+  SHOP_SCROLL_STORAGE_KEY,
+} from "../utils/listNavigationState";
 
 export const ShopPage = () => {
   const { t, i18n } = useTranslation();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigationType = useNavigationType();
   const searchQuery = searchParams.get("search");
   const currentLang = i18n.language;
   const [wallpaper, setWallpaper] = useState("");
   const [filterKey, setFilterKey] = useState(0);
   const { productCategories } = useSelector((state) => state.admin);
-  // console.log("productCategories", productCategories);
 
   const translatedCategories = useMemo(
     () => [
@@ -51,14 +61,26 @@ export const ShopPage = () => {
 
   const [categoryData, setCategoryData] = useState({});
   const { includeVAT, toggleVAT } = useVat();
-  const [filters, setFilters] = useState({
-    selectedFilters: {},
-    price: [PRODUCT_MIN_PRICE, PRODUCT_MAX_PRICE],
-  });
+  const [filters, setFilters] = useState(() =>
+    parseShopFiltersFromParams(searchParams, [])
+  );
   const debounceTimer = useRef(null);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(() =>
+    parsePageFromParams(searchParams)
+  );
   const pageSize = PRODUCT_PAGE_SIZE;
   const [totalItems, setTotalItems] = useState(0);
+  const didHydrateFilters = useRef(false);
+  const didRestoreScroll = useRef(false);
+  const skipPageResetRef = useRef(true);
+
+  useEffect(() => {
+    // Even if categories never load, eventually treat filter changes as user-driven.
+    const timer = setTimeout(() => {
+      skipPageResetRef.current = false;
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   const fetchExistingImage = async () => {
     try {
@@ -75,18 +97,6 @@ export const ShopPage = () => {
     fetchExistingImage();
   }, []);
 
-  // useEffect(() => {
-  //   const initialData = translatedCategories.reduce((acc, category) => {
-  //     const foundCategory = productCategories?.find(
-  //       (c) => c.name?.toLowerCase() === category.toLowerCase()
-  //     );
-  //     acc[category] = foundCategory || { name: category, choices: [] };
-  //     return acc;
-  //   }, {});
-
-  //   setCategoryData(initialData);
-  // }, [productCategories, translatedCategories]);
-
   useEffect(() => {
     const initialData = translatedCategories.reduce((acc, category) => {
       const foundCategory = productCategories?.find((c) => {
@@ -99,12 +109,73 @@ export const ShopPage = () => {
       return acc;
     }, {});
 
-    setCategoryData(initialData); // Make sure you're calling this
+    setCategoryData(initialData);
   }, [productCategories, translatedCategories]);
 
   const categoryArray = Object.values(categoryData);
+
+  // Re-parse filters with real category metadata once categories are loaded.
+  useEffect(() => {
+    if (didHydrateFilters.current) return;
+    if (!productCategories?.length) return;
+
+    setFilters(parseShopFiltersFromParams(searchParams, productCategories));
+    didHydrateFilters.current = true;
+    // Allow user-driven filter changes to reset pagination after hydration.
+    const timer = setTimeout(() => {
+      skipPageResetRef.current = false;
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [productCategories, searchParams]);
+
+  // Keep the URL in sync so browser Back restores filters + page.
+  useEffect(() => {
+    const next = buildShopSearchParams({
+      filters,
+      currentPage,
+      searchQuery,
+    });
+    if (!searchParamsEqual(next, searchParams)) {
+      setSearchParams(next, { replace: true });
+    }
+    rememberShopReturnUrl(
+      `/shop-page${next.toString() ? `?${next.toString()}` : ""}`
+    );
+  }, [filters, currentPage, searchQuery, searchParams, setSearchParams]);
+
+  // Persist scroll while browsing the list; restore after Back.
+  useEffect(() => {
+    const onScroll = () => saveWindowScroll(SHOP_SCROLL_STORAGE_KEY);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      onScroll();
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (didRestoreScroll.current) return;
+    if (navigationType !== "POP") return;
+
+    const restore = () => restoreWindowScroll(SHOP_SCROLL_STORAGE_KEY);
+    restore();
+    const frame = requestAnimationFrame(restore);
+    const timer = setTimeout(() => {
+      restore();
+      didRestoreScroll.current = true;
+    }, 150);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      clearTimeout(timer);
+    };
+  }, [navigationType, totalItems]);
+
   const [filterDrawer, setFilterDrawer] = useState(false);
   const filterToggler = () => setFilterDrawer((prev) => !prev);
+
+  const filtersRef = useRef(filters);
+  filtersRef.current = filters;
 
   const handleFilterChange = useCallback((newFilters) => {
     if (debounceTimer.current) {
@@ -112,13 +183,18 @@ export const ShopPage = () => {
     }
 
     debounceTimer.current = setTimeout(() => {
-      setFilters((prev) => ({
-        ...prev,
+      const next = {
         selectedFilters: newFilters.selectedFilters,
         price: newFilters.price,
-      }));
-      setCurrentPage(0);
-    }, 300); // Wait 300ms after user stops moving
+      };
+
+      if (areShopFiltersEqual(filtersRef.current, next)) return;
+
+      setFilters(next);
+      if (!skipPageResetRef.current) {
+        setCurrentPage(0);
+      }
+    }, 300);
   }, []);
 
   const initialFiltersMemo = useMemo(
