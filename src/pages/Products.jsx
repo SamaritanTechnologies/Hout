@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import editImg from "../assets/DashboardImages/edit.svg";
 import dltImg from "../assets/DashboardImages/delete.svg";
 import { FunnelIcon, MagnifyingGlassIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outline";
@@ -6,7 +6,7 @@ import { openPDFWithAutoPrint, downloadPDF, openPDFWithAutoPrintSameTab } from "
 import Button from "../components/Common/Button";
 import ButtonSmall from "../components/Common/Button2";
 import DropdownFilter from "../components/Dashboard/DropdownFilter";
-import { useLocation, useNavigate, useNavigationType, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import DeleteModal from "../components/Modals/DeleteModal";
 import {
   deleteProduct,
@@ -27,15 +27,16 @@ import Pagination from "../components/Common/Pagination";
 import { PRODUCT_PAGE_SIZE } from "../utils/const";
 import { scrollDashboardToTop, parsePrice } from "../utils/helper";
 import {
-  ADMIN_PRODUCTS_SCROLL_STORAGE_KEY,
   buildAdminSearchParams,
-  consumeAdminProductsScrollRestore,
-  markAdminProductsScrollRestore,
+  getCurrentScroll,
+  getDashboardScrollElement,
   parseAdminFiltersFromParams,
   parsePageFromParams,
-  rememberAdminProductsReturnUrl,
-  restoreDashboardScroll,
-  saveDashboardScroll,
+  pauseScrollSaving,
+  readScrollPosition,
+  rememberAdminProductsReturn,
+  restoreScrollPosition,
+  saveScrollPosition,
   searchParamsEqual,
 } from "../utils/listNavigationState";
 
@@ -50,7 +51,6 @@ export const Products = () => {
   const { productCategories } = useSelector((state) => state.admin);
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
-  const navigationType = useNavigationType();
   const [searchQuery, setSearchQuery] = useState(
     () => searchParams.get("search") || ""
   );
@@ -76,7 +76,13 @@ export const Products = () => {
   );
   const pageSize = PRODUCT_PAGE_SIZE;
   const { t } = useTranslation();
-  const didRestoreScroll = useRef(false);
+
+  // Read during render so the scroll listener cannot overwrite it first.
+  const restoreTargetRef = useRef(null);
+  if (restoreTargetRef.current === null) {
+    restoreTargetRef.current =
+      Number(location.state?.restoreScroll) || readScrollPosition(location.key);
+  }
 
   const fetchProducts = async (
     selectedOptions,
@@ -138,6 +144,15 @@ export const Products = () => {
   }, [isDeleted, currentPage, selectedOptions, appliedSearchQuery]);
 
   // Persist list state in the URL so browser Back restores page + filters + search.
+  const listUrl = useMemo(() => {
+    const params = buildAdminSearchParams({
+      selectedOptions,
+      currentPage,
+      search: appliedSearchQuery,
+    }).toString();
+    return `/products${params ? `?${params}` : ""}`;
+  }, [selectedOptions, currentPage, appliedSearchQuery]);
+
   useEffect(() => {
     const next = buildAdminSearchParams({
       selectedOptions,
@@ -147,53 +162,46 @@ export const Products = () => {
     if (!searchParamsEqual(next, searchParams)) {
       setSearchParams(next, { replace: true });
     }
-    rememberAdminProductsReturnUrl(
-      `${location.pathname}${next.toString() ? `?${next.toString()}` : ""}`
-    );
   }, [
     selectedOptions,
     currentPage,
     appliedSearchQuery,
     searchParams,
     setSearchParams,
-    location.pathname,
   ]);
 
-  // Persist dashboard scroll; restore after Back from product edit.
+  // Track scroll of the dashboard pane for browser Back and the back arrow.
   useEffect(() => {
-    const el = document.querySelector(".dashboard-content");
-    if (!el) return undefined;
+    const element = getDashboardScrollElement();
+    if (!element) return undefined;
 
-    const onScroll = () => saveDashboardScroll(ADMIN_PRODUCTS_SCROLL_STORAGE_KEY);
-    el.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      onScroll();
-      el.removeEventListener("scroll", onScroll);
+    let ticking = false;
+
+    const persist = () => {
+      ticking = false;
+      const position = getCurrentScroll(element);
+      saveScrollPosition(location.key, position);
+      rememberAdminProductsReturn(listUrl, position);
     };
-  }, []);
 
-  useEffect(() => {
-    if (didRestoreScroll.current) return;
-    if (isLoading) return;
-
-    const flagged = consumeAdminProductsScrollRestore();
-    const shouldRestore = navigationType === "POP" || flagged;
-    if (!shouldRestore) return;
-
-    const restore = () =>
-      restoreDashboardScroll(ADMIN_PRODUCTS_SCROLL_STORAGE_KEY);
-    restore();
-    const frame = requestAnimationFrame(restore);
-    const timer = setTimeout(() => {
-      restore();
-      didRestoreScroll.current = true;
-    }, 150);
-
-    return () => {
-      cancelAnimationFrame(frame);
-      clearTimeout(timer);
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(persist);
     };
-  }, [navigationType, isLoading, state.results]);
+
+    persist();
+    element.addEventListener("scroll", onScroll, { passive: true });
+    return () => element.removeEventListener("scroll", onScroll);
+  }, [location.key, listUrl]);
+
+  useEffect(
+    () =>
+      restoreScrollPosition(restoreTargetRef.current, {
+        getElement: getDashboardScrollElement,
+      }),
+    []
+  );
 
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected);
@@ -708,11 +716,7 @@ export const Products = () => {
                     <div className="flex xl:gap-3 gap-2 items-center justify-center">
                       <div
                         onClick={() => {
-                          saveDashboardScroll(ADMIN_PRODUCTS_SCROLL_STORAGE_KEY);
-                          markAdminProductsScrollRestore();
-                          rememberAdminProductsReturnUrl(
-                            `${location.pathname}${location.search}`
-                          );
+                          pauseScrollSaving();
                           navigate(`/product/${rowData.id}`);
                         }}
                         className="cursor-pointer"

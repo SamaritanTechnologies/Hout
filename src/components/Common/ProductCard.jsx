@@ -13,10 +13,7 @@ import { useTranslation } from "react-i18next";
 import { formatPrice } from "../../utils/helper";
 import { useVat } from "../../providers";
 import { getCheapestVariant, getVariantPrice, hasDiscount } from "../../utils/vat";
-import {
-  saveWindowScroll,
-  SHOP_SCROLL_STORAGE_KEY,
-} from "../../utils/listNavigationState";
+import { pauseScrollSaving } from "../../utils/listNavigationState";
 
 const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
   const { t, i18n } = useTranslation();
@@ -140,8 +137,8 @@ const ProductCard = ({ product, minimumPrice, fetchProduct }) => {
   };
 
   const handleViewProduct = () => {
-    // Keep shop scroll so browser Back can restore it.
-    saveWindowScroll(SHOP_SCROLL_STORAGE_KEY);
+    // The scroll to top below must not be recorded as the list position.
+    pauseScrollSaving();
     navigate(`/product-detail/${product.id}`);
     window.scrollTo(0, 0);
   };

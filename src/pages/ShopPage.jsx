@@ -12,7 +12,7 @@ import ProductsList from "../components/ShopComponents/ProductsList";
 import Filters from "../components/ShopComponents/Filters";
 import QualitySection from "../components/Common/QualitySection";
 import Switch from "../components/Common/Switch";
-import { Link, useNavigationType, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Pagination from "../components/Common/Pagination";
 import {
@@ -27,19 +27,20 @@ import { useVat } from "../providers";
 import {
   areShopFiltersEqual,
   buildShopSearchParams,
+  getCurrentScroll,
   parsePageFromParams,
   parseShopFiltersFromParams,
-  restoreWindowScroll,
-  saveWindowScroll,
+  readScrollPosition,
+  rememberShopReturn,
+  restoreScrollPosition,
+  saveScrollPosition,
   searchParamsEqual,
-  rememberShopReturnUrl,
-  SHOP_SCROLL_STORAGE_KEY,
 } from "../utils/listNavigationState";
 
 export const ShopPage = () => {
   const { t, i18n } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigationType = useNavigationType();
+  const location = useLocation();
   const searchQuery = searchParams.get("search");
   const currentLang = i18n.language;
   const [wallpaper, setWallpaper] = useState("");
@@ -71,8 +72,14 @@ export const ShopPage = () => {
   const pageSize = PRODUCT_PAGE_SIZE;
   const [totalItems, setTotalItems] = useState(0);
   const didHydrateFilters = useRef(false);
-  const didRestoreScroll = useRef(false);
   const skipPageResetRef = useRef(true);
+
+  // Read during render so the scroll listener cannot overwrite it first.
+  const restoreTargetRef = useRef(null);
+  if (restoreTargetRef.current === null) {
+    restoreTargetRef.current =
+      Number(location.state?.restoreScroll) || readScrollPosition(location.key);
+  }
 
   useEffect(() => {
     // Even if categories never load, eventually treat filter changes as user-driven.
@@ -129,6 +136,15 @@ export const ShopPage = () => {
   }, [productCategories, searchParams]);
 
   // Keep the URL in sync so browser Back restores filters + page.
+  const listUrl = useMemo(() => {
+    const params = buildShopSearchParams({
+      filters,
+      currentPage,
+      searchQuery,
+    }).toString();
+    return `/shop-page${params ? `?${params}` : ""}`;
+  }, [filters, currentPage, searchQuery]);
+
   useEffect(() => {
     const next = buildShopSearchParams({
       filters,
@@ -138,38 +154,31 @@ export const ShopPage = () => {
     if (!searchParamsEqual(next, searchParams)) {
       setSearchParams(next, { replace: true });
     }
-    rememberShopReturnUrl(
-      `/shop-page${next.toString() ? `?${next.toString()}` : ""}`
-    );
   }, [filters, currentPage, searchQuery, searchParams, setSearchParams]);
 
-  // Persist scroll while browsing the list; restore after Back.
+  // Track scroll so both browser Back and the breadcrumb can return to it.
   useEffect(() => {
-    const onScroll = () => saveWindowScroll(SHOP_SCROLL_STORAGE_KEY);
+    let ticking = false;
+
+    const persist = () => {
+      ticking = false;
+      const position = getCurrentScroll();
+      saveScrollPosition(location.key, position);
+      rememberShopReturn(listUrl, position);
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(persist);
+    };
+
+    persist();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      onScroll();
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, []);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [location.key, listUrl]);
 
-  useEffect(() => {
-    if (didRestoreScroll.current) return;
-    if (navigationType !== "POP") return;
-
-    const restore = () => restoreWindowScroll(SHOP_SCROLL_STORAGE_KEY);
-    restore();
-    const frame = requestAnimationFrame(restore);
-    const timer = setTimeout(() => {
-      restore();
-      didRestoreScroll.current = true;
-    }, 150);
-
-    return () => {
-      cancelAnimationFrame(frame);
-      clearTimeout(timer);
-    };
-  }, [navigationType, totalItems]);
+  useEffect(() => restoreScrollPosition(restoreTargetRef.current), []);
 
   const [filterDrawer, setFilterDrawer] = useState(false);
   const filterToggler = () => setFilterDrawer((prev) => !prev);

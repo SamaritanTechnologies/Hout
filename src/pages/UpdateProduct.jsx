@@ -27,7 +27,7 @@ import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { parsePrice, formatPrice } from "../utils/helper";
 import ToggleSwitch from "../components/Common/ToggleSwitch";
-import { getAdminProductsReturnUrl } from "../utils/listNavigationState";
+import { adminProductsReturnTarget } from "../utils/listNavigationState";
 
 const styleMultiSelect = {
   chips: {
@@ -140,11 +140,11 @@ export const UpdateProduct = () => {
 
         setRelatedProducts(formattedRelatedProducts);
       } else {
-        navigate(getAdminProductsReturnUrl());
+        navigate(...adminProductsReturnTarget());
       }
     } catch (error) {
       console.error("Error fetching product data:", error);
-      navigate(getAdminProductsReturnUrl());
+      navigate(...adminProductsReturnTarget());
     } finally {
       setLoading(false);
     }
@@ -322,7 +322,7 @@ export const UpdateProduct = () => {
       <div className="flex gap-2 items-center">
         <div
           onClick={() => {
-            navigate(getAdminProductsReturnUrl());
+            navigate(...adminProductsReturnTarget());
           }}
           className="cursor-pointer"
         >
@@ -396,7 +396,7 @@ export const UpdateProduct = () => {
                 relatedProducts
               );
               await updateProduct(id, values, formattedLengths, images, relatedProducts);
-              navigate(getAdminProductsReturnUrl());
+              navigate(...adminProductsReturnTarget());
             } catch (error) {
               console.error("Error submitting form:", error);
             } finally {

@@ -31,7 +31,7 @@ import { FlashOnTwoTone } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { parsePrice, formatPrice } from "../utils/helper";
-import { getAdminProductsReturnUrl } from "../utils/listNavigationState";
+import { adminProductsReturnTarget } from "../utils/listNavigationState";
 
 const styleMultiSelect = {
   chips: {
@@ -235,7 +235,7 @@ export const AddNewProduct = () => {
       <div className="flex gap-2 items-center">
         <div
           onClick={() => {
-            navigate(getAdminProductsReturnUrl());
+            navigate(...adminProductsReturnTarget());
           }}
           className="cursor-pointer"
         >
@@ -297,7 +297,7 @@ export const AddNewProduct = () => {
             }));
 
             await addProduct(values, formattedLengths, images, relatedProducts);
-            navigate(getAdminProductsReturnUrl());
+            navigate(...adminProductsReturnTarget());
           } catch (error) {
             console.error("Error submitting form:", error);
           } finally {

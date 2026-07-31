@@ -1,11 +1,8 @@
-import {
-  PRODUCT_MAX_PRICE,
-  PRODUCT_MIN_PRICE,
-} from "./const";
+import { PRODUCT_MAX_PRICE, PRODUCT_MIN_PRICE } from "./const";
 
-const SHOP_SCROLL_KEY = "list-scroll:/shop-page";
-const ADMIN_PRODUCTS_SCROLL_KEY = "list-scroll:/products";
-const ADMIN_PRODUCTS_RETURN_KEY = "admin-products-return-url";
+const SCROLL_PREFIX = "list-scroll:";
+const ADMIN_PRODUCTS_RETURN_KEY = "admin-products-return";
+const SHOP_RETURN_KEY = "shop-return";
 
 export const ADMIN_PRODUCT_FILTER_KEYS = [
   "group",
@@ -14,6 +11,16 @@ export const ADMIN_PRODUCT_FILTER_KEYS = [
   "profile",
   "thickness",
   "width",
+];
+
+const SHOP_FILTER_PARAMS = [
+  "group",
+  "product_type",
+  "material",
+  "profile",
+  "durability_class",
+  "quality",
+  "application",
 ];
 
 const emptyAdminFilters = () =>
@@ -84,19 +91,10 @@ export const parseShopFiltersFromParams = (searchParams, categories = []) => {
     };
   });
 
-  // Fallback when categories have not loaded yet: keep IDs keyed by param hint
-  // so a later pass with category metadata can enrich names.
+  // Before the category list has loaded we still need the right API query, so
+  // the IDs are kept under a label that maps back to the same param name.
   if (!categories.length) {
-    const knownParams = [
-      "group",
-      "product_type",
-      "material",
-      "profile",
-      "durability_class",
-      "quality",
-      "application",
-    ];
-    knownParams.forEach((paramName) => {
+    SHOP_FILTER_PARAMS.forEach((paramName) => {
       const ids = parsePositiveIntIds(searchParams.getAll(paramName));
       if (!ids.length) return;
       const hint = shopParamToCategoryHint(paramName);
@@ -125,7 +123,6 @@ export const buildShopSearchParams = ({
   filters,
   currentPage,
   searchQuery,
-  existingParams,
 } = {}) => {
   const params = new URLSearchParams();
 
@@ -153,30 +150,6 @@ export const buildShopSearchParams = ({
   }
   if (maxPrice !== PRODUCT_MAX_PRICE) {
     params.set("max_price", String(maxPrice));
-  }
-
-  // Preserve any unrelated params (e.g. future flags) that we do not own.
-  if (existingParams) {
-    existingParams.forEach((value, key) => {
-      if (
-        key === "search" ||
-        key === "page" ||
-        key === "min_price" ||
-        key === "max_price" ||
-        [
-          "group",
-          "product_type",
-          "material",
-          "profile",
-          "durability_class",
-          "quality",
-          "application",
-        ].includes(key)
-      ) {
-        return;
-      }
-      if (!params.has(key)) params.append(key, value);
-    });
   }
 
   return params;
@@ -216,14 +189,6 @@ export const buildAdminSearchParams = ({
   return params;
 };
 
-export const areAdminFiltersEqual = (a, b) =>
-  ADMIN_PRODUCT_FILTER_KEYS.every((key) => {
-    const aValues = [...(a?.[key] || [])].sort();
-    const bValues = [...(b?.[key] || [])].sort();
-    if (aValues.length !== bValues.length) return false;
-    return aValues.every((id, index) => id === bValues[index]);
-  });
-
 /** Order-insensitive comparison so URL sync does not loop on param order. */
 export const searchParamsEqual = (a, b) => {
   const aParams = a instanceof URLSearchParams ? a : new URLSearchParams(a);
@@ -239,70 +204,135 @@ export const searchParamsEqual = (a, b) => {
   return true;
 };
 
-export const saveWindowScroll = (key = SHOP_SCROLL_KEY) => {
-  sessionStorage.setItem(key, String(window.scrollY || 0));
+/**
+ * Leaving a list often scrolls the page to the top before the list unmounts.
+ * That top position must not be recorded as "where the user was", so saving is
+ * paused for a moment whenever we knowingly navigate away.
+ */
+let saveLockedUntil = 0;
+
+export const pauseScrollSaving = (ms = 2000) => {
+  saveLockedUntil = Date.now() + ms;
 };
 
-export const restoreWindowScroll = (key = SHOP_SCROLL_KEY) => {
-  const raw = sessionStorage.getItem(key);
-  if (raw == null) return false;
-  const y = Number(raw);
-  if (!Number.isFinite(y)) return false;
-  window.scrollTo(0, y);
-  return true;
+export const saveScrollPosition = (entryKey, position) => {
+  if (!entryKey) return;
+  if (Date.now() < saveLockedUntil) return;
+  sessionStorage.setItem(
+    `${SCROLL_PREFIX}${entryKey}`,
+    String(Math.max(Math.round(position) || 0, 0))
+  );
 };
 
-export const saveDashboardScroll = (key = ADMIN_PRODUCTS_SCROLL_KEY) => {
-  const el = document.querySelector(".dashboard-content");
-  const y = el ? el.scrollTop : window.scrollY || 0;
-  sessionStorage.setItem(key, String(y));
+export const readScrollPosition = (entryKey) => {
+  if (!entryKey) return 0;
+  const raw = sessionStorage.getItem(`${SCROLL_PREFIX}${entryKey}`);
+  const value = Number(raw);
+  return Number.isFinite(value) && value > 0 ? value : 0;
 };
 
-export const restoreDashboardScroll = (key = ADMIN_PRODUCTS_SCROLL_KEY) => {
-  const raw = sessionStorage.getItem(key);
-  if (raw == null) return false;
-  const y = Number(raw);
-  if (!Number.isFinite(y)) return false;
+export const getDashboardScrollElement = () =>
+  document.querySelector(".dashboard-content");
 
-  const el = document.querySelector(".dashboard-content");
-  if (el) {
-    el.scrollTo(0, y);
-  } else {
-    window.scrollTo(0, y);
+export const getCurrentScroll = (element) =>
+  element ? element.scrollTop : window.scrollY || 0;
+
+/**
+ * Scrolling back to a saved position only works once the list has rendered, and
+ * the list depends on an API call. So the position is re-applied every frame
+ * until the page is tall enough and its height has settled.
+ */
+export const restoreScrollPosition = (
+  target,
+  { getElement, deadlineMs = 5000 } = {}
+) => {
+  if (!Number.isFinite(target) || target <= 0) return () => {};
+
+  const startedAt = Date.now();
+  let frame = null;
+  let cancelled = false;
+  let lastHeight = -1;
+  let stableFrames = 0;
+
+  const cancel = () => {
+    if (cancelled) return;
+    cancelled = true;
+    if (frame !== null) cancelAnimationFrame(frame);
+    window.removeEventListener("wheel", cancel);
+    window.removeEventListener("touchstart", cancel);
+    window.removeEventListener("keydown", cancel);
+  };
+
+  const apply = () => {
+    if (cancelled) return;
+
+    const element = getElement ? getElement() : null;
+    const scrollHeight = element
+      ? element.scrollHeight
+      : document.documentElement.scrollHeight;
+    const viewport = element ? element.clientHeight : window.innerHeight;
+    const maxScroll = Math.max(scrollHeight - viewport, 0);
+
+    if (element) {
+      element.scrollTop = Math.min(target, maxScroll);
+    } else {
+      window.scrollTo(0, Math.min(target, maxScroll));
+    }
+
+    stableFrames = scrollHeight === lastHeight ? stableFrames + 1 : 0;
+    lastHeight = scrollHeight;
+
+    const settled = maxScroll >= target && stableFrames >= 5;
+    if (settled || Date.now() - startedAt > deadlineMs) {
+      cancel();
+      return;
+    }
+
+    frame = requestAnimationFrame(apply);
+  };
+
+  window.addEventListener("wheel", cancel, { passive: true, once: true });
+  window.addEventListener("touchstart", cancel, { passive: true, once: true });
+  window.addEventListener("keydown", cancel, { once: true });
+
+  apply();
+
+  return cancel;
+};
+
+const readReturn = (storageKey, fallbackUrl) => {
+  try {
+    const parsed = JSON.parse(sessionStorage.getItem(storageKey));
+    if (parsed?.url) {
+      return { url: parsed.url, scroll: Number(parsed.scroll) || 0 };
+    }
+  } catch (error) {
+    // Corrupt or missing entry simply falls back to the plain list URL.
   }
-  return true;
+  return { url: fallbackUrl, scroll: 0 };
 };
 
-export const rememberAdminProductsReturnUrl = (url) => {
-  sessionStorage.setItem(ADMIN_PRODUCTS_RETURN_KEY, url);
+const writeReturn = (storageKey, url, scroll) => {
+  sessionStorage.setItem(
+    storageKey,
+    JSON.stringify({ url, scroll: Math.max(Math.round(scroll) || 0, 0) })
+  );
 };
 
-export const getAdminProductsReturnUrl = () =>
-  sessionStorage.getItem(ADMIN_PRODUCTS_RETURN_KEY) || "/products";
+/** Spreadable navigate() arguments: `navigate(...target)`. */
+const toNavigateTarget = ({ url, scroll }) => [
+  url,
+  { state: { restoreScroll: scroll } },
+];
 
-const ADMIN_PRODUCTS_RESTORE_SCROLL_FLAG = "admin-products-restore-scroll";
+export const rememberShopReturn = (url, scroll) =>
+  writeReturn(SHOP_RETURN_KEY, url, scroll);
 
-export const markAdminProductsScrollRestore = () => {
-  sessionStorage.setItem(ADMIN_PRODUCTS_RESTORE_SCROLL_FLAG, "1");
-};
+export const shopReturnTarget = () =>
+  toNavigateTarget(readReturn(SHOP_RETURN_KEY, "/shop-page"));
 
-export const consumeAdminProductsScrollRestore = () => {
-  const shouldRestore =
-    sessionStorage.getItem(ADMIN_PRODUCTS_RESTORE_SCROLL_FLAG) === "1";
-  if (shouldRestore) {
-    sessionStorage.removeItem(ADMIN_PRODUCTS_RESTORE_SCROLL_FLAG);
-  }
-  return shouldRestore;
-};
+export const rememberAdminProductsReturn = (url, scroll) =>
+  writeReturn(ADMIN_PRODUCTS_RETURN_KEY, url, scroll);
 
-const SHOP_RETURN_KEY = "shop-return-url";
-
-export const rememberShopReturnUrl = (url) => {
-  sessionStorage.setItem(SHOP_RETURN_KEY, url);
-};
-
-export const getShopReturnUrl = () =>
-  sessionStorage.getItem(SHOP_RETURN_KEY) || "/shop-page";
-
-export const SHOP_SCROLL_STORAGE_KEY = SHOP_SCROLL_KEY;
-export const ADMIN_PRODUCTS_SCROLL_STORAGE_KEY = ADMIN_PRODUCTS_SCROLL_KEY;
+export const adminProductsReturnTarget = () =>
+  toNavigateTarget(readReturn(ADMIN_PRODUCTS_RETURN_KEY, "/products"));

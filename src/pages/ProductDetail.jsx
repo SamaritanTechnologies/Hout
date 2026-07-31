@@ -28,7 +28,7 @@ import { useTranslation } from "react-i18next";
 import { formatPrice } from "../utils/helper";
 import { useVat } from "../providers";
 import { getCheapestVariant, getVariantPrice } from "../utils/vat";
-import { getShopReturnUrl } from "../utils/listNavigationState";
+import { shopReturnTarget } from "../utils/listNavigationState";
 
 export const ProductDetail = () => {
   const { t, i18n } = useTranslation();
@@ -111,7 +111,7 @@ export const ProductDetail = () => {
             </td>
             <td
               className="text-[#9F9F9F] xs:text-14 sm:text-15 text-16 cursor-pointer"
-              onClick={() => navigate(getShopReturnUrl())}
+              onClick={() => navigate(...shopReturnTarget())}
             >
               Shop
             </td>
