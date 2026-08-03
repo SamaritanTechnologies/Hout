@@ -12,7 +12,12 @@ import ProductsList from "../components/ShopComponents/ProductsList";
 import Filters from "../components/ShopComponents/Filters";
 import QualitySection from "../components/Common/QualitySection";
 import Switch from "../components/Common/Switch";
-import { Link, useLocation, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigationType,
+  useSearchParams,
+} from "react-router-dom";
 import { useSelector } from "react-redux";
 import Pagination from "../components/Common/Pagination";
 import {
@@ -41,6 +46,7 @@ export const ShopPage = () => {
   const { t, i18n } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
+  const navigationType = useNavigationType();
   const searchQuery = searchParams.get("search");
   const currentLang = i18n.language;
   const [wallpaper, setWallpaper] = useState("");
@@ -65,14 +71,24 @@ export const ShopPage = () => {
   const [filters, setFilters] = useState(() =>
     parseShopFiltersFromParams(searchParams, [])
   );
+  const filtersRef = useRef(filters);
+  filtersRef.current = filters;
   const debounceTimer = useRef(null);
   const [currentPage, setCurrentPage] = useState(() =>
     parsePageFromParams(searchParams)
   );
+  const currentPageRef = useRef(currentPage);
+  currentPageRef.current = currentPage;
   const pageSize = PRODUCT_PAGE_SIZE;
   const [totalItems, setTotalItems] = useState(0);
   const didHydrateFilters = useRef(false);
   const skipPageResetRef = useRef(true);
+
+  // Paging is the one list change that earns its own history entry, so Back
+  // walks page by page instead of leaving the shop altogether.
+  const historyActionRef = useRef("replace");
+  const adoptedFromUrlRef = useRef(false);
+  const lastLocationKeyRef = useRef(location.key);
 
   // Read during render so the scroll listener cannot overwrite it first.
   const restoreTargetRef = useRef(null);
@@ -145,14 +161,63 @@ export const ShopPage = () => {
     return `/shop-page${params ? `?${params}` : ""}`;
   }, [filters, currentPage, searchQuery]);
 
+  // Back/Forward between shop pages swaps the URL without remounting this page,
+  // so the popped URL has to be read back into state.
   useEffect(() => {
+    if (lastLocationKeyRef.current === location.key) return;
+    lastLocationKeyRef.current = location.key;
+    if (navigationType !== "POP") return;
+
+    const stateParams = buildShopSearchParams({
+      filters: filtersRef.current,
+      currentPage: currentPageRef.current,
+      searchQuery,
+    });
+    if (searchParamsEqual(stateParams, searchParams)) return;
+
+    adoptedFromUrlRef.current = true;
+    setCurrentPage(parsePageFromParams(searchParams));
+
+    const urlFilters = parseShopFiltersFromParams(
+      searchParams,
+      productCategories || []
+    );
+    if (!areShopFiltersEqual(filtersRef.current, urlFilters)) {
+      // Remounting Filters replays its initial values back at us; that echo
+      // must not be mistaken for the user changing a filter.
+      skipPageResetRef.current = true;
+      setFilters(urlFilters);
+      setFilterKey((prev) => prev + 1);
+      setTimeout(() => {
+        skipPageResetRef.current = false;
+      }, 350);
+    }
+
+    const target = readScrollPosition(location.key);
+    if (target > 0) {
+      restoreScrollPosition(target);
+    } else {
+      scrollToTop();
+    }
+  }, [location.key, navigationType, searchParams, searchQuery, productCategories]);
+
+  useEffect(() => {
+    // A Back/Forward navigation already carries the correct values in the URL.
+    if (adoptedFromUrlRef.current) {
+      adoptedFromUrlRef.current = false;
+      return;
+    }
+
     const next = buildShopSearchParams({
       filters,
       currentPage,
       searchQuery,
     });
+    const action = historyActionRef.current;
+    historyActionRef.current = "replace";
+
     if (!searchParamsEqual(next, searchParams)) {
-      setSearchParams(next, { replace: true });
+      setSearchParams(next, { replace: action !== "push" });
     }
   }, [filters, currentPage, searchQuery, searchParams, setSearchParams]);
 
@@ -183,9 +248,6 @@ export const ShopPage = () => {
   const [filterDrawer, setFilterDrawer] = useState(false);
   const filterToggler = () => setFilterDrawer((prev) => !prev);
 
-  const filtersRef = useRef(filters);
-  filtersRef.current = filters;
-
   const handleFilterChange = useCallback((newFilters) => {
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);
@@ -215,6 +277,8 @@ export const ShopPage = () => {
   );
 
   const handlePageChange = ({ selected }) => {
+    if (selected === currentPage) return;
+    historyActionRef.current = "push";
     setCurrentPage(selected);
     scrollToTop();
   };

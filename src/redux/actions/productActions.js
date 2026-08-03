@@ -392,10 +392,21 @@ export const generateProductLabel = async (productId) => {
   }
 };
 
-export const getProductImages = async () => {
+export const getProductImages = async (productIds, config = {}) => {
   try {
-    // Fetch all product images without pagination by setting a large page_size
-    const response = await axiosWithCredentials.get(`/product/images/?page_size=1000`);
+    const params = new URLSearchParams();
+    if (productIds?.length) {
+      // Asking for the rows actually on screen keeps this to a handful of
+      // products instead of the whole catalogue.
+      params.set("product_ids", productIds.join(","));
+    } else {
+      params.set("page_size", "1000");
+    }
+
+    const response = await axiosWithCredentials.get(
+      `/product/images/?${params.toString()}`,
+      config
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching product images:", error);

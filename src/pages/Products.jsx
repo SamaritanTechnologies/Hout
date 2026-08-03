@@ -6,7 +6,12 @@ import { openPDFWithAutoPrint, downloadPDF, openPDFWithAutoPrintSameTab } from "
 import Button from "../components/Common/Button";
 import ButtonSmall from "../components/Common/Button2";
 import DropdownFilter from "../components/Dashboard/DropdownFilter";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+  useNavigationType,
+  useSearchParams,
+} from "react-router-dom";
 import DeleteModal from "../components/Modals/DeleteModal";
 import {
   deleteProduct,
@@ -51,6 +56,7 @@ export const Products = () => {
   const { productCategories } = useSelector((state) => state.admin);
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
+  const navigationType = useNavigationType();
   const [searchQuery, setSearchQuery] = useState(
     () => searchParams.get("search") || ""
   );
@@ -64,7 +70,6 @@ export const Products = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [labelGenerating, setLabelGenerating] = useState({});
   const [copyingProduct, setCopyingProduct] = useState({});
-  const [imagesLoaded, setImagesLoaded] = useState(false);
   const [productImages, setProductImages] = useState({});
   const [loadingImages, setLoadingImages] = useState(false);
   const navigate = useNavigate();
@@ -76,6 +81,15 @@ export const Products = () => {
   );
   const pageSize = PRODUCT_PAGE_SIZE;
   const { t } = useTranslation();
+
+  const listStateRef = useRef(null);
+  listStateRef.current = { selectedOptions, currentPage, appliedSearchQuery };
+
+  // Paging is the one list change that earns its own history entry, so Back
+  // walks page by page instead of leaving the product list altogether.
+  const historyActionRef = useRef("replace");
+  const adoptedFromUrlRef = useRef(false);
+  const lastLocationKeyRef = useRef(location.key);
 
   // Read during render so the scroll listener cannot overwrite it first.
   const restoreTargetRef = useRef(null);
@@ -143,6 +157,51 @@ export const Products = () => {
     fetchProducts(selectedOptions, currentPage, appliedSearchQuery);
   }, [isDeleted, currentPage, selectedOptions, appliedSearchQuery]);
 
+  // Thumbnails are fetched for the rows on screen only, and every product that
+  // has been looked up once stays cached for the rest of the visit.
+  const productImagesRef = useRef(productImages);
+  productImagesRef.current = productImages;
+
+  useEffect(() => {
+    const missingIds = (state.results || [])
+      .map((product) => product?.id)
+      .filter((id) => id && !(id in productImagesRef.current));
+
+    if (!missingIds.length) return undefined;
+
+    const controller = new AbortController();
+    let active = true;
+    setLoadingImages(true);
+
+    getProductImages(missingIds, { signal: controller.signal })
+      .then((response) => {
+        if (!active) return;
+        setProductImages((prev) => {
+          const next = { ...prev };
+          // Products without images get an empty entry so they are not re-requested.
+          missingIds.forEach((id) => {
+            next[id] = [];
+          });
+          (response?.results || []).forEach((product) => {
+            next[product.id] = product.images || [];
+          });
+          return next;
+        });
+      })
+      .catch((error) => {
+        if (!active || controller.signal.aborted) return;
+        console.error("Error loading product images:", error);
+      })
+      .finally(() => {
+        if (active) setLoadingImages(false);
+      });
+
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, [state.results]);
+
   // Persist list state in the URL so browser Back restores page + filters + search.
   const listUrl = useMemo(() => {
     const params = buildAdminSearchParams({
@@ -153,14 +212,53 @@ export const Products = () => {
     return `/products${params ? `?${params}` : ""}`;
   }, [selectedOptions, currentPage, appliedSearchQuery]);
 
+  // Back/Forward between product pages swaps the URL without remounting this
+  // page, so the popped URL has to be read back into state.
   useEffect(() => {
+    if (lastLocationKeyRef.current === location.key) return;
+    lastLocationKeyRef.current = location.key;
+    if (navigationType !== "POP") return;
+
+    const stateParams = buildAdminSearchParams({
+      selectedOptions: listStateRef.current.selectedOptions,
+      currentPage: listStateRef.current.currentPage,
+      search: listStateRef.current.appliedSearchQuery,
+    });
+    if (searchParamsEqual(stateParams, searchParams)) return;
+
+    const urlSearch = searchParams.get("search") || "";
+
+    adoptedFromUrlRef.current = true;
+    setCurrentPage(parsePageFromParams(searchParams));
+    setSelectedOptions(parseAdminFiltersFromParams(searchParams));
+    setSearchQuery(urlSearch);
+    setAppliedSearchQuery(urlSearch);
+
+    const target = readScrollPosition(location.key);
+    if (target > 0) {
+      restoreScrollPosition(target, { getElement: getDashboardScrollElement });
+    } else {
+      scrollDashboardToTop();
+    }
+  }, [location.key, navigationType, searchParams]);
+
+  useEffect(() => {
+    // A Back/Forward navigation already carries the correct values in the URL.
+    if (adoptedFromUrlRef.current) {
+      adoptedFromUrlRef.current = false;
+      return;
+    }
+
     const next = buildAdminSearchParams({
       selectedOptions,
       currentPage,
       search: appliedSearchQuery,
     });
+    const action = historyActionRef.current;
+    historyActionRef.current = "replace";
+
     if (!searchParamsEqual(next, searchParams)) {
-      setSearchParams(next, { replace: true });
+      setSearchParams(next, { replace: action !== "push" });
     }
   }, [
     selectedOptions,
@@ -204,6 +302,8 @@ export const Products = () => {
   );
 
   const handlePageChange = ({ selected }) => {
+    if (selected === currentPage) return;
+    historyActionRef.current = "push";
     setCurrentPage(selected);
     scrollDashboardToTop();
   };
@@ -381,31 +481,6 @@ export const Products = () => {
     );
   };
 
-  const handleLoadImages = async () => {
-    if (loadingImages) return;
-    
-    try {
-      setLoadingImages(true);
-      const response = await getProductImages();
-      
-      // Create a map of product ID to images array
-      const imagesMap = {};
-      if (response.results) {
-        response.results.forEach((product) => {
-          imagesMap[product.id] = product.images || [];
-        });
-      }
-      
-      setProductImages(imagesMap);
-      setImagesLoaded(true);
-    } catch (error) {
-      console.error("Error loading product images:", error);
-      toast.error("Failed to load product images");
-    } finally {
-      setLoadingImages(false);
-    }
-  };
-
   return (
     <>
       <DeleteModal
@@ -453,18 +528,11 @@ export const Products = () => {
                   <span className="text-xs font-normal text-gray-500">Webshop</span>
                 </div>
               </th>
-              <th 
-                className="px-[10px] py-[12px] text-left text-14 font-medium min-h-12 cursor-pointer hover:bg-gray-200 transition-colors"
-                onClick={handleLoadImages}
-                title={imagesLoaded ? "Images loaded" : "Click to load images"}
-              >
+              <th className="px-[10px] py-[12px] text-left text-14 font-medium min-h-12">
                 <div className="flex items-center gap-2">
                   <span>Image</span>
                   {loadingImages && (
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
-                  )}
-                  {imagesLoaded && !loadingImages && (
-                    <span className="text-xs text-green-600">✓</span>
                   )}
                 </div>
               </th>
@@ -595,19 +663,31 @@ export const Products = () => {
                   </td>
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">
                     <div className="flex gap-1 items-center flex-wrap">
-                      {imagesLoaded && productImages[rowData?.id]?.length > 0 ? (
-                        <div className="block xl:w-[60px] lg:w-[50px] w-[45px]">
-                          <img
-                            src={productImages[rowData.id][0]?.url}
-                            alt={`${rowData?.name} thumbnail`}
-                            className="w-full h-full object-cover rounded"
-                          />
-                        </div>
-                      ) : imagesLoaded && (!productImages[rowData?.id] || productImages[rowData.id].length === 0) ? (
-                        <span className="text-xs text-gray-400">No images</span>
-                      ) : (
-                        <span className="text-xs text-gray-400">Click header to load</span>
-                      )}
+                      {(() => {
+                        const images = productImages[rowData?.id];
+                        if (!images) {
+                          return (
+                            <div className="xl:w-[60px] lg:w-[50px] w-[45px] h-8 rounded bg-gray-100 animate-pulse" />
+                          );
+                        }
+                        if (!images.length) {
+                          return (
+                            <span className="text-xs text-gray-400">
+                              No images
+                            </span>
+                          );
+                        }
+                        return (
+                          <div className="block xl:w-[60px] lg:w-[50px] w-[45px]">
+                            <img
+                              src={images[0]?.url}
+                              alt={`${rowData?.name_nl} thumbnail`}
+                              loading="lazy"
+                              className="w-full h-full object-cover rounded"
+                            />
+                          </div>
+                        );
+                      })()}
                     </div>
                   </td>
                   <td className="xl:px-[10px] lg:px-[8px] px-[6px] py-[12px] text-left text-14 font-semibold text-gray3">
